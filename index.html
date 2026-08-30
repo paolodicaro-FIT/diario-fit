@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario Fit di Paolo v2.0</title>
+  <title>Diario FIT by Paolo & Gemini</title>
   <style>
     :root {
       --bg: #121212;
@@ -21,7 +21,7 @@
       padding: 15px;
       box-sizing: border-box;
     }
-    h1 { text-align: center; color: var(--accent); margin-bottom: 2px; }
+    h1 { text-align: center; color: var(--accent); margin-bottom: 2px; font-size: 1.5rem; }
     .current-date {
       text-align: center;
       color: var(--accent);
@@ -139,34 +139,75 @@
       margin-left: 4px;
       font-size: 0.8rem;
     }
+
+    .target-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      background: #2a2a2a;
+      padding: 8px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>💪 Diario Fit di Paolo</h1>
+  <h1>💪 Diario FIT by Paolo & Gemini</h1>
   <div class="current-date" id="display-date"></div>
+
+  <!-- BOX IMPOSTAZIONE TARGET -->
+  <div class="card" style="border: 1px solid var(--accent);">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="margin: 0; font-size: 1rem;">🎯 Target Giornalieri Impostati</h2>
+      <button onclick="toggleTargetInputs()" style="padding: 6px 10px; font-size: 0.8rem;" class="btn-secondary">⚙️ Modifica</button>
+    </div>
+
+    <!-- RIEPILOGO TARGET SEMPRE VISIBILE -->
+    <div class="target-summary-grid">
+      <div>🔥 <b id="box-target-kcal">2000</b> kcal</div>
+      <div>🥩 <b id="box-target-pro">160</b>g P</div>
+      <div>🥑 <b id="box-target-fat">65</b>g G</div>
+      <div>🍞 <b id="box-target-carb">180</b>g C</div>
+    </div>
+    
+    <!-- CAMPI FORM NASCOSTI PER MODIFICA -->
+    <div id="target-inputs" style="display: none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 10px;">
+      <div class="inline-group">
+        <input type="number" id="target-kcal-input" placeholder="Kcal">
+        <input type="number" id="target-pro-input" placeholder="Prot (g)">
+      </div>
+      <div class="inline-group">
+        <input type="number" id="target-fat-input" placeholder="Gras (g)">
+        <input type="number" id="target-carb-input" placeholder="Carb (g)">
+      </div>
+      <button class="btn-action" onclick="saveCustomTargets()">Salva Nuovi Target</button>
+    </div>
+  </div>
 
   <!-- DASHBOARD MACRO CON TARGET -->
   <div class="card">
     <div class="grid-macros">
       <div class="macro-box">
         <div class="macro-value" id="tot-kcal">0</div>
-        <div class="macro-label">Kcal / 2000</div>
+        <div class="macro-label">Kcal / <span id="target-kcal-val">2000</span></div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-kcal"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-pro">0g</div>
-        <div class="macro-label">Prot / 160g</div>
+        <div class="macro-label">Prot / <span id="target-pro-val">160</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-pro"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-fat">0g</div>
-        <div class="macro-label">Gras / 65g</div>
+        <div class="macro-label">Gras / <span id="target-fat-val">65</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-fat"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-carb">0g</div>
-        <div class="macro-label">Carb / 180g</div>
+        <div class="macro-label">Carb / <span id="target-carb-val">180</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-carb"></div></div>
       </div>
     </div>
@@ -260,7 +301,7 @@
   </div>
 
   <script>
-    const TARGETS = { kcal: 2000, pro: 160, fat: 65, carb: 180 };
+    let TARGETS = JSON.parse(localStorage.getItem('diario_targets')) || { kcal: 2000, pro: 160, fat: 65, carb: 180 };
 
     let log = JSON.parse(localStorage.getItem('diario_log')) || [];
     let acquaTot = parseInt(localStorage.getItem('diario_acqua')) || 0;
@@ -275,6 +316,48 @@
     function getCurrentTimeStr() {
       const now = new Date();
       return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function updateTargetDisplays() {
+      // Aggiorna cruscotto
+      document.getElementById('target-kcal-val').innerText = TARGETS.kcal;
+      document.getElementById('target-pro-val').innerText = TARGETS.pro;
+      document.getElementById('target-fat-val').innerText = TARGETS.fat;
+      document.getElementById('target-carb-val').innerText = TARGETS.carb;
+
+      // Aggiorna box di riepilogo in alto
+      document.getElementById('box-target-kcal').innerText = TARGETS.kcal;
+      document.getElementById('box-target-pro').innerText = TARGETS.pro;
+      document.getElementById('box-target-fat').innerText = TARGETS.fat;
+      document.getElementById('box-target-carb').innerText = TARGETS.carb;
+
+      // Aggiorna input
+      document.getElementById('target-kcal-input').value = TARGETS.kcal;
+      document.getElementById('target-pro-input').value = TARGETS.pro;
+      document.getElementById('target-fat-input').value = TARGETS.fat;
+      document.getElementById('target-carb-input').value = TARGETS.carb;
+    }
+
+    function toggleTargetInputs() {
+      const box = document.getElementById('target-inputs');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function saveCustomTargets() {
+      const k = parseInt(document.getElementById('target-kcal-input').value);
+      const p = parseInt(document.getElementById('target-pro-input').value);
+      const f = parseInt(document.getElementById('target-fat-input').value);
+      const c = parseInt(document.getElementById('target-carb-input').value);
+
+      if (k && p && f && c) {
+        TARGETS = { kcal: k, pro: p, fat: f, carb: c };
+        localStorage.setItem('diario_targets', JSON.stringify(TARGETS));
+        updateTargetDisplays();
+        toggleTargetInputs();
+        saveAndRender();
+      } else {
+        alert('Inserisci dei valori validi per tutti i target.');
+      }
     }
 
     function renderSavedFoods() {
@@ -489,7 +572,7 @@
     }
 
     function exportData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, acquaTot, savedFoods, historyLogs }));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, acquaTot, savedFoods, historyLogs, TARGETS }));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `diario_fit_backup_${isoDateStr}.json`);
@@ -513,6 +596,10 @@
             if (content.historyLogs) historyLogs = content.historyLogs;
             if (content.log) log = content.log;
             if (content.acquaTot) acquaTot = content.acquaTot;
+            if (content.TARGETS) {
+              TARGETS = content.TARGETS;
+              updateTargetDisplays();
+            }
             saveAndRender();
             alert('Backup ripristinato con successo!');
           } catch (err) {
@@ -563,7 +650,7 @@
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Report Diario Fit - ${formattedDateStr}</title>
+          <title>Report Diario FIT - ${formattedDateStr}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #222; }
             h1 { color: #00aa44; text-align: center; }
@@ -576,7 +663,7 @@
         </head>
         <body>
           <button onclick="window.print()" style="width:100%; padding:10px; background:#00aa44; color:#fff; border:none; margin-bottom:20px;">Stampa / Salva PDF</button>
-          <h1>💪 Diario Fit di Paolo</h1>
+          <h1>💪 Diario FIT by Paolo & Gemini</h1>
           <div class="date">${formattedDateStr}</div>
           <div class="summary-box">
             <div><b>Kcal:</b> ${kcal}</div><div><b>Prot:</b> ${pro}</div><div><b>Gras:</b> ${fat}</div><div><b>Carb:</b> ${carb}</div>
@@ -591,6 +678,7 @@
       printWindow.document.close();
     }
 
+    updateTargetDisplays();
     saveAndRender();
   </script>
 </body>
