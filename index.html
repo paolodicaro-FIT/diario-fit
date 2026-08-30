@@ -362,7 +362,7 @@
       <button onclick="addQuick('Fiocchi di Latte (200g)', 180, 24, 8, 3)">🧀 Fiocchi di Latte (200g)</button>
       <button onclick="addQuick('Mirtilli (250g)', 140, 2, 1, 35)">🫐 Mirtilli Fresh (250g)</button>
       <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z</button>
-      <button onclick="addQuick('Acqua (500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
+      <button onclick="addQuick('Acqua (+500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
     </div>
 
     <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -476,7 +476,7 @@
     }
 
     function updateTargetDisplays() {
-      if (!TARGETS.water) TARGETS.water = 2500; // Valore di fallback se mancante da vecchio salvataggio
+      if (!TARGETS.water) TARGETS.water = 2500;
 
       document.getElementById('target-kcal-val').innerText = TARGETS.kcal;
       document.getElementById('target-pro-val').innerText = TARGETS.pro;
@@ -569,8 +569,14 @@
             if (item.waterMl) acquaTot += item.waterMl;
 
             const li = document.createElement('li');
+            
+            // Etichetta specifica per il testo dell'elemento
+            let itemText = `<b>${item.name}</b>`;
+            if (item.kcal > 0) itemText += ` (${item.kcal} kcal)`;
+            if (item.waterMl > 0 && !item.kcal) itemText += ` (${item.waterMl} ml)`;
+
             li.innerHTML = `
-              <span><span class="time-badge">[${item.time || '-'}]</span> <b>${item.name}</b> ${item.kcal ? `(${item.kcal} kcal)` : ''}</span>
+              <span><span class="time-badge">[${item.time || '-'}]</span> ${itemText}</span>
               <div class="item-actions">
                 <button onclick="editItem(${originalIndex})" style="background: #333;">✏️</button>
                 <button onclick="removeItem(${originalIndex})" style="background: #cf6679; color:#000;">✕</button>
@@ -582,16 +588,8 @@
         }
       });
 
-      if (acquaTot > 0) {
-        const waterDiv = document.createElement('div');
-        waterDiv.style.marginTop = '15px';
-        waterDiv.style.padding = '8px';
-        waterDiv.style.background = '#2a2a2a';
-        waterDiv.style.borderRadius = '6px';
-        waterDiv.style.fontSize = '0.9rem';
-        waterDiv.style.borderLeft = '4px solid var(--water-color)';
-        waterDiv.innerHTML = `💧 <b>Totale Acqua Ingerita:</b> ${acquaTot} ml / ${TARGETS.water} ml`;
-        container.appendChild(waterDiv);
+      if (log.length === 0) {
+        container.innerHTML = '<div style="color: var(--subtext); text-align: center; padding: 10px;">Nessun elemento registrato per oggi.</div>';
       }
 
       document.getElementById('tot-kcal').innerText = kcal;
@@ -663,17 +661,20 @@
 
     function editItem(index) {
       const item = log[index];
-      const newName = prompt('Modifica nome e porzione:', item.name);
+      const newName = prompt('Modifica descrizione:', item.name);
       if (newName === null) return;
       
-      if (item.waterMl > 0 && !item.kcal) {
+      // Se è solo un elemento acqua pura (0 kcal)
+      if (item.waterMl > 0 && (!item.kcal || item.kcal === 0)) {
         const newWater = prompt('Modifica quantità acqua in ml:', item.waterMl);
-        log[index] = { ...item, name: newName || item.name, waterMl: parseInt(newWater) || 0 };
+        if (newWater !== null) {
+          log[index] = { ...item, name: newName || item.name, waterMl: parseInt(newWater) || 0 };
+        }
       } else {
-        const newKcal = prompt('Modifica Calorie (kcal):', item.kcal);
-        const newPro = prompt('Modifica Proteine (g):', item.pro);
-        const newFat = prompt('Modifica Grassi (g):', item.fat);
-        const newCarb = prompt('Modifica Carboidrati (g):', item.carb);
+        const newKcal = prompt('Modifica Calorie (kcal):', item.kcal || 0);
+        const newPro = prompt('Modifica Proteine (g):', item.pro || 0);
+        const newFat = prompt('Modifica Grassi (g):', item.fat || 0);
+        const newCarb = prompt('Modifica Carboidrati (g):', item.carb || 0);
         const newWater = prompt('Modifica Acqua contenuta (ml):', item.waterMl || 0);
 
         log[index] = {
