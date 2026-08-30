@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario Fit di Paolo</title>
+  <title>Diario Fit di Paolo v2.0</title>
   <style>
     :root {
       --bg: #121212;
       --card: #1e1e1e;
-      --accent: #00ff66; /* Verde Fluo */
+      --accent: #00ff66;
       --text: #ffffff;
       --subtext: #aaaaaa;
       --border: #333333;
@@ -52,6 +52,21 @@
     .macro-value { font-size: 1.1rem; font-weight: bold; color: var(--accent); }
     .macro-label { font-size: 0.75rem; color: var(--subtext); }
     
+    .progress-bar-bg {
+      background: #333;
+      border-radius: 4px;
+      height: 6px;
+      width: 100%;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--accent);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
     .quick-buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -76,10 +91,7 @@
       font-size: 1rem;
       margin-top: 10px;
     }
-    .btn-secondary {
-      background: #333;
-      color: #fff;
-    }
+    .btn-secondary { background: #333; color: #fff; }
     .btn-danger { background: #cf6679; color: #000; }
     
     input, select {
@@ -92,6 +104,11 @@
       color: var(--text);
       box-sizing: border-box;
       font-size: 0.95rem;
+    }
+
+    .inline-group {
+      display: flex;
+      gap: 10px;
     }
     
     ul { list-style: none; padding: 0; margin: 0; }
@@ -108,6 +125,20 @@
       font-weight: bold;
       margin-right: 5px;
     }
+    .meal-header {
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 3px;
+    }
+    .item-actions button {
+      padding: 4px 8px;
+      margin-left: 4px;
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
@@ -115,61 +146,84 @@
   <h1>💪 Diario Fit di Paolo</h1>
   <div class="current-date" id="display-date"></div>
 
-  <!-- DASHBOARD MACRO -->
+  <!-- DASHBOARD MACRO CON TARGET -->
   <div class="card">
     <div class="grid-macros">
       <div class="macro-box">
         <div class="macro-value" id="tot-kcal">0</div>
-        <div class="macro-label">Kcal</div>
+        <div class="macro-label">Kcal / 2000</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-kcal"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-pro">0g</div>
-        <div class="macro-label">Prot</div>
+        <div class="macro-label">Prot / 160g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-pro"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-fat">0g</div>
-        <div class="macro-label">Gras</div>
+        <div class="macro-label">Gras / 65g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-fat"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-carb">0g</div>
-        <div class="macro-label">Carb</div>
+        <div class="macro-label">Carb / 180g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-carb"></div></div>
       </div>
     </div>
+  </div>
+
+  <!-- SELEZIONE PASTO -->
+  <div class="card">
+    <label style="font-size:0.85rem; color: var(--subtext);">Pasto Corrente:</label>
+    <select id="meal-category">
+      <option value="Snack / Integrazione">🥤 Snack / Integrazione</option>
+      <option value="Colazione">🍳 Colazione</option>
+      <option value="Pranzo">🍗 Pranzo</option>
+      <option value="Cena">🍽️ Cena</option>
+    </select>
   </div>
 
   <!-- QUICK ADD -->
   <div class="card">
     <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
-      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3)">🥤 Shaker Whey (2 cup + Creatina + 500ml H2O)</button>
+      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3)">🥤 Shaker Whey (2 cup + Creatina)</button>
       <button onclick="addQuick('Noci Macadamia (10 pz / ~25g)', 180, 2, 19, 3)">🌰 Noci Macadamia (10 pz)</button>
-      <button onclick="addQuick('Yogurt Greco 0% (150g) + Whey (1 cup)', 160, 23, 0, 8)">🥣 Yogurt Greco 0% (150g) + Whey</button>
+      <button onclick="addQuick('Yogurt Greco 0% (150g) + Whey (1 cup)', 160, 23, 0, 8)">🥣 Yogurt Greco 0% + Whey</button>
       <button onclick="addQuick('Uova Sode (4 pz intere)', 300, 25, 20, 1)">🥚 4 Uova Sode</button>
       <button onclick="addQuick('Fiocchi di Latte (200g)', 180, 24, 8, 3)">🧀 Fiocchi di Latte (200g)</button>
       <button onclick="addQuick('Mirtilli (250g)', 140, 2, 1, 35)">🫐 Mirtilli Fresh (250g)</button>
-      <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z (1 tazza)</button>
+      <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z</button>
       <button onclick="addQuick('Acqua (500ml)', 0, 0, 0, 0)">💧 Acqua (+500ml)</button>
     </div>
 
-    <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu Rapido:</label>
-    <select id="quick-select">
-      <option value="">-- Seleziona un alimento --</option>
-      <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
-      <optgroup label="🍽️ Alimenti predefiniti">
-        <option value="Pollo o son desto (Petto 200g + Patate 250g + Verdure)|550|55|15|45">🍗 Pollo o son desto (Petto 200g + Patate 250g)</option>
-        <option value="Spaghetti / Pasta (Porzione media 100g)|450|12|5|85">🍝 Spaghetti / Pasta (100g secchi)</option>
-        <option value="Fagioli Bud Spencer (Fagioli 250g + Salsiccia/Bacon)|550|30|25|45">🫘 Fagioli Bud Spencer (250g + Salsiccia)</option>
-        <option value="Piadina con Prosciutto Cotto (1 piada + 80g cotto)|450|20|18|50">🌮 Piadina con Prosciutto Cotto (80g)</option>
-        <option value="Piadina con Prosciutto Crudo (1 piada + 80g crudo)|470|22|19|50">🌮 Piadina con Prosciutto Crudo (80g)</option>
-        <option value="Pollo allo Spiedo (1/2 Petto ~200g)|350|38|12|0">🍗 Pollo allo Spiedo (1/2 petto ~200g)</option>
-        <option value="Pizza al Trancio (1 trancio medio)|400|14|12|55">🍕 Pizza al Trancio (1 trancio)</option>
-        <option value="Pizza Classica (Intera Margherita)|800|28|22|115">🍕 Pizza Classica (1 intera)</option>
-        <option value="Sgombro in scatola (120g scocciolato)|240|25|15|0">🐟 Sgombro in scatola (120g)</option>
-        <option value="Tonno al naturale (2 scatolette / 112g sgocciolato)|130|30|1|0">🐟 Tonno al naturale (2 scatolette)</option>
-        <option value="Uova Sode/Tegame (2 pz intere)|150|13|10|1">🥚 2 Uova Sode/Tegame</option>
-        <option value="Sushi / Miso / Nigiri (Pasto medio ~12-14 pz)|650|30|12|95">🍣 Sushi (Pasto medio ~12-14 pz)</option>
-      </optgroup>
-    </select>
+    <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
+    <div class="inline-group">
+      <select id="quick-select" style="flex: 2;">
+        <option value="">-- Seleziona un alimento --</option>
+        <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
+        <optgroup label="🍽️ Alimenti predefiniti">
+          <option value="Pollo o son desto (Petto 200g + Patate 250g)|550|55|15|45">🍗 Pollo o son desto (Petto 200g + Patate 250g)</option>
+          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85">🍝 Spaghetti / Pasta (100g secchi)</option>
+          <option value="Fagioli Bud Spencer (Fagioli 250g + Salsiccia)|550|30|25|45">🫘 Fagioli Bud Spencer (250g + Salsiccia)</option>
+          <option value="Piadina con Prosciutto Cotto (80g)|450|20|18|50">🌮 Piadina con Prosciutto Cotto (80g)</option>
+          <option value="Piadina con Prosciutto Crudo (80g)|470|22|19|50">🌮 Piadina con Prosciutto Crudo (80g)</option>
+          <option value="Pollo allo Spiedo (1/2 petto ~200g)|350|38|12|0">🍗 Pollo allo Spiedo (1/2 petto ~200g)</option>
+          <option value="Pizza al Trancio (1 trancio)|400|14|12|55">🍕 Pizza al Trancio (1 trancio)</option>
+          <option value="Pizza Classica (1 intera)|800|28|22|115">🍕 Pizza Classica (1 intera)</option>
+          <option value="Sgombro in scatola (120g)|240|25|15|0">🐟 Sgombro in scatola (120g)</option>
+          <option value="Tonno al naturale (2 scatolette)|130|30|1|0">🐟 Tonno al naturale (2 scatolette)</option>
+          <option value="Uova Sode/Tegame (2 pz)|150|13|10|1">🥚 2 Uova Sode/Tegame</option>
+          <option value="Sushi (Pasto medio ~12-14 pz)|650|30|12|95">🍣 Sushi (Pasto medio ~12-14 pz)</option>
+        </optgroup>
+      </select>
+      <select id="portion-multiplier" style="flex: 1;">
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
+    </div>
     <button class="btn-action" onclick="addFromSelect()">+ Aggiungi Selezionato</button>
   </div>
 
@@ -187,33 +241,45 @@
   <!-- LOG GIORNALIERO -->
   <div class="card">
     <h2>📋 Registro di Oggi</h2>
-    <ul id="log-list"></ul>
+    <div id="log-container"></div>
     <button class="btn-action" style="margin-top: 15px;" onclick="copyReport()">📋 Copia Report per Gemini</button>
     <button class="btn-action btn-secondary" style="margin-top: 10px;" onclick="generatePrintableReport()">🖨️ Anteprima e Stampa PDF</button>
-    <button class="btn-action btn-danger" style="margin-top: 10px;" onclick="resetDay()">🔄 Nuova Giornata</button>
+    <button class="btn-action btn-danger" style="margin-top: 10px;" onclick="resetDay()">🔄 Chiudi Giornata e Salva in Storico</button>
+  </div>
+
+  <!-- CRONOLOGIA E BACKUP -->
+  <div class="card">
+    <h2>📚 Storico & Backup Dati</h2>
+    <button class="btn-action btn-secondary" onclick="toggleHistory()">📂 Mostra / Nascondi Storico Giorni</button>
+    <div id="history-container" style="display: none; margin-top: 10px;"></div>
+    
+    <div class="inline-group" style="margin-top: 15px;">
+      <button class="btn-secondary" style="flex: 1;" onclick="exportData()">💾 Esporta Backup</button>
+      <button class="btn-secondary" style="flex: 1;" onclick="importData()">📥 Importa Backup</button>
+    </div>
   </div>
 
   <script>
+    const TARGETS = { kcal: 2000, pro: 160, fat: 65, carb: 180 };
+
     let log = JSON.parse(localStorage.getItem('diario_log')) || [];
     let acquaTot = parseInt(localStorage.getItem('diario_acqua')) || 0;
     let savedFoods = JSON.parse(localStorage.getItem('diario_saved_foods')) || [];
+    let historyLogs = JSON.parse(localStorage.getItem('diario_history')) || {};
 
-    // Formattazione data corrente
     const todayObj = new Date();
     const formattedDateStr = todayObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const isoDateStr = todayObj.toISOString().split('T')[0];
     document.getElementById('display-date').innerText = formattedDateStr;
 
     function getCurrentTimeStr() {
       const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${hours}:${minutes}`;
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     }
 
     function renderSavedFoods() {
       const optgroup = document.getElementById('custom-optgroup');
       optgroup.innerHTML = '';
-      
       savedFoods.forEach(food => {
         const option = document.createElement('option');
         option.value = `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}`;
@@ -222,34 +288,62 @@
       });
     }
 
+    function updateProgressBars(kcal, pro, fat, carb) {
+      document.getElementById('bar-kcal').style.width = Math.min(100, (kcal / TARGETS.kcal) * 100) + '%';
+      document.getElementById('bar-pro').style.width = Math.min(100, (pro / TARGETS.pro) * 100) + '%';
+      document.getElementById('bar-fat').style.width = Math.min(100, (fat / TARGETS.fat) * 100) + '%';
+      document.getElementById('bar-carb').style.width = Math.min(100, (carb / TARGETS.carb) * 100) + '%';
+    }
+
     function saveAndRender() {
       localStorage.setItem('diario_log', JSON.stringify(log));
       localStorage.setItem('diario_acqua', acquaTot);
       localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
+      localStorage.setItem('diario_history', JSON.stringify(historyLogs));
       
       let kcal = 0, pro = 0, fat = 0, carb = 0;
-      const listEl = document.getElementById('log-list');
-      listEl.innerHTML = '';
+      const container = document.getElementById('log-container');
+      container.innerHTML = '';
 
-      log.forEach((item, index) => {
-        kcal += item.kcal;
-        pro += item.pro;
-        fat += item.fat;
-        carb += item.carb;
+      const mealsOrder = ['Snack / Integrazione', 'Colazione', 'Pranzo', 'Cena'];
+      
+      mealsOrder.forEach(mealCategory => {
+        const mealItems = log.filter(item => item.category === mealCategory || (!item.category && mealCategory === 'Snack / Integrazione'));
+        
+        if (mealItems.length > 0) {
+          const header = document.createElement('div');
+          header.className = 'meal-header';
+          header.innerText = mealCategory;
+          container.appendChild(header);
 
-        const li = document.createElement('li');
-        const timeDisplay = item.time ? `<span class="time-badge">[${item.time}]</span>` : '';
-        li.innerHTML = `
-          <span>${timeDisplay} <b>${item.name}</b> (${item.kcal} kcal)</span>
-          <button onclick="removeItem(${index})" style="padding: 2px 8px; background: #444;">✕</button>
-        `;
-        listEl.appendChild(li);
+          const ul = document.createElement('ul');
+          mealItems.forEach(item => {
+            const originalIndex = log.indexOf(item);
+            kcal += item.kcal;
+            pro += item.pro;
+            fat += item.fat;
+            carb += item.carb;
+
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span><span class="time-badge">[${item.time || '-'}]</span> <b>${item.name}</b> (${item.kcal} kcal)</span>
+              <div class="item-actions">
+                <button onclick="editItem(${originalIndex})" style="background: #333;">✏️</button>
+                <button onclick="removeItem(${originalIndex})" style="background: #cf6679; color:#000;">✕</button>
+              </div>
+            `;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        }
       });
 
       if (acquaTot > 0) {
-        const liAcqua = document.createElement('li');
-        liAcqua.innerHTML = `<span>💧 <b>Totale Acqua Ingerita:</b> ${acquaTot} ml</span>`;
-        listEl.appendChild(liAcqua);
+        const waterDiv = document.createElement('div');
+        waterDiv.style.marginTop = '10px';
+        waterDiv.style.fontSize = '0.9rem';
+        waterDiv.innerHTML = `💧 <b>Totale Acqua Ingerita:</b> ${acquaTot} ml`;
+        container.appendChild(waterDiv);
       }
 
       document.getElementById('tot-kcal').innerText = kcal;
@@ -257,6 +351,7 @@
       document.getElementById('tot-fat').innerText = fat + 'g';
       document.getElementById('tot-carb').innerText = carb + 'g';
 
+      updateProgressBars(kcal, pro, fat, carb);
       renderSavedFoods();
     }
 
@@ -264,26 +359,29 @@
       if (name.includes('Acqua')) {
         acquaTot += 500;
       } else {
-        const time = getCurrentTimeStr();
-        log.push({ name, kcal, pro, fat, carb, time });
+        const category = document.getElementById('meal-category').value;
+        log.push({ name, kcal, pro, fat, carb, category, time: getCurrentTimeStr() });
       }
       saveAndRender();
     }
 
     function addFromSelect() {
       const select = document.getElementById('quick-select');
+      const mult = parseFloat(document.getElementById('portion-multiplier').value) || 1;
       const val = select.value;
       if (!val) return;
 
       const [name, kcal, pro, fat, carb] = val.split('|');
-      const time = getCurrentTimeStr();
+      const category = document.getElementById('meal-category').value;
+      
       log.push({
-        name,
-        kcal: parseInt(kcal),
-        pro: parseInt(pro),
-        fat: parseInt(fat),
-        carb: parseInt(carb),
-        time
+        name: mult !== 1 ? `${name} (${mult}x)` : name,
+        kcal: Math.round(parseInt(kcal) * mult),
+        pro: Math.round(parseInt(pro) * mult),
+        fat: Math.round(parseInt(fat) * mult),
+        carb: Math.round(parseInt(carb) * mult),
+        category,
+        time: getCurrentTimeStr()
       });
       
       select.selectedIndex = 0;
@@ -292,20 +390,15 @@
 
     function addCustom() {
       const nameInput = document.getElementById('custom-name').value.trim();
-      if (!nameInput) {
-        alert('Inserisci il nome dell\'alimento');
-        return;
-      }
+      if (!nameInput) return alert('Inserisci il nome dell\'alimento');
 
       const kcal = parseInt(document.getElementById('custom-kcal').value) || 0;
       const pro = parseInt(document.getElementById('custom-pro').value) || 0;
       const fat = parseInt(document.getElementById('custom-fat').value) || 0;
       const carb = parseInt(document.getElementById('custom-carb').value) || 0;
-      const time = getCurrentTimeStr();
+      const category = document.getElementById('meal-category').value;
 
-      const newFood = { name: nameInput, kcal, pro, fat, carb, time };
-
-      log.push(newFood);
+      log.push({ name: nameInput, kcal, pro, fat, carb, category, time: getCurrentTimeStr() });
 
       if (!savedFoods.some(f => f.name.toLowerCase() === nameInput.toLowerCase())) {
         savedFoods.push({ name: nameInput, kcal, pro, fat, carb });
@@ -320,17 +413,114 @@
       document.getElementById('custom-carb').value = '';
     }
 
+    function editItem(index) {
+      const item = log[index];
+      const newName = prompt('Modifica nome e porzione:', item.name);
+      if (newName === null) return;
+      const newKcal = prompt('Modifica Calorie (kcal):', item.kcal);
+      const newPro = prompt('Modifica Proteine (g):', item.pro);
+      const newFat = prompt('Modifica Grassi (g):', item.fat);
+      const newCarb = prompt('Modifica Carboidrati (g):', item.carb);
+
+      log[index] = {
+        ...item,
+        name: newName || item.name,
+        kcal: parseInt(newKcal) || 0,
+        pro: parseInt(newPro) || 0,
+        fat: parseInt(newFat) || 0,
+        carb: parseInt(newCarb) || 0
+      };
+      saveAndRender();
+    }
+
     function removeItem(index) {
       log.splice(index, 1);
       saveAndRender();
     }
 
     function resetDay() {
-      if (confirm('Vuoi azzerare il diario per una nuova giornata? (Gli alimenti salvati nel menu rimarranno)')) {
+      if (confirm('Vuoi archiviare la giornata nello storico e iniziare un nuovo diario pulito?')) {
+        if (log.length > 0) {
+          historyLogs[isoDateStr] = {
+            date: formattedDateStr,
+            log: [...log],
+            acquaTot,
+            summary: {
+              kcal: document.getElementById('tot-kcal').innerText,
+              pro: document.getElementById('tot-pro').innerText,
+              fat: document.getElementById('tot-fat').innerText,
+              carb: document.getElementById('tot-carb').innerText
+            }
+          };
+        }
         log = [];
         acquaTot = 0;
         saveAndRender();
       }
+    }
+
+    function toggleHistory() {
+      const container = document.getElementById('history-container');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        container.innerHTML = '';
+        const keys = Object.keys(historyLogs).sort().reverse();
+        if (keys.length === 0) {
+          container.innerHTML = '<div style="font-size:0.85rem; color:var(--subtext);">Nessun giorno archiviato.</div>';
+          return;
+        }
+        keys.forEach(k => {
+          const entry = historyLogs[k];
+          const div = document.createElement('div');
+          div.style.background = '#2a2a2a';
+          div.style.padding = '10px';
+          div.style.borderRadius = '6px';
+          div.style.marginBottom = '8px';
+          div.style.fontSize = '0.85rem';
+          div.innerHTML = `
+            <b>${entry.date}</b><br>
+            Totale: ${entry.summary.kcal} kcal | Prot: ${entry.summary.pro} | Grassi: ${entry.summary.fat} | Carb: ${entry.summary.carb}
+          `;
+          container.appendChild(div);
+        });
+      } else {
+        container.style.display = 'none';
+      }
+    }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, acquaTot, savedFoods, historyLogs }));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `diario_fit_backup_${isoDateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = readerEvent => {
+          try {
+            const content = JSON.parse(readerEvent.target.result);
+            if (content.savedFoods) savedFoods = content.savedFoods;
+            if (content.historyLogs) historyLogs = content.historyLogs;
+            if (content.log) log = content.log;
+            if (content.acquaTot) acquaTot = content.acquaTot;
+            saveAndRender();
+            alert('Backup ripristinato con successo!');
+          } catch (err) {
+            alert('File non valido.');
+          }
+        }
+      }
+      input.click();
     }
 
     function copyReport() {
@@ -341,14 +531,13 @@
 
       let report = `Ecco il mio report del ${formattedDateStr}:\n`;
       log.forEach(item => {
-        const t = item.time ? `[${item.time}] ` : '';
-        report += `- ${t}${item.name}\n`;
+        report += `- [${item.time || '-'}] [${item.category || 'Generico'}] ${item.name} (${item.kcal} kcal)\n`;
       });
       if (acquaTot > 0) report += `- Acqua: ${acquaTot} ml\n`;
       report += `\nTOTALE STIMATO: ${kcal} Kcal | Prot: ${pro} | Grassi: ${fat} | Carb: ${carb}`;
 
       navigator.clipboard.writeText(report);
-      alert('Report copiato negli appunti! Ora puoi incollarlo in chat.');
+      alert('Report copiato negli appunti!');
     }
 
     function generatePrintableReport() {
@@ -358,10 +547,10 @@
       let carb = document.getElementById('tot-carb').innerText;
 
       let printWindow = window.open('', '_blank');
-      
       let itemsHtml = log.map(item => `
         <tr>
-          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center; font-weight: bold; color: #00aa44;">${item.time || '-'}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">${item.time || '-'}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd;"><b>${item.category || '-'}</b></td>
           <td style="padding: 8px; border-bottom: 1px solid #ddd;">${item.name}</td>
           <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.kcal} kcal</td>
           <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.pro}g</td>
@@ -370,16 +559,6 @@
         </tr>
       `).join('');
 
-      if (acquaTot > 0) {
-        itemsHtml += `
-          <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">-</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">💧 Totale Acqua Ingerita</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;" colspan="4"><b>${acquaTot} ml</b></td>
-          </tr>
-        `;
-      }
-
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
@@ -387,53 +566,28 @@
           <title>Report Diario Fit - ${formattedDateStr}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #222; }
-            h1 { color: #00aa44; text-align: center; margin-bottom: 5px; }
-            .date { text-align: center; color: #666; font-size: 1rem; margin-bottom: 25px; text-transform: capitalize; font-weight: bold; }
-            .summary-box { display: flex; justify-content: space-around; background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #ccc; }
-            .stat { text-align: center; }
-            .stat-val { font-size: 1.3rem; font-weight: bold; color: #00aa44; }
-            .stat-lbl { font-size: 0.8rem; color: #555; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background: #00aa44; color: white; padding: 10px; text-align: left; }
+            h1 { color: #00aa44; text-align: center; }
+            .date { text-align: center; font-weight: bold; margin-bottom: 20px; }
+            .summary-box { display: flex; justify-content: space-around; background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th { background: #00aa44; color: white; padding: 8px; text-align: left; }
             th.num, td.num { text-align: right; }
-            .btn-print { background: #00aa44; color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px; cursor: pointer; margin-bottom: 20px; display: block; width: 100%; }
-            @media print {
-              .btn-print { display: none; }
-            }
           </style>
         </head>
         <body>
-          <button class="btn-print" onclick="window.print()">🖨️ Stampa / Salva in PDF</button>
+          <button onclick="window.print()" style="width:100%; padding:10px; background:#00aa44; color:#fff; border:none; margin-bottom:20px;">Stampa / Salva PDF</button>
           <h1>💪 Diario Fit di Paolo</h1>
           <div class="date">${formattedDateStr}</div>
-
           <div class="summary-box">
-            <div class="stat"><div class="stat-val">${kcal}</div><div class="stat-lbl">Kcal Totali</div></div>
-            <div class="stat"><div class="stat-val">${pro}</div><div class="stat-lbl">Proteine</div></div>
-            <div class="stat"><div class="stat-val">${fat}</div><div class="stat-lbl">Grassi</div></div>
-            <div class="stat"><div class="stat-val">${carb}</div><div class="stat-lbl">Carboidrati</div></div>
+            <div><b>Kcal:</b> ${kcal}</div><div><b>Prot:</b> ${pro}</div><div><b>Gras:</b> ${fat}</div><div><b>Carb:</b> ${carb}</div>
           </div>
-
-          <h3>Dettaglio Alimenti Ingeriti</h3>
           <table>
-            <thead>
-              <tr>
-                <th style="width: 70px;">Ora</th>
-                <th>Alimento / Integrazione</th>
-                <th class="num">Kcal</th>
-                <th class="num">Prot</th>
-                <th class="num">Gras</th>
-                <th class="num">Carb</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHtml}
-            </tbody>
+            <thead><tr><th>Ora</th><th>Pasto</th><th>Alimento</th><th class="num">Kcal</th><th class="num">Prot</th><th class="num">Gras</th><th class="num">Carb</th></tr></thead>
+            <tbody>${itemsHtml}</tbody>
           </table>
         </body>
         </html>
       `);
-
       printWindow.document.close();
     }
 
