@@ -10,9 +10,6 @@
       --card: #1e1e1e;
       --accent: #00ff66;
       --water-color: #00bfff;
-      --pro-color: #ff453a;
-      --fat-color: #ff9f0a;
-      --carb-color: #30d158;
       --text: #ffffff;
       --subtext: #aaaaaa;
       --border: #333333;
@@ -106,84 +103,36 @@
       margin-bottom: 15px;
       border: 1px solid var(--border);
     }
-
-    /* DASHBOARD A CIAMBELLE / ANELLI */
-    .rings-dashboard {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .ring-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .ring-svg {
-      transform: rotate(-90deg);
-      overflow: visible;
-    }
-
-    .ring-bg {
-      fill: none;
-      stroke: #2a2a2a;
-      stroke-width: 10;
-    }
-
-    .ring-fill {
-      fill: none;
-      stroke-width: 10;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
-    }
-
-    .ring-center-text {
-      position: absolute;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ring-val {
-      font-size: 1rem;
-      font-weight: bold;
-      line-height: 1.1;
-    }
-
-    .ring-sub {
-      font-size: 0.68rem;
-      color: var(--subtext);
-      margin-top: 2px;
-    }
-
-    /* LEGENDA MACRO COMPATTA */
-    .macro-legend {
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      margin-top: 15px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
+    .grid-macros {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
       text-align: center;
     }
-
-    .legend-item {
-      font-size: 0.8rem;
+    .macro-box {
+      background: #2a2a2a;
+      padding: 10px 4px;
+      border-radius: 8px;
     }
-
-    .legend-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 4px;
+    .macro-value { font-size: 1rem; font-weight: bold; color: var(--accent); }
+    .macro-label { font-size: 0.7rem; color: var(--subtext); }
+    
+    .progress-bar-bg {
+      background: #333;
+      border-radius: 4px;
+      height: 6px;
+      width: 100%;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--accent);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-bar-water {
+      background: var(--water-color);
     }
 
     .quick-buttons {
@@ -360,64 +309,33 @@
     </div>
   </div>
 
-  <!-- DASHBOARD A ANELLI / CIAMBELLE -->
+  <!-- DASHBOARD MACRO E ACQUA CON TARGET -->
   <div class="card">
-    <div class="rings-dashboard">
-      
-      <!-- ANELLO KCAL -->
-      <div class="ring-card">
-        <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110">
-          <circle class="ring-bg" cx="55" cy="55" r="45"></circle>
-          <circle class="ring-fill" id="ring-kcal" cx="55" cy="55" r="45" stroke="#00ff66" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-        </svg>
-        <div class="ring-center-text">
-          <div class="ring-val" id="tot-kcal">0</div>
-          <div class="ring-sub">/ <span id="target-kcal-val">2000</span> kcal</div>
-        </div>
+    <div class="grid-macros">
+      <div class="macro-box">
+        <div class="macro-value" id="tot-kcal">0</div>
+        <div class="macro-label">Kcal / <span id="target-kcal-val">2000</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-kcal"></div></div>
       </div>
-
-      <!-- CIAMBERA DISTRIBUZIONE MACRO (%) -->
-      <div class="ring-card">
-        <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110">
-          <circle class="ring-bg" cx="55" cy="55" r="45"></circle>
-          <!-- Fette della ciambella -->
-          <circle id="macro-donut-pro" class="ring-fill" cx="55" cy="55" r="45" stroke="var(--pro-color)" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-          <circle id="macro-donut-fat" class="ring-fill" cx="55" cy="55" r="45" stroke="var(--fat-color)" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-          <circle id="macro-donut-carb" class="ring-fill" cx="55" cy="55" r="45" stroke="var(--carb-color)" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-        </svg>
-        <div class="ring-center-text">
-          <div class="ring-val" style="font-size: 0.85rem;" id="macro-pct-summary">0%</div>
-          <div class="ring-sub">Macro %</div>
-        </div>
+      <div class="macro-box">
+        <div class="macro-value" id="tot-pro">0g</div>
+        <div class="macro-label">Prot / <span id="target-pro-val">160</span>g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-pro"></div></div>
       </div>
-
-      <!-- ANELLO ACQUA -->
-      <div class="ring-card">
-        <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110">
-          <circle class="ring-bg" cx="55" cy="55" r="45"></circle>
-          <circle class="ring-fill" id="ring-water" cx="55" cy="55" r="45" stroke="var(--water-color)" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-        </svg>
-        <div class="ring-center-text">
-          <div class="ring-val" style="color: var(--water-color);" id="tot-water">0ml</div>
-          <div class="ring-sub">/ <span id="target-water-val">2500</span> ml</div>
-        </div>
+      <div class="macro-box">
+        <div class="macro-value" id="tot-fat">0g</div>
+        <div class="macro-label">Gras / <span id="target-fat-val">65</span>g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-fat"></div></div>
       </div>
-
-    </div>
-
-    <!-- LEGENDA DETTAGLIATA MACRO (G E TARGET) -->
-    <div class="macro-legend">
-      <div class="legend-item">
-        <span class="legend-dot" style="background: var(--pro-color);"></span>
-        <b>Prot:</b> <span id="tot-pro">0g</span> / <span id="target-pro-val">160</span>g
+      <div class="macro-box">
+        <div class="macro-value" id="tot-carb">0g</div>
+        <div class="macro-label">Carb / <span id="target-carb-val">180</span>g</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-carb"></div></div>
       </div>
-      <div class="legend-item">
-        <span class="legend-dot" style="background: var(--fat-color);"></span>
-        <b>Gras:</b> <span id="tot-fat">0g</span> / <span id="target-fat-val">65</span>g
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot" style="background: var(--carb-color);"></span>
-        <b>Carb:</b> <span id="tot-carb">0g</span> / <span id="target-carb-val">180</span>g
+      <div class="macro-box">
+        <div class="macro-value" style="color: var(--water-color);" id="tot-water">0ml</div>
+        <div class="macro-label">Acqua / <span id="target-water-val">2500</span>ml</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill progress-bar-water" id="bar-water"></div></div>
       </div>
     </div>
   </div>
@@ -507,7 +425,7 @@
       </div>
       <div>
         <h4>🎯 Target Giornalieri Personalizzabili</h4>
-        <p>Nella scheda in alto visualizzi il tuo cruscotto nutrizionale e di idratazione con anelli e grafico a ciambella. Clicca su <b>⚙️ Modifica</b> per aggiornare i tuoi obiettivi personali di Kcal, Proteine, Grassi, Carboidrati e Acqua (in ml).</p>
+        <p>Nella scheda in alto visualizzi il tuo cruscotto nutrizionale e di idratazione. Clicca su <b>⚙️ Modifica</b> per aggiornare i tuoi obiettivi personali di Kcal, Proteine, Grassi, Carboidrati e Acqua (in ml).</p>
 
         <h4>🍽️ Selezione Pasto Corrente</h4>
         <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack, Colazione, Pranzo, Cena) prima di registrare gli alimenti per mantenerli organizzati nel registro.</p>
@@ -541,8 +459,6 @@
     let log = JSON.parse(localStorage.getItem('diario_log')) || [];
     let savedFoods = JSON.parse(localStorage.getItem('diario_saved_foods')) || [];
     let historyLogs = JSON.parse(localStorage.getItem('diario_history')) || {};
-
-    const CIRCUMFERENCE = 2 * Math.PI * 45; // 282.7 px per r=45
 
     const todayObj = new Date();
     const formattedDateStr = todayObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -615,71 +531,12 @@
       });
     }
 
-    /* RENDERING GRAFICI A CIAMBELLA E ANELLI */
-    function renderRingsAndDonut(kcal, pro, fat, carb, water) {
-      // 1. Anello Kcal
-      const ringKcal = document.getElementById('ring-kcal');
-      const ratioKcal = Math.min(1.0, kcal / TARGETS.kcal);
-      const offsetKcal = CIRCUMFERENCE * (1 - ratioKcal);
-      ringKcal.style.strokeDashoffset = offsetKcal;
-
-      if (kcal / TARGETS.kcal <= 0.85) {
-        ringKcal.style.stroke = '#00ff66';
-      } else if (kcal / TARGETS.kcal <= 1.0) {
-        ringKcal.style.stroke = '#ffcc00';
-      } else {
-        ringKcal.style.stroke = '#ff4444';
-      }
-
-      // 2. Anello Acqua
-      const ringWater = document.getElementById('ring-water');
-      const ratioWater = Math.min(1.0, water / TARGETS.water);
-      const offsetWater = CIRCUMFERENCE * (1 - ratioWater);
-      ringWater.style.strokeDashoffset = offsetWater;
-
-      if (water / TARGETS.water < 0.5) {
-        ringWater.style.stroke = '#ffcc00';
-      } else if (water / TARGETS.water < 1.0) {
-        ringWater.style.stroke = '#00bfff';
-      } else {
-        ringWater.style.stroke = '#00ff66';
-      }
-
-      // 3. Ciambella Distribuzione Macro (Proteine, Grassi, Carboidrati)
-      const proKcal = pro * 4;
-      const fatKcal = fat * 9;
-      const carbKcal = carb * 4;
-      const totMacroKcal = proKcal + fatKcal + carbKcal;
-
-      const donutPro = document.getElementById('macro-donut-pro');
-      const donutFat = document.getElementById('macro-donut-fat');
-      const donutCarb = document.getElementById('macro-donut-carb');
-
-      if (totMacroKcal === 0) {
-        donutPro.style.strokeDashoffset = CIRCUMFERENCE;
-        donutFat.style.strokeDashoffset = CIRCUMFERENCE;
-        donutCarb.style.strokeDashoffset = CIRCUMFERENCE;
-        document.getElementById('macro-pct-summary').innerText = '0%';
-      } else {
-        const pctPro = proKcal / totMacroKcal;
-        const pctFat = fatKcal / totMacroKcal;
-        const pctCarb = carbKcal / totMacroKcal;
-
-        const lenPro = CIRCUMFERENCE * pctPro;
-        const lenFat = CIRCUMFERENCE * pctFat;
-        const lenCarb = CIRCUMFERENCE * pctCarb;
-
-        donutPro.style.strokeDasharray = `${lenPro} ${CIRCUMFERENCE - lenPro}`;
-        donutPro.style.strokeDashoffset = 0;
-
-        donutFat.style.strokeDasharray = `${lenFat} ${CIRCUMFERENCE - lenFat}`;
-        donutFat.style.strokeDashoffset = -lenPro;
-
-        donutCarb.style.strokeDasharray = `${lenCarb} ${CIRCUMFERENCE - lenCarb}`;
-        donutCarb.style.strokeDashoffset = -(lenPro + lenFat);
-
-        document.getElementById('macro-pct-summary').innerText = `${Math.round(pctPro*100)}% P`;
-      }
+    function updateProgressBars(kcal, pro, fat, carb, water) {
+      document.getElementById('bar-kcal').style.width = Math.min(100, (kcal / TARGETS.kcal) * 100) + '%';
+      document.getElementById('bar-pro').style.width = Math.min(100, (pro / TARGETS.pro) * 100) + '%';
+      document.getElementById('bar-fat').style.width = Math.min(100, (fat / TARGETS.fat) * 100) + '%';
+      document.getElementById('bar-carb').style.width = Math.min(100, (carb / TARGETS.carb) * 100) + '%';
+      document.getElementById('bar-water').style.width = Math.min(100, (water / TARGETS.water) * 100) + '%';
     }
 
     function saveAndRender() {
@@ -713,6 +570,7 @@
 
             const li = document.createElement('li');
             
+            // Etichetta specifica per il testo dell'elemento
             let itemText = `<b>${item.name}</b>`;
             if (item.kcal > 0) itemText += ` (${item.kcal} kcal)`;
             if (item.waterMl > 0 && !item.kcal) itemText += ` (${item.waterMl} ml)`;
@@ -740,7 +598,7 @@
       document.getElementById('tot-carb').innerText = carb + 'g';
       document.getElementById('tot-water').innerText = acquaTot + 'ml';
 
-      renderRingsAndDonut(kcal, pro, fat, carb, acquaTot);
+      updateProgressBars(kcal, pro, fat, carb, acquaTot);
       renderSavedFoods();
     }
 
@@ -806,6 +664,7 @@
       const newName = prompt('Modifica descrizione:', item.name);
       if (newName === null) return;
       
+      // Se è solo un elemento acqua pura (0 kcal)
       if (item.waterMl > 0 && (!item.kcal || item.kcal === 0)) {
         const newWater = prompt('Modifica quantità acqua in ml:', item.waterMl);
         if (newWater !== null) {
