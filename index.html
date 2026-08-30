@@ -9,6 +9,7 @@
       --bg: #121212;
       --card: #1e1e1e;
       --accent: #00ff66;
+      --water-color: #00bfff;
       --text: #ffffff;
       --subtext: #aaaaaa;
       --border: #333333;
@@ -104,17 +105,17 @@
     }
     .grid-macros {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
       text-align: center;
     }
     .macro-box {
       background: #2a2a2a;
-      padding: 10px 5px;
+      padding: 10px 4px;
       border-radius: 8px;
     }
-    .macro-value { font-size: 1.1rem; font-weight: bold; color: var(--accent); }
-    .macro-label { font-size: 0.75rem; color: var(--subtext); }
+    .macro-value { font-size: 1rem; font-weight: bold; color: var(--accent); }
+    .macro-label { font-size: 0.7rem; color: var(--subtext); }
     
     .progress-bar-bg {
       background: #333;
@@ -129,6 +130,9 @@
       height: 100%;
       width: 0%;
       transition: width 0.3s ease;
+    }
+    .progress-bar-water {
+      background: var(--water-color);
     }
 
     .quick-buttons {
@@ -205,11 +209,11 @@
 
     .target-summary-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
       text-align: center;
       margin-top: 10px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       background: #2a2a2a;
       padding: 8px;
       border-radius: 8px;
@@ -287,6 +291,7 @@
       <div>🥩 <b id="box-target-pro">160</b>g P</div>
       <div>🥑 <b id="box-target-fat">65</b>g G</div>
       <div>🍞 <b id="box-target-carb">180</b>g C</div>
+      <div>💧 <b id="box-target-water">2500</b> ml</div>
     </div>
     
     <!-- CAMPI FORM NASCOSTI PER MODIFICA -->
@@ -299,11 +304,12 @@
         <input type="number" id="target-fat-input" placeholder="Gras (g)">
         <input type="number" id="target-carb-input" placeholder="Carb (g)">
       </div>
+      <input type="number" id="target-water-input" placeholder="Acqua (ml)">
       <button class="btn-action" onclick="saveCustomTargets()">Salva Nuovi Target</button>
     </div>
   </div>
 
-  <!-- DASHBOARD MACRO CON TARGET -->
+  <!-- DASHBOARD MACRO E ACQUA CON TARGET -->
   <div class="card">
     <div class="grid-macros">
       <div class="macro-box">
@@ -326,6 +332,11 @@
         <div class="macro-label">Carb / <span id="target-carb-val">180</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-carb"></div></div>
       </div>
+      <div class="macro-box">
+        <div class="macro-value" style="color: var(--water-color);" id="tot-water">0ml</div>
+        <div class="macro-label">Acqua / <span id="target-water-val">2500</span>ml</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill progress-bar-water" id="bar-water"></div></div>
+      </div>
     </div>
   </div>
 
@@ -344,14 +355,14 @@
   <div class="card">
     <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
-      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3)">🥤 Shaker Whey (2 cup + Creatina)</button>
-      <button onclick="addQuick('Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina)', 0, 0, 0, 0)">⚡ Pre-Workout (Citrullina + Beta-A. + Betaina)</button>
+      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3, 500)">🥤 Shaker Whey (2 cup + Creatina + 500ml H2O)</button>
+      <button onclick="addQuick('Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)', 0, 0, 0, 0, 400)">⚡ Pre-Workout (+ 400ml H2O)</button>
       <button onclick="addQuick('Noci Macadamia (10 pz / ~25g)', 180, 2, 19, 3)">🌰 Noci Macadamia (10 pz)</button>
       <button onclick="addQuick('Yogurt Greco 0% (150g) + Whey (1 cup)', 160, 23, 0, 8)">🥣 Yogurt Greco 0% + Whey</button>
       <button onclick="addQuick('Fiocchi di Latte (200g)', 180, 24, 8, 3)">🧀 Fiocchi di Latte (200g)</button>
       <button onclick="addQuick('Mirtilli (250g)', 140, 2, 1, 35)">🫐 Mirtilli Fresh (250g)</button>
       <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z</button>
-      <button onclick="addQuick('Acqua (500ml)', 0, 0, 0, 0)">💧 Acqua (+500ml)</button>
+      <button onclick="addQuick('Acqua (500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
     </div>
 
     <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -360,18 +371,19 @@
         <option value="">-- Seleziona un alimento --</option>
         <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
         <optgroup label="🍽️ Alimenti predefiniti">
-          <option value="Uovo Sodo (1 pz intero)|75|7|5|0">🥚 Uovo Sodo (1 pz intero)</option>
-          <option value="Tonno al naturale (1 scatolette ~56g sgocciolato)|60|14|1|0">🐟 Tonno al naturale (1 scatoletta)</option>
-          <option value="Pollo o son desto (Petto 200g + Patate 250g)|550|55|15|45">🍗 Pollo o son desto (Petto 200g + Patate 250g)</option>
-          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85">🍝 Spaghetti / Pasta (100g secchi)</option>
-          <option value="Fagioli Bud Spencer (Fagioli 250g + Salsiccia)|550|30|25|45">🫘 Fagioli Bud Spencer (250g + Salsiccia)</option>
-          <option value="Piadina con Prosciutto Cotto (80g)|450|20|18|50">🌮 Piadina con Prosciutto Cotto (80g)</option>
-          <option value="Piadina con Prosciutto Crudo (80g)|470|22|19|50">🌮 Piadina con Prosciutto Crudo (80g)</option>
-          <option value="Pollo allo Spiedo (1/2 petto ~200g)|350|38|12|0">🍗 Pollo allo Spiedo (1/2 petto ~200g)</option>
-          <option value="Pizza al Trancio (1 trancio)|400|14|12|55">🍕 Pizza al Trancio (1 trancio)</option>
-          <option value="Pizza Classica (1 intera)|800|28|22|115">🍕 Pizza Classica (1 intera)</option>
-          <option value="Sgombro in scatola (120g)|240|25|15|0">🐟 Sgombro in scatola (120g)</option>
-          <option value="Sushi (Pasto medio ~12-14 pz)|650|30|12|95">🍣 Sushi (Pasto medio ~12-14 pz)</option>
+          <option value="Salmone Grigliato (150g)|280|30|18|0|0">🐟 Salmone Grigliato (150g)</option>
+          <option value="Uovo Sodo (1 pz intero)|75|7|5|0|0">🥚 Uovo Sodo (1 pz intero)</option>
+          <option value="Tonno al naturale (1 scatolette ~56g sgocciolato)|60|14|1|0|0">🐟 Tonno al naturale (1 scatoletta)</option>
+          <option value="Pollo o son desto (Petto 200g + Patate 250g)|550|55|15|45|0">🍗 Pollo o son desto (Petto 200g + Patate 250g)</option>
+          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">🍝 Spaghetti / Pasta (100g secchi)</option>
+          <option value="Fagioli Bud Spencer (Fagioli 250g + Salsiccia)|550|30|25|45|0">🫘 Fagioli Bud Spencer (250g + Salsiccia)</option>
+          <option value="Piadina con Prosciutto Cotto (80g)|450|20|18|50|0">🌮 Piadina con Prosciutto Cotto (80g)</option>
+          <option value="Piadina con Prosciutto Crudo (80g)|470|22|19|50|0">🌮 Piadina con Prosciutto Crudo (80g)</option>
+          <option value="Pollo allo Spiedo (1/2 petto ~200g)|350|38|12|0|0">🍗 Pollo allo Spiedo (1/2 petto ~200g)</option>
+          <option value="Pizza al Trancio (1 trancio)|400|14|12|55|0">🍕 Pizza al Trancio (1 trancio)</option>
+          <option value="Pizza Classica (1 intera)|800|28|22|115|0">🍕 Pizza Classica (1 intera)</option>
+          <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
+          <option value="Sushi (Pasto medio ~12-14 pz)|650|30|12|95|0">🍣 Sushi (Pasto medio ~12-14 pz)</option>
         </optgroup>
       </select>
       <select id="portion-multiplier" style="flex: 1;">
@@ -394,6 +406,7 @@
     <input type="number" id="custom-pro" placeholder="Proteine (g)">
     <input type="number" id="custom-fat" placeholder="Grassi (g)">
     <input type="number" id="custom-carb" placeholder="Carboidrati (g)">
+    <input type="number" id="custom-water" placeholder="Acqua opzionale (ml)">
     <button class="btn-action" onclick="addCustom()">Aggiungi e Salva nel Menu</button>
   </div>
 
@@ -412,7 +425,7 @@
       </div>
       <div>
         <h4>🎯 Target Giornalieri Personalizzabili</h4>
-        <p>Nella scheda in alto visualizzi il tuo cruscotto nutrizionale. Clicca su <b>⚙️ Modifica</b> per aggiornare i tuoi obiettivi personali di Kcal, Proteine, Grassi e Carboidrati.</p>
+        <p>Nella scheda in alto visualizzi il tuo cruscotto nutrizionale e di idratazione. Clicca su <b>⚙️ Modifica</b> per aggiornare i tuoi obiettivi personali di Kcal, Proteine, Grassi, Carboidrati e Acqua (in ml).</p>
 
         <h4>🍽️ Selezione Pasto Corrente</h4>
         <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack, Colazione, Pranzo, Cena) prima di registrare gli alimenti per mantenerli organizzati nel registro.</p>
@@ -420,8 +433,8 @@
         <h4>⚡ Modalità di Inserimento</h4>
         <ul>
           <li><b>Quick Add:</b> Tocca un pulsante rapido per inserire alimenti frequenti o acqua.</li>
-          <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta la quantità (es. 2x per 2 uova sode o 2 scatolette di tonno).</li>
-          <li><b>Inserimento Libero:</b> Digita nome e macro di un nuovo cibo; verrà salvato automaticamente nel menu per i prossimi utilizzi (contrassegnato da ⭐).</li>
+          <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta la quantità.</li>
+          <li><b>Inserimento Libero:</b> Digita nome e dati di un nuovo cibo; verrà salvato automaticamente nel menu per i prossimi utilizzi (contrassegnato da ⭐).</li>
         </ul>
 
         <h4>📋 Gestione Registro e Barra Superiore</h4>
@@ -441,10 +454,9 @@
   </div>
 
   <script>
-    let TARGETS = JSON.parse(localStorage.getItem('diario_targets')) || { kcal: 2000, pro: 160, fat: 65, carb: 180 };
+    let TARGETS = JSON.parse(localStorage.getItem('diario_targets')) || { kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500 };
 
     let log = JSON.parse(localStorage.getItem('diario_log')) || [];
-    let acquaTot = parseInt(localStorage.getItem('diario_acqua')) || 0;
     let savedFoods = JSON.parse(localStorage.getItem('diario_saved_foods')) || [];
     let historyLogs = JSON.parse(localStorage.getItem('diario_history')) || {};
 
@@ -464,20 +476,25 @@
     }
 
     function updateTargetDisplays() {
+      if (!TARGETS.water) TARGETS.water = 2500; // Valore di fallback se mancante da vecchio salvataggio
+
       document.getElementById('target-kcal-val').innerText = TARGETS.kcal;
       document.getElementById('target-pro-val').innerText = TARGETS.pro;
       document.getElementById('target-fat-val').innerText = TARGETS.fat;
       document.getElementById('target-carb-val').innerText = TARGETS.carb;
+      document.getElementById('target-water-val').innerText = TARGETS.water;
 
       document.getElementById('box-target-kcal').innerText = TARGETS.kcal;
       document.getElementById('box-target-pro').innerText = TARGETS.pro;
       document.getElementById('box-target-fat').innerText = TARGETS.fat;
       document.getElementById('box-target-carb').innerText = TARGETS.carb;
+      document.getElementById('box-target-water').innerText = TARGETS.water;
 
       document.getElementById('target-kcal-input').value = TARGETS.kcal;
       document.getElementById('target-pro-input').value = TARGETS.pro;
       document.getElementById('target-fat-input').value = TARGETS.fat;
       document.getElementById('target-carb-input').value = TARGETS.carb;
+      document.getElementById('target-water-input').value = TARGETS.water;
     }
 
     function toggleTargetInputs() {
@@ -490,9 +507,10 @@
       const p = parseInt(document.getElementById('target-pro-input').value);
       const f = parseInt(document.getElementById('target-fat-input').value);
       const c = parseInt(document.getElementById('target-carb-input').value);
+      const w = parseInt(document.getElementById('target-water-input').value);
 
-      if (k && p && f && c) {
-        TARGETS = { kcal: k, pro: p, fat: f, carb: c };
+      if (k && p && f && c && w) {
+        TARGETS = { kcal: k, pro: p, fat: f, carb: c, water: w };
         localStorage.setItem('diario_targets', JSON.stringify(TARGETS));
         updateTargetDisplays();
         toggleTargetInputs();
@@ -507,26 +525,26 @@
       optgroup.innerHTML = '';
       savedFoods.forEach(food => {
         const option = document.createElement('option');
-        option.value = `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}`;
+        option.value = `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.waterMl || 0}`;
         option.innerText = `⭐ ${food.name}`;
         optgroup.appendChild(option);
       });
     }
 
-    function updateProgressBars(kcal, pro, fat, carb) {
+    function updateProgressBars(kcal, pro, fat, carb, water) {
       document.getElementById('bar-kcal').style.width = Math.min(100, (kcal / TARGETS.kcal) * 100) + '%';
       document.getElementById('bar-pro').style.width = Math.min(100, (pro / TARGETS.pro) * 100) + '%';
       document.getElementById('bar-fat').style.width = Math.min(100, (fat / TARGETS.fat) * 100) + '%';
       document.getElementById('bar-carb').style.width = Math.min(100, (carb / TARGETS.carb) * 100) + '%';
+      document.getElementById('bar-water').style.width = Math.min(100, (water / TARGETS.water) * 100) + '%';
     }
 
     function saveAndRender() {
       localStorage.setItem('diario_log', JSON.stringify(log));
-      localStorage.setItem('diario_acqua', acquaTot);
       localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
       localStorage.setItem('diario_history', JSON.stringify(historyLogs));
       
-      let kcal = 0, pro = 0, fat = 0, carb = 0;
+      let kcal = 0, pro = 0, fat = 0, carb = 0, acquaTot = 0;
       const container = document.getElementById('log-container');
       container.innerHTML = '';
 
@@ -544,14 +562,15 @@
           const ul = document.createElement('ul');
           mealItems.forEach(item => {
             const originalIndex = log.indexOf(item);
-            kcal += item.kcal;
-            pro += item.pro;
-            fat += item.fat;
-            carb += item.carb;
+            kcal += item.kcal || 0;
+            pro += item.pro || 0;
+            fat += item.fat || 0;
+            carb += item.carb || 0;
+            if (item.waterMl) acquaTot += item.waterMl;
 
             const li = document.createElement('li');
             li.innerHTML = `
-              <span><span class="time-badge">[${item.time || '-'}]</span> <b>${item.name}</b> (${item.kcal} kcal)</span>
+              <span><span class="time-badge">[${item.time || '-'}]</span> <b>${item.name}</b> ${item.kcal ? `(${item.kcal} kcal)` : ''}</span>
               <div class="item-actions">
                 <button onclick="editItem(${originalIndex})" style="background: #333;">✏️</button>
                 <button onclick="removeItem(${originalIndex})" style="background: #cf6679; color:#000;">✕</button>
@@ -565,9 +584,13 @@
 
       if (acquaTot > 0) {
         const waterDiv = document.createElement('div');
-        waterDiv.style.marginTop = '10px';
+        waterDiv.style.marginTop = '15px';
+        waterDiv.style.padding = '8px';
+        waterDiv.style.background = '#2a2a2a';
+        waterDiv.style.borderRadius = '6px';
         waterDiv.style.fontSize = '0.9rem';
-        waterDiv.innerHTML = `💧 <b>Totale Acqua Ingerita:</b> ${acquaTot} ml`;
+        waterDiv.style.borderLeft = '4px solid var(--water-color)';
+        waterDiv.innerHTML = `💧 <b>Totale Acqua Ingerita:</b> ${acquaTot} ml / ${TARGETS.water} ml`;
         container.appendChild(waterDiv);
       }
 
@@ -575,18 +598,15 @@
       document.getElementById('tot-pro').innerText = pro + 'g';
       document.getElementById('tot-fat').innerText = fat + 'g';
       document.getElementById('tot-carb').innerText = carb + 'g';
+      document.getElementById('tot-water').innerText = acquaTot + 'ml';
 
-      updateProgressBars(kcal, pro, fat, carb);
+      updateProgressBars(kcal, pro, fat, carb, acquaTot);
       renderSavedFoods();
     }
 
-    function addQuick(name, kcal, pro, fat, carb) {
-      if (name.includes('Acqua')) {
-        acquaTot += 500;
-      } else {
-        const category = document.getElementById('meal-category').value;
-        log.push({ name, kcal, pro, fat, carb, category, time: getCurrentTimeStr() });
-      }
+    function addQuick(name, kcal, pro, fat, carb, waterMl = 0) {
+      const category = document.getElementById('meal-category').value;
+      log.push({ name, kcal, pro, fat, carb, waterMl, category, time: getCurrentTimeStr() });
       saveAndRender();
     }
 
@@ -596,7 +616,7 @@
       const val = select.value;
       if (!val) return;
 
-      const [name, kcal, pro, fat, carb] = val.split('|');
+      const [name, kcal, pro, fat, carb, waterMl] = val.split('|');
       const category = document.getElementById('meal-category').value;
       
       log.push({
@@ -605,6 +625,7 @@
         pro: Math.round(parseInt(pro) * mult),
         fat: Math.round(parseInt(fat) * mult),
         carb: Math.round(parseInt(carb) * mult),
+        waterMl: Math.round(parseInt(waterMl || 0) * mult),
         category,
         time: getCurrentTimeStr()
       });
@@ -621,12 +642,13 @@
       const pro = parseInt(document.getElementById('custom-pro').value) || 0;
       const fat = parseInt(document.getElementById('custom-fat').value) || 0;
       const carb = parseInt(document.getElementById('custom-carb').value) || 0;
+      const waterMl = parseInt(document.getElementById('custom-water').value) || 0;
       const category = document.getElementById('meal-category').value;
 
-      log.push({ name: nameInput, kcal, pro, fat, carb, category, time: getCurrentTimeStr() });
+      log.push({ name: nameInput, kcal, pro, fat, carb, waterMl, category, time: getCurrentTimeStr() });
 
       if (!savedFoods.some(f => f.name.toLowerCase() === nameInput.toLowerCase())) {
-        savedFoods.push({ name: nameInput, kcal, pro, fat, carb });
+        savedFoods.push({ name: nameInput, kcal, pro, fat, carb, waterMl });
       }
 
       saveAndRender();
@@ -636,25 +658,34 @@
       document.getElementById('custom-pro').value = '';
       document.getElementById('custom-fat').value = '';
       document.getElementById('custom-carb').value = '';
+      document.getElementById('custom-water').value = '';
     }
 
     function editItem(index) {
       const item = log[index];
       const newName = prompt('Modifica nome e porzione:', item.name);
       if (newName === null) return;
-      const newKcal = prompt('Modifica Calorie (kcal):', item.kcal);
-      const newPro = prompt('Modifica Proteine (g):', item.pro);
-      const newFat = prompt('Modifica Grassi (g):', item.fat);
-      const newCarb = prompt('Modifica Carboidrati (g):', item.carb);
+      
+      if (item.waterMl > 0 && !item.kcal) {
+        const newWater = prompt('Modifica quantità acqua in ml:', item.waterMl);
+        log[index] = { ...item, name: newName || item.name, waterMl: parseInt(newWater) || 0 };
+      } else {
+        const newKcal = prompt('Modifica Calorie (kcal):', item.kcal);
+        const newPro = prompt('Modifica Proteine (g):', item.pro);
+        const newFat = prompt('Modifica Grassi (g):', item.fat);
+        const newCarb = prompt('Modifica Carboidrati (g):', item.carb);
+        const newWater = prompt('Modifica Acqua contenuta (ml):', item.waterMl || 0);
 
-      log[index] = {
-        ...item,
-        name: newName || item.name,
-        kcal: parseInt(newKcal) || 0,
-        pro: parseInt(newPro) || 0,
-        fat: parseInt(newFat) || 0,
-        carb: parseInt(newCarb) || 0
-      };
+        log[index] = {
+          ...item,
+          name: newName || item.name,
+          kcal: parseInt(newKcal) || 0,
+          pro: parseInt(newPro) || 0,
+          fat: parseInt(newFat) || 0,
+          carb: parseInt(newCarb) || 0,
+          waterMl: parseInt(newWater) || 0
+        };
+      }
       saveAndRender();
     }
 
@@ -665,6 +696,7 @@
 
     function resetDay() {
       if (confirm('Vuoi archiviare la giornata nello storico e iniziare un nuovo diario pulito?')) {
+        let acquaTot = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
         if (log.length > 0) {
           historyLogs[isoDateStr] = {
             date: formattedDateStr,
@@ -674,12 +706,12 @@
               kcal: document.getElementById('tot-kcal').innerText,
               pro: document.getElementById('tot-pro').innerText,
               fat: document.getElementById('tot-fat').innerText,
-              carb: document.getElementById('tot-carb').innerText
+              carb: document.getElementById('tot-carb').innerText,
+              water: acquaTot + 'ml'
             }
           };
         }
         log = [];
-        acquaTot = 0;
         saveAndRender();
       }
     }
@@ -706,6 +738,7 @@
           div.innerHTML = `
             <b>${entry.date}</b><br>
             Totale: ${entry.summary.kcal} kcal | Prot: ${entry.summary.pro} | Grassi: ${entry.summary.fat} | Carb: ${entry.summary.carb}
+            ${entry.acquaTot ? ` | Acqua: ${entry.acquaTot} ml` : ''}
           `;
           container.appendChild(div);
         });
@@ -715,7 +748,7 @@
     }
 
     function exportData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, acquaTot, savedFoods, historyLogs, TARGETS }));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, savedFoods, historyLogs, TARGETS }));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `diario_fit_backup_${isoDateStr}.json`);
@@ -738,7 +771,6 @@
             if (content.savedFoods) savedFoods = content.savedFoods;
             if (content.historyLogs) historyLogs = content.historyLogs;
             if (content.log) log = content.log;
-            if (content.acquaTot) acquaTot = content.acquaTot;
             if (content.TARGETS) {
               TARGETS = content.TARGETS;
               updateTargetDisplays();
@@ -758,13 +790,13 @@
       let pro = document.getElementById('tot-pro').innerText;
       let fat = document.getElementById('tot-fat').innerText;
       let carb = document.getElementById('tot-carb').innerText;
+      let acquaTot = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
 
       let report = `Ecco il mio report del ${formattedDateStr}:\n`;
       log.forEach(item => {
-        report += `- [${item.time || '-'}] [${item.category || 'Generico'}] ${item.name} (${item.kcal} kcal)\n`;
+        report += `- [${item.time || '-'}] [${item.category || 'Generico'}] ${item.name} ${item.kcal ? `(${item.kcal} kcal)` : ''}\n`;
       });
-      if (acquaTot > 0) report += `- Acqua: ${acquaTot} ml\n`;
-      report += `\nTOTALE STIMATO: ${kcal} Kcal | Prot: ${pro} | Grassi: ${fat} | Carb: ${carb}`;
+      report += `\nTOTALE STIMATO: ${kcal} Kcal | Prot: ${pro} | Grassi: ${fat} | Carb: ${carb} | Acqua: ${acquaTot}/${TARGETS.water} ml`;
 
       navigator.clipboard.writeText(report);
       alert('Report copiato negli appunti!');
@@ -775,6 +807,7 @@
       let pro = document.getElementById('tot-pro').innerText;
       let fat = document.getElementById('tot-fat').innerText;
       let carb = document.getElementById('tot-carb').innerText;
+      let acquaTot = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
 
       let printWindow = window.open('', '_blank');
       let itemsHtml = log.map(item => `
@@ -782,10 +815,10 @@
           <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">${item.time || '-'}</td>
           <td style="padding: 8px; border-bottom: 1px solid #ddd;"><b>${item.category || '-'}</b></td>
           <td style="padding: 8px; border-bottom: 1px solid #ddd;">${item.name}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.kcal} kcal</td>
-          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.pro}g</td>
-          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.fat}g</td>
-          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.carb}g</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.kcal || 0} kcal</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.pro || 0}g</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.fat || 0}g</td>
+          <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.carb || 0}g</td>
         </tr>
       `).join('');
 
@@ -809,7 +842,7 @@
           <h1>💪 Diario FIT by Paolo</h1>
           <div class="date">${formattedDateStr}</div>
           <div class="summary-box">
-            <div><b>Kcal:</b> ${kcal}</div><div><b>Prot:</b> ${pro}</div><div><b>Gras:</b> ${fat}</div><div><b>Carb:</b> ${carb}</div>
+            <div><b>Kcal:</b> ${kcal}</div><div><b>Prot:</b> ${pro}</div><div><b>Gras:</b> ${fat}</div><div><b>Carb:</b> ${carb}</div><div><b>Acqua:</b> ${acquaTot}/${TARGETS.water} ml</div>
           </div>
           <table>
             <thead><tr><th>Ora</th><th>Pasto</th><th>Alimento</th><th class="num">Kcal</th><th class="num">Prot</th><th class="num">Gras</th><th class="num">Carb</th></tr></thead>
