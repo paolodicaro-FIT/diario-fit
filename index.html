@@ -120,19 +120,16 @@
     .progress-bar-bg {
       background: #333;
       border-radius: 4px;
-      height: 6px;
+      height: 8px;
       width: 100%;
-      margin-top: 5px;
+      margin-top: 6px;
       overflow: hidden;
     }
     .progress-bar-fill {
-      background: var(--accent);
       height: 100%;
       width: 0%;
-      transition: width 0.3s ease;
-    }
-    .progress-bar-water {
-      background: var(--water-color);
+      transition: width 0.3s ease, background-color 0.3s ease;
+      border-radius: 4px;
     }
 
     .quick-buttons {
@@ -335,7 +332,7 @@
       <div class="macro-box">
         <div class="macro-value" style="color: var(--water-color);" id="tot-water">0ml</div>
         <div class="macro-label">Acqua / <span id="target-water-val">2500</span>ml</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill progress-bar-water" id="bar-water"></div></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-water"></div></div>
       </div>
     </div>
   </div>
@@ -531,12 +528,40 @@
       });
     }
 
+    function updateSingleBar(barElementId, currentVal, targetVal, isWater = false) {
+      const bar = document.getElementById(barElementId);
+      const pct = Math.min(100, (currentVal / targetVal) * 100);
+      bar.style.width = pct + '%';
+
+      const ratio = currentVal / targetVal;
+
+      if (!isWater) {
+        // Logica Colori Nutrienti (Verde -> Giallo -> Rosso se si supera)
+        if (ratio <= 0.85) {
+          bar.style.backgroundColor = '#00ff66'; // Verde
+        } else if (ratio <= 1.0) {
+          bar.style.backgroundColor = '#ffcc00'; // Giallo
+        } else {
+          bar.style.backgroundColor = '#ff4444'; // Rosso (Sforato)
+        }
+      } else {
+        // Logica Colori Acqua (Giallo -> Azzurro -> Verde quando si raggiunge il target)
+        if (ratio < 0.5) {
+          bar.style.backgroundColor = '#ffcc00'; // Giallo (Incompleto)
+        } else if (ratio < 1.0) {
+          bar.style.backgroundColor = '#00bfff'; // Azzurro brillante
+        } else {
+          bar.style.backgroundColor = '#00ff66'; // Verde (Target Acqua raggiunto!)
+        }
+      }
+    }
+
     function updateProgressBars(kcal, pro, fat, carb, water) {
-      document.getElementById('bar-kcal').style.width = Math.min(100, (kcal / TARGETS.kcal) * 100) + '%';
-      document.getElementById('bar-pro').style.width = Math.min(100, (pro / TARGETS.pro) * 100) + '%';
-      document.getElementById('bar-fat').style.width = Math.min(100, (fat / TARGETS.fat) * 100) + '%';
-      document.getElementById('bar-carb').style.width = Math.min(100, (carb / TARGETS.carb) * 100) + '%';
-      document.getElementById('bar-water').style.width = Math.min(100, (water / TARGETS.water) * 100) + '%';
+      updateSingleBar('bar-kcal', kcal, TARGETS.kcal);
+      updateSingleBar('bar-pro', pro, TARGETS.pro);
+      updateSingleBar('bar-fat', fat, TARGETS.fat);
+      updateSingleBar('bar-carb', carb, TARGETS.carb);
+      updateSingleBar('bar-water', water, TARGETS.water, true);
     }
 
     function saveAndRender() {
@@ -570,7 +595,6 @@
 
             const li = document.createElement('li');
             
-            // Etichetta specifica per il testo dell'elemento
             let itemText = `<b>${item.name}</b>`;
             if (item.kcal > 0) itemText += ` (${item.kcal} kcal)`;
             if (item.waterMl > 0 && !item.kcal) itemText += ` (${item.waterMl} ml)`;
@@ -664,7 +688,6 @@
       const newName = prompt('Modifica descrizione:', item.name);
       if (newName === null) return;
       
-      // Se è solo un elemento acqua pura (0 kcal)
       if (item.waterMl > 0 && (!item.kcal || item.kcal === 0)) {
         const newWater = prompt('Modifica quantità acqua in ml:', item.waterMl);
         if (newWater !== null) {
