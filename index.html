@@ -512,7 +512,6 @@
     const isoDateStr = todayObj.toISOString().split('T')[0];
     document.getElementById('display-date').innerText = formattedDateStr;
 
-    // Gestione persistenza e cambio data automatico
     let lastActiveDate = localStorage.getItem('diario_last_date');
     let log = JSON.parse(localStorage.getItem('diario_log')) || [];
 
@@ -654,15 +653,26 @@
       });
     }
 
-    function getProgressColor(percent, isWater = false) {
-      let hue;
-      if (isWater) {
-        hue = Math.min(190, Math.max(30, (percent / 100) * 160 + 30));
+    function getProgressColor(percent, type = 'positive') {
+      if (type === 'water') {
+        let hue = Math.min(190, Math.max(30, (percent / 100) * 160 + 30));
         let lightness = percent < 30 ? 50 : 45;
         return `hsl(${hue}, 90%, ${lightness}%)`;
-      } else {
-        // Colore progressivo dinamico originale (da rosso/arancio verso il verde brillante o ambra vivace)
-        hue = Math.min(120, Math.max(0, (percent / 100) * 120));
+      } 
+      else if (type === 'negative') {
+        // PER KCAL, GRASSI E CARBOIDRATI: Se superi il 100% (sforamento), diventa rosso fisso di avviso.
+        if (percent > 100) {
+          return '#e53935'; // Rosso allarme
+        }
+        // Fino al 100%, sfumatura ambrata/calda riposante (da toni caldi scuri verso il pieno ambrato)
+        let hue = 38; // Tonalità ambrata
+        let lightness = Math.min(50, Math.max(25, (percent / 100) * 25 + 25));
+        let saturation = 90;
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      } 
+      else {
+        // PER LE PROTEINE (Logica positiva originaria): da rosso/arancio verso il verde brillante o ambra
+        let hue = Math.min(120, Math.max(0, (percent / 100) * 120));
         let lightness = percent >= 100 ? 50 : 45;
         return `hsl(${hue}, 90%, ${lightness}%)`;
       }
@@ -677,23 +687,23 @@
 
       const barKcal = document.getElementById('bar-kcal');
       barKcal.style.width = Math.min(100, pKcal) + '%';
-      barKcal.style.backgroundColor = getProgressColor(pKcal);
+      barKcal.style.backgroundColor = getProgressColor(pKcal, 'negative');
 
       const barPro = document.getElementById('bar-pro');
       barPro.style.width = Math.min(100, pPro) + '%';
-      barPro.style.backgroundColor = getProgressColor(pPro);
+      barPro.style.backgroundColor = getProgressColor(pPro, 'positive');
 
       const barFat = document.getElementById('bar-fat');
       barFat.style.width = Math.min(100, pFat) + '%';
-      barFat.style.backgroundColor = getProgressColor(pFat);
+      barFat.style.backgroundColor = getProgressColor(pFat, 'negative');
 
       const barCarb = document.getElementById('bar-carb');
       barCarb.style.width = Math.min(100, pCarb) + '%';
-      barCarb.style.backgroundColor = getProgressColor(pCarb);
+      barCarb.style.backgroundColor = getProgressColor(pCarb, 'negative');
 
       const barWater = document.getElementById('bar-water');
       barWater.style.width = Math.min(100, pWater) + '%';
-      barWater.style.backgroundColor = getProgressColor(pWater, true);
+      barWater.style.backgroundColor = getProgressColor(pWater, 'water');
     }
 
     function saveAndRender() {
@@ -979,7 +989,6 @@
       window.print();
     }
 
-    // Inizializzazione all'avvio
     updateTargetDisplays();
     saveAndRender();
   </script>
