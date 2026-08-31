@@ -482,21 +482,21 @@
         <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
       </div>
       <div>
-        <h4>🎯 Target Giornalieri e Calcolatore</h4>
-        <p>Puoi impostare manualmente i tuoi target oppure cliccare su <b>🎯 Calcola Target</b> per ricavare in automatico calorie e macro ideali inserendo i tuoi dati fisici e il tuo obiettivo (mantenimento, dimagrimento o massa).</p>
+        <h4>🎯 Target Giornalieri e Calcolatore Automatico</h4>
+        <p>Puoi impostare manualmente i tuoi target tramite il tasto <b>⚙️ Modifica</b> oppure cliccare su <b>🎯 Calcola Target</b> per ricavare in automatico calorie e macro ideali tramite la formula di Mifflin-St Jeor inserendo i tuoi dati fisici e l'obiettivo desiderato (mantenimento, dimagrimento o massa).</p>
 
         <h4>🍽️ Selezione Pasto Corrente</h4>
-        <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack, Colazione, Pranzo, Cena) prima di registrare gli alimenti.</p>
+        <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack / Integrazione, Colazione, Pranzo, Cena) prima di registrare gli alimenti.</p>
 
         <h4>⚡ Modalità di Inserimento</h4>
         <ul>
-          <li><b>Quick Add:</b> Tocca un pulsante rapido per inserire alimenti frequenti o acqua.</li>
-          <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta la quantità.</li>
-          <li><b>Inserimento Libero:</b> Digita nome e dati di un nuovo cibo; verrà salvato automaticamente nel menu con ⭐.</li>
+          <li><b>Quick Add:</b> Tocca i pulsanti rapidi (inclusi gli shaker Whey, Post-Workout, Pre-Workout, snack e acqua) per registrare subito le voci frequenti con un solo tap.</li>
+          <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta il moltiplicatore di porzione (da 0.5x a 4x).</li>
+          <li><b>Inserimento Libero:</b> Digita nome e dati nutrizionali di un nuovo cibo; verrà registrato e salvato automaticamente nella lista personalizzata con ⭐.</li>
         </ul>
 
         <h4>📋 Gestione Registro e Barra Superiore</h4>
-        <p>Usa la barra dei pulsanti in alto per copiare il report, stampare in PDF, gestire lo storico o chiudere la giornata.</p>
+        <p>Usa la barra dei pulsanti in alto per copiare il report testuale, generare un PDF stampabile, visualizzare lo storico dei giorni passati, esportare/importare i dati di backup o chiudere la giornata corrente.</p>
       </div>
     </div>
   </div>
@@ -656,9 +656,16 @@
     }
 
     function getProgressColor(percent, isWater = false) {
-      if (isWater) return '#00bfff';
-      let hue = Math.min(120, Math.max(0, (percent / 100) * 120)); 
-      return `hsl(${hue}, 85%, 45%)`;
+      let hue;
+      if (isWater) {
+        // L'acqua passa da giallo/arancio (~30) a azzurro pieno (~190) man mano che ti avvicini al 100%
+        hue = Math.min(190, Math.max(30, (percent / 100) * 160 + 30));
+        let lightness = percent < 30 ? 50 : 45;
+        return `hsl(${hue}, 90%, ${lightness}%)`;
+      } else {
+        hue = Math.min(120, Math.max(0, (percent / 100) * 120)); 
+        return `hsl(${hue}, 85%, 45%)`;
+      }
     }
 
     function updateProgressBars(kcal, pro, fat, carb, water) {
