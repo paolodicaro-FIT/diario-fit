@@ -1,34 +1,22 @@
 # diario-fit
- Target Giornalieri Personalizzabili
 
-Nella scheda in alto visualizzi il tuo cruscotto nutrizionale. Clicca su ⚙️ Modifica per aggiornare i tuoi obiettivi personali di Kcal, Proteine, Grassi e Carboidrati.
+   Manuale d'Uso Diario FIT by Paolo
+🎯 Target Giornalieri e Calcolatore Automatico
+
+Puoi impostare manualmente i tuoi target tramite il tasto ⚙️ Modifica oppure cliccare su 🎯 Calcola Target per ricavare in automatico calorie e macro ideali tramite la formula di Mifflin-St Jeor inserendo i tuoi dati fisici e l'obiettivo desiderato (mantenimento, dimagrimento o massa).
 🍽️ Selezione Pasto Corrente
 
-Scegli dal menu a tendina Pasto Corrente la categoria (Snack, Colazione, Pranzo, Cena) prima di registrare gli alimenti per mantenerli organizzati nel registro.
+Scegli dal menu a tendina Pasto Corrente la categoria (Snack / Integrazione, Colazione, Pranzo, Cena) prima di registrare gli alimenti.
 ⚡ Modalità di Inserimento
 
     Quick Add:
-    Tocca un pulsante rapido per inserire alimenti frequenti o acqua.
+    Tocca i pulsanti rapidi (inclusi gli shaker Whey, Post-Workout, Pre-Workout, snack e acqua) per registrare subito le voci frequenti con un solo tap.
     Menu a Tendina + Moltiplicatore:
-    Seleziona un alimento dal menu e imposta la quantità (es. 2x per 2 uova sode o 2 scatolette di tonno).
+    Seleziona un alimento dal menu e imposta il moltiplicatore di porzione (da 0.5x a 4x).
     Inserimento Libero:
-    Digita nome e macro di un nuovo cibo; verrà salvato automaticamente nel menu per i prossimi utilizzi (contrassegnato da ⭐).
+    Digita nome e dati nutrizionali di un nuovo cibo; verrà registrato e salvato automaticamente nella lista personalizzata con ⭐.
 
 📋 Gestione Registro e Barra Superiore
 
-Usa la barra dei pulsanti in alto per accedere rapidamente alle funzioni principali:
+Usa la barra dei pulsanti in alto per copiare il report testuale, generare un PDF stampabile, visualizzare lo storico dei giorni passati, esportare/importare i dati di backup o chiudere la giornata corrente.
 
-    📋 Copia Report:
-    Copia l'intero diario negli appunti per incollarlo su Gemini o altre chat.
-    🖨️ Stampa PDF:
-    Genera una scheda stampabile o salvabile in PDF.
-    📂 Storico:
-    Mostra o nasconde i dettagli dei giorni passati archiviati.
-    💾 Esporta / 📥 Importa:
-    Salva o ripristina un backup in formato JSON.
-    🔄 Chiudi Giornata:
-    Archivia i dati correnti nello storico e azzera il registro per il giorno successivo.
-
-💾 Sicurezza Dati
-
-Tutti i dati rimangono riservati e salvati in locale nel tuo browser.
