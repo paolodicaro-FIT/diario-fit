@@ -660,18 +660,18 @@
         return `hsl(${hue}, 90%, ${lightness}%)`;
       } 
       else if (type === 'negative') {
-        // PER KCAL, GRASSI E CARBOIDRATI: Se superi il 100% (sforamento), diventa rosso fisso di avviso.
+        // PER KCAL, GRASSI E CARBOIDRATI: Se superi il 100% (sforamento), diventa rosso fisso.
         if (percent > 100) {
           return '#e53935'; // Rosso allarme
         }
-        // Fino al 100%, sfumatura ambrata/calda riposante (da toni caldi scuri verso il pieno ambrato)
-        let hue = 38; // Tonalità ambrata
-        let lightness = Math.min(50, Math.max(25, (percent / 100) * 25 + 25));
+        // Partono dal VERDE brillante (Hue 120) a 0% e sfumano dolcemente verso l'ambrato (Hue 40) man mano che ti avvicini al 100%
+        let hue = Math.max(40, 120 - (percent / 100) * 80);
+        let lightness = 45;
         let saturation = 90;
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       } 
       else {
-        // PER LE PROTEINE (Logica positiva originaria): da rosso/arancio verso il verde brillante o ambra
+        // PER LE PROTEINE (Logica positiva originaria): parte dal rosso/arancio e arriva al verde brillante
         let hue = Math.min(120, Math.max(0, (percent / 100) * 120));
         let lightness = percent >= 100 ? 50 : 45;
         return `hsl(${hue}, 90%, ${lightness}%)`;
