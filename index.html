@@ -8,7 +8,8 @@
     :root {
       --bg: #121212;
       --card: #1e1e1e;
-      --accent: #00ff66;
+      --accent: #ffb000;         /* 🌟 Tono Ambra caldo e riposante */
+      --accent-glow: rgba(255, 176, 0, 0.2);
       --water-color: #00bfff;
       --text: #ffffff;
       --subtext: #aaaaaa;
@@ -77,8 +78,8 @@
       transform: translateY(1px);
     }
     .win-btn-help {
-      background: linear-gradient(180deg, #008833 0%, #004411 100%);
-      border-color: #00ff66;
+      background: linear-gradient(180deg, #d97706 0%, #92400e 100%);
+      border-color: #ffb000;
       color: #fff;
     }
     .win-btn-danger {
@@ -557,7 +558,6 @@
       const activity = parseFloat(document.getElementById('calc-activity').value) || 1.55;
       const goal = document.getElementById('calc-goal').value;
 
-      // Formula Mifflin-St Jeor per BMR
       let bmr = (10 * weight) + (6.25 * height) - (5 * age);
       if (gender === 'male') {
         bmr += 5;
@@ -569,20 +569,19 @@
       let targetKcal = tdee;
 
       if (goal === 'cut') {
-        targetKcal *= 0.8; // Deficit 20%
+        targetKcal *= 0.8;
       } else if (goal === 'bulk') {
-        targetKcal *= 1.1; // Surplus 10%
+        targetKcal *= 1.1;
       }
 
       targetKcal = Math.round(targetKcal);
 
-      // Calcolo Macronutrienti stimati (es. Proteine 2g per kg, Grassi ~25% delle kcal, il resto Carboidrati)
       let targetPro = Math.round(weight * 2.0);
       let targetFat = Math.round((targetKcal * 0.25) / 9);
       let remainingKcalForCarb = targetKcal - ((targetPro * 4) + (targetFat * 9));
       let targetCarb = Math.max(50, Math.round(remainingKcalForCarb / 4));
-      let targetWater = weight * 35; // stima idratazione approssimativa in ml (es. 35ml per kg)
-      targetWater = Math.round(targetWater / 100) * 100; // arrotondato alle centinaia
+      let targetWater = weight * 35;
+      targetWater = Math.round(targetWater / 100) * 100;
 
       TARGETS = {
         kcal: targetKcal,
@@ -658,13 +657,14 @@
     function getProgressColor(percent, isWater = false) {
       let hue;
       if (isWater) {
-        // L'acqua passa da giallo/arancio (~30) a azzurro pieno (~190) man mano che ti avvicini al 100%
         hue = Math.min(190, Math.max(30, (percent / 100) * 160 + 30));
         let lightness = percent < 30 ? 50 : 45;
         return `hsl(${hue}, 90%, ${lightness}%)`;
       } else {
-        hue = Math.min(120, Math.max(0, (percent / 100) * 120)); 
-        return `hsl(${hue}, 85%, 45%)`;
+        // Colore progressivo dinamico originale (da rosso/arancio verso il verde brillante o ambra vivace)
+        hue = Math.min(120, Math.max(0, (percent / 100) * 120));
+        let lightness = percent >= 100 ? 50 : 45;
+        return `hsl(${hue}, 90%, ${lightness}%)`;
       }
     }
 
