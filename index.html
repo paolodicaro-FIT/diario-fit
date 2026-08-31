@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario FIT di Paolo Di Caro</title>
+  <title>Diario FIT by Paolo</title>
+  
+  <!-- 🦾 FAVICON INTEGRATA: Icona automatica per preferiti e browser -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
+
   <style>
     :root {
       --bg: #121212;
@@ -255,7 +260,7 @@
 
   <!-- HEADER CON TOOLBAR WINDOWS E HELP -->
   <div class="header-container">
-    <h1 class="header-title">💪 Diario FIT di Paolo Di Caro</h1>
+    <h1 class="header-title">💪 Diario FIT by Paolo</h1>
     <div class="top-toolbar">
       <button class="win-btn" onclick="copyReport()">📋 Copia Report</button>
       <button class="win-btn" onclick="generatePrintableReport()">🖨️ Stampa PDF</button>
@@ -671,7 +676,7 @@
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       } 
       else {
-        // PER LE PROTEINE (Logica positiva originaria): parte dal rosso/arancio e arriva al verde brillante
+        // PER LE PROTEINE: parte dal rosso/arancio e arriva al verde brillante
         let hue = Math.min(120, Math.max(0, (percent / 100) * 120));
         let lightness = percent >= 100 ? 50 : 45;
         return `hsl(${hue}, 90%, ${lightness}%)`;
