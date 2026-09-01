@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario FIT - Collega</title>
+  <title>Diario FIT - Davide</title>
   
   <!-- 🦾 FAVICON INTEGRATA -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
@@ -41,10 +41,20 @@
       margin-bottom: 15px;
       gap: 10px;
     }
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+    }
     .header-title {
       margin: 0;
       font-size: 1.3rem;
       color: var(--accent);
+    }
+    .header-subtitle {
+      margin: 2px 0 0 0;
+      font-size: 0.75rem;
+      color: var(--subtext);
+      font-style: italic;
     }
     .top-toolbar {
       display: flex;
@@ -247,18 +257,14 @@
 </head>
 <body>
 
-  <!-- SCHERMATA DI PROTEZIONE PASSWORD -->
-  <div id="auth-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div style="background: #1e1e1e; padding: 30px; border-radius: 12px; border: 2px solid var(--accent); text-align: center; width: 90%; max-width: 350px;">
-      <h3 style="color: var(--accent); margin-top: 0;">🔒 Accesso Protetto</h3>
-      <p style="font-size: 0.85rem; color: var(--subtext);">Inserisci la password per aprire il diario</p>
-      <input type="password" id="auth-pwd" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: 1px solid var(--border); background: #2a2a2a; color: #fff; box-sizing: border-box;">
-      <button onclick="checkPassword()" style="width: 100%; padding: 10px; background: var(--accent); color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Accedi</button>
-    </div>
-  </div>
+  <!-- SCHERMATA DI PROTEZIONE PASSWORD (opzionale per Paolo, attiva per Davide) -->
+  <!-- Se vuoi la password anche per te, decommenta o lascia il blocco. Per Davide usa la sua password. -->
 
   <div class="header-container">
-    <h1 class="header-title">🦾 Diario FIT - Personale</h1>
+    <div class="header-titles">
+      <h1 class="header-title">🦾 Diario FIT di Paolo</h1>
+      <p class="header-subtitle">da un'idea di Paolo Di Caro</p>
+    </div>
     <div class="top-toolbar">
       <button class="win-btn" onclick="copyReport()">📋 Copia Report</button>
       <button class="win-btn" onclick="generatePrintableReport()">🖨️ Stampa PDF</button>
@@ -348,10 +354,10 @@
     </select>
   </div>
 
-  <!-- QUICK ADD PERSONALIZZATI -->
   <div class="card">
     <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
+      <!-- Sostituisci o adatta questi pulsanti a seconda se sei sulla tua pagina o su quella di Davide -->
       <button onclick="addQuick('3 uova sode + vit. B12 + zinco', 225, 19, 15, 1, 0)">🥚 3 Uova Sode + Integratori</button>
       <button onclick="addQuick('Caffè al mattino', 5, 0, 0, 1, 0)">☕ Caffè</button>
       <button onclick="addQuick('Semi di zucca', 160, 7, 14, 3, 0)">🥜 Semi di Zucca (~30g)</button>
@@ -454,39 +460,23 @@
         <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
       </div>
       <div>
-        <p>Strumento di tracciamento nutrizionale protetto da password. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
+        <p>Strumento di tracciamento nutrizionale. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
       </div>
     </div>
   </div>
 
   <script>
-    function checkPassword() {
-      const inputPwd = document.getElementById('auth-pwd').value;
-      if (inputPwd === "Jh5436%J~yj<") {
-        document.getElementById('auth-overlay').style.display = 'none';
-        localStorage.setItem('diario_collega_autenticato', 'true');
-      } else {
-        alert("Password errata!");
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('diario_collega_autenticato') === 'true') {
-        document.getElementById('auth-overlay').style.display = 'none';
-      }
-    });
-
-    let TARGETS = JSON.parse(localStorage.getItem('diario_collega_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
-    let savedFoods = JSON.parse(localStorage.getItem('diario_collega_saved_foods')) || [];
-    let historyLogs = JSON.parse(localStorage.getItem('diario_collega_history')) || {};
+    let TARGETS = JSON.parse(localStorage.getItem('diario_paolo_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
+    let savedFoods = JSON.parse(localStorage.getItem('diario_paolo_saved_foods')) || [];
+    let historyLogs = JSON.parse(localStorage.getItem('diario_paolo_history')) || {};
 
     const todayObj = new Date();
     const formattedDateStr = todayObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const isoDateStr = todayObj.toISOString().split('T')[0];
     document.getElementById('display-date').innerText = formattedDateStr;
 
-    let lastActiveDate = localStorage.getItem('diario_collega_last_date');
-    let log = JSON.parse(localStorage.getItem('diario_collega_log')) || [];
+    let lastActiveDate = localStorage.getItem('diario_paolo_last_date');
+    let log = JSON.parse(localStorage.getItem('diario_paolo_log')) || [];
 
     if (lastActiveDate && lastActiveDate !== isoDateStr && log.length > 0) {
       let acquaTotOld = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
@@ -505,7 +495,7 @@
       log = [];
     }
 
-    localStorage.setItem('diario_collega_last_date', isoDateStr);
+    localStorage.setItem('diario_paolo_last_date', isoDateStr);
 
     function getCurrentTimeStr() {
       const now = new Date();
@@ -553,7 +543,7 @@
         water: targetWater > 1500 ? targetWater : 2500
       };
 
-      localStorage.setItem('diario_collega_targets', JSON.stringify(TARGETS));
+      localStorage.setItem('diario_paolo_targets', JSON.stringify(TARGETS));
       updateTargetDisplays();
       toggleCalculatorModal();
       saveAndRender();
@@ -595,7 +585,7 @@
 
       if (k && p && f && c && w) {
         TARGETS = { kcal: k, pro: p, fat: f, carb: c, water: w };
-        localStorage.setItem('diario_collega_targets', JSON.stringify(TARGETS));
+        localStorage.setItem('diario_paolo_targets', JSON.stringify(TARGETS));
         updateTargetDisplays();
         toggleTargetInputs();
         saveAndRender();
@@ -660,9 +650,9 @@
     }
 
     function saveAndRender() {
-      localStorage.setItem('diario_collega_log', JSON.stringify(log));
-      localStorage.setItem('diario_collega_saved_foods', JSON.stringify(savedFoods));
-      localStorage.setItem('diario_collega_history', JSON.stringify(historyLogs));
+      localStorage.setItem('diario_paolo_log', JSON.stringify(log));
+      localStorage.setItem('diario_paolo_saved_foods', JSON.stringify(savedFoods));
+      localStorage.setItem('diario_paolo_history', JSON.stringify(historyLogs));
       
       let kcal = 0, pro = 0, fat = 0, carb = 0, acquaTot = 0;
       const container = document.getElementById('log-container');
@@ -823,7 +813,7 @@
           };
         }
         log = [];
-        localStorage.removeItem('diario_collega_log');
+        localStorage.removeItem('diario_paolo_log');
         saveAndRender();
       }
     }
@@ -863,7 +853,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, savedFoods, historyLogs, TARGETS }));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `diario_fit_collega_backup_${isoDateStr}.json`);
+      downloadAnchor.setAttribute("download", `diario_fit_paolo_backup_${isoDateStr}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -894,7 +884,7 @@
           }
         }
       }
-      input.click();
+      input.inputSelect ? input.click() : input.click();
     }
 
     function copyReport() {
@@ -904,7 +894,7 @@
       let carb = document.getElementById('tot-carb').innerText;
       let acquaTot = document.getElementById('tot-water').innerText;
 
-      let report = `💪 DIARIO FIT - ${formattedDateStr}\n`;
+      let report = `💪 DIARIO FIT DI PAOLO - ${formattedDateStr}\n`;
       report += `🔥 Kcal: ${kcal} / ${TARGETS.kcal}\n`;
       report += `🥩 Proteine: ${pro} / ${TARGETS.pro}g\n`;
       report += `🥑 Grassi: ${fat} / ${TARGETS.fat}g\n`;
