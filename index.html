@@ -13,7 +13,7 @@
     :root {
       --bg: #121212;
       --card: #1e1e1e;
-      --accent: #00e5ff;         /* 🌊 Tono Azzurro/Cyan distintivo */
+      --accent: #00e5ff;
       --accent-glow: rgba(0, 229, 255, 0.2);
       --water-color: #00bfff;
       --text: #ffffff;
@@ -354,13 +354,13 @@
   <div class="card">
     <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
-      <!-- I tuoi tasti rapidi originali ripristinati -->
-      <button onclick="addQuick('3 uova sode + vit. B12 + zinco', 225, 19, 15, 1, 0)">🥚 3 Uova Sode + Integratori</button>
-      <button onclick="addQuick('Caffè al mattino', 5, 0, 0, 1, 0)">☕ Caffè</button>
-      <button onclick="addQuick('Semi di zucca (~30g)', 160, 7, 14, 3, 0)">🥜 Semi di Zucca (~30g)</button>
-      <button onclick="addQuick('Grissini ai semi', 130, 4, 4, 18, 0)">🥖 Grissini ai Semi</button>
-      <button onclick="addQuick('Pre workout: citrullina, betaina, beta alanina', 10, 0, 0, 0, 0)">⚡ Pre-Workout (Aminoacidi)</button>
-      <button onclick="addQuick('Post workout: 100 gr. Whey', 380, 80, 2, 6, 0)">🥤 Post-Workout (100g Whey)</button>
+      <!-- I tuoi alimenti e preferiti reali -->
+      <button onclick="addQuick('Uova sode', 150, 13, 10, 1, 0)">🥚 Uova Sode</button>
+      <button onclick="addQuick('Tonno in scatola', 120, 26, 2, 0, 0)">🐟 Tonno in Scatola</button>
+      <button onclick="addQuick('Petto di pollo', 110, 23, 1, 0, 0)">🍗 Petto di Pollo</button>
+      <button onclick="addQuick('Petto di tacchino', 105, 22, 1, 0, 0)">🦃 Petto di Tacchino</button>
+      <button onclick="addQuick('Fiocchi di latte', 100, 12, 4, 3, 0)">🧀 Fiocchi di Latte</button>
+      <button onclick="addQuick('Yogurt greco 0% fat', 60, 10, 0, 4, 0)">🥛 Yogurt Greco 0%</button>
     </div>
 
     <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -457,7 +457,7 @@
         <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
       </div>
       <div>
-        <p>Strumento di tracciamento nutrizionale. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
+        <p>Strumento di tracciamento nutrizionale per Paolo. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
       </div>
     </div>
   </div>
@@ -465,11 +465,22 @@
   <script>
     let TARGETS = JSON.parse(localStorage.getItem('diario_paolo_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
     
-    // Recupera i cibi salvati o imposta una lista di default per evitare il vuoto
-    let savedFoods = JSON.parse(localStorage.getItem('diario_paolo_saved_foods')) || [
-      { name: "3 uova sode + vit. B12 + zinco", kcal: 225, pro: 19, fat: 15, carb: 1, waterMl: 0 },
-      { name: "Post workout: 100 gr. Whey", kcal: 380, pro: 80, fat: 2, carb: 6, waterMl: 0 }
+    // I tuoi veri alimenti preferiti di base
+    const defaultSavedFoods = [
+      { name: "Uova sode", kcal: 150, pro: 13, fat: 10, carb: 1, waterMl: 0 },
+      { name: "Tonno in scatola", kcal: 120, pro: 26, fat: 2, carb: 0, waterMl: 0 },
+      { name: "Petto di pollo", kcal: 110, pro: 23, fat: 1, carb: 0, waterMl: 0 },
+      { name: "Petto di tacchino", kcal: 105, pro: 22, fat: 1, carb: 0, waterMl: 0 },
+      { name: "Fiocchi di latte", kcal: 100, pro: 12, fat: 4, carb: 3, waterMl: 0 },
+      { name: "Yogurt greco 0% fat", kcal: 60, pro: 10, fat: 0, carb: 4, waterMl: 0 },
+      { name: "Mirtilli", kcal: 57, pro: 1, fat: 0, carb: 14, waterMl: 0 },
+      { name: "Noci di macadamia", kcal: 718, pro: 8, fat: 76, carb: 14, waterMl: 0 },
+      { name: "Noci pecan", kcal: 691, pro: 9, fat: 72, carb: 14, waterMl: 0 },
+      { name: "Datteri", kcal: 282, pro: 25, fat: 0, carb: 75, waterMl: 0 }
     ];
+
+    let storedFoods = JSON.parse(localStorage.getItem('diario_paolo_saved_foods'));
+    let savedFoods = (storedFoods && storedFoods.length > 0) ? storedFoods : defaultSavedFoods;
     
     let historyLogs = JSON.parse(localStorage.getItem('diario_paolo_history')) || {};
 
