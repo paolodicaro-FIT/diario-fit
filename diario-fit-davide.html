@@ -281,7 +281,7 @@
 <body>
 
   <!-- SCHERMATA DI LOGIN PROTETTA -->
-  <div id="login-overlay">
+  <div id="login-overlay" style="display:none;">
     <div class="login-card">
       <h2>🔒 Accesso Riservato</h2>
       <p style="font-size:0.85rem; color:var(--subtext);">Inserisci la password per aprire il Diario FIT di Davide</p>
@@ -291,7 +291,7 @@
     </div>
   </div>
 
-  <!-- APP PRINCIPALE (Nascosta finché non si fa login) -->
+  <!-- APP PRINCIPALE -->
   <div id="app-container" style="display:none;">
 
     <!-- HEADER CON TOOLBAR WINDOWS E HELP -->
@@ -304,13 +304,14 @@
         <button class="win-btn" onclick="exportData()">💾 Esporta</button>
         <button class="win-btn" onclick="importData()">📥 Importa</button>
         <button class="win-btn win-btn-danger" onclick="resetDay()">🔄 Chiudi Giornata</button>
+        <button class="win-btn" onclick="lockApp()" title="Blocca con Password">🔒 Blocca</button>
         <button class="win-btn win-btn-help" onclick="toggleHelpModal()">❓ Help</button>
       </div>
     </div>
 
     <div class="current-date" id="display-date"></div>
 
-    <!-- SEZIONE STORICO (VISIBILE AL CLICK SU 📂 STORICO) -->
+    <!-- SEZIONE STORICO -->
     <div class="card" id="history-card" style="display: none; border: 1px solid var(--accent);">
       <h2>📚 Storico Giorni Archiviati</h2>
       <div id="history-container"></div>
@@ -326,7 +327,7 @@
         </div>
       </div>
 
-      <!-- RIEPILOGO TARGET SEMPRE VISIBILE -->
+      <!-- RIEPILOGO TARGET -->
       <div class="target-summary-grid">
         <div>🔥 <b id="box-target-kcal">2000</b> kcal</div>
         <div>🥩 <b id="box-target-pro">160</b>g P</div>
@@ -350,7 +351,7 @@
       </div>
     </div>
 
-    <!-- DASHBOARD MACRO E ACQUA CON TARGET E PROGRESS BAR DINAMICHE -->
+    <!-- DASHBOARD MACRO E ACQUA -->
     <div class="card">
       <div class="grid-macros">
         <div class="macro-box">
@@ -392,7 +393,7 @@
       </select>
     </div>
 
-    <!-- QUICK ADD (TASTI RAPIDI PREFERITI DI DAVIDE) -->
+    <!-- QUICK ADD (6 TASTI RAPIDI DI DAVIDE) -->
     <div class="card">
       <h2>⚡ Tasti Rapidi (Preferiti di Davide)</h2>
       <div class="quick-buttons">
@@ -521,13 +522,13 @@
 
           <h4>⚡ Modalità di Inserimento</h4>
           <ul>
-            <li><b>Quick Add:</b> Tocca i pulsanti rapidi personalizzati per Davide (uova sode con B12/zinco, caffè, semi di zucca, grissini con semi, pre-workout e post-workout con 100g di whey) per registrare subito le voci con un solo tap.</li>
+            <li><b>Quick Add:</b> Tocca i pulsanti rapidi personalizzati per Davide per registrare subito le voci con un solo tap.</li>
             <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta il moltiplicatore di porzione (da 0.5x a 4x).</li>
             <li><b>Inserimento Libero:</b> Digita nome e dati nutrizionali di un nuovo cibo; verrà registrato e salvato automaticamente nella lista personalizzata con ⭐.</li>
           </ul>
 
           <h4>📋 Gestione Registro e Barra Superiore</h4>
-          <p>Usa la barra dei pulsanti in alto per copiare il report testuale, generare un PDF stampabile, visualizzare lo storico dei giorni passati, esportare/importare i dati di backup o chiudere la giornata corrente.</p>
+          <p>Usa la barra dei pulsanti in alto per copiare il report testuale, generare un PDF stampabile, visualizzare lo storico, bloccare l'app con password (tramite il tasto 🔒 Blocca), esportare/importare i dati o chiudere la giornata.</p>
         </div>
       </div>
     </div>
@@ -537,15 +538,37 @@
   <script>
     const CORRECT_PASSWORD = "Fitness-2o26@";
 
+    // Controlla subito all'avvio se l'utente ha già fatto il login in precedenza
+    window.addEventListener('DOMContentLoaded', () => {
+      const isAuth = localStorage.getItem('diario_authenticated');
+      if (isAuth === 'true') {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('app-container').style.display = 'block';
+        initApp();
+      } else {
+        document.getElementById('login-overlay').style.display = 'flex';
+      }
+    });
+
     function checkPassword() {
       const inputVal = document.getElementById('login-password-input').value;
       if (inputVal === CORRECT_PASSWORD) {
+        localStorage.setItem('diario_authenticated', 'true');
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('app-container').style.display = 'block';
         initApp();
       } else {
         document.getElementById('login-error').style.display = 'block';
       }
+    }
+
+    // Permette di bloccare manualmente l'app con la password tramite il nuovo pulsante nella toolbar
+    function lockApp() {
+      localStorage.removeItem('diario_authenticated');
+      document.getElementById('app-container').style.display = 'none';
+      document.getElementById('login-password-input').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('login-overlay').style.display = 'flex';
     }
 
     // Permetti invio con tasto Enter sulla password
