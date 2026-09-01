@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario FIT - Paolo</title>
+  <title>Diario FIT by Paolo</title>
   
-  <!-- 🦾 FAVICON INTEGRATA -->
+  <!-- 🦾 FAVICON INTEGRATA: Icona automatica per preferiti e browser -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
 
@@ -13,12 +13,14 @@
     :root {
       --bg: #121212;
       --card: #1e1e1e;
-      --accent: #00e5ff;
-      --accent-glow: rgba(0, 229, 255, 0.2);
+      --accent: #ffb000;         /* 🌟 Tono Ambra caldo e riposante */
+      --accent-glow: rgba(255, 176, 0, 0.2);
       --water-color: #00bfff;
       --text: #ffffff;
       --subtext: #aaaaaa;
       --border: #333333;
+      --win-btn-bg: #2d2d2d;
+      --win-btn-border: #555555;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -29,6 +31,7 @@
       box-sizing: border-box;
     }
     
+    /* HEADER E TOOLBAR STILE WINDOWS */
     .header-container {
       display: flex;
       flex-wrap: wrap;
@@ -41,20 +44,10 @@
       margin-bottom: 15px;
       gap: 10px;
     }
-    .header-titles {
-      display: flex;
-      flex-direction: column;
-    }
     .header-title {
       margin: 0;
       font-size: 1.3rem;
       color: var(--accent);
-    }
-    .header-subtitle {
-      margin: 2px 0 0 0;
-      font-size: 0.75rem;
-      color: var(--subtext);
-      font-style: italic;
     }
     .top-toolbar {
       display: flex;
@@ -63,10 +56,11 @@
       align-items: center;
     }
     
+    /* PULSANTI STILE WINDOWS / DESKTOP */
     .win-btn {
       background: linear-gradient(180deg, #3a3a3a 0%, #222222 100%);
       color: var(--text);
-      border: 1px solid #555;
+      border: 1px solid var(--win-btn-border);
       border-top-color: #666;
       border-left-color: #666;
       border-radius: 4px;
@@ -81,11 +75,16 @@
     }
     .win-btn:active {
       background: linear-gradient(180deg, #181818 0%, #2a2a2a 100%);
+      border-top-color: #111;
+      border-left-color: #111;
+      border-right-color: #555;
+      border-bottom-color: #555;
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8);
       transform: translateY(1px);
     }
     .win-btn-help {
-      background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
-      border-color: #00e5ff;
+      background: linear-gradient(180deg, #d97706 0%, #92400e 100%);
+      border-color: #ffb000;
       color: #fff;
     }
     .win-btn-danger {
@@ -222,6 +221,7 @@
       border-radius: 8px;
     }
 
+    /* MODALE FINESTRA (HELP & CALCOLATORE TARGET) */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -253,15 +253,14 @@
       margin-bottom: 15px;
     }
     .modal-header h3 { margin: 0; color: var(--accent); }
+    .modal-content h4 { color: var(--accent); margin-top: 15px; margin-bottom: 5px; }
   </style>
 </head>
 <body>
 
+  <!-- HEADER CON TOOLBAR WINDOWS E HELP -->
   <div class="header-container">
-    <div class="header-titles">
-      <h1 class="header-title">🦾 Diario FIT di Paolo</h1>
-      <p class="header-subtitle">da un'idea di Paolo Di Caro</p>
-    </div>
+    <h1 class="header-title">💪 Diario FIT by Paolo</h1>
     <div class="top-toolbar">
       <button class="win-btn" onclick="copyReport()">📋 Copia Report</button>
       <button class="win-btn" onclick="generatePrintableReport()">🖨️ Stampa PDF</button>
@@ -275,11 +274,13 @@
 
   <div class="current-date" id="display-date"></div>
 
+  <!-- SEZIONE STORICO (VISIBILE AL CLICK SU 📂 STORICO) -->
   <div class="card" id="history-card" style="display: none; border: 1px solid var(--accent);">
     <h2>📚 Storico Giorni Archiviati</h2>
     <div id="history-container"></div>
   </div>
 
+  <!-- BOX IMPOSTAZIONE TARGET -->
   <div class="card" style="border: 1px solid var(--accent);">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <h2 style="margin: 0; font-size: 1rem;">🎯 Target Giornalieri Impostati</h2>
@@ -289,14 +290,16 @@
       </div>
     </div>
 
+    <!-- RIEPILOGO TARGET SEMPRE VISIBILE -->
     <div class="target-summary-grid">
-      <div>🔥 <b id="box-target-kcal">2200</b> kcal</div>
-      <div>🥩 <b id="box-target-pro">150</b>g P</div>
-      <div>🥑 <b id="box-target-fat">70</b>g G</div>
-      <div>🍞 <b id="box-target-carb">220</b>g C</div>
+      <div>🔥 <b id="box-target-kcal">2000</b> kcal</div>
+      <div>🥩 <b id="box-target-pro">160</b>g P</div>
+      <div>🥑 <b id="box-target-fat">65</b>g G</div>
+      <div>🍞 <b id="box-target-carb">180</b>g C</div>
       <div>💧 <b id="box-target-water">2500</b> ml</div>
     </div>
     
+    <!-- CAMPI FORM NASCOSTI PER MODIFICA MANUALE -->
     <div id="target-inputs" style="display: none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 10px;">
       <div class="inline-group">
         <input type="number" id="target-kcal-input" placeholder="Kcal">
@@ -311,26 +314,27 @@
     </div>
   </div>
 
+  <!-- DASHBOARD MACRO E ACQUA CON TARGET E PROGRESS BAR DINAMICHE -->
   <div class="card">
     <div class="grid-macros">
       <div class="macro-box">
         <div class="macro-value" id="tot-kcal">0</div>
-        <div class="macro-label">Kcal / <span id="target-kcal-val">2200</span></div>
+        <div class="macro-label">Kcal / <span id="target-kcal-val">2000</span></div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-kcal"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-pro">0g</div>
-        <div class="macro-label">Prot / <span id="target-pro-val">150</span>g</div>
+        <div class="macro-label">Prot / <span id="target-pro-val">160</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-pro"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-fat">0g</div>
-        <div class="macro-label">Gras / <span id="target-fat-val">70</span>g</div>
+        <div class="macro-label">Gras / <span id="target-fat-val">65</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-fat"></div></div>
       </div>
       <div class="macro-box">
         <div class="macro-value" id="tot-carb">0g</div>
-        <div class="macro-label">Carb / <span id="target-carb-val">220</span>g</div>
+        <div class="macro-label">Carb / <span id="target-carb-val">180</span>g</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="bar-carb"></div></div>
       </div>
       <div class="macro-box">
@@ -341,6 +345,7 @@
     </div>
   </div>
 
+  <!-- SELEZIONE PASTO -->
   <div class="card">
     <label style="font-size:0.85rem; color: var(--subtext);">Pasto Corrente:</label>
     <select id="meal-category">
@@ -351,16 +356,19 @@
     </select>
   </div>
 
+  <!-- QUICK ADD -->
   <div class="card">
     <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
-      <!-- I tuoi alimenti e preferiti reali -->
-      <button onclick="addQuick('Uova sode', 150, 13, 10, 1, 0)">🥚 Uova Sode</button>
-      <button onclick="addQuick('Tonno in scatola', 120, 26, 2, 0, 0)">🐟 Tonno in Scatola</button>
-      <button onclick="addQuick('Petto di pollo', 110, 23, 1, 0, 0)">🍗 Petto di Pollo</button>
-      <button onclick="addQuick('Petto di tacchino', 105, 22, 1, 0, 0)">🦃 Petto di Tacchino</button>
-      <button onclick="addQuick('Fiocchi di latte', 100, 12, 4, 3, 0)">🧀 Fiocchi di Latte</button>
-      <button onclick="addQuick('Yogurt greco 0% fat', 60, 10, 0, 4, 0)">🥛 Yogurt Greco 0%</button>
+      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3, 500)">🥤 Shaker Whey (2 cup + Creatina + 500ml H2O)</button>
+      <button onclick="addQuick('Shaker Post-Workout (1 Cup Whey + 300ml H2O)', 100, 20, 1, 1.5, 300)">🥤 Shaker Post-Workout (1 Cup + 300ml H2O)</button>
+      <button onclick="addQuick('Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)', 0, 0, 0, 0, 400)">⚡ Pre-Workout (+ 400ml H2O)</button>
+      <button onclick="addQuick('Noci Macadamia (10 pz / ~25g)', 180, 2, 19, 3)">🌰 Noci Macadamia (10 pz)</button>
+      <button onclick="addQuick('Yogurt Greco 0% (150g) + Whey (1 cup)', 160, 23, 0, 8)">🥣 Yogurt Greco 0% + Whey</button>
+      <button onclick="addQuick('Fiocchi di Latte (200g)', 180, 24, 8, 3)">🧀 Fiocchi di Latte (200g)</button>
+      <button onclick="addQuick('Mirtilli (250g)', 140, 2, 1, 35)">🫐 Mirtilli Fresh (250g)</button>
+      <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z</button>
+      <button onclick="addQuick('Acqua (+500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
     </div>
 
     <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -368,6 +376,23 @@
       <select id="quick-select" style="flex: 2;">
         <option value="">-- Seleziona un alimento --</option>
         <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
+        <optgroup label="🍽️ Alimenti predefiniti">
+          <option value="Barretta Perugina Nero 70% (35g)|189|3|14|11|0">🍫 Barretta Perugina Nero 70% (35g)</option>
+          <option value="Prosciutto e Melone (Mezzo melone + Mezza vaschetta prosciutto)|260|14|8|34|0">🍈 Prosciutto e Melone (Mezzo melone + 1/2 vaschetta)</option>
+          <option value="Salmone Grigliato (150g)|280|30|18|0|0">🐟 Salmone Grigliato (150g)</option>
+          <option value="Uovo Sodo (1 pz intero)|75|7|5|0|0">🥚 Uovo Sodo (1 pz intero)</option>
+          <option value="Tonno al naturale (1 scatoletta ~56g sgocciolato)|60|14|1|0|0">🐟 Tonno al naturale (1 scatoletta)</option>
+          <option value="Pollo o son desto (Petto 200g + Patate 250g)|550|55|15|45|0">🍗 Pollo o son desto (Petto 200g + Patate 250g)</option>
+          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">🍝 Spaghetti / Pasta (100g secchi)</option>
+          <option value="Fagioli Bud Spencer (Fagioli 250g + Salsiccia)|550|30|25|45|0">🫘 Fagioli Bud Spencer (250g + Salsiccia)</option>
+          <option value="Piadina con Prosciutto Cotto (80g)|450|20|18|50|0">🌮 Piadina con Prosciutto Cotto (80g)</option>
+          <option value="Piadina con Prosciutto Crudo (80g)|470|22|19|50|0">🌮 Piadina con Prosciutto Crudo (80g)</option>
+          <option value="Pollo allo Spiedo (1/2 petto ~200g)|350|38|12|0|0">🍗 Pollo allo Spiedo (1/2 petto ~200g)</option>
+          <option value="Pizza al Trancio (1 trancio)|400|14|12|55|0">🍕 Pizza al Trancio (1 trancio)</option>
+          <option value="Pizza Classica (1 intera)|800|28|22|115|0">🍕 Pizza Classica (1 intera)</option>
+          <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
+          <option value="Sushi (Pasto medio ~12-14 pz)|650|30|12|95|0">🍣 Sushi (Pasto medio ~12-14 pz)</option>
+        </optgroup>
       </select>
       <select id="portion-multiplier" style="flex: 1;">
         <option value="0.5">0.5x</option>
@@ -381,9 +406,10 @@
     <button class="btn-action" onclick="addFromSelect()">+ Aggiungi Selezionato</button>
   </div>
 
+  <!-- MANUALE -->
   <div class="card">
     <h2>✍️ Inserimento Libero e Salvataggio</h2>
-    <input type="text" id="custom-name" placeholder="Nome alimento e dose">
+    <input type="text" id="custom-name" placeholder="Nome alimento e dose (es. Noci Pecan 30g)">
     <input type="number" id="custom-kcal" placeholder="Calorie (kcal)">
     <input type="number" id="custom-pro" placeholder="Proteine (g)">
     <input type="number" id="custom-fat" placeholder="Grassi (g)">
@@ -392,11 +418,13 @@
     <button class="btn-action" onclick="addCustom()">Aggiungi e Salva nel Menu</button>
   </div>
 
+  <!-- LOG GIORNALIERO -->
   <div class="card">
     <h2>📋 Registro di Oggi</h2>
     <div id="log-container"></div>
   </div>
 
+  <!-- MODALE CALCOLATORE TARGET -->
   <div class="modal-overlay" id="calculator-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -404,6 +432,8 @@
         <button class="win-btn" onclick="toggleCalculatorModal()">✕ Chiudi</button>
       </div>
       <div>
+        <p style="font-size: 0.85rem; color: var(--subtext); margin-top:0;">Inserisci i tuoi parametri fisici per calcolare calorie e macronutrienti ideali basati sul tuo obiettivo.</p>
+        
         <label style="font-size: 0.85rem;">Sesso:</label>
         <select id="calc-gender">
           <option value="male">Uomo</option>
@@ -413,11 +443,11 @@
         <div class="inline-group">
           <div style="flex:1;">
             <label style="font-size: 0.85rem;">Età (anni):</label>
-            <input type="number" id="calc-age" placeholder="es. 40" value="40">
+            <input type="number" id="calc-age" placeholder="es. 59" value="59">
           </div>
           <div style="flex:1;">
             <label style="font-size: 0.85rem;">Peso (kg):</label>
-            <input type="number" id="calc-weight" placeholder="es. 80" value="80">
+            <input type="number" id="calc-weight" placeholder="es. 75">
           </div>
         </div>
 
@@ -429,20 +459,20 @@
           <div style="flex:1;">
             <label style="font-size: 0.85rem;">Livello di Attività:</label>
             <select id="calc-activity">
-              <option value="1.2">Sedentario</option>
-              <option value="1.375">Leggero</option>
-              <option value="1.55" selected>Moderato</option>
-              <option value="1.725">Intenso</option>
-              <option value="1.9">Molto intenso</option>
+              <option value="1.2">Sedentario (poco o nessun esercizio)</option>
+              <option value="1.375">Leggero (esercizio 1-3 volte/sett)</option>
+              <option value="1.55" selected>Moderato (esercizio 3-5 volte/sett)</option>
+              <option value="1.725">Intenso (esercizio 6-7 volte/sett)</option>
+              <option value="1.9">Molto intenso (lavoro fisico / 2x allenamento)</option>
             </select>
           </div>
         </div>
 
         <label style="font-size: 0.85rem;">Obiettivo:</label>
         <select id="calc-goal">
-          <option value="cut">Dimagrimento (-20%)</option>
-          <option value="maintain" selected>Mantenimento</option>
-          <option value="bulk">Massa (+10%)</option>
+          <option value="cut">Dimagrimento / Definizione (-20% kcal)</option>
+          <option value="maintain" selected>Mantenimento del peso attuale</option>
+          <option value="bulk">Massa / Crescita (+10% kcal)</option>
         </select>
 
         <button class="btn-action" onclick="calculateAndApplyTargets()" style="margin-top: 15px;">Calcola e Imposta Target</button>
@@ -450,47 +480,45 @@
     </div>
   </div>
 
+  <!-- MODALE FINESTRA HELP -->
   <div class="modal-overlay" id="help-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>📖 Manuale d'Uso</h3>
+        <h3>📖 Manuale d'Uso Diario FIT by Paolo</h3>
         <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
       </div>
       <div>
-        <p>Strumento di tracciamento nutrizionale per Paolo. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
+        <h4>🎯 Target Giornalieri e Calcolatore Automatico</h4>
+        <p>Puoi impostare manualmente i tuoi target tramite il tasto <b>⚙️ Modifica</b> oppure cliccare su <b>🎯 Calcola Target</b> per ricavare in automatico calorie e macro ideali tramite la formula di Mifflin-St Jeor inserendo i tuoi dati fisici e l'obiettivo desiderato (mantenimento, dimagrimento o massa).</p>
+
+        <h4>🍽️ Selezione Pasto Corrente</h4>
+        <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack / Integrazione, Colazione, Pranzo, Cena) prima di registrare gli alimenti.</p>
+
+        <h4>⚡ Modalità di Inserimento</h4>
+        <ul>
+          <li><b>Quick Add:</b> Tocca i pulsanti rapidi (inclusi gli shaker Whey, Post-Workout, Pre-Workout, snack e acqua) per registrare subito le voci frequenti con un solo tap.</li>
+          <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta il moltiplicatore di porzione (da 0.5x a 4x).</li>
+          <li><b>Inserimento Libero:</b> Digita nome e dati nutrizionali di un nuovo cibo; verrà registrato e salvato automaticamente nella lista personalizzata con ⭐.</li>
+        </ul>
+
+        <h4>📋 Gestione Registro e Barra Superiore</h4>
+        <p>Usa la barra dei pulsanti in alto per copiare il report testuale, generare un PDF stampabile, visualizzare lo storico dei giorni passati, esportare/importare i dati di backup o chiudere la giornata corrente.</p>
       </div>
     </div>
   </div>
 
   <script>
-    let TARGETS = JSON.parse(localStorage.getItem('diario_paolo_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
-    
-    // I tuoi veri alimenti preferiti di base
-    const defaultSavedFoods = [
-      { name: "Uova sode", kcal: 150, pro: 13, fat: 10, carb: 1, waterMl: 0 },
-      { name: "Tonno in scatola", kcal: 120, pro: 26, fat: 2, carb: 0, waterMl: 0 },
-      { name: "Petto di pollo", kcal: 110, pro: 23, fat: 1, carb: 0, waterMl: 0 },
-      { name: "Petto di tacchino", kcal: 105, pro: 22, fat: 1, carb: 0, waterMl: 0 },
-      { name: "Fiocchi di latte", kcal: 100, pro: 12, fat: 4, carb: 3, waterMl: 0 },
-      { name: "Yogurt greco 0% fat", kcal: 60, pro: 10, fat: 0, carb: 4, waterMl: 0 },
-      { name: "Mirtilli", kcal: 57, pro: 1, fat: 0, carb: 14, waterMl: 0 },
-      { name: "Noci di macadamia", kcal: 718, pro: 8, fat: 76, carb: 14, waterMl: 0 },
-      { name: "Noci pecan", kcal: 691, pro: 9, fat: 72, carb: 14, waterMl: 0 },
-      { name: "Datteri", kcal: 282, pro: 25, fat: 0, carb: 75, waterMl: 0 }
-    ];
-
-    let storedFoods = JSON.parse(localStorage.getItem('diario_paolo_saved_foods'));
-    let savedFoods = (storedFoods && storedFoods.length > 0) ? storedFoods : defaultSavedFoods;
-    
-    let historyLogs = JSON.parse(localStorage.getItem('diario_paolo_history')) || {};
+    let TARGETS = JSON.parse(localStorage.getItem('diario_targets')) || { kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500 };
+    let savedFoods = JSON.parse(localStorage.getItem('diario_saved_foods')) || [];
+    let historyLogs = JSON.parse(localStorage.getItem('diario_history')) || {};
 
     const todayObj = new Date();
     const formattedDateStr = todayObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const isoDateStr = todayObj.toISOString().split('T')[0];
     document.getElementById('display-date').innerText = formattedDateStr;
 
-    let lastActiveDate = localStorage.getItem('diario_paolo_last_date');
-    let log = JSON.parse(localStorage.getItem('diario_paolo_log')) || [];
+    let lastActiveDate = localStorage.getItem('diario_last_date');
+    let log = JSON.parse(localStorage.getItem('diario_log')) || [];
 
     if (lastActiveDate && lastActiveDate !== isoDateStr && log.length > 0) {
       let acquaTotOld = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
@@ -509,7 +537,7 @@
       log = [];
     }
 
-    localStorage.setItem('diario_paolo_last_date', isoDateStr);
+    localStorage.setItem('diario_last_date', isoDateStr);
 
     function getCurrentTimeStr() {
       const now = new Date();
@@ -535,19 +563,29 @@
       const goal = document.getElementById('calc-goal').value;
 
       let bmr = (10 * weight) + (6.25 * height) - (5 * age);
-      bmr = (gender === 'male') ? bmr + 5 : bmr - 161;
+      if (gender === 'male') {
+        bmr += 5;
+      } else {
+        bmr -= 161;
+      }
 
       let tdee = bmr * activity;
       let targetKcal = tdee;
-      if (goal === 'cut') targetKcal *= 0.8;
-      else if (goal === 'bulk') targetKcal *= 1.1;
+
+      if (goal === 'cut') {
+        targetKcal *= 0.8;
+      } else if (goal === 'bulk') {
+        targetKcal *= 1.1;
+      }
 
       targetKcal = Math.round(targetKcal);
+
       let targetPro = Math.round(weight * 2.0);
       let targetFat = Math.round((targetKcal * 0.25) / 9);
       let remainingKcalForCarb = targetKcal - ((targetPro * 4) + (targetFat * 9));
       let targetCarb = Math.max(50, Math.round(remainingKcalForCarb / 4));
-      let targetWater = Math.round((weight * 35) / 100) * 100;
+      let targetWater = weight * 35;
+      targetWater = Math.round(targetWater / 100) * 100;
 
       TARGETS = {
         kcal: targetKcal,
@@ -557,7 +595,7 @@
         water: targetWater > 1500 ? targetWater : 2500
       };
 
-      localStorage.setItem('diario_paolo_targets', JSON.stringify(TARGETS));
+      localStorage.setItem('diario_targets', JSON.stringify(TARGETS));
       updateTargetDisplays();
       toggleCalculatorModal();
       saveAndRender();
@@ -566,6 +604,7 @@
 
     function updateTargetDisplays() {
       if (!TARGETS.water) TARGETS.water = 2500;
+
       document.getElementById('target-kcal-val').innerText = TARGETS.kcal;
       document.getElementById('target-pro-val').innerText = TARGETS.pro;
       document.getElementById('target-fat-val').innerText = TARGETS.fat;
@@ -599,7 +638,7 @@
 
       if (k && p && f && c && w) {
         TARGETS = { kcal: k, pro: p, fat: f, carb: c, water: w };
-        localStorage.setItem('diario_paolo_targets', JSON.stringify(TARGETS));
+        localStorage.setItem('diario_targets', JSON.stringify(TARGETS));
         updateTargetDisplays();
         toggleTargetInputs();
         saveAndRender();
@@ -622,16 +661,25 @@
     function getProgressColor(percent, type = 'positive') {
       if (type === 'water') {
         let hue = Math.min(190, Math.max(30, (percent / 100) * 160 + 30));
-        return `hsl(${hue}, 90%, 45%)`;
+        let lightness = percent < 30 ? 50 : 45;
+        return `hsl(${hue}, 90%, ${lightness}%)`;
       } 
       else if (type === 'negative') {
-        if (percent > 100) return '#e53935';
+        // PER KCAL, GRASSI E CARBOIDRATI: Se superi il 100% (sforamento), diventa rosso fisso.
+        if (percent > 100) {
+          return '#e53935'; // Rosso allarme
+        }
+        // Partono dal VERDE brillante (Hue 120) a 0% e sfumano dolcemente verso l'ambrato (Hue 40) man mano che ti avvicini al 100%
         let hue = Math.max(40, 120 - (percent / 100) * 80);
-        return `hsl(${hue}, 90%, 45%)`;
+        let lightness = 45;
+        let saturation = 90;
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       } 
       else {
+        // PER LE PROTEINE: parte dal rosso/arancio e arriva al verde brillante
         let hue = Math.min(120, Math.max(0, (percent / 100) * 120));
-        return `hsl(${hue}, 90%, 45%)`;
+        let lightness = percent >= 100 ? 50 : 45;
+        return `hsl(${hue}, 90%, ${lightness}%)`;
       }
     }
 
@@ -664,9 +712,9 @@
     }
 
     function saveAndRender() {
-      localStorage.setItem('diario_paolo_log', JSON.stringify(log));
-      localStorage.setItem('diario_paolo_saved_foods', JSON.stringify(savedFoods));
-      localStorage.setItem('diario_paolo_history', JSON.stringify(historyLogs));
+      localStorage.setItem('diario_log', JSON.stringify(log));
+      localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
+      localStorage.setItem('diario_history', JSON.stringify(historyLogs));
       
       let kcal = 0, pro = 0, fat = 0, carb = 0, acquaTot = 0;
       const container = document.getElementById('log-container');
@@ -693,6 +741,7 @@
             if (item.waterMl) acquaTot += item.waterMl;
 
             const li = document.createElement('li');
+            
             let itemText = `<b>${item.name}</b>`;
             if (item.kcal > 0) itemText += ` (${item.kcal} kcal)`;
             if (item.waterMl > 0 && !item.kcal) itemText += ` (${item.waterMl} ml)`;
@@ -786,21 +835,28 @@
       const newName = prompt('Modifica descrizione:', item.name);
       if (newName === null) return;
       
-      const newKcal = prompt('Modifica Calorie (kcal):', item.kcal || 0);
-      const newPro = prompt('Modifica Proteine (g):', item.pro || 0);
-      const newFat = prompt('Modifica Grassi (g):', item.fat || 0);
-      const newCarb = prompt('Modifica Carboidrati (g):', item.carb || 0);
-      const newWater = prompt('Modifica Acqua contenuta (ml):', item.waterMl || 0);
+      if (item.waterMl > 0 && (!item.kcal || item.kcal === 0)) {
+        const newWater = prompt('Modifica quantità acqua in ml:', item.waterMl);
+        if (newWater !== null) {
+          log[index] = { ...item, name: newName || item.name, waterMl: parseInt(newWater) || 0 };
+        }
+      } else {
+        const newKcal = prompt('Modifica Calorie (kcal):', item.kcal || 0);
+        const newPro = prompt('Modifica Proteine (g):', item.pro || 0);
+        const newFat = prompt('Modifica Grassi (g):', item.fat || 0);
+        const newCarb = prompt('Modifica Carboidrati (g):', item.carb || 0);
+        const newWater = prompt('Modifica Acqua contenuta (ml):', item.waterMl || 0);
 
-      log[index] = {
-        ...item,
-        name: newName || item.name,
-        kcal: parseInt(newKcal) || 0,
-        pro: parseInt(newPro) || 0,
-        fat: parseInt(newFat) || 0,
-        carb: parseInt(newCarb) || 0,
-        waterMl: parseInt(newWater) || 0
-      };
+        log[index] = {
+          ...item,
+          name: newName || item.name,
+          kcal: parseInt(newKcal) || 0,
+          pro: parseInt(newPro) || 0,
+          fat: parseInt(newFat) || 0,
+          carb: parseInt(newCarb) || 0,
+          waterMl: parseInt(newWater) || 0
+        };
+      }
       saveAndRender();
     }
 
@@ -827,7 +883,7 @@
           };
         }
         log = [];
-        localStorage.removeItem('diario_paolo_log');
+        localStorage.removeItem('diario_log');
         saveAndRender();
       }
     }
@@ -867,7 +923,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, savedFoods, historyLogs, TARGETS }));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `diario_fit_paolo_backup_${isoDateStr}.json`);
+      downloadAnchor.setAttribute("download", `diario_fit_backup_${isoDateStr}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -908,7 +964,7 @@
       let carb = document.getElementById('tot-carb').innerText;
       let acquaTot = document.getElementById('tot-water').innerText;
 
-      let report = `💪 DIARIO FIT DI PAOLO - ${formattedDateStr}\n`;
+      let report = `💪 DIARIO FIT - ${formattedDateStr}\n`;
       report += `🔥 Kcal: ${kcal} / ${TARGETS.kcal}\n`;
       report += `🥩 Proteine: ${pro} / ${TARGETS.pro}g\n`;
       report += `🥑 Grassi: ${fat} / ${TARGETS.fat}g\n`;
