@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario FIT by Davide</title>
+  <title>Diario FIT - Collega</title>
   
   <!-- 🦾 FAVICON INTEGRATA -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
@@ -13,14 +13,12 @@
     :root {
       --bg: #121212;
       --card: #1e1e1e;
-      --accent: #00e5ff;         /* 🌊 Tono Azzurro/Cyan distintivo per Davide */
+      --accent: #00e5ff;         /* 🌊 Tono Azzurro/Cyan distintivo */
       --accent-glow: rgba(0, 229, 255, 0.2);
       --water-color: #00bfff;
       --text: #ffffff;
       --subtext: #aaaaaa;
       --border: #333333;
-      --win-btn-bg: #2d2d2d;
-      --win-btn-border: #555555;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -58,7 +56,7 @@
     .win-btn {
       background: linear-gradient(180deg, #3a3a3a 0%, #222222 100%);
       color: var(--text);
-      border: 1px solid var(--win-btn-border);
+      border: 1px solid #555;
       border-top-color: #666;
       border-left-color: #666;
       border-radius: 4px;
@@ -73,11 +71,6 @@
     }
     .win-btn:active {
       background: linear-gradient(180deg, #181818 0%, #2a2a2a 100%);
-      border-top-color: #111;
-      border-left-color: #111;
-      border-right-color: #555;
-      border-bottom-color: #555;
-      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8);
       transform: translateY(1px);
     }
     .win-btn-help {
@@ -250,13 +243,22 @@
       margin-bottom: 15px;
     }
     .modal-header h3 { margin: 0; color: var(--accent); }
-    .modal-content h4 { color: var(--accent); margin-top: 15px; margin-bottom: 5px; }
   </style>
 </head>
 <body>
 
+  <!-- SCHERMATA DI PROTEZIONE PASSWORD -->
+  <div id="auth-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div style="background: #1e1e1e; padding: 30px; border-radius: 12px; border: 2px solid var(--accent); text-align: center; width: 90%; max-width: 350px;">
+      <h3 style="color: var(--accent); margin-top: 0;">🔒 Accesso Protetto</h3>
+      <p style="font-size: 0.85rem; color: var(--subtext);">Inserisci la password per aprire il diario</p>
+      <input type="password" id="auth-pwd" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: 1px solid var(--border); background: #2a2a2a; color: #fff; box-sizing: border-box;">
+      <button onclick="checkPassword()" style="width: 100%; padding: 10px; background: var(--accent); color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Accedi</button>
+    </div>
+  </div>
+
   <div class="header-container">
-    <h1 class="header-title">💪 Diario FIT by Davide</h1>
+    <h1 class="header-title">🦾 Diario FIT - Personale</h1>
     <div class="top-toolbar">
       <button class="win-btn" onclick="copyReport()">📋 Copia Report</button>
       <button class="win-btn" onclick="generatePrintableReport()">🖨️ Stampa PDF</button>
@@ -346,16 +348,16 @@
     </select>
   </div>
 
-  <!-- QUICK ADD DI DAVIDE (Personalizzabili) -->
+  <!-- QUICK ADD PERSONALIZZATI -->
   <div class="card">
-    <h2>⚡ Inserimento Rapido (Davide)</h2>
+    <h2>⚡ Inserimento Rapido</h2>
     <div class="quick-buttons">
-      <button onclick="addQuick('Colazione Avena + Whey', 350, 25, 5, 50, 0)">🥣 Colazione Avena + Whey</button>
-      <button onclick="addQuick('Petto di Pollo (200g) + Riso (80g)', 500, 50, 4, 65, 0)">🍗 Pollo & Riso (Pasto Standard)</button>
-      <button onclick="addQuick('Panino con Bresaola (100g pane + 70g bresaola)', 380, 28, 4, 55, 0)">🥪 Panino con Bresaola</button>
-      <button onclick="addQuick('Frutta Mista (Mela / Banana ~200g)', 100, 1, 0, 25, 0)">🍎 Frutta Fresca</button>
-      <button onclick="addQuick('Snack Mandorle (30g)', 180, 6, 15, 6, 0)">🥜 Mandorle (30g)</button>
-      <button onclick="addQuick('Acqua (+500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
+      <button onclick="addQuick('3 uova sode + vit. B12 + zinco', 225, 19, 15, 1, 0)">🥚 3 Uova Sode + Integratori</button>
+      <button onclick="addQuick('Caffè al mattino', 5, 0, 0, 1, 0)">☕ Caffè</button>
+      <button onclick="addQuick('Semi di zucca', 160, 7, 14, 3, 0)">🥜 Semi di Zucca (~30g)</button>
+      <button onclick="addQuick('Grissini con semi di lino, girasole, sesamo', 130, 4, 4, 18, 0)">🥖 Grissini ai Semi</button>
+      <button onclick="addQuick('Pre workout: citrullina, betaina, beta alanina', 10, 0, 0, 0, 0)">⚡ Pre-Workout (Aminoacidi)</button>
+      <button onclick="addQuick('Post work: 100 gr. Whey', 380, 80, 2, 6, 0)">🥤 Post-Workout (100g Whey)</button>
     </div>
 
     <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -363,14 +365,6 @@
       <select id="quick-select" style="flex: 2;">
         <option value="">-- Seleziona un alimento --</option>
         <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
-        <optgroup label="🍽️ Alimenti predefiniti">
-          <option value="Riso Basmati bollito (100g secchi)|350|7|1|78|0">🍚 Riso Basmati (100g secchi)</option>
-          <option value="Petto di Pollo ai ferri (200g)|220|46|3|0|0">🍗 Petto di Pollo (200g)</option>
-          <option value="Tonno in scatola (2 scatolette ~112g sgocciolato)|120|28|2|0|0">🐟 Tonno in scatola (2 pz)</option>
-          <option value="Uova intere (2 pz)|150|14|10|1|0">🥚 Uova intere (2 pz)</option>
-          <option value="Gallette di Riso o Mais (40g)|150|3|1|32|0">🍘 Gallette (40g)</option>
-          <option value="Olio Extravergine d'Oliva (1 cucchiaio ~10g)|90|0|10|0|0">🫒 Olio EVO (1 cucchiaio)</option>
-        </optgroup>
       </select>
       <select id="portion-multiplier" style="flex: 1;">
         <option value="0.5">0.5x</option>
@@ -456,27 +450,43 @@
   <div class="modal-overlay" id="help-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>📖 Manuale d'Uso - Diario di Davide</h3>
+        <h3>📖 Manuale d'Uso</h3>
         <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
       </div>
       <div>
-        <p>Strumento di tracciamento nutrizionale personalizzato. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
+        <p>Strumento di tracciamento nutrizionale protetto da password. Usa i pulsanti rapidi o l'inserimento libero per registrare la tua giornata.</p>
       </div>
     </div>
   </div>
 
   <script>
-    let TARGETS = JSON.parse(localStorage.getItem('diario_davide_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
-    let savedFoods = JSON.parse(localStorage.getItem('diario_davide_saved_foods')) || [];
-    let historyLogs = JSON.parse(localStorage.getItem('diario_davide_history')) || {};
+    function checkPassword() {
+      const inputPwd = document.getElementById('auth-pwd').value;
+      if (inputPwd === "Jh5436%J~yj<") {
+        document.getElementById('auth-overlay').style.display = 'none';
+        localStorage.setItem('diario_collega_autenticato', 'true');
+      } else {
+        alert("Password errata!");
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('diario_collega_autenticato') === 'true') {
+        document.getElementById('auth-overlay').style.display = 'none';
+      }
+    });
+
+    let TARGETS = JSON.parse(localStorage.getItem('diario_collega_targets')) || { kcal: 2200, pro: 150, fat: 70, carb: 220, water: 2500 };
+    let savedFoods = JSON.parse(localStorage.getItem('diario_collega_saved_foods')) || [];
+    let historyLogs = JSON.parse(localStorage.getItem('diario_collega_history')) || {};
 
     const todayObj = new Date();
     const formattedDateStr = todayObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const isoDateStr = todayObj.toISOString().split('T')[0];
     document.getElementById('display-date').innerText = formattedDateStr;
 
-    let lastActiveDate = localStorage.getItem('diario_davide_last_date');
-    let log = JSON.parse(localStorage.getItem('diario_davide_log')) || [];
+    let lastActiveDate = localStorage.getItem('diario_collega_last_date');
+    let log = JSON.parse(localStorage.getItem('diario_collega_log')) || [];
 
     if (lastActiveDate && lastActiveDate !== isoDateStr && log.length > 0) {
       let acquaTotOld = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
@@ -495,7 +505,7 @@
       log = [];
     }
 
-    localStorage.setItem('diario_davide_last_date', isoDateStr);
+    localStorage.setItem('diario_collega_last_date', isoDateStr);
 
     function getCurrentTimeStr() {
       const now = new Date();
@@ -543,7 +553,7 @@
         water: targetWater > 1500 ? targetWater : 2500
       };
 
-      localStorage.setItem('diario_davide_targets', JSON.stringify(TARGETS));
+      localStorage.setItem('diario_collega_targets', JSON.stringify(TARGETS));
       updateTargetDisplays();
       toggleCalculatorModal();
       saveAndRender();
@@ -585,7 +595,7 @@
 
       if (k && p && f && c && w) {
         TARGETS = { kcal: k, pro: p, fat: f, carb: c, water: w };
-        localStorage.setItem('diario_davide_targets', JSON.stringify(TARGETS));
+        localStorage.setItem('diario_collega_targets', JSON.stringify(TARGETS));
         updateTargetDisplays();
         toggleTargetInputs();
         saveAndRender();
@@ -650,9 +660,9 @@
     }
 
     function saveAndRender() {
-      localStorage.setItem('diario_davide_log', JSON.stringify(log));
-      localStorage.setItem('diario_davide_saved_foods', JSON.stringify(savedFoods));
-      localStorage.setItem('diario_davide_history', JSON.stringify(historyLogs));
+      localStorage.setItem('diario_collega_log', JSON.stringify(log));
+      localStorage.setItem('diario_collega_saved_foods', JSON.stringify(savedFoods));
+      localStorage.setItem('diario_collega_history', JSON.stringify(historyLogs));
       
       let kcal = 0, pro = 0, fat = 0, carb = 0, acquaTot = 0;
       const container = document.getElementById('log-container');
@@ -813,7 +823,7 @@
           };
         }
         log = [];
-        localStorage.removeItem('diario_davide_log');
+        localStorage.removeItem('diario_collega_log');
         saveAndRender();
       }
     }
@@ -853,7 +863,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ log, savedFoods, historyLogs, TARGETS }));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `diario_fit_davide_backup_${isoDateStr}.json`);
+      downloadAnchor.setAttribute("download", `diario_fit_collega_backup_${isoDateStr}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -894,7 +904,7 @@
       let carb = document.getElementById('tot-carb').innerText;
       let acquaTot = document.getElementById('tot-water').innerText;
 
-      let report = `💪 DIARIO FIT (Davide) - ${formattedDateStr}\n`;
+      let report = `💪 DIARIO FIT - ${formattedDateStr}\n`;
       report += `🔥 Kcal: ${kcal} / ${TARGETS.kcal}\n`;
       report += `🥩 Proteine: ${pro} / ${TARGETS.pro}g\n`;
       report += `🥑 Grassi: ${fat} / ${TARGETS.fat}g\n`;
