@@ -406,15 +406,12 @@
     <button class="btn-action" onclick="addFromSelect()">+ Aggiungi Selezionato</button>
   </div>
 
-  <!-- NUOVA SEZIONE: STIMA ALIMENTO -->
+  <!-- SEZIONE: STIMA ALIMENTO -->
   <div class="card" style="border: 1px dashed var(--accent);">
     <h2>🤖 Stima Alimento</h2>
     <p style="font-size: 0.82rem; color: var(--subtext); margin-top: 0;">Descrivi l'alimento o il piatto e i grammi per stimare automaticamente i macro e compilarlo sotto.</p>
     <textarea id="estimate-prompt" rows="2" placeholder="Es. 250g di petto di pollo alla piastra con un filo d'olio"></textarea>
-    <div class="inline-group">
-      <button class="win-btn" onclick="estimateFoodAI()" style="flex: 2; justify-content: center; background: var(--accent); color: #000;">✨ Calcola Stima</button>
-      <button class="win-btn win-btn-danger" onclick="clearEstimate()" style="flex: 1; justify-content: center;">Pulisci</button>
-    </div>
+    <button class="win-btn" onclick="estimateFoodAI()" style="width: 100%; justify-content: center; background: var(--accent); color: #000;">✨ Calcola Stima</button>
     <div id="estimate-result-box" style="display: none; margin-top: 10px; background: #2a2a2a; padding: 10px; border-radius: 6px; font-size: 0.85rem;">
       <div id="estimate-text" style="color: var(--accent); font-weight: bold; margin-bottom: 6px;"></div>
       <button class="win-btn" onclick="transferEstimateToManual()" style="width: 100%; justify-content: center; background: #333;">⬇️ Riporta nei campi di Inserimento Libero</button>
@@ -507,7 +504,7 @@
         <p>Puoi impostare manualmente i tuoi target tramite il tasto <b>⚙️ Modifica</b> oppure cliccare su <b>🎯 Calcola Target</b> per ricavare in automatico calorie e macro ideali tramite la formula di Mifflin-St Jeor inserendo i tuoi dati fisici e l'obiettivo desiderato (mantenimento, dimagrimento o massa).</p>
 
         <h4>🤖 Stima Alimento</h4>
-        <p>Usa la sezione Stima Alimento per descrivere un piatto in linguaggio naturale: l'assistente calcolerà una stima rapida dei macro che potrai trasferire direttamente nel modulo di inserimento libero.</p>
+        <p>Usa la sezione Stima Alimento per descrivere un piatto in linguaggio naturale: l'assistente calcolerà una stima rapida dei macro (ripulendo automaticamente il campo di testo) che potrai trasferire direttamente nel modulo di inserimento libero con un click.</p>
 
         <h4>🍽️ Selezione Pasto Corrente</h4>
         <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack / Integrazione, Colazione, Pranzo, Cena) prima di registrare gli alimenti.</p>
@@ -726,15 +723,15 @@
       barWater.style.backgroundColor = getProgressColor(pWater, 'water');
     }
 
-    // Funzioni di Stima Alimento AI (stimatore euristico integrato lato client)
+    // Funzioni di Stima Alimento AI con pulizia automatica del campo
     let lastEstimatedData = null;
     function estimateFoodAI() {
-      const text = document.getElementById('estimate-prompt').value.trim();
+      const textarea = document.getElementById('estimate-prompt');
+      const text = textarea.value.trim();
       if (!text) {
         alert('Inserisci una descrizione dell alimento da stimare.');
         return;
       }
-      // Euristica di stima di base integrata per offrire un riscontro immediato offline/standalone
       let estimated = { name: text, kcal: 300, pro: 25, fat: 10, carb: 25, waterMl: 0 };
       const lower = text.toLowerCase();
       if (lower.includes('pollo') || lower.includes('tacchino')) {
@@ -749,12 +746,9 @@
       lastEstimatedData = estimated;
       document.getElementById('estimate-text').innerText = `Stima: ${estimated.name} -> ~${estimated.kcal} kcal | P: ${estimated.pro}g | G: ${estimated.fat}g | C: ${estimated.carb}g`;
       document.getElementById('estimate-result-box').style.display = 'block';
-    }
-
-    function clearEstimate() {
-      document.getElementById('estimate-prompt').value = '';
-      document.getElementById('estimate-result-box').style.display = 'none';
-      lastEstimatedData = null;
+      
+      // Automatismo richiesto: pulisce in automatico il campo di testo dopo la stima
+      textarea.value = '';
     }
 
     function transferEstimateToManual() {
