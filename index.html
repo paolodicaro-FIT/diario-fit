@@ -491,7 +491,108 @@
       </div>
     </div>
   </div>
+    <!-- MODALE STIMA VALORI ALIMENTO -->
+    <div class="modal-overlay" id="estimator-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🔍 Stima Valori Nutrizionali Alimento</h3>
+          <button class="win-btn" onclick="toggleEstimatorModal()">✕ Chiudi</button>
+        </div>
+        <div>
+          <p style="font-size: 0.85rem; color: var(--subtext); margin-top:0;">Se sei fuori a cena e non hai l'etichetta, seleziona la tipologia e inserisci i grammi stimati per calcolare approssimativamente i valori.</p>
+          
+          <label style="font-size: 0.85rem;">Nome Alimento (es. Filetto di manzo alcol / Tagliata):</label>
+          <input type="text" id="est-name" placeholder="es. Tagliata di carne">
 
+          <div class="inline-group">
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Categoria Tipologica:</label>
+              <select id="est-category">
+                <option value="lean_meat">Carne Magra (pollo, tacchino, filetto)</option>
+                <option value="fat_meat">Carne Grassa / Saccatura (maiale, manzo grasso)</option>
+                <option value="fish">Pesce Bianco / Magro (merluzzo, orata)</option>
+                <option value="fat_fish">Pesce Grasso / Azzurro (salmone, sgombro)</option>
+                <option value="carb_dish">Primo / Carboidrati (pasta, riso, pane)</option>
+                <option value="cheese">Formaggio / Latticino (parmigiano, mozzarella)</option>
+                <option value="fat_source">Fonte di Grassi (olio, frutta secca, burro)</option>
+                <option value="cooked_veg">Verdura cotta/condita con olio</option>
+              </select>
+            </div>
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Peso Stimato (grammi):</label>
+              <input type="number" id="est-grams" placeholder="es. 150" value="150">
+            </div>
+          </div>
+
+          <div style="background: #2a2a2a; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9rem;">
+            <b>Risultato Stimato:</b>
+            <div id="est-result-preview" style="color: var(--accent); margin-top: 5px;">Calcola per vedere l'anteprima...</div>
+          </div>
+
+          <div class="inline-group" style="margin-top: 15px;">
+            <button class="btn-secondary" onclick="calculateEstimation()" style="flex:1;">Calcola Stima</button>
+            <button class="btn-action" onclick="applyEstimationToForm()" style="flex:1; margin-top:0;">Usa questi valori nel modulo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODALE CALCOLATORE TARGET -->
+    <div class="modal-overlay" id="calculator-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🎯 Calcolatore Automatico Fabbisogno e Target</h3>
+          <button class="win-btn" onclick="toggleCalculatorModal()">✕ Chiudi</button>
+        </div>
+        <div>
+          <p style="font-size: 0.85rem; color: var(--subtext); margin-top:0;">Inserisci i tuoi parametri fisici per calcolare calorie e macronutrienti ideali basati sul tuo obiettivo.</p>
+          
+          <label style="font-size: 0.85rem;">Sesso:</label>
+          <select id="calc-gender">
+            <option value="male" selected>Uomo</option>
+            <option value="female">Donna</option>
+          </select>
+
+          <div class="inline-group">
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Età (anni):</label>
+              <input type="number" id="calc-age" placeholder="es. 59" value="59">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Peso (kg):</label>
+              <input type="number" id="calc-weight" placeholder="es. 75">
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Altezza (cm):</label>
+              <input type="number" id="calc-height" placeholder="es. 180" value="180">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Livello di Attività:</label>
+              <select id="calc-activity">
+                <option value="1.2">Sedentario (poco o nessun esercizio)</option>
+                <option value="1.375">Leggero (esercizio 1-3 volte/sett)</option>
+                <option value="1.55" selected>Moderato (esercizio 3-5 volte/sett)</option>
+                <option value="1.725">Intenso (esercizio 6-7 volte/sett)</option>
+                <option value="1.9">Molto intenso (lavoro fisico / 2x allenamento)</option>
+              </select>
+            </div>
+          </div>
+
+          <label style="font-size: 0.85rem;">Obiettivo:</label>
+          <select id="calc-goal">
+            <option value="cut">Dimagrimento / Definizione (-20% kcal)</option>
+            <option value="maintain" selected>Mantenimento del peso attuale</option>
+            <option value="bulk">Massa / Crescita (+10% kcal)</option>
+          </select>
+
+          <button class="btn-action" onclick="calculateAndApplyTargets()" style="margin-top: 15px;">Calcola e Imposta Target</button>
+        </div>
+      </div>
+    </div>
+  
   <!-- MODALE FINESTRA HELP -->
   <div class="modal-overlay" id="help-modal">
     <div class="modal-content">
