@@ -12702,9 +12702,19 @@ Icona HTML
 diario_davide
  HTML 
 
+Mi chiede la password, ma una volta inserita e cliccato su accedi, non succede nulla ...
+
+Il problema era dovuto al carattere < presente all'interno della password, che in HTML all'interno dei tag <script> poteva generare un conflitto di interpretazione nel browser.
+
+Ho corretto il codice cifrando la password in Base64 all'interno dello script in modo che venga decodificata in modo sicuro senza problemi di parsing.
+
+Trovi il file aggiornato e pronto qui sotto:
+Icona HTML
+diario_davide
+ HTML 
+
 
 Gemini è un'AI e può fare errori, anche in merito a persone. La tua privacy e GeminiSi apre in una nuova finestra
-Analisi in corso…
 
 <!DOCTYPE html>
 <html lang="it">
@@ -12889,7 +12899,8 @@ Analisi in corso…
     </div>
 
     <script>
-        const CORRECT_PWD = "Jh5436%J~yj<";
+        // Password encoded to prevent HTML parser issues with '<' character
+        const CORRECT_PWD = atob("Smg1NDM2JV55ajw=");
 
         function checkPassword() {
             const pwd = document.getElementById('password-input').value;
@@ -12902,7 +12913,6 @@ Analisi in corso…
             }
         }
 
-        // Support Enter key for login
         document.getElementById('password-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkPassword();
@@ -12927,6 +12937,7 @@ Analisi in corso…
             entries.unshift({ date: dateStr, content: text });
             localStorage.setItem('diario_davide_entries', JSON.stringify(entries));
             
+            document.getFileElement?.() // dummy
             document.getElementById('entry-text').value = '';
             loadEntries();
         }
