@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario FIT di Davide</title>
+  <title>Diario FIT</title>
   
   <!-- 🦾 FAVICON INTEGRATA: Icona automatica per preferiti e browser -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
@@ -284,7 +284,7 @@
   <div id="login-overlay" style="display:none;">
     <div class="login-card">
       <h2>🔒 Accesso Riservato</h2>
-      <p style="font-size:0.85rem; color:var(--subtext);">Inserisci la password per aprire il Diario FIT di Davide</p>
+      <p style="font-size:0.85rem; color:var(--subtext);">Inserisci la password per aprire il tuo Diario FIT</p>
       <input type="password" id="login-password-input" placeholder="Password di accesso" style="text-align:center;">
       <button class="win-btn" style="width:100%; justify-content:center; padding:10px; background:var(--accent); color:#000; font-size:1rem;" onclick="checkPassword()">Accedi</button>
       <p id="login-error" style="color:#cf6679; font-size:0.8rem; margin-top:10px; display:none;">Password errata, riprova.</p>
@@ -296,7 +296,7 @@
 
     <!-- HEADER CON TOOLBAR WINDOWS E HELP -->
     <div class="header-container">
-      <h1 class="header-title">💪 Diario FIT di Davide</h1>
+      <h1 class="header-title">🦾 Diario FIT</h1>
       <div class="top-toolbar">
         <button class="win-btn" onclick="copyReport()">📋 Copia Report</button>
         <button class="win-btn" onclick="generatePrintableReport()">🖨️ Stampa PDF</button>
@@ -393,16 +393,16 @@
       </select>
     </div>
 
-    <!-- QUICK ADD (6 TASTI RAPIDI DI DAVIDE) -->
+    <!-- QUICK ADD (6 TASTI RAPIDI PERSONALI) -->
     <div class="card">
-      <h2>⚡ Tasti Rapidi (Preferiti di Davide)</h2>
+      <h2>⚡ Tasti Rapidi (Preferiti)</h2>
       <div class="quick-buttons">
         <button onclick="addQuick('3 Uova sode + vit. B12 + zinco', 225, 21, 15, 0)">🥚 3 Uova sode + B12 + Zinco</button>
         <button onclick="addQuick('Caffè amaro', 5, 0, 0, 1)">☕ Caffè amaro</button>
-        <button onclick="addQuick('Semi di zucca', 140, 7, 12, 3)">🟢 Semi di zucca</button>
-        <button onclick="addQuick('Grissini con semi di lino, girasole, sesamo', 110, 3, 4, 15)">🥖 Grissini con semi</button>
+        <button onclick="addQuick('Mirtilli (50g)', 30, 0, 0, 7)">🫐 Mirtilli (50g)</button>
+        <button onclick="addQuick('Noci di Macadamia (20g)', 143, 1, 15, 3)">🌰 Noci di Macadamia (20g)</button>
         <button onclick="addQuick('Pre workout: citrullina, betaina, beta alanina + 400ml H2O', 0, 0, 0, 0, 400)">⚡ Pre workout (Citrullina/Betaina/Beta-alanina)</button>
-        <button onclick="addQuick('Post work: 100 gr di Proteine whey + 400ml H2O', 400, 100, 2, 3, 400)">🥤 Post work (100g Whey)</button>
+        <button onclick="addQuick('Post work: 120g Whey protein + 400ml H2O', 480, 120, 2, 4, 400)">🥤 Post work (120g Whey)</button>
       </div>
 
       <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
@@ -411,13 +411,12 @@
           <option value="">-- Seleziona un alimento --</option>
           <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
           <optgroup label="🍽️ Alimenti predefiniti">
-            <option value="Barretta Perugina Nero 70% (35g)|189|3|14|11|0">🍫 Barretta Perugina Nero 70% (35g)</option>
-            <option value="Prosciutto e Melone (Mezzo melone + Mezza vaschetta prosciutto)|260|14|8|34|0">🍈 Prosciutto e Melone</option>
-            <option value="Salmone Grigliato (150g)|280|30|18|0|0">🐟 Salmone Grigliato (150g)</option>
-            <option value="Tonno al naturale (1 scatoletta ~56g sgocciolato)|60|14|1|0|0">🐟 Tonno al naturale (1 scatoletta)</option>
-            <option value="Pollo (Petto 200g + Patate 250g)|550|55|15|45|0">🍗 Pollo e Patate (200g/250g)</option>
-            <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">🍝 Spaghetti / Pasta (100g secchi)</option>
-            <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
+            <option value="Yogurt greco 0% (150g)|85|15|0|6|0">🥣 Yogurt greco 0% (150g)</option>
+            <option value="Fiocchi di latte (200g)|194|26|8|4|0">🧀 Fiocchi di latte (200g)</option>
+            <option value="Petto di pollo (200g)|220|46|2|0|0">🍗 Petto di pollo (200g)</option>
+            <option value="Tonno in scatola (160g sgocciolato)|170|40|1|0|0">🐟 Tonno in scatola (160g)</option>
+            <option value="Noci Pecan (25g)|175,2,18,1|0">🥜 Noci Pecan (25g)</option>
+            <option value="Datteri (30g)|84|1|0|22|0">🌴 Datteri (30g)</option>
           </optgroup>
         </select>
         <select id="portion-multiplier" style="flex: 1;">
@@ -463,7 +462,7 @@
         <div>
           <p style="font-size: 0.85rem; color: var(--subtext); margin-top:0;">Se sei fuori a cena e non hai l'etichetta, seleziona la tipologia e inserisci i grammi stimati per calcolare approssimativamente i valori.</p>
           
-          <label style="font-size: 0.85rem;">Nome Alimento (es. Filetto di manzo alcol / Tagliata):</label>
+          <label style="font-size: 0.85rem;">Nome Alimento (es. Tagliata / Piatto ristorante):</label>
           <input type="text" id="est-name" placeholder="es. Tagliata di carne">
 
           <div class="inline-group">
@@ -522,7 +521,7 @@
             </div>
             <div style="flex:1;">
               <label style="font-size: 0.85rem;">Peso (kg):</label>
-              <input type="number" id="calc-weight" placeholder="es. 75">
+              <input type="number" id="calc-weight" placeholder="es. 75" value="75">
             </div>
           </div>
 
@@ -559,7 +558,7 @@
     <div class="modal-overlay" id="help-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>📖 Manuale d'Uso Diario FIT by Davide</h3>
+          <h3>📖 Manuale d'Uso Diario FIT</h3>
           <button class="win-btn" onclick="toggleHelpModal()">✕ Chiudi</button>
         </div>
         <div>
@@ -574,7 +573,7 @@
 
           <h4>⚡ Modalità di Inserimento</h4>
           <ul>
-            <li><b>Quick Add:</b> Tocca i pulsanti rapidi personalizzati per Davide per registrare subito le voci con un solo tap.</li>
+            <li><b>Quick Add:</b> Tocca i pulsanti rapidi personali per registrare subito le voci con un solo tap.</li>
             <li><b>Menu a Tendina + Moltiplicatore:</b> Seleziona un alimento dal menu e imposta il moltiplicatore di porzione (da 0.5x a 4x).</li>
             <li><b>Inserimento Libero:</b> Digita nome e dati nutrizionali di un nuovo cibo; verrà registrato e salvato automaticamente nella lista personalizzata con ⭐.</li>
           </ul>
@@ -692,14 +691,12 @@
       const category = document.getElementById('est-category').value;
       const grams = parseFloat(document.getElementById('est-grams').value) || 100;
 
-      // Valori medi per 100g delle varie categorie
-      // [kcal, pro, fat, carb] per 100g
       const profiles = {
         lean_meat:  { kcal: 120, pro: 23, fat: 3,  carb: 0 },
         fat_meat:   { kcal: 230, pro: 18, fat: 17, carb: 0 },
         fish:       { kcal: 90,  pro: 19, fat: 1.5,carb: 0 },
         fat_fish:   { kcal: 180, pro: 20, fat: 11, carb: 0 },
-        carb_dish:  { kcal: 150, pro: 5,  fat: 2,  carb: 28 }, // cotto (pasta/riso)
+        carb_dish:  { kcal: 150, pro: 5,  fat: 2,  carb: 28 },
         cheese:     { kcal: 350, pro: 25, fat: 27, carb: 1 },
         fat_source: { kcal: 600, pro: 10, fat: 55, carb: 10 },
         cooked_veg: { kcal: 60,  pro: 2,  fat: 4,  carb: 5 }
