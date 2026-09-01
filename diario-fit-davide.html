@@ -243,7 +243,7 @@
       border-radius: 8px;
     }
 
-    /* MODALE FINESTRA (HELP & CALCOLATORE TARGET) */
+    /* MODALE FINESTRA */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -393,20 +393,17 @@
       </select>
     </div>
 
-   <!-- QUICK ADD -->
-  <div class="card">
-    <h2>⚡ Inserimento Rapido</h2>
-    <div class="quick-buttons">
-      <button onclick="addQuick('Shaker Whey (2 cup Whey + 1 mis. Creatina + 500ml H2O)', 200, 40, 2, 3, 500)">🥤 Shaker Whey (2 cup + Creatina + 500ml H2O)</button>
-      <button onclick="addQuick('Shaker Post-Workout (1 Cup Whey + 300ml H2O)', 100, 20, 1, 1.5, 300)">🥤 Shaker Post-Workout (1 Cup + 300ml H2O)</button>
-      <button onclick="addQuick('Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)', 0, 0, 0, 0, 400)">⚡ Pre-Workout (+ 400ml H2O)</button>
-      <button onclick="addQuick('Noci Macadamia (10 pz / ~25g)', 180, 2, 19, 3)">🌰 Noci Macadamia (10 pz)</button>
-      <button onclick="addQuick('Yogurt Greco 0% (150g) + Whey (1 cup)', 160, 23, 0, 8)">🥣 Yogurt Greco 0% + Whey</button>
-      <button onclick="addQuick('Fiocchi di Latte (200g)', 180, 24, 8, 3)">🧀 Fiocchi di Latte (200g)</button>
-      <button onclick="addQuick('Mirtilli (250g)', 140, 2, 1, 35)">🫐 Mirtilli Fresh (250g)</button>
-      <button onclick="addQuick('Mocaccino s/z (1 tazza)', 30, 1, 1, 4)">☕ Mocaccino s/z</button>
-      <button onclick="addQuick('Acqua (+500ml)', 0, 0, 0, 0, 500)" style="border-color: var(--water-color);">💧 Acqua (+500ml)</button>
-    </div>
+    <!-- QUICK ADD (6 TASTI RAPIDI DI DAVIDE) -->
+    <div class="card">
+      <h2>⚡ Tasti Rapidi (Preferiti di Davide)</h2>
+      <div class="quick-buttons">
+        <button onclick="addQuick('3 Uova sode + vit. B12 + zinco', 225, 21, 15, 0)">🥚 3 Uova sode + B12 + Zinco</button>
+        <button onclick="addQuick('Caffè amaro', 5, 0, 0, 1)">☕ Caffè amaro</button>
+        <button onclick="addQuick('Semi di zucca', 140, 7, 12, 3)">🟢 Semi di zucca</button>
+        <button onclick="addQuick('Grissini con semi di lino, girasole, sesamo', 110, 3, 4, 15)">🥖 Grissini con semi</button>
+        <button onclick="addQuick('Pre workout: citrullina, betaina, beta alanina + 400ml H2O', 0, 0, 0, 0, 400)">⚡ Pre workout (Citrullina/Betaina/Beta-alanina)</button>
+        <button onclick="addQuick('Post work: 100 gr di Proteine whey + 400ml H2O', 400, 100, 2, 3, 400)">🥤 Post work (100g Whey)</button>
+      </div>
 
       <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
       <div class="inline-group">
@@ -437,8 +434,11 @@
 
     <!-- MANUALE -->
     <div class="card">
-      <h2>✍️ Inserimento Libero e Salvataggio</h2>
-      <input type="text" id="custom-name" placeholder="Nome alimento e dose (es. Noci Pecan 30g)">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <h2 style="margin: 0; font-size: 1.1rem;">✍️ Inserimento Libero e Salvataggio</h2>
+        <button onclick="toggleEstimatorModal()" style="padding: 6px 10px; font-size: 0.8rem; background: var(--accent); color: #000;" class="win-btn">🔍 Stima Alimento</button>
+      </div>
+      <input type="text" id="custom-name" placeholder="Nome alimento e dose (es. Noci Pecan 30g)" style="margin-top: 10px;">
       <input type="number" id="custom-kcal" placeholder="Calorie (kcal)">
       <input type="number" id="custom-pro" placeholder="Proteine (g)">
       <input type="number" id="custom-fat" placeholder="Grassi (g)">
@@ -451,6 +451,52 @@
     <div class="card">
       <h2>📋 Registro di Oggi</h2>
       <div id="log-container"></div>
+    </div>
+
+    <!-- MODALE STIMA VALORI ALIMENTO -->
+    <div class="modal-overlay" id="estimator-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🔍 Stima Valori Nutrizionali Alimento</h3>
+          <button class="win-btn" onclick="toggleEstimatorModal()">✕ Chiudi</button>
+        </div>
+        <div>
+          <p style="font-size: 0.85rem; color: var(--subtext); margin-top:0;">Se sei fuori a cena e non hai l'etichetta, seleziona la tipologia e inserisci i grammi stimati per calcolare approssimativamente i valori.</p>
+          
+          <label style="font-size: 0.85rem;">Nome Alimento (es. Filetto di manzo alcol / Tagliata):</label>
+          <input type="text" id="est-name" placeholder="es. Tagliata di carne">
+
+          <div class="inline-group">
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Categoria Tipologica:</label>
+              <select id="est-category">
+                <option value="lean_meat">Carne Magra (pollo, tacchino, filetto)</option>
+                <option value="fat_meat">Carne Grassa / Saccatura (maiale, manzo grasso)</option>
+                <option value="fish">Pesce Bianco / Magro (merluzzo, orata)</option>
+                <option value="fat_fish">Pesce Grasso / Azzurro (salmone, sgombro)</option>
+                <option value="carb_dish">Primo / Carboidrati (pasta, riso, pane)</option>
+                <option value="cheese">Formaggio / Latticino (parmigiano, mozzarella)</option>
+                <option value="fat_source">Fonte di Grassi (olio, frutta secca, burro)</option>
+                <option value="cooked_veg">Verdura cotta/condita con olio</option>
+              </select>
+            </div>
+            <div style="flex:1;">
+              <label style="font-size: 0.85rem;">Peso Stimato (grammi):</label>
+              <input type="number" id="est-grams" placeholder="es. 150" value="150">
+            </div>
+          </div>
+
+          <div style="background: #2a2a2a; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9rem;">
+            <b>Risultato Stimato:</b>
+            <div id="est-result-preview" style="color: var(--accent); margin-top: 5px;">Calcola per vedere l'anteprima...</div>
+          </div>
+
+          <div class="inline-group" style="margin-top: 15px;">
+            <button class="btn-secondary" onclick="calculateEstimation()" style="flex:1;">Calcola Stima</button>
+            <button class="btn-action" onclick="applyEstimationToForm()" style="flex:1; margin-top:0;">Usa questi valori nel modulo</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- MODALE CALCOLATORE TARGET -->
@@ -520,6 +566,9 @@
           <h4>🎯 Target Giornalieri e Calcolatore Automatico</h4>
           <p>Puoi impostare manualmente i tuoi target tramite il tasto <b>⚙️ Modifica</b> oppure cliccare su <b>🎯 Calcola Target</b> per ricavare in automatico calorie e macro ideali tramite la formula di Mifflin-St Jeor inserendo i tuoi dati fisici e l'obiettivo desiderato.</p>
 
+          <h4>🔍 Stima Valori Alimento (Fuori casa)</h4>
+          <p>Se mangi fuori e non conosci i valori esatti, clicca su <b>🔍 Stima Alimento</b> nell'area di inserimento libero: inserendo tipo e grammi stimati, il sistema calcolerà una stima rapida da riportare nel modulo.</p>
+
           <h4>🍽️ Selezione Pasto Corrente</h4>
           <p>Scegli dal menu a tendina <i>Pasto Corrente</i> la categoria (Snack / Integrazione, Colazione, Pranzo, Cena) prima di registrare gli alimenti.</p>
 
@@ -580,6 +629,7 @@
     });
 
     let TARGETS, savedFoods, historyLogs, log;
+    let lastEstimatedData = null;
 
     function initApp() {
       TARGETS = JSON.parse(localStorage.getItem('diario_targets')) || { kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500 };
@@ -630,6 +680,63 @@
     function toggleCalculatorModal() {
       const modal = document.getElementById('calculator-modal');
       modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function toggleEstimatorModal() {
+      const modal = document.getElementById('estimator-modal');
+      modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function calculateEstimation() {
+      const name = document.getElementById('est-name').value.trim() || 'Piatto stimato';
+      const category = document.getElementById('est-category').value;
+      const grams = parseFloat(document.getElementById('est-grams').value) || 100;
+
+      // Valori medi per 100g delle varie categorie
+      // [kcal, pro, fat, carb] per 100g
+      const profiles = {
+        lean_meat:  { kcal: 120, pro: 23, fat: 3,  carb: 0 },
+        fat_meat:   { kcal: 230, pro: 18, fat: 17, carb: 0 },
+        fish:       { kcal: 90,  pro: 19, fat: 1.5,carb: 0 },
+        fat_fish:   { kcal: 180, pro: 20, fat: 11, carb: 0 },
+        carb_dish:  { kcal: 150, pro: 5,  fat: 2,  carb: 28 }, // cotto (pasta/riso)
+        cheese:     { kcal: 350, pro: 25, fat: 27, carb: 1 },
+        fat_source: { kcal: 600, pro: 10, fat: 55, carb: 10 },
+        cooked_veg: { kcal: 60,  pro: 2,  fat: 4,  carb: 5 }
+      };
+
+      const p = profiles[category] || profiles.lean_meat;
+      const factor = grams / 100;
+
+      const estKcal = Math.round(p.kcal * factor);
+      const estPro = Math.round(p.pro * factor);
+      const estFat = Math.round(p.fat * factor);
+      const estCarb = Math.round(p.carb * factor);
+
+      lastEstimatedData = {
+        name: `${name} (${grams}g)`,
+        kcal: estKcal,
+        pro: estPro,
+        fat: estFat,
+        carb: estCarb
+      };
+
+      document.getElementById('est-result-preview').innerHTML = 
+        `<b>${lastEstimatedData.name}</b><br>` +
+        `🔥 ${estKcal} kcal | 🥩 ${estPro}g P | 🥑 ${estFat}g G | 🍞 ${estCarb}g C`;
+    }
+
+    function applyEstimationToForm() {
+      if (!lastEstimatedData) {
+        calculateEstimation();
+      }
+      document.getElementById('custom-name').value = lastEstimatedData.name;
+      document.getElementById('custom-kcal').value = lastEstimatedData.kcal;
+      document.getElementById('custom-pro').value = lastEstimatedData.pro;
+      document.getElementById('custom-fat').value = lastEstimatedData.fat;
+      document.getElementById('custom-carb').value = lastEstimatedData.carb;
+      document.getElementById('custom-water').value = '';
+      toggleEstimatorModal();
     }
 
     function calculateAndApplyTargets() {
