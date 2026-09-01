@@ -13,6 +13,7 @@
             --accent: #38bdf8;
             --accent-hover: #0ea5e9;
             --border: #334155;
+            --success: #22c55e;
             --danger: #ef4444;
         }
         body {
@@ -28,7 +29,7 @@
         }
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -103,6 +104,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.2s;
+            text-align: left;
         }
         .quick-btn:hover {
             background-color: var(--accent);
@@ -112,9 +114,13 @@
         .section-title {
             font-size: 1.1rem;
             margin-bottom: 10px;
+            margin-top: 15px;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border);
             padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         textarea {
             resize: vertical;
@@ -122,23 +128,54 @@
         }
         .saved-list {
             margin-top: 20px;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             border-top: 1px solid var(--border);
             padding-top: 10px;
         }
         .saved-item {
             background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             font-size: 0.9rem;
             border: 1px solid var(--border);
+            position: relative;
+        }
+        .saved-item .header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
         }
         .saved-item .date {
             font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+            color: var(--accent);
+        }
+        .delete-btn {
+            background: transparent;
+            color: var(--danger);
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            width: auto;
+        }
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-secondary {
+            background-color: #334155;
+            color: var(--text-color);
+        }
+        .btn-secondary:hover {
+            background-color: #475569;
         }
     </style>
 </head>
@@ -161,20 +198,28 @@
             
             <div class="section-title">Tasti Rapidi (Inserimento Veloce)</div>
             <div class="quick-buttons">
-                <button class="quick-btn" onclick="addText('3 uova sode con integratori')">🥚 3 Uova Sode</button>
+                <button class="quick-btn" onclick="addText('3 uova sode con spezie')">🥚 3 Uova Sode</button>
                 <button class="quick-btn" onclick="addText('Caffè')">☕ Caffè</button>
-                <button class="quick-btn" onclick="addText('Semi di zucca')">🌱 Semi di Zucca</button>
-                <button class="quick-btn" onclick="addText('Grissini ai semi')">🥖 Grissini ai Semi</button>
+                <button class="quick-btn" onclick="addText('Fiocchi di latte + spezie')">🧀 Fiocchi di Latte</button>
+                <button class="quick-btn" onclick="addText('Yogurt greco 0% + mirtilli')">🫐 Yogurt e Mirtilli</button>
                 <button class="quick-btn" onclick="addText('Pre-workout (Citrullina, Betaina, Beta-alanina)')">⚡ Pre-workout</button>
-                <button class="quick-btn" onclick="addText('Post-workout (100g Whey)')">💪 Post-workout (100g Whey)</button>
+                <button class="quick-btn" onclick="addText('Post-workout (120g Whey + Creatina)')">💪 Post-workout (120g Whey)</button>
             </div>
 
             <div class="section-title">Nuova Registrazione</div>
             <textarea id="entry-text" placeholder="Scrivi qui o usa i tasti rapidi..."></textarea>
-            <button onclick="saveEntry()">Salva nel Diario</button>
+            
+            <div class="action-buttons">
+                <button onclick="saveEntry()">Salva nel Diario</button>
+                <button class="btn-secondary" onclick="clearText()" style="width: auto; padding: 12px 15px;">Pulisci</button>
+            </div>
 
             <div class="saved-list" id="saved-list">
                 <div class="section-title" style="border:none; margin-bottom:5px;">Storico Recente</div>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: right;">
+                <button class="btn-secondary" onclick="exportData()" style="width: auto; font-size: 0.85rem; padding: 6px 12px;">Esporta Dati (JSON)</button>
             </div>
         </div>
     </div>
@@ -206,6 +251,10 @@
             textarea.value += (textarea.value ? "\n" : "") + addition;
         }
 
+        function clearText() {
+            document.getElementById('entry-text').value = '';
+        }
+
         function saveEntry() {
             const text = document.getElementById('entry-text').value.trim();
             if (!text) return;
@@ -214,10 +263,17 @@
             const now = new Date();
             const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
-            entries.unshift({ date: dateStr, content: text });
+            entries.unshift({ id: Date.now(), date: dateStr, content: text });
             localStorage.setItem('diario_davide_entries', JSON.stringify(entries));
             
             document.getElementById('entry-text').value = '';
+            loadEntries();
+        }
+
+        function deleteEntry(id) {
+            let entries = JSON.parse(localStorage.getItem('diario_davide_entries') || '[]');
+            entries = entries.filter(entry => entry.id !== id);
+            localStorage.setItem('diario_davide_entries', JSON.stringify(entries));
             loadEntries();
         }
 
@@ -231,12 +287,25 @@
             } else {
                 entries.forEach(entry => {
                     html += `<div class="saved-item">
-                        <div class="date">${entry.date}</div>
+                        <div class="header-item">
+                            <span class="date">${entry.date}</span>
+                            <button class="delete-btn" onclick="deleteEntry(${entry.id})">Elimina</button>
+                        </div>
                         <div style="white-space: pre-wrap;">${entry.content}</div>
                     </div>`;
                 });
             }
             listEl.innerHTML = html;
+        }
+
+        function exportData() {
+            const entries = localStorage.getItem('diario_davide_entries') || '[]';
+            const blob = new Blob([entries], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'diario_fit_backup.json';
+            a.click();
         }
     </script>
 </body>
