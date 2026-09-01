@@ -749,8 +749,7 @@
     }
 
     // LOGICA CALCOLO TEORICO
-    function calculateTheoreticalValuesData() {
-      const name = document.getElementById('calc-theo-name').value.trim();
+    function computeTheoreticalValues() {
       const weight = parseFloat(document.getElementById('calc-theo-weight').value) || 0;
       const k100 = parseFloat(document.getElementById('calc-theo-kcal100').value) || 0;
       const p100 = parseFloat(document.getElementById('calc-theo-pro100').value) || 0;
@@ -759,174 +758,116 @@
       const w100 = parseFloat(document.getElementById('calc-theo-water100').value) || 0;
 
       const factor = weight / 100;
-      const kcal = Math.round(k100 * factor);
-      const pro = parseFloat((p100 * factor).toFixed(1));
-      const fat = parseFloat((f100 * factor).toFixed(1));
-      const carb = parseFloat((c100 * factor).toFixed(1));
-      const waterMl = Math.round(w100 * factor);
+      const calcKcal = Math.round(k100 * factor);
+      const calcPro = Math.round((p100 * factor) * 10) / 10;
+      const calcFat = Math.round((f100 * factor) * 10) / 10;
+      const calcCarb = Math.round((c100 * factor) * 10) / 10;
+      const calcWater = Math.round(w100 * factor);
 
-      return { name, weight, kcal, pro, fat, carb, waterMl, k100, p100, f100, c100, w100 };
-    }
+      document.getElementById('calc-theo-preview').innerHTML = 
+        `Risultato calcolato: <span style="color: var(--accent); font-weight: bold;">${calcKcal} kcal</span> (P: ${calcPro}g | G: ${calcFat}g | C: ${calcCarb}g${calcWater > 0 ? ' | Acqua: ' + calcWater + 'ml' : ''})`;
 
-    function computeTheoreticalValues() {
-      const d = calculateTheoreticalValuesData();
-      const preview = document.getElementById('calc-theo-preview');
-      preview.innerHTML = `Risultato per ${d.weight}g: <span style="color: var(--accent); font-weight: bold;">${d.kcal} kcal</span> (P: ${d.pro}g | G: ${d.fat}g | C: ${d.carb}g${d.waterMl > 0 ? ' | H2O: ' + d.waterMl + 'ml' : ''})`;
+      return { weight, k100, p100, f100, c100, w100, calcKcal, calcPro, calcFat, calcCarb, calcWater };
     }
 
     function addTheoreticalToLog() {
-      const d = calculateTheoreticalValuesData();
-      if (!d.name || d.weight <= 0) {
-        alert("Inserisci il nome dell'alimento e un peso valido.");
+      const name = document.getElementById('calc-theo-name').value.trim();
+      const res = computeTheoreticalValues();
+
+      if (!name || res.weight <= 0) {
+        alert('Inserisci un nome valido e il peso effettivo consumato.');
         return;
       }
-      const category = document.getElementById('meal-category').value;
+
+      const mealCategory = document.getElementById('meal-category').value;
       log.push({
-        name: `${d.name} (${d.weight}g)`,
-        kcal: d.kcal,
-        pro: d.pro,
-        fat: d.fat,
-        carb: d.carb,
-        waterMl: d.waterMl,
-        category: category,
-        time: getCurrentTimeStr()
+        id: Date.now(),
+        time: getCurrentTimeStr(),
+        meal: mealCategory,
+        name: `${name} (${res.weight}g)`,
+        kcal: res.calcKcal,
+        pro: res.calcPro,
+        fat: res.calcFat,
+        carb: res.calcCarb,
+        waterMl: res.calcWater
       });
+
       saveAndRender();
-      resetTheoreticalForm();
+      document.getElementById('calc-theo-name').value = '';
+      document.getElementById('calc-theo-weight').value = '';
     }
 
     function saveTheoreticalToMenu() {
-      const d = calculateTheoreticalValuesData();
-      if (!d.name || d.weight <= 0) {
-        alert("Inserisci il nome dell'alimento e un peso valido.");
+      const name = document.getElementById('calc-theo-name').value.trim();
+      const res = computeTheoreticalValues();
+
+      if (!name || res.k100 <= 0) {
+        alert('Inserisci un nome e i valori per 100g validi per salvare nel menu.');
         return;
       }
-      // Salva nel menu personalizzato i valori proporzionati o per 100g? Salviamo l'alimento con il totale calcolato o salviamo come preferito
-      const newFood = {
-        name: `${d.name} (${d.weight}g)`,
-        kcal: d.kcal,
-        pro: d.pro,
-        fat: d.fat,
-        carb: d.carb,
-        waterMl: d.waterMl
+
+      const foodObj = {
+        name: `${name} (${res.weight}g)`,
+        kcal: res.calcKcal,
+        pro: res.calcPro,
+        fat: res.calcFat,
+        carb: res.calcCarb,
+        waterMl: res.calcWater
       };
-      savedFoods.push(newFood);
-      renderSavedFoods();
-      
-      // Aggiunge anche al log di oggi
-      const category = document.getElementById('meal-category').value;
-      log.push({
-        name: newFood.name,
-        kcal: newFood.kcal,
-        pro: newFood.pro,
-        fat: newFood.fat,
-        carb: newFood.carb,
-        waterMl: newFood.waterMl,
-        category: category,
-        time: getCurrentTimeStr()
-      });
-      saveAndRender();
-      resetTheoreticalForm();
-      alert(`Alimento "${newFood.name}" aggiunto al diario e salvato tra i preferiti ⭐!`);
-    }
 
-    function resetTheoreticalForm() {
-      document.getElementById('calc-theo-name').value = '';
-      document.getElementById('calc-theo-weight').value = '';
-      document.getElementById('calc-theo-kcal100').value = '';
-      document.getElementById('calc-theo-pro100').value = '';
-      document.getElementById('calc-theo-fat100').value = '';
-      document.getElementById('calc-theo-carb100').value = '';
-      document.getElementById('calc-theo-water100').value = '';
-      document.getElementById('calc-theo-preview').innerHTML = `Risultato calcolato: <span style="color: var(--accent); font-weight: bold;">0 kcal</span> (P: 0g | G: 0g | C: 0g)`;
-    }
-
-    function saveAndRender() {
-      localStorage.setItem('diario_log', JSON.stringify(log));
+      savedFoods.push(foodObj);
       localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
-      localStorage.setItem('diario_history', JSON.stringify(historyLogs));
-      
-      let kcal = 0, pro = 0, fat = 0, carb = 0, acquaTot = 0;
-      const container = document.getElementById('log-container');
-      container.innerHTML = '';
+      renderSavedFoods();
 
-      const mealsOrder = ['Snack / Integrazione', 'Colazione', 'Pranzo', 'Cena'];
-      
-      mealsOrder.forEach(mealCategory => {
-        const mealItems = log.filter(item => item.category === mealCategory || (!item.category && mealCategory === 'Snack / Integrazione'));
-        
-        if (mealItems.length > 0) {
-          const header = document.createElement('div');
-          header.className = 'meal-header';
-          header.innerText = mealCategory;
-          container.appendChild(header);
-
-          const ul = document.createElement('ul');
-          mealItems.forEach(item => {
-            const originalIndex = log.indexOf(item);
-            kcal += item.kcal || 0;
-            pro += item.pro || 0;
-            fat += item.fat || 0;
-            carb += item.carb || 0;
-            if (item.waterMl) acquaTot += item.waterMl;
-
-            const li = document.createElement('li');
-            
-            let itemText = `<b>${item.name}</b>`;
-            if (item.kcal > 0) itemText += ` (${item.kcal} kcal)`;
-            if (item.waterMl > 0 && !item.kcal) itemText += ` (${item.waterMl} ml)`;
-
-            li.innerHTML = `
-              <span><span class="time-badge">[${item.time || '-'}]</span> ${itemText}</span>
-              <div class="item-actions">
-                <button onclick="editItem(${originalIndex})" style="background: #333;">✏️</button>
-                <button onclick="removeItem(${originalIndex})" style="background: #cf6679; color:#000;">✕</button>
-              </div>
-            `;
-            ul.appendChild(li);
-          });
-          container.appendChild(ul);
-        }
-      });
-
-      if (log.length === 0) {
-        container.innerHTML = '<div style="color: var(--subtext); text-align: center; padding: 10px;">Nessun elemento registrato per oggi.</div>';
-      }
-
-      document.getElementById('tot-kcal').innerText = Math.round(kcal);
-      document.getElementById('tot-pro').innerText = Math.round(pro * 10) / 10 + 'g';
-      document.getElementById('tot-fat').innerText = Math.round(fat * 10) / 10 + 'g';
-      document.getElementById('tot-carb').innerText = Math.round(carb * 10) / 10 + 'g';
-      document.getElementById('tot-water').innerText = acquaTot + 'ml';
-
-      updateProgressBars(kcal, pro, fat, carb, acquaTot);
+      addTheoreticalToLog();
     }
 
-    // Funzioni di supporto esistenti richiamate dall'interfaccia
-    function addQuick(name, kcal, pro, fat, carb, waterMl) {
-      const category = document.getElementById('meal-category').value;
-      log.push({ name, kcal, pro, fat, carb, waterMl, category, time: getCurrentTimeStr() });
+    function addQuick(name, kcal, pro, fat, carb, water = 0) {
+      const mealCategory = document.getElementById('meal-category').value;
+      log.push({
+        id: Date.now(),
+        time: getCurrentTimeStr(),
+        meal: mealCategory,
+        name: name,
+        kcal: kcal,
+        pro: pro,
+        fat: fat,
+        carb: carb,
+        waterMl: water
+      });
       saveAndRender();
     }
 
     function addFromSelect() {
       const select = document.getElementById('quick-select');
-      if (!select.value) return;
-      const parts = select.value.split('|');
-      const mult = parseFloat(document.getElementById('portion-multiplier').value) || 1;
-      const category = document.getElementById('meal-category').value;
+      const val = select.value;
+      if (!val) {
+        alert('Seleziona un alimento dal menu.');
+        return;
+      }
+      const multiplier = parseFloat(document.getElementById('portion-multiplier').value) || 1;
+      const parts = val.split('|');
+      const name = parts[0] + (multiplier !== 1 ? ` (${multiplier}x)` : '');
+      const kcal = Math.round(parseFloat(parts[1]) * multiplier);
+      const pro = Math.round((parseFloat(parts[2]) * multiplier) * 10) / 10;
+      const fat = Math.round((parseFloat(parts[3]) * multiplier) * 10) / 10;
+      const carb = Math.round((parseFloat(parts[4]) * multiplier) * 10) / 10;
+      const water = Math.round((parseFloat(parts[5]) || 0) * multiplier);
 
+      const mealCategory = document.getElementById('meal-category').value;
       log.push({
-        name: `${parts[0]} (${mult}x)`,
-        kcal: Math.round(parseFloat(parts[1]) * mult),
-        pro: parseFloat((parseFloat(parts[2]) * mult).toFixed(1)),
-        fat: parseFloat((parseFloat(parts[3]) * mult).toFixed(1)),
-        carb: parseFloat((parseFloat(parts[4]) * mult).toFixed(1)),
-        waterMl: Math.round((parseFloat(parts[5]) || 0) * mult),
-        category: category,
-        time: getCurrentTimeStr()
+        id: Date.now(),
+        time: getCurrentTimeStr(),
+        meal: mealCategory,
+        name: name,
+        kcal: kcal,
+        pro: pro,
+        fat: fat,
+        carb: carb,
+        waterMl: water
       });
       select.value = "";
+      document.getElementById('portion-multiplier').value = "1";
       saveAndRender();
     }
 
@@ -936,19 +877,30 @@
       const pro = parseFloat(document.getElementById('custom-pro').value) || 0;
       const fat = parseFloat(document.getElementById('custom-fat').value) || 0;
       const carb = parseFloat(document.getElementById('custom-carb').value) || 0;
-      const waterMl = parseInt(document.getElementById('custom-water').value) || 0;
+      const water = parseInt(document.getElementById('custom-water').value) || 0;
 
       if (!name) {
-        alert("Inserisci il nome dell'alimento.");
+        alert('Inserisci il nome dell alimento.');
         return;
       }
 
-      const category = document.getElementById('meal-category').value;
-      const newFood = { name, kcal, pro, fat, carb, waterMl };
-      savedFoods.push(newFood);
+      const foodObj = { name, kcal, pro, fat, carb, waterMl: water };
+      savedFoods.push(foodObj);
+      localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
       renderSavedFoods();
 
-      log.push({ ...newFood, category, time: getCurrentTimeStr() });
+      const mealCategory = document.getElementById('meal-category').value;
+      log.push({
+        id: Date.now(),
+        time: getCurrentTimeStr(),
+        meal: mealCategory,
+        name: name,
+        kcal: kcal,
+        pro: pro,
+        fat: fat,
+        carb: carb,
+        waterMl: water
+      });
 
       document.getElementById('custom-name').value = '';
       document.getElementById('custom-kcal').value = '';
@@ -960,41 +912,96 @@
       saveAndRender();
     }
 
-    function removeItem(index) {
-      log.splice(index, 1);
+    function deleteItem(id) {
+      log = log.filter(item => item.id !== id);
       saveAndRender();
     }
 
-    function editItem(index) {
-      const item = log[index];
-      const newName = prompt("Modifica nome alimento:", item.name);
-      if (newName === null) return;
-      const newKcal = prompt("Modifica calorie (kcal):", item.kcal);
-      if (newKcal === null) return;
-      
-      item.name = newName;
-      item.kcal = parseInt(newKcal) || 0;
-      saveAndRender();
+    function saveAndRender() {
+      localStorage.setItem('diario_log', JSON.stringify(log));
+
+      let totKcal = 0, totPro = 0, totFat = 0, totCarb = 0, totWater = 0;
+      log.forEach(item => {
+        totKcal += item.kcal || 0;
+        totPro += item.pro || 0;
+        totFat += item.fat || 0;
+        totCarb += item.carb || 0;
+        totWater += item.waterMl || 0;
+      });
+
+      document.getElementById('tot-kcal').innerText = totKcal;
+      document.getElementById('tot-pro').innerText = Math.round(totPro * 10) / 10 + 'g';
+      document.getElementById('tot-fat').innerText = Math.round(totFat * 10) / 10 + 'g';
+      document.getElementById('tot-carb').innerText = Math.round(totCarb * 10) / 10 + 'g';
+      document.getElementById('tot-water').innerText = totWater + 'ml';
+
+      updateProgressBars(totKcal, totPro, totFat, totCarb, totWater);
+
+      const container = document.getElementById('log-container');
+      container.innerHTML = '';
+
+      if (log.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--subtext); font-size: 0.9rem;">Nessun alimento registrato oggi.</p>';
+        return;
+      }
+
+      const categories = ['Colazione', 'Pranzo', 'Cena', 'Snack / Integrazione'];
+      categories.forEach(cat => {
+        const itemsInCat = log.filter(item => item.meal === cat);
+        if (itemsInCat.length > 0) {
+          const catHeader = document.createElement('div');
+          catHeader.className = 'meal-header';
+          catHeader.innerText = cat;
+          container.appendChild(catHeader);
+
+          const ul = document.createElement('ul');
+          itemsInCat.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span><span class="time-badge">[${item.time}]</span> ${item.name} <br>
+              <small style="color: var(--subtext);">${item.kcal} kcal | P: ${item.pro}g | G: ${item.fat}g | C: ${item.carb}g${item.waterMl ? ' | 💧 ' + item.waterMl + 'ml' : ''}</small></span>
+              <span class="item-actions"><button class="win-btn win-btn-danger" onclick="deleteItem(${item.id})">✕</button></span>
+            `;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        }
+      });
     }
 
     function copyReport() {
-      let text = `📋 Report Diario FIT - ${formattedDateStr}\n`;
-      let kcal = 0, pro = 0, fat = 0, carb = 0, water = 0;
-      
+      let totKcal = 0, totPro = 0, totFat = 0, totCarb = 0, totWater = 0;
       log.forEach(item => {
-        text += `- [${item.time || '-'}] ${item.name} (${item.kcal} kcal, P:${item.pro}g, G:${item.fat}g, C:${item.carb}g)\n`;
-        kcal += item.kcal || 0;
-        pro += item.pro || 0;
-        fat += item.fat || 0;
-        carb += item.carb || 0;
-        water += item.waterMl || 0;
+        totKcal += item.kcal || 0;
+        totPro += item.pro || 0;
+        totFat += item.fat || 0;
+        totCarb += item.carb || 0;
+        totWater += item.waterMl || 0;
       });
 
-      text += `\n📊 Totali: ${kcal} kcal | P: ${Math.round(pro)}g | G: ${Math.round(fat)}g | C: ${Math.round(carb)}g | H2O: ${water}ml`;
-      text += `\n🎯 Target: ${TARGETS.kcal} kcal | P: ${TARGETS.pro}g | G: ${TARGETS.fat}g | C: ${TARGETS.carb}g | H2O: ${TARGETS.water}ml`;
+      let text = `💪 REPORT DIARIO FIT - ${formattedDateStr}\n`;
+      text += `----------------------------------------\n`;
+      text += `🔥 Calorie: ${totKcal} / ${TARGETS.kcal} kcal\n`;
+      text += `🥩 Proteine: ${Math.round(totPro*10)/10}g / ${TARGETS.pro}g\n`;
+      text += `🥑 Grassi: ${Math.round(totFat*10)/10}g / ${TARGETS.fat}g\n`;
+      text += `🍞 Carboidrati: ${Math.round(totCarb*10)/10}g / ${TARGETS.carb}g\n`;
+      text += `💧 Acqua: ${totWater}ml / ${TARGETS.water}ml\n`;
+      text += `----------------------------------------\n\n`;
+
+      const categories = ['Colazione', 'Pranzo', 'Cena', 'Snack / Integrazione'];
+      categories.forEach(cat => {
+        const items = log.filter(i => i.meal === cat);
+        if (items.length > 0) {
+          text += `[${cat}]\n`;
+          items.forEach(i => {
+            text += `- [${i.time}] ${i.name} (${i.kcal} kcal, P:${i.pro}g, G:${i.fat}g, C:${i.carb}g${i.waterMl ? ', H2O:' + i.waterMl + 'ml' : ''})\n`;
+          });
+          text += `\n`;
+        }
+      });
 
       navigator.clipboard.writeText(text).then(() => {
-        alert('Report copiato negli appunti!');
+        alert('Report copiato negli appunti con successo!');
       });
     }
 
@@ -1005,33 +1012,29 @@
     function toggleHistory() {
       const card = document.getElementById('history-card');
       card.style.display = card.style.display === 'none' ? 'block' : 'none';
-      if (card.style.display === 'block') {
-        renderHistory();
-      }
+      renderHistory();
     }
 
     function renderHistory() {
       const container = document.getElementById('history-container');
       container.innerHTML = '';
-      const dates = Object.keys(historyLogs).sort().reverse();
-      
-      if (dates.length === 0) {
-        container.innerHTML = '<div style="color: var(--subtext); text-align: center; padding: 10px;">Nessun giorno archiviato nello storico.</div>';
+      const keys = Object.keys(historyLogs).sort().reverse();
+
+      if (keys.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--subtext); font-size: 0.85rem;">Nessun giorno precedente archiviato.</p>';
         return;
       }
 
-      dates.forEach(dateStr => {
-        const dayData = historyLogs[dateStr];
+      keys.forEach(dateStr => {
+        const data = historyLogs[dateStr];
         const div = document.createElement('div');
-        div.style.background = '#2a2a2a';
+        div.style.background = '#252525';
         div.style.padding = '10px';
         div.style.borderRadius = '6px';
         div.style.marginBottom = '8px';
-        div.style.fontSize = '0.85rem';
-        
         div.innerHTML = `
-          <div style="font-weight: bold; color: var(--accent); margin-bottom: 4px;">📅 ${dateStr}</div>
-          <div>🔥 Kcal: <b>${dayData.summary.kcal}</b> | 🥩 P: <b>${dayData.summary.pro}</b> | 🥑 G: <b>${dayData.summary.fat}</b> | 🍞 C: <b>${dayData.summary.carb}</b> | 💧 H2O: <b>${dayData.summary.water}</b></div>
+          <b style="color: var(--accent);">${dateStr}</b><br>
+          <small style="color: var(--subtext);">Kcal: ${data.summary.kcal} | P: ${data.summary.pro} | G: ${data.summary.fat} | C: ${data.summary.carb} | H2O: ${data.summary.water}</small>
         `;
         container.appendChild(div);
       });
@@ -1048,7 +1051,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `diario-fit-backup-${isoDateStr}.json`;
+      a.download = `diario_fit_backup_${isoDateStr}.json`;
       a.click();
     }
 
@@ -1066,7 +1069,7 @@
             if (data.savedFoods) savedFoods = data.savedFoods;
             if (data.history) historyLogs = data.history;
             if (data.currentLog) log = data.currentLog;
-            
+
             localStorage.setItem('diario_targets', JSON.stringify(TARGETS));
             localStorage.setItem('diario_saved_foods', JSON.stringify(savedFoods));
             localStorage.setItem('diario_history', JSON.stringify(historyLogs));
@@ -1074,9 +1077,9 @@
             updateTargetDisplays();
             renderSavedFoods();
             saveAndRender();
-            alert('Backup importato con successo!');
+            alert('Dati importati con successo!');
           } catch (err) {
-            alert('File di backup non valido.');
+            alert('File non valido.');
           }
         };
         reader.readAsText(file);
@@ -1085,27 +1088,28 @@
     }
 
     function resetDay() {
-      if (confirm("Vuoi chiudere e archiviare la giornata corrente azzerando il registro di oggi?")) {
-        let acquaTotToday = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
+      if (confirm('Vuoi chiudere e archiviare la giornata corrente?')) {
+        let totWater = log.reduce((sum, item) => sum + (item.waterMl || 0), 0);
         historyLogs[isoDateStr] = {
           date: isoDateStr,
           log: [...log],
-          acquaTot: acquaTotToday,
+          acquaTot: totWater,
           summary: {
             kcal: log.reduce((sum, item) => sum + (item.kcal || 0), 0),
             pro: log.reduce((sum, item) => sum + (item.pro || 0), 0) + 'g',
             fat: log.reduce((sum, item) => sum + (item.fat || 0), 0) + 'g',
             carb: log.reduce((sum, item) => sum + (item.carb || 0), 0) + 'g',
-            water: acquaTotToday + 'ml'
+            water: totWater + 'ml'
           }
         };
+        localStorage.setItem('diario_history', JSON.stringify(historyLogs));
         log = [];
         saveAndRender();
-        alert('Giornata archiviata nello storico.');
+        alert('Giornata chiusa e archiviata nello storico!');
       }
     }
 
-    // Inizializzazione all'avvio
+    // Inizializzazione pagina
     updateTargetDisplays();
     renderSavedFoods();
     saveAndRender();
