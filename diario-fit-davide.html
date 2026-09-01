@@ -13,7 +13,6 @@
             --accent: #38bdf8;
             --accent-hover: #0ea5e9;
             --border: #334155;
-            --success: #22c55e;
             --danger: #ef4444;
         }
         body {
@@ -53,7 +52,7 @@
             margin-bottom: 25px;
             font-style: italic;
         }
-        input[type="password"], input[type="text"], textarea, select {
+        input[type="password"], textarea {
             width: 100%;
             padding: 12px 16px;
             background: #0f172a;
@@ -150,7 +149,7 @@
             <h1>Diario FIT di Davide</h1>
             <div class="subtitle">da un'idea di Paolo Di Caro</div>
             <p style="color: var(--text-muted); margin-bottom: 20px;">Inserisci la password per accedere al diario:</p>
-            <input type="password" id="password-input" placeholder="Password protetta">
+            <input type="password" id="password-input" placeholder="Password (Fitness-2o26@)">
             <button onclick="checkPassword()">Accedi</button>
             <div id="error-msg" class="error-msg">Password errata. Riprova.</div>
         </div>
@@ -181,7 +180,7 @@
     </div>
 
     <script>
-        const CORRECT_PWD = atob("Smg1NDM2JUp+eWo8");
+        const CORRECT_PWD = "Fitness-2o26@";
 
         function checkPassword() {
             const pwd = document.getElementById('password-input').value;
