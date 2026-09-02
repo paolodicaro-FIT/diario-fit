@@ -421,15 +421,14 @@
             <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
           </optgroup>
         </select>
-        <select id="portion-multiplier" style="flex: 1;">
-          <option value="0.5">0.5x</option>
-          <option value="1" selected>1x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-          <option value="3">3x</option>
-          <option value="4">4x</option>
-        </select>
+        
+       <label style="font-size:0.85rem; color: var(--subtext);">Moltiplicatore Quantità:</label>
+      <div class="multiplier-control">
+        <button type="button" onclick="changeMultiplier(-0.5)">−</button>
+        <input type="number" id="portion-multiplier" value="1" step="0.5" min="0.5" readonly style="flex:1;">
+        <button type="button" onclick="changeMultiplier(0.5)">+</button>
       </div>
+
       <button class="btn-action" onclick="addFromSelect()">+ Aggiungi Selezionato</button>
     </div>
 
