@@ -406,22 +406,21 @@
         <button onclick="addQuick('Post work: 100 gr di Proteine whey + 400ml H2O', 400, 100, 2, 3, 400)">🥤 Post work (100g Whey)</button>
       </div>
 
-      <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Moltiplicatore:</label>
-      <div class="inline-group">
-        <select id="quick-select" style="flex: 2;">
-          <option value="">-- Seleziona un alimento --</option>
-          <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
-          <optgroup label="🍽️ Alimenti predefiniti">
-            <option value="Barretta Perugina Nero 70% (35g)|189|3|14|11|0">🍫 Barretta Perugina Nero 70% (35g)</option>
-            <option value="Prosciutto e Melone (Mezzo melone + Mezza vaschetta prosciutto)|260|14|8|34|0">🍈 Prosciutto e Melone</option>
-            <option value="Salmone Grigliato (150g)|280|30|18|0|0">🐟 Salmone Grigliato (150g)</option>
-            <option value="Tonno al naturale (1 scatoletta ~56g sgocciolato)|60|14|1|0|0">🐟 Tonno al naturale (1 scatoletta)</option>
-            <option value="Pollo (Petto 200g + Patate 250g)|550|55|15|45|0">🍗 Pollo e Patate (200g/250g)</option>
-            <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">🍝 Spaghetti / Pasta (100g secchi)</option>
-            <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
-          </optgroup>
-        </select>
-        
+           <label style="font-size:0.85rem; color: var(--subtext);">Scegli dal Menu con Quantità:</label>
+      <select id="quick-select">
+        <option value="">-- Seleziona un alimento --</option>
+        <optgroup label="⭐ I tuoi alimenti salvati" id="custom-optgroup"></optgroup>
+        <optgroup label="🍽️ Alimenti predefiniti">
+          <option value="Barretta Perugina Nero 70% (35g)|189|3|14|11|0">🍫 Barretta Perugina Nero 70% (35g)</option>
+          <option value="Prosciutto e Melone (Mezzo melone + Mezza vaschetta prosciutto)|260|14|8|34|0">🍈 Prosciutto e Melone</option>
+          <option value="Salmone Grigliato (150g)|280|30|18|0|0">🐟 Salmone Grigliato (150g)</option>
+          <option value="Tonno al naturale (1 scatoletta ~56g sgocciolato)|60|14|1|0|0">🐟 Tonno al naturale (1 scatoletta)</option>
+          <option value="Pollo (Petto 200g + Patate 250g)|550|55|15|45|0">🍗 Pollo e Patate (200g/250g)</option>
+          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">🍝 Spaghetti / Pasta (100g secchi)</option>
+          <option value="Sgombro in scatola (120g)|240|25|15|0|0">🐟 Sgombro in scatola (120g)</option>
+        </optgroup>
+      </select>
+
       <label style="font-size:0.85rem; color: var(--subtext);">Moltiplicatore Quantità:</label>
       <div class="multiplier-control">
         <button type="button" onclick="changeMultiplier(-0.5)">−</button>
