@@ -1315,6 +1315,69 @@ select:focus {
   border-radius: 99px;
 }
 
+
+/* =========================================================
+   DIMENSIONI REVISIONATE - mantenimento grafica C
+   Testi leggermente più grandi, layout ancora compatto
+========================================================= */
+
+.header-subtitle { font-size: .86rem; }
+.section-title h2 { font-size: 1.04rem; }
+.section-title small { font-size: .80rem; }
+.target-title { font-size: 1.00rem; }
+.target-item { font-size: .79rem; }
+.target-item strong { font-size: .90rem; }
+.metric-icon { font-size: 1.05rem; }
+.metric-value { font-size: 1.12rem; }
+.metric-label { font-size: .73rem; }
+.meal-selector label { font-size: .84rem; }
+input, select { font-size: .94rem; }
+::placeholder { font-size: .94rem; }
+.quick-btn { font-size: .79rem; }
+.multiplier-control button { font-size: 1.15rem; }
+.add-selected { font-size: .94rem; }
+.estimator-btn { font-size: .80rem; }
+.save-food-btn { font-size: .92rem; }
+.log-empty { font-size: .88rem; }
+.meal-header { font-size: .86rem; }
+.log-name { font-size: .88rem; }
+.log-meta { font-size: .76rem; }
+.delete-btn { font-size: .74rem; }
+.history-date { font-size: .85rem; }
+.history-summary { font-size: .77rem; }
+.btn { font-size: .90rem; }
+.modal-header h3 { font-size: 1.07rem; }
+.modal-content label { font-size: .82rem; }
+.modal-content p { font-size: .88rem; }
+.result-preview { font-size: .88rem; }
+
+/* Mantieni il vantaggio compatto sui telefoni */
+@media (max-width: 560px) {
+  .header-subtitle { font-size: .78rem; }
+  .section-title h2 { font-size: .94rem; }
+  .section-title small { font-size: .76rem; }
+  .target-title { font-size: .92rem; }
+  .target-item { font-size: .68rem; }
+  .target-item strong { font-size: .80rem; }
+  .metric-icon { font-size: .98rem; }
+  .metric-value { font-size: .94rem; }
+  .metric-label { font-size: .67rem; }
+  input, select { font-size: .86rem; }
+  ::placeholder { font-size: .86rem; }
+  .quick-btn { font-size: .70rem; }
+  .add-selected, .save-food-btn { font-size: .86rem; }
+  .log-name { font-size: .78rem; }
+  .log-meta { font-size: .67rem; }
+}
+
+@media (max-width: 370px) {
+  .header-subtitle { font-size: .72rem; }
+  .quick-btn { font-size: .66rem; }
+  .metric-value { font-size: .88rem; }
+  .metric-label { font-size: .61rem; }
+  input, select, ::placeholder { font-size: .82rem; }
+}
+
 </style>
 </head>
 
@@ -1335,7 +1398,7 @@ select:focus {
     <h2>Diario FIT</h2>
 
     <p>
-      Monitoraggio quotidiano di Paolo
+      monitoraggio quotidiano di Paolo
     </p>
 
     <input
@@ -1388,7 +1451,7 @@ select:focus {
       </h1>
 
       <div class="header-subtitle">
-        Monitoraggio quotidiano di Paolo
+        monitoraggio quotidiano di Paolo
       </div>
 
     </div>
@@ -4471,7 +4534,7 @@ function generatePrintableReport() {
       </h1>
 
       <div class="subtitle">
-        Monitoraggio quotidiano di Paolo
+        monitoraggio quotidiano di Paolo
         · ${document.getElementById("display-date").innerText}
       </div>
 
