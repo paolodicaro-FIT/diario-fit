@@ -2887,7 +2887,7 @@ let selectedFoodDisplayText = "";
 let lastEstimatedData = null;
 let lastGeminiData = null;
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-3.6-flash";
 
 
 /* =========================================================
@@ -3680,7 +3680,6 @@ async function askGemini() {
               { parts: [ { text: prompt } ] }
             ],
             generationConfig: {
-              temperature: 0.4,
               responseMimeType: "application/json"
             }
           })
