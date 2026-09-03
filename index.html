@@ -1378,6 +1378,27 @@ input, select { font-size: .94rem; }
   input, select, ::placeholder { font-size: .82rem; }
 }
 
+/* Riduzione e ottimizzazione per il menu "Scegli alimento" */
+#quick-select {
+  font-size: 0.72rem !important;
+}
+
+#quick-select option,
+#quick-select optgroup {
+  font-size: 0.70rem !important;
+}
+
+/* Regolazione per gli schermi dei cellulari */
+@media (max-width: 560px) {
+  #quick-select {
+    font-size: 0.65rem !important;
+  }
+  #quick-select option,
+  #quick-select optgroup {
+    font-size: 0.62rem !important;
+  }
+}
+
 </style>
 </head>
 
