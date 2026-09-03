@@ -81,7 +81,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -534,7 +535,8 @@ button:active {
 ========================================================= */
 
 input,
-select {
+select,
+textarea {
   width: 100%;
 
   min-height: 40px;
@@ -557,8 +559,14 @@ select {
   font-size: .82rem;
 }
 
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   border-color: rgba(255,159,28,.65);
 
   box-shadow:
@@ -1125,6 +1133,56 @@ select:focus {
 
 
 /* =========================================================
+   GEMINI AI MODAL & COMPONENTS
+========================================================= */
+
+.gemini-quick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.gemini-chip {
+  background: rgba(255,159,28,.1);
+  border: 1px solid rgba(255,159,28,.3);
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.gemini-chip:hover {
+  background: var(--accent);
+  color: #111827;
+}
+
+.gemini-response {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: .85rem;
+  line-height: 1.5;
+  color: var(--text);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.gemini-key-box {
+  background: rgba(0,0,0,.25);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  margin-bottom: 12px;
+}
+
+
+/* =========================================================
    RESPONSIVE DESKTOP
 ========================================================= */
 
@@ -1289,6 +1347,7 @@ select:focus {
 
   input,
   select,
+  textarea,
   .food-picker-trigger {
     min-height: 37px;
 
@@ -1397,7 +1456,7 @@ select:focus {
 .metric-value { font-size: 1.12rem; }
 .metric-label { font-size: .73rem; }
 .meal-selector label { font-size: .84rem; }
-input, select, .food-picker-trigger { font-size: .94rem; }
+input, select, textarea, .food-picker-trigger { font-size: .94rem; }
 ::placeholder { font-size: .94rem; }
 .quick-btn { font-size: .79rem; }
 .multiplier-control button { font-size: 1.15rem; }
@@ -1428,7 +1487,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
   .metric-icon { font-size: .98rem; }
   .metric-value { font-size: .94rem; }
   .metric-label { font-size: .67rem; }
-  input, select, .food-picker-trigger { font-size: .86rem; }
+  input, select, textarea, .food-picker-trigger { font-size: .86rem; }
   ::placeholder { font-size: .86rem; }
   .quick-btn { font-size: .70rem; }
   .add-selected, .save-food-btn { font-size: .86rem; }
@@ -1441,7 +1500,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
   .quick-btn { font-size: .66rem; }
   .metric-value { font-size: .88rem; }
   .metric-label { font-size: .61rem; }
-  input, select, .food-picker-trigger, ::placeholder { font-size: .82rem; }
+  input, select, textarea, .food-picker-trigger, ::placeholder { font-size: .82rem; }
 }
 
 </style>
@@ -1524,6 +1583,14 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
     <div class="top-toolbar">
+
+      <button
+        class="toolbar-btn accent"
+        onclick="toggleGeminiModal()"
+        title="Chiedi a Gemini"
+      >
+        ✨ <span class="label">Gemini</span>
+      </button>
 
       <button
         class="toolbar-btn"
@@ -2220,6 +2287,96 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
 <!-- =====================================================
+     MODAL CHIEDI A GEMINI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="gemini-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        ✨ Chiedi a Gemini
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleGeminiModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div class="gemini-key-box">
+      <label style="margin-top:0;">🔑 API Key Gemini (Google AI Studio)</label>
+      <div class="inline-group">
+        <input
+          type="password"
+          id="gemini-api-key-input"
+          placeholder="Incolla la tua API Key qui"
+        >
+        <button
+          class="btn"
+          style="flex:0 0 auto; width:80px;"
+          onclick="saveGeminiKey()"
+        >
+          Salva
+        </button>
+      </div>
+      <small style="color:var(--muted); display:block; margin-top:4px;">
+        La chiave viene salvata localmente nel tuo browser.
+      </small>
+    </div>
+
+    <p>
+      Chiedi consigli nutrizionali, ricette o stime basate sullo stato del tuo diario di oggi.
+    </p>
+
+    <div class="gemini-quick-btns">
+      <button class="gemini-chip" onclick="setQuickGeminiPrompt('Analizza cosa ho mangiato oggi e dammi un parere nutrizionale conciso.')">
+        📊 Analizza giornata
+      </button>
+
+      <button class="gemini-chip" onclick="setQuickGeminiPrompt('Cosa posso mangiare stasera per completare i miei target di proteine e calorie?')">
+        💡 Suggerimento cena
+      </button>
+
+      <button class="gemini-chip" onclick="setQuickGeminiPrompt('Dammi un idea per uno spuntino rapido ad alto contenuto proteico e pochi grassi.')">
+        🥩 Spuntino proteico
+      </button>
+    </div>
+
+    <label>La tua domanda per Gemini:</label>
+    <textarea
+      id="gemini-prompt-input"
+      placeholder="Es: Quante calorie e proteine ha una porzione di bresaola, rucola e grana? Oppure chiedi un consiglio sul tuo diario..."
+    ></textarea>
+
+    <button
+      class="btn primary full"
+      onclick="askGemini()"
+      style="margin-top:10px;"
+    >
+      ✨ Invia a Gemini
+    </button>
+
+    <div
+      id="gemini-response-container"
+      class="gemini-response"
+      style="display:none;"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      MODAL STIMA ALIMENTO
 ===================================================== -->
 
@@ -2585,6 +2742,14 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     <p>
       Quando non conosci i valori esatti di un alimento,
       puoi utilizzare la funzione di stima.
+    </p>
+
+
+    <h4>✨ Chiedi a Gemini</h4>
+
+    <p>
+      Utilizza l'IA Gemini per analizzare il tuo diario,
+      ricevere consigli sui pasti o calcolare macro.
     </p>
 
 
@@ -2982,6 +3147,115 @@ function toggleEstimatorModal() {
       ? "none"
       : "flex";
 
+}
+
+
+/* =========================================================
+   GEMINI AI FUNCTIONS
+========================================================= */
+
+function toggleGeminiModal() {
+  const modal = document.getElementById("gemini-modal");
+  if (modal.style.display === "flex") {
+    modal.style.display = "none";
+  } else {
+    modal.style.display = "flex";
+    const savedKey = localStorage.getItem("diario_gemini_key") || "";
+    document.getElementById("gemini-api-key-input").value = savedKey;
+  }
+}
+
+function saveGeminiKey() {
+  const key = document.getElementById("gemini-api-key-input").value.trim();
+  localStorage.setItem("diario_gemini_key", key);
+  alert("API Key Gemini salvata con successo!");
+}
+
+function setQuickGeminiPrompt(promptText) {
+  document.getElementById("gemini-prompt-input").value = promptText;
+}
+
+async function askGemini() {
+  const apiKey = document.getElementById("gemini-api-key-input").value.trim() || localStorage.getItem("diario_gemini_key");
+  const promptInput = document.getElementById("gemini-prompt-input").value.trim();
+  const respContainer = document.getElementById("gemini-response-container");
+
+  if (!apiKey) {
+    alert("Per favore inserisci e salva la tua API Key di Gemini.");
+    return;
+  }
+
+  if (!promptInput) {
+    alert("Scrivi una domanda o seleziona un suggerimento.");
+    return;
+  }
+
+  localStorage.setItem("diario_gemini_key", apiKey);
+
+  respContainer.style.display = "block";
+  respContainer.innerHTML = "⏳ <i>Gemini sta elaborando la tua richiesta...</i>";
+
+  let currentLogSummary = "Nessun alimento ancora registrato oggi.";
+  if (log && log.length > 0) {
+    currentLogSummary = log.map(i => `- [${i.meal}] ${i.name}: ${i.kcal} kcal (P:${i.pro}g, G:${i.fat}g, C:${i.carb}g, H2O:${i.waterMl||0}ml)`).join("\n");
+  }
+
+  let totKcal = 0, totPro = 0, totFat = 0, totCarb = 0, totWater = 0;
+  if (log) {
+    log.forEach(i => {
+      totKcal += i.kcal || 0;
+      totPro += i.pro || 0;
+      totFat += i.fat || 0;
+      totCarb += i.carb || 0;
+      totWater += i.waterMl || 0;
+    });
+  }
+
+  const fullPrompt = `Sei l'assistente nutrizionale e fitness della Web App 'Diario FIT' di Paolo.
+Rispondi in modo chiaro, utile, conciso e motivante in italiano.
+
+STATO ATTUALE DI OGGI:
+- Target Giornalieri: ${TARGETS.kcal} kcal | Proteine: ${TARGETS.pro}g | Grassi: ${TARGETS.fat}g | Carbo: ${TARGETS.carb}g | Acqua: ${TARGETS.water}ml
+- Totali Consumati Finora: ${totKcal} kcal | Proteine: ${totPro}g | Grassi: ${totFat}g | Carbo: ${totCarb}g | Acqua: ${totWater}ml
+- Rimanenti ai Target: ${TARGETS.kcal - totKcal} kcal | Proteine: ${TARGETS.pro - totPro}g | Grassi: ${TARGETS.fat - totFat}g | Carbo: ${TARGETS.carb - totCarb}g
+
+REGISTRO DETTAGLIATO PASTI OGGI:
+${currentLogSummary}
+
+DOMANDA O RICHIESTA DELL'UTENTE:
+${promptInput}`;
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: fullPrompt }] }]
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `Errore HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (resultText) {
+      let formatted = escapeHTML(resultText)
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\*(.*?)\*/g, '<i>$1</i>')
+        .replaceAll('\n', '<br>');
+      respContainer.innerHTML = formatted;
+    } else {
+      respContainer.innerText = "Nessuna risposta ricevuta da Gemini.";
+    }
+  } catch (err) {
+    console.error("Gemini API Error:", err);
+    respContainer.innerHTML = `<span style="color:var(--red);">❌ Errore durante la richiesta: ${escapeHTML(err.message)}</span>`;
+  }
 }
 
 
