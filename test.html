@@ -2535,7 +2535,10 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     </div>
 
-    <div class="gemini-hint">
+    <div
+      class="gemini-hint"
+      id="gemini-hint"
+    >
       La chiave resta salvata solo su questo dispositivo (localStorage) e
       viene usata per chiamare direttamente l'API di Google Gemini.
       Puoi crearne una gratuita su
@@ -2888,6 +2891,14 @@ let lastEstimatedData = null;
 let lastGeminiData = null;
 
 const GEMINI_MODEL = "gemini-3.6-flash";
+
+/* -----------------------------------------------------------
+   Incolla qui sotto, tra le virgolette, la tua chiave API
+   Gemini (creata su https://aistudio.google.com/app/apikey).
+   Se la lasci vuota, l'app tornera' a chiederla da video
+   come prima.
+----------------------------------------------------------- */
+const GEMINI_API_KEY_HARDCODED = "";
 
 
 /* =========================================================
@@ -3531,6 +3542,19 @@ function toggleGeminiModal() {
 
   if (opening) {
 
+    const usingHardcodedKey =
+      !!GEMINI_API_KEY_HARDCODED;
+
+    document.getElementById(
+      "gemini-key-row"
+    ).style.display =
+      usingHardcodedKey ? "none" : "flex";
+
+    document.getElementById(
+      "gemini-hint"
+    ).style.display =
+      usingHardcodedKey ? "none" : "block";
+
     document.getElementById(
       "gemini-api-key"
     ).value =
@@ -3620,6 +3644,8 @@ async function askGemini() {
   }
 
   const apiKey =
+    GEMINI_API_KEY_HARDCODED
+    ||
     document.getElementById(
       "gemini-api-key"
     ).value.trim()
@@ -3637,10 +3663,14 @@ async function askGemini() {
     return;
   }
 
-  localStorage.setItem(
-    "diario_gemini_api_key",
-    apiKey
-  );
+  if (!GEMINI_API_KEY_HARDCODED) {
+
+    localStorage.setItem(
+      "diario_gemini_api_key",
+      apiKey
+    );
+
+  }
 
   const askBtn =
     document.getElementById(
