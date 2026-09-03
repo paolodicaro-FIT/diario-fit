@@ -264,6 +264,11 @@ button:active {
   color: var(--red);
 }
 
+.toolbar-btn.purple {
+  color: var(--purple);
+  border-color: rgba(167,139,250,.4);
+}
+
 
 /* =========================================================
    DATE
@@ -899,6 +904,145 @@ textarea:focus {
   color: var(--red);
 
   font-size: .76rem;
+}
+
+
+/* =========================================================
+   ADMIN / PROFILI
+========================================================= */
+
+.profile-list-item {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 9px 10px;
+
+  margin-bottom: 6px;
+
+  background: rgba(167,139,250,.08);
+
+  border: 1px solid rgba(167,139,250,.25);
+
+  border-radius: 10px;
+}
+
+.profile-list-item .profile-name {
+  font-weight: 800;
+  font-size: .84rem;
+}
+
+.profile-list-item .profile-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.profile-list-item .profile-actions button {
+  min-height: 30px;
+  padding: 0 8px;
+
+  border: 0;
+  border-radius: 8px;
+
+  font-size: .78rem;
+  font-weight: 700;
+
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+}
+
+.profile-list-item .profile-actions button.danger {
+  color: var(--red);
+}
+
+.repeatable-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-bottom: 6px;
+
+  padding: 6px;
+
+  background: rgba(255,255,255,.02);
+
+  border-radius: 8px;
+}
+
+.repeatable-row input {
+  min-height: 32px;
+  padding: 5px 6px;
+  font-size: .74rem;
+}
+
+.repeatable-row .rr-emoji { width: 42px; }
+.repeatable-row .rr-label { width: 76px; }
+.repeatable-row .rr-name { flex: 1 1 140px; min-width: 120px; }
+.repeatable-row .rr-num { width: 58px; }
+
+.repeatable-row .row-remove {
+  min-width: 30px;
+  min-height: 30px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: rgba(251,113,133,.15);
+  color: var(--red);
+
+  font-weight: 800;
+  font-size: .8rem;
+}
+
+.admin-add-row-btn {
+  width: 100%;
+
+  min-height: 34px;
+
+  margin-bottom: 10px;
+
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--subtext);
+
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.admin-subheading {
+  margin: 14px 0 6px;
+
+  color: var(--purple);
+
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.modal-content.wide {
+  max-width: 760px;
+}
+
+.rr-field-hint {
+  width: 100%;
+
+  display: flex;
+
+  gap: 5px;
+
+  color: var(--muted);
+
+  font-size: .6rem;
+}
+
+.rr-field-hint span {
+  text-align: center;
 }
 
 .save-food-btn {
@@ -1615,7 +1759,10 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         💪 Diario <span>FIT</span>
       </h1>
 
-      <div class="header-subtitle">
+      <div
+        class="header-subtitle"
+        id="header-subtitle"
+      >
         diario di Paolo
       </div>
 
@@ -1623,6 +1770,16 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
     <div class="top-toolbar">
+
+      <button
+        class="toolbar-btn purple"
+        id="admin-toolbar-btn"
+        onclick="toggleAdminModal()"
+        title="Gestione profili"
+        style="display:none;"
+      >
+        👑
+      </button>
 
       <button
         class="toolbar-btn"
@@ -2022,106 +2179,11 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     </div>
 
 
-    <div class="quick-grid">
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Shaker Whey (2 cup Whey + Creatina + 500ml H2O)',
-          200,40,2,3,500
-        )"
-      >
-        🥤 Whey
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Shaker Post-Workout (1 Cup Whey + 300ml H2O)',
-          100,20,1,1.5,300
-        )"
-      >
-        🏋️ Post
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)',
-          0,0,0,0,400
-        )"
-      >
-        ⚡ Pre
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Noci Macadamia (10 pz / ~25g)',
-          180,2,19,3
-        )"
-      >
-        🌰 Noci
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Yogurt Greco 0% (150g) + Whey (1 cup)',
-          160,23,0,8
-        )"
-      >
-        🥣 Yogurt
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Fiocchi di Latte (200g)',
-          180,24,8,3
-        )"
-      >
-        🧀 Fiocchi
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Mirtilli (250g)',
-          140,2,1,35
-        )"
-      >
-        🫐 Mirtilli
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="addQuick(
-          'Mocaccino s/z (1 tazza)',
-          30,1,1,4
-        )"
-      >
-        ☕ Caffè
-      </button>
-
-
-      <button
-        class="quick-btn water"
-        onclick="addQuick(
-          'Acqua (+500ml)',
-          0,0,0,0,500
-        )"
-      >
-        💧 +500 ml
-      </button>
-
+    <div
+      class="quick-grid"
+      id="quick-grid-container"
+    >
+      <!-- Generato dinamicamente via JS da renderQuickGrid() -->
     </div>
 
 
@@ -2592,6 +2654,168 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
 <!-- =====================================================
+     MODAL ADMIN / PROFILI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="admin-modal"
+>
+
+  <div class="modal-content wide">
+
+    <div class="modal-header">
+
+      <h3>
+        👑 Gestione profili
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleAdminModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <!-- VISTA ELENCO -->
+
+    <div id="admin-list-view">
+
+      <p>
+        Crea un profilo per ogni amico o collega, con target,
+        inserimento rapido e alimenti preferiti dedicati. Poi copia
+        il link e inviaglielo: aprendolo sul proprio cellulare,
+        tablet o PC l'app si configura da sola su quel dispositivo.
+      </p>
+
+      <div id="admin-profiles-list"></div>
+
+      <button
+        class="btn primary full"
+        onclick="openProfileEditor(null)"
+      >
+        ＋ Nuovo profilo
+      </button>
+
+    </div>
+
+
+    <!-- VISTA EDITOR -->
+
+    <div
+      id="admin-editor-view"
+      style="display:none;"
+    >
+
+      <label>
+        Nome profilo
+      </label>
+
+      <input
+        type="text"
+        id="prof-name"
+        placeholder="es. Marco"
+      >
+
+
+      <div class="admin-subheading">
+        🎯 Target giornalieri
+      </div>
+
+      <div class="inline-group">
+
+        <div>
+          <label>Kcal</label>
+          <input type="number" id="prof-kcal">
+        </div>
+
+        <div>
+          <label>Proteine g</label>
+          <input type="number" id="prof-pro">
+        </div>
+
+      </div>
+
+      <div class="inline-group">
+
+        <div>
+          <label>Grassi g</label>
+          <input type="number" id="prof-fat">
+        </div>
+
+        <div>
+          <label>Carboidrati g</label>
+          <input type="number" id="prof-carb">
+        </div>
+
+      </div>
+
+      <label>
+        Acqua ml
+      </label>
+
+      <input type="number" id="prof-water">
+
+
+      <div class="admin-subheading">
+        ⚡ Inserimento rapido (tasti "1 tap")
+      </div>
+
+      <div id="prof-quick-rows"></div>
+
+      <button
+        type="button"
+        class="admin-add-row-btn"
+        onclick="addQuickRowToEditor()"
+      >
+        + Aggiungi tasto rapido
+      </button>
+
+
+      <div class="admin-subheading">
+        ⭐ Alimenti preferiti
+      </div>
+
+      <div id="prof-fav-rows"></div>
+
+      <button
+        type="button"
+        class="admin-add-row-btn"
+        onclick="addFavRowToEditor()"
+      >
+        + Aggiungi alimento preferito
+      </button>
+
+
+      <div class="inline-group" style="margin-top:10px;">
+
+        <button
+          class="btn"
+          onclick="closeProfileEditor()"
+        >
+          Annulla
+        </button>
+
+        <button
+          class="btn primary"
+          onclick="saveProfile()"
+        >
+          Salva profilo
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      MODAL CALCOLATORE
 ===================================================== -->
 
@@ -2875,6 +3099,28 @@ const DEFAULT_PRESET_FOODS = [
   { value: "Sgombro in scatola (120g)|240|25|15|0|0", label: "🐟 Sgombro", text: "Sgombro in scatola" }
 ];
 
+const DEFAULT_QUICK_ITEMS = [
+  { emoji: "🥤", label: "Whey", name: "Shaker Whey (2 cup Whey + Creatina + 500ml H2O)", kcal: 200, pro: 40, fat: 2, carb: 3, water: 500 },
+  { emoji: "🏋️", label: "Post", name: "Shaker Post-Workout (1 Cup Whey + 300ml H2O)", kcal: 100, pro: 20, fat: 1, carb: 1.5, water: 300 },
+  { emoji: "⚡", label: "Pre", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, water: 400 },
+  { emoji: "🌰", label: "Noci", name: "Noci Macadamia (10 pz / ~25g)", kcal: 180, pro: 2, fat: 19, carb: 3, water: 0 },
+  { emoji: "🥣", label: "Yogurt", name: "Yogurt Greco 0% (150g) + Whey (1 cup)", kcal: 160, pro: 23, fat: 0, carb: 8, water: 0 },
+  { emoji: "🧀", label: "Fiocchi", name: "Fiocchi di Latte (200g)", kcal: 180, pro: 24, fat: 8, carb: 3, water: 0 },
+  { emoji: "🫐", label: "Mirtilli", name: "Mirtilli (250g)", kcal: 140, pro: 2, fat: 1, carb: 35, water: 0 },
+  { emoji: "☕", label: "Caffè", name: "Mocaccino s/z (1 tazza)", kcal: 30, pro: 1, fat: 1, carb: 4, water: 0 },
+  { emoji: "💧", label: "+500 ml", name: "Acqua (+500ml)", kcal: 0, pro: 0, fat: 0, carb: 0, water: 500, isWater: true }
+];
+
+/* -----------------------------------------------------------
+   ADMIN / PROFILI
+   Il tasto 👑 in alto compare solo se apri l'app con
+   ?admin=<codice qui sotto> nell'indirizzo (es. salvalo nei
+   preferiti sul tuo dispositivo). Non e' una vera sicurezza
+   server (qui non c'e' un server: e' tutto nel browser), e'
+   solo un modo per tenere il tasto nascosto agli amici.
+----------------------------------------------------------- */
+const ADMIN_ACCESS_CODE = "paolo2026";
+
 
 /* =========================================================
    VARIABILI
@@ -2884,11 +3130,14 @@ let TARGETS;
 let savedFoods;
 let historyLogs;
 let log;
+let quickAddItems;
+let profiles;
 
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let lastEstimatedData = null;
 let lastGeminiData = null;
+let editingProfileId = null;
 
 const GEMINI_MODEL = "gemini-3.6-flash";
 
@@ -2898,7 +3147,7 @@ const GEMINI_MODEL = "gemini-3.6-flash";
    Se la lasci vuota, l'app tornera' a chiederla da video
    come prima.
 ----------------------------------------------------------- */
-const GEMINI_API_KEY_HARDCODED = "AQ.Ab8RN6IJVHscPINSqotoHIY_IVu-loffGK-0cvs9JLUq9bgekw";
+const GEMINI_API_KEY_HARDCODED = "";
 
 
 /* =========================================================
@@ -2908,6 +3157,8 @@ const GEMINI_API_KEY_HARDCODED = "AQ.Ab8RN6IJVHscPINSqotoHIY_IVu-loffGK-0cvs9JLU
 window.addEventListener(
   "DOMContentLoaded",
   () => {
+
+    importProfileFromUrlIfPresent();
 
     const isAuth =
       localStorage.getItem(
@@ -3017,6 +3268,516 @@ document
 
 
 /* =========================================================
+   PROFILI - HELPER BASE64 UNICODE
+========================================================= */
+
+function b64EncodeUnicode(str) {
+
+  return btoa(
+    encodeURIComponent(str).replace(
+      /%([0-9A-F]{2})/g,
+      (match, p1) =>
+        String.fromCharCode("0x" + p1)
+    )
+  );
+
+}
+
+function b64DecodeUnicode(str) {
+
+  return decodeURIComponent(
+    atob(str)
+      .split("")
+      .map(c =>
+        "%" +
+        ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+      )
+      .join("")
+  );
+
+}
+
+
+/* =========================================================
+   PROFILI - IMPORT SU DISPOSITIVO AMICO
+========================================================= */
+
+function importProfileFromUrlIfPresent() {
+
+  const encoded =
+    new URLSearchParams(location.search).get("profile");
+
+  if (!encoded) {
+    return;
+  }
+
+  try {
+
+    const json =
+      b64DecodeUnicode(
+        decodeURIComponent(encoded)
+      );
+
+    const profile = JSON.parse(json);
+
+    if (!profile || !profile.name) {
+      throw new Error("Formato profilo non valido.");
+    }
+
+    const confirmMsg =
+      `Vuoi importare il profilo "${profile.name}" su questo ` +
+      `dispositivo? Verranno impostati target, inserimento ` +
+      `rapido e alimenti preferiti dedicati a questo profilo.`;
+
+    if (confirm(confirmMsg)) {
+
+      localStorage.setItem(
+        "diario_user_name",
+        profile.name
+      );
+
+      localStorage.setItem(
+        "diario_targets",
+        JSON.stringify(
+          profile.targets ||
+          { kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500 }
+        )
+      );
+
+      localStorage.setItem(
+        "diario_quick_items",
+        JSON.stringify(
+          profile.quickItems || DEFAULT_QUICK_ITEMS
+        )
+      );
+
+      localStorage.setItem(
+        "diario_saved_foods",
+        JSON.stringify(
+          profile.favoriteFoods || []
+        )
+      );
+
+    }
+
+  } catch (err) {
+
+    alert(
+      "Il link del profilo non è valido o è corrotto. Chiedi un nuovo link a chi te lo ha inviato."
+    );
+
+  } finally {
+
+    history.replaceState(
+      null,
+      "",
+      location.pathname
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILI - PANNELLO ADMIN
+========================================================= */
+
+function toggleAdminModal() {
+
+  const modal =
+    document.getElementById(
+      "admin-modal"
+    );
+
+  const opening =
+    modal.style.display !== "flex";
+
+  modal.style.display =
+    opening ? "flex" : "none";
+
+  if (opening) {
+    closeProfileEditor();
+    renderProfilesList();
+  }
+
+}
+
+
+function renderProfilesList() {
+
+  const container =
+    document.getElementById(
+      "admin-profiles-list"
+    );
+
+  container.innerHTML = "";
+
+  if (!profiles || profiles.length === 0) {
+
+    container.innerHTML =
+      `<div class="log-empty">Nessun profilo creato ancora.</div>`;
+
+    return;
+
+  }
+
+  profiles.forEach(p => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "profile-list-item";
+
+    row.innerHTML =
+      `<div class="profile-name">${escapeHTML(p.name)}</div>` +
+      `<div class="profile-actions"></div>`;
+
+    const actions =
+      row.querySelector(".profile-actions");
+
+    const editBtn =
+      document.createElement("button");
+    editBtn.innerText = "✏️";
+    editBtn.title = "Modifica";
+    editBtn.onclick = () => openProfileEditor(p.id);
+    actions.appendChild(editBtn);
+
+    const linkBtn =
+      document.createElement("button");
+    linkBtn.innerText = "🔗";
+    linkBtn.title = "Copia link di importazione";
+    linkBtn.onclick = () => copyProfileLink(p.id);
+    actions.appendChild(linkBtn);
+
+    const delBtn =
+      document.createElement("button");
+    delBtn.innerText = "🗑️";
+    delBtn.title = "Elimina";
+    delBtn.className = "danger";
+    delBtn.onclick = () => deleteProfile(p.id);
+    actions.appendChild(delBtn);
+
+    container.appendChild(row);
+
+  });
+
+}
+
+
+function openProfileEditor(id) {
+
+  editingProfileId = id;
+
+  document.getElementById(
+    "admin-list-view"
+  ).style.display = "none";
+
+  document.getElementById(
+    "admin-editor-view"
+  ).style.display = "block";
+
+  const profile =
+    id
+    ? profiles.find(p => p.id === id)
+    : null;
+
+  document.getElementById("prof-name").value =
+    profile ? profile.name : "";
+
+  const t =
+    (profile && profile.targets) || {
+      kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500
+    };
+
+  document.getElementById("prof-kcal").value = t.kcal;
+  document.getElementById("prof-pro").value = t.pro;
+  document.getElementById("prof-fat").value = t.fat;
+  document.getElementById("prof-carb").value = t.carb;
+  document.getElementById("prof-water").value = t.water;
+
+  document.getElementById("prof-quick-rows").innerHTML = "";
+  document.getElementById("prof-fav-rows").innerHTML = "";
+
+  const quickItems =
+    (profile && profile.quickItems) || DEFAULT_QUICK_ITEMS;
+
+  quickItems.forEach(item =>
+    addQuickRowToEditor(item)
+  );
+
+  const favFoods =
+    (profile && profile.favoriteFoods) || [];
+
+  favFoods.forEach(item =>
+    addFavRowToEditor(item)
+  );
+
+}
+
+
+function closeProfileEditor() {
+
+  editingProfileId = null;
+
+  document.getElementById(
+    "admin-editor-view"
+  ).style.display = "none";
+
+  document.getElementById(
+    "admin-list-view"
+  ).style.display = "block";
+
+}
+
+
+function addQuickRowToEditor(item) {
+
+  item = item || {
+    emoji: "🍽️", label: "", name: "",
+    kcal: 0, pro: 0, fat: 0, carb: 0, water: 0
+  };
+
+  const row =
+    document.createElement("div");
+
+  row.className = "repeatable-row";
+
+  row.innerHTML =
+    `<input class="rr-emoji" data-f="emoji" value="${escapeHTML(item.emoji || "")}" placeholder="🍽️">` +
+    `<input class="rr-label" data-f="label" value="${escapeHTML(item.label || "")}" placeholder="Etichetta">` +
+    `<input class="rr-name" data-f="name" value="${escapeHTML(item.name || "")}" placeholder="Nome alimento e dose">` +
+    `<input class="rr-num" type="number" data-f="kcal" value="${item.kcal || 0}" placeholder="Kcal">` +
+    `<input class="rr-num" type="number" data-f="pro" value="${item.pro || 0}" placeholder="Pro g">` +
+    `<input class="rr-num" type="number" data-f="fat" value="${item.fat || 0}" placeholder="Grassi g">` +
+    `<input class="rr-num" type="number" data-f="carb" value="${item.carb || 0}" placeholder="Carb g">` +
+    `<input class="rr-num" type="number" data-f="water" value="${item.water || 0}" placeholder="Acqua ml">` +
+    `<button type="button" class="row-remove">✕</button>`;
+
+  row.querySelector(".row-remove").onclick =
+    () => row.remove();
+
+  document.getElementById(
+    "prof-quick-rows"
+  ).appendChild(row);
+
+}
+
+
+function addFavRowToEditor(item) {
+
+  item = item || {
+    name: "", kcal: 0, pro: 0, fat: 0, carb: 0, water: 0
+  };
+
+  const row =
+    document.createElement("div");
+
+  row.className = "repeatable-row";
+
+  row.innerHTML =
+    `<input class="rr-name" data-f="name" value="${escapeHTML(item.name || "")}" placeholder="Nome alimento e dose">` +
+    `<input class="rr-num" type="number" data-f="kcal" value="${item.kcal || 0}" placeholder="Kcal">` +
+    `<input class="rr-num" type="number" data-f="pro" value="${item.pro || 0}" placeholder="Pro g">` +
+    `<input class="rr-num" type="number" data-f="fat" value="${item.fat || 0}" placeholder="Grassi g">` +
+    `<input class="rr-num" type="number" data-f="carb" value="${item.carb || 0}" placeholder="Carb g">` +
+    `<input class="rr-num" type="number" data-f="water" value="${item.water || 0}" placeholder="Acqua ml">` +
+    `<button type="button" class="row-remove">✕</button>`;
+
+  row.querySelector(".row-remove").onclick =
+    () => row.remove();
+
+  document.getElementById(
+    "prof-fav-rows"
+  ).appendChild(row);
+
+}
+
+
+function collectQuickRows() {
+
+  const rows =
+    document.querySelectorAll(
+      "#prof-quick-rows .repeatable-row"
+    );
+
+  return Array.from(rows).map(row => ({
+
+    emoji: row.querySelector('[data-f="emoji"]').value.trim() || "🍽️",
+    label: row.querySelector('[data-f="label"]').value.trim(),
+    name: row.querySelector('[data-f="name"]').value.trim(),
+    kcal: parseFloat(row.querySelector('[data-f="kcal"]').value) || 0,
+    pro: parseFloat(row.querySelector('[data-f="pro"]').value) || 0,
+    fat: parseFloat(row.querySelector('[data-f="fat"]').value) || 0,
+    carb: parseFloat(row.querySelector('[data-f="carb"]').value) || 0,
+    water: parseFloat(row.querySelector('[data-f="water"]').value) || 0
+
+  })).filter(item => item.name);
+
+}
+
+
+function collectFavRows() {
+
+  const rows =
+    document.querySelectorAll(
+      "#prof-fav-rows .repeatable-row"
+    );
+
+  return Array.from(rows).map(row => ({
+
+    name: row.querySelector('[data-f="name"]').value.trim(),
+    kcal: parseFloat(row.querySelector('[data-f="kcal"]').value) || 0,
+    pro: parseFloat(row.querySelector('[data-f="pro"]').value) || 0,
+    fat: parseFloat(row.querySelector('[data-f="fat"]').value) || 0,
+    carb: parseFloat(row.querySelector('[data-f="carb"]').value) || 0,
+    water: parseFloat(row.querySelector('[data-f="water"]').value) || 0
+
+  })).filter(item => item.name);
+
+}
+
+
+function saveProfile() {
+
+  const name =
+    document.getElementById("prof-name").value.trim();
+
+  if (!name) {
+    alert("Inserisci un nome per il profilo.");
+    return;
+  }
+
+  const profileData = {
+
+    id:
+      editingProfileId
+      ||
+      ("p_" + Date.now()),
+
+    name,
+
+    targets: {
+      kcal: parseFloat(document.getElementById("prof-kcal").value) || 0,
+      pro: parseFloat(document.getElementById("prof-pro").value) || 0,
+      fat: parseFloat(document.getElementById("prof-fat").value) || 0,
+      carb: parseFloat(document.getElementById("prof-carb").value) || 0,
+      water: parseFloat(document.getElementById("prof-water").value) || 0
+    },
+
+    quickItems: collectQuickRows(),
+
+    favoriteFoods: collectFavRows()
+
+  };
+
+  if (editingProfileId) {
+
+    const idx =
+      profiles.findIndex(p => p.id === editingProfileId);
+
+    if (idx > -1) {
+      profiles[idx] = profileData;
+    }
+
+  } else {
+
+    profiles.push(profileData);
+
+  }
+
+  localStorage.setItem(
+    "diario_profiles",
+    JSON.stringify(profiles)
+  );
+
+  closeProfileEditor();
+  renderProfilesList();
+
+}
+
+
+function deleteProfile(id) {
+
+  const profile =
+    profiles.find(p => p.id === id);
+
+  if (!profile) {
+    return;
+  }
+
+  if (!confirm(`Eliminare il profilo "${profile.name}"?`)) {
+    return;
+  }
+
+  profiles =
+    profiles.filter(p => p.id !== id);
+
+  localStorage.setItem(
+    "diario_profiles",
+    JSON.stringify(profiles)
+  );
+
+  renderProfilesList();
+
+}
+
+
+function copyProfileLink(id) {
+
+  const profile =
+    profiles.find(p => p.id === id);
+
+  if (!profile) {
+    return;
+  }
+
+  const exportData = {
+    name: profile.name,
+    targets: profile.targets,
+    quickItems: profile.quickItems,
+    favoriteFoods: profile.favoriteFoods
+  };
+
+  const encoded =
+    encodeURIComponent(
+      b64EncodeUnicode(
+        JSON.stringify(exportData)
+      )
+    );
+
+  const link =
+    `${location.origin}${location.pathname}?profile=${encoded}`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        alert(
+          `Link copiato negli appunti! Invialo a ${profile.name}: ` +
+          `basta che lo apra sul suo cellulare/tablet/PC per configurare l'app.`
+        );
+      })
+      .catch(() => {
+        prompt(
+          "Copia manualmente questo link:",
+          link
+        );
+      });
+
+  } else {
+
+    prompt(
+      "Copia manualmente questo link:",
+      link
+    );
+
+  }
+
+}
+
+
+/* =========================================================
    INIT
 ========================================================= */
 
@@ -3040,6 +3801,22 @@ function initApp() {
     JSON.parse(
       localStorage.getItem(
         "diario_saved_foods"
+      )
+    ) || [];
+
+
+  quickAddItems =
+    JSON.parse(
+      localStorage.getItem(
+        "diario_quick_items"
+      )
+    ) || DEFAULT_QUICK_ITEMS;
+
+
+  profiles =
+    JSON.parse(
+      localStorage.getItem(
+        "diario_profiles"
       )
     ) || [];
 
@@ -3113,6 +3890,24 @@ function initApp() {
   updateTargetDisplays();
 
   renderFoodPickerModal();
+
+  renderQuickGrid();
+
+  applyUserDisplayName();
+
+  if (
+    new URLSearchParams(location.search).get("admin")
+    ===
+    ADMIN_ACCESS_CODE
+  ) {
+
+    document.getElementById(
+      "admin-toolbar-btn"
+    ).style.display = "inline-block";
+
+    renderProfilesList();
+
+  }
 
   saveAndRender();
 
@@ -4241,6 +5036,64 @@ function updateTargetDisplays() {
    ADD QUICK
 ========================================================= */
 
+function renderQuickGrid() {
+
+  const container =
+    document.getElementById(
+      "quick-grid-container"
+    );
+
+  container.innerHTML = "";
+
+  quickAddItems.forEach(item => {
+
+    const btn =
+      document.createElement("button");
+
+    btn.className =
+      item.isWater
+        ? "quick-btn water"
+        : "quick-btn";
+
+    btn.innerText =
+      `${item.emoji} ${item.label}`;
+
+    btn.onclick = () =>
+      addQuick(
+        item.name,
+        item.kcal,
+        item.pro,
+        item.fat,
+        item.carb,
+        item.water || 0
+      );
+
+    container.appendChild(btn);
+
+  });
+
+}
+
+
+function applyUserDisplayName() {
+
+  const savedName =
+    localStorage.getItem(
+      "diario_user_name"
+    );
+
+  if (savedName) {
+
+    document.getElementById(
+      "header-subtitle"
+    ).innerText =
+      `diario di ${savedName}`;
+
+  }
+
+}
+
+
 function addQuick(
   name,
   kcal,
@@ -5269,11 +6122,11 @@ function generatePrintableReport() {
     <body>
 
       <h1>
-        💪 Diario FIT di Paolo
+        💪 Diario FIT di ${escapeHTML(localStorage.getItem("diario_user_name") || "Paolo")}
       </h1>
 
       <div class="subtitle">
-        monitoraggio quotidiano di Paolo
+        monitoraggio quotidiano di ${escapeHTML(localStorage.getItem("diario_user_name") || "Paolo")}
         · ${document.getElementById("display-date").innerText}
       </div>
 
