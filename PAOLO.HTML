@@ -534,7 +534,8 @@ button:active {
 ========================================================= */
 
 input,
-select {
+select,
+textarea {
   width: 100%;
 
   min-height: 40px;
@@ -557,8 +558,18 @@ select {
   font-size: .82rem;
 }
 
+textarea {
+  min-height: 84px;
+
+  resize: vertical;
+
+  font-family: inherit;
+  line-height: 1.4;
+}
+
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   border-color: rgba(255,159,28,.65);
 
   box-shadow:
@@ -800,6 +811,94 @@ select:focus {
 
   font-size: .68rem;
   font-weight: 800;
+}
+
+.section-actions {
+  display: flex;
+
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+.gemini-btn {
+  padding: 6px 9px;
+
+  border:
+    1px solid rgba(96,165,250,.35);
+
+  background: rgba(96,165,250,.12);
+
+  border-radius: 99px;
+
+  color: var(--blue);
+
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.gemini-btn:disabled {
+  opacity: .6;
+}
+
+.gemini-key-row {
+  display: flex;
+
+  gap: 7px;
+
+  margin-top: 4px;
+}
+
+.gemini-key-row input {
+  flex: 1;
+}
+
+.gemini-key-save {
+  padding: 0 12px;
+
+  border: 0;
+
+  border-radius: 10px;
+
+  background: var(--blue);
+
+  color: #0b0f14;
+
+  font-size: .78rem;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.gemini-hint {
+  color: var(--muted);
+
+  font-size: .66rem;
+
+  margin-top: 4px;
+}
+
+.gemini-hint a {
+  color: var(--blue);
+}
+
+.gemini-error {
+  display: none;
+
+  margin-top: 8px;
+
+  padding: 9px 10px;
+
+  background: rgba(251,113,133,.12);
+
+  border: 1px solid rgba(251,113,133,.35);
+
+  border-radius: 10px;
+
+  color: var(--red);
+
+  font-size: .76rem;
 }
 
 .save-food-btn {
@@ -2089,12 +2188,23 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
       <h2>✍️ Inserimento libero</h2>
 
-      <button
-        class="estimator-btn"
-        onclick="toggleEstimatorModal()"
-      >
-        🔍 Stima
-      </button>
+      <div class="section-actions">
+
+        <button
+          class="gemini-btn"
+          onclick="toggleGeminiModal()"
+        >
+          🤖 Chiedi a Gemini
+        </button>
+
+        <button
+          class="estimator-btn"
+          onclick="toggleEstimatorModal()"
+        >
+          🔍 Stima
+        </button>
+
+      </div>
 
     </div>
 
@@ -2362,6 +2472,126 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
 <!-- =====================================================
+     MODAL CHIEDI A GEMINI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="gemini-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        🤖 Chiedi a Gemini
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleGeminiModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <p>
+      Descrivi cosa stai mangiando (anche al ristorante,
+      in modo libero). Gemini stimerà kcal e macro e
+      compilerà i campi dell'Inserimento libero.
+    </p>
+
+
+    <label>
+      Descrizione del pasto
+    </label>
+
+    <textarea
+      id="gemini-description"
+      placeholder="es. Trancio di tagliata di manzo circa 200g con patate al forno e un bicchiere di vino rosso"
+    ></textarea>
+
+
+    <div
+      class="gemini-key-row"
+      id="gemini-key-row"
+    >
+
+      <input
+        type="password"
+        id="gemini-api-key"
+        placeholder="Incolla qui la tua chiave API Gemini"
+      >
+
+      <button
+        class="gemini-key-save"
+        onclick="saveGeminiApiKey()"
+      >
+        Salva
+      </button>
+
+    </div>
+
+    <div
+      class="gemini-hint"
+      id="gemini-hint"
+    >
+      La chiave resta salvata solo su questo dispositivo (localStorage) e
+      viene usata per chiamare direttamente l'API di Google Gemini.
+      Puoi crearne una gratuita su
+      <a
+        href="https://aistudio.google.com/app/apikey"
+        target="_blank"
+        rel="noopener"
+      >aistudio.google.com</a>.
+    </div>
+
+
+    <div
+      class="result-preview"
+      id="gemini-result-preview"
+      style="display:none;"
+    >
+      <b>Risultato:</b>
+      <div id="gemini-result-content"></div>
+    </div>
+
+    <div
+      class="gemini-error"
+      id="gemini-error"
+    ></div>
+
+
+    <div class="inline-group" style="margin-top:10px;">
+
+      <button
+        class="btn"
+        id="gemini-ask-btn"
+        onclick="askGemini()"
+      >
+        Chiedi a Gemini
+      </button>
+
+      <button
+        class="btn primary"
+        id="gemini-use-btn"
+        onclick="applyGeminiToForm()"
+        style="display:none;"
+      >
+        Usa valori
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      MODAL CALCOLATORE
 ===================================================== -->
 
@@ -2588,6 +2818,17 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     </p>
 
 
+    <h4>🤖 Chiedi a Gemini</h4>
+
+    <p>
+      Descrivi liberamente cosa stai mangiando (anche
+      fuori casa) e Gemini stimera' kcal e macro,
+      compilando i campi dell'Inserimento libero.
+      Serve una chiave API Gemini gratuita, salvata solo
+      su questo dispositivo.
+    </p>
+
+
     <h4>📋 Registro</h4>
 
     <p>
@@ -2647,6 +2888,17 @@ let log;
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let lastEstimatedData = null;
+let lastGeminiData = null;
+
+const GEMINI_MODEL = "gemini-3.6-flash";
+
+/* -----------------------------------------------------------
+   Incolla qui sotto, tra le virgolette, la tua chiave API
+   Gemini (creata su https://aistudio.google.com/app/apikey).
+   Se la lasci vuota, l'app tornera' a chiederla da video
+   come prima.
+----------------------------------------------------------- */
+const GEMINI_API_KEY_HARDCODED = "AQ.Ab8RN6IJVHscPINSqotoHIY_IVu-loffGK-0cvs9JLUq9bgekw";
 
 
 /* =========================================================
@@ -3267,6 +3519,368 @@ function applyEstimationToForm() {
 
 
   toggleEstimatorModal();
+
+}
+
+
+/* =========================================================
+   CHIEDI A GEMINI
+========================================================= */
+
+function toggleGeminiModal() {
+
+  const modal =
+    document.getElementById(
+      "gemini-modal"
+    );
+
+  const opening =
+    modal.style.display !== "flex";
+
+  modal.style.display =
+    opening ? "flex" : "none";
+
+  if (opening) {
+
+    const usingHardcodedKey =
+      !!GEMINI_API_KEY_HARDCODED;
+
+    document.getElementById(
+      "gemini-key-row"
+    ).style.display =
+      usingHardcodedKey ? "none" : "flex";
+
+    document.getElementById(
+      "gemini-hint"
+    ).style.display =
+      usingHardcodedKey ? "none" : "block";
+
+    document.getElementById(
+      "gemini-api-key"
+    ).value =
+      localStorage.getItem(
+        "diario_gemini_api_key"
+      ) || "";
+
+    showGeminiError("");
+
+    document.getElementById(
+      "gemini-result-preview"
+    ).style.display = "none";
+
+    document.getElementById(
+      "gemini-use-btn"
+    ).style.display = "none";
+
+  }
+
+}
+
+
+function saveGeminiApiKey() {
+
+  const key =
+    document.getElementById(
+      "gemini-api-key"
+    ).value.trim();
+
+  if (!key) {
+    showGeminiError(
+      "Inserisci una chiave API valida prima di salvare."
+    );
+    return;
+  }
+
+  localStorage.setItem(
+    "diario_gemini_api_key",
+    key
+  );
+
+  showGeminiError("");
+
+}
+
+
+function showGeminiError(msg) {
+
+  const el =
+    document.getElementById(
+      "gemini-error"
+    );
+
+  if (!msg) {
+    el.style.display = "none";
+    el.innerText = "";
+  } else {
+    el.style.display = "block";
+    el.innerText = msg;
+  }
+
+}
+
+
+async function askGemini() {
+
+  const description =
+    document.getElementById(
+      "gemini-description"
+    ).value.trim();
+
+  showGeminiError("");
+
+  document.getElementById(
+    "gemini-result-preview"
+  ).style.display = "none";
+
+  document.getElementById(
+    "gemini-use-btn"
+  ).style.display = "none";
+
+  if (!description) {
+    showGeminiError(
+      "Descrivi prima cosa stai mangiando."
+    );
+    return;
+  }
+
+  const apiKey =
+    GEMINI_API_KEY_HARDCODED
+    ||
+    document.getElementById(
+      "gemini-api-key"
+    ).value.trim()
+    ||
+    localStorage.getItem(
+      "diario_gemini_api_key"
+    )
+    ||
+    "";
+
+  if (!apiKey) {
+    showGeminiError(
+      "Inserisci e salva la tua chiave API Gemini per continuare."
+    );
+    return;
+  }
+
+  if (!GEMINI_API_KEY_HARDCODED) {
+
+    localStorage.setItem(
+      "diario_gemini_api_key",
+      apiKey
+    );
+
+  }
+
+  const askBtn =
+    document.getElementById(
+      "gemini-ask-btn"
+    );
+
+  const originalLabel =
+    askBtn.innerText;
+
+  askBtn.disabled = true;
+  askBtn.innerText = "⏳ Sto pensando...";
+
+  const prompt =
+    "Sei un nutrizionista esperto. L'utente ti descrive in modo libero e informale " +
+    "un pasto che sta mangiando o ha mangiato (anche fuori casa, al ristorante). " +
+    "Stima in modo realistico i valori nutrizionali dell'INTERA porzione descritta " +
+    "(non per 100g). Se le quantita' non sono specificate, assumi porzioni standard " +
+    "plausibili per un adulto. Rispondi SOLO con un oggetto JSON valido, senza testo " +
+    "aggiuntivo ne' markdown, con questa struttura esatta: " +
+    '{"name": "nome breve del piatto con dose stimata", "kcal": numero, "pro": numero, "fat": numero, "carb": numero}. ' +
+    "I numeri devono essere numeri (non stringhe), arrotondati a interi. Il campo name " +
+    "deve essere in italiano, breve (es. \"Tagliata di manzo 200g con patate\"). " +
+    "Descrizione del pasto: " + description;
+
+  try {
+
+    const response =
+      await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              { parts: [ { text: prompt } ] }
+            ],
+            generationConfig: {
+              responseMimeType: "application/json"
+            }
+          })
+        }
+      );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+      const apiMsg =
+        (data && data.error && data.error.message)
+        ||
+        `Errore HTTP ${response.status}`;
+
+      throw new Error(apiMsg);
+
+    }
+
+    const candidate =
+      data.candidates && data.candidates[0];
+
+    const textPart =
+      candidate &&
+      candidate.content &&
+      candidate.content.parts &&
+      candidate.content.parts[0] &&
+      candidate.content.parts[0].text;
+
+    if (!textPart) {
+      throw new Error(
+        "Gemini non ha restituito una risposta utilizzabile. Riprova con una descrizione piu' chiara."
+      );
+    }
+
+    let cleanText = textPart.trim();
+
+    cleanText =
+      cleanText
+        .replace(/^```json/i, "")
+        .replace(/^```/, "")
+        .replace(/```$/, "")
+        .trim();
+
+    let parsed;
+
+    try {
+      parsed = JSON.parse(cleanText);
+    } catch (parseErr) {
+      throw new Error(
+        "Non sono riuscito a interpretare la risposta di Gemini. Riprova."
+      );
+    }
+
+    const kcal = Math.round(Number(parsed.kcal)) || 0;
+    const pro = Math.round(Number(parsed.pro)) || 0;
+    const fat = Math.round(Number(parsed.fat)) || 0;
+    const carb = Math.round(Number(parsed.carb)) || 0;
+
+    const name =
+      (parsed.name && String(parsed.name).trim())
+      ||
+      description;
+
+    lastGeminiData = {
+      name,
+      kcal,
+      pro,
+      fat,
+      carb
+    };
+
+    document.getElementById(
+      "gemini-result-content"
+    ).innerHTML =
+      `<b>${escapeHTML(lastGeminiData.name)}</b><br>` +
+      `🔥 ${kcal} kcal · ` +
+      `🥩 ${pro}g P · ` +
+      `🥑 ${fat}g G · ` +
+      `🍞 ${carb}g C`;
+
+    document.getElementById(
+      "gemini-result-preview"
+    ).style.display = "block";
+
+    document.getElementById(
+      "gemini-use-btn"
+    ).style.display = "inline-block";
+
+  } catch (err) {
+
+    let friendlyMsg =
+      err.message
+      ||
+      "Errore nella richiesta a Gemini.";
+
+    const isNetworkError =
+      err instanceof TypeError
+      &&
+      /fetch/i.test(err.message || "");
+
+    if (isNetworkError) {
+
+      if (location.protocol === "file:") {
+
+        friendlyMsg =
+          "La richiesta non parte perche' la pagina e' aperta come file locale " +
+          "(file://...). I browser bloccano le chiamate esterne da un file aperto " +
+          "cosi'. Apri l'app dal link online (es. GitHub Pages) invece che dal file " +
+          "sul telefono/computer.";
+
+      } else {
+
+        friendlyMsg =
+          "Impossibile contattare Gemini (Failed to fetch). Possibili cause: " +
+          "nessuna connessione internet, un blocco di rete/adblocker/VPN verso " +
+          "googleapis.com, oppure un browser che blocca la richiesta. Controlla " +
+          "la connessione, prova a disattivare adblocker/VPN e riprova.";
+
+      }
+
+    }
+
+    showGeminiError(friendlyMsg);
+
+  } finally {
+
+    askBtn.disabled = false;
+    askBtn.innerText = originalLabel;
+
+  }
+
+}
+
+
+function applyGeminiToForm() {
+
+  if (!lastGeminiData) {
+    return;
+  }
+
+  document.getElementById(
+    "custom-name"
+  ).value =
+    lastGeminiData.name;
+
+  document.getElementById(
+    "custom-kcal"
+  ).value =
+    lastGeminiData.kcal;
+
+  document.getElementById(
+    "custom-pro"
+  ).value =
+    lastGeminiData.pro;
+
+  document.getElementById(
+    "custom-fat"
+  ).value =
+    lastGeminiData.fat;
+
+  document.getElementById(
+    "custom-carb"
+  ).value =
+    lastGeminiData.carb;
+
+  document.getElementById(
+    "custom-water"
+  ).value = "";
+
+  toggleGeminiModal();
 
 }
 
