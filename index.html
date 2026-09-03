@@ -625,7 +625,7 @@ select:focus {
 
 
 /* =========================================================
-   SELECT FOOD
+   SELECT FOOD CUSTOM MODAL
 ========================================================= */
 
 .food-selector {
@@ -637,6 +637,30 @@ select:focus {
   gap: 7px;
 
   margin-top: 8px;
+}
+
+.food-picker-trigger {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  background: #101720;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  text-align: left;
+  font-size: .82rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.food-picker-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .multiplier-control {
@@ -703,6 +727,47 @@ select:focus {
   font-weight: 800;
 }
 
+/* STILI POPUP CUSTOM SELETTORE ALIMENTI */
+.food-group-title {
+  margin: 12px 0 6px;
+  color: var(--accent);
+  font-size: .75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.food-group-title:first-child {
+  margin-top: 0;
+}
+
+.food-option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.food-option-item {
+  padding: 10px 12px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-size: .82rem;
+  font-weight: 600;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: .15s;
+}
+
+.food-option-item:hover,
+.food-option-item:active {
+  border-color: rgba(255,159,28,.5);
+  background: var(--accent-soft);
+}
+
 
 /* =========================================================
    FREE INPUT
@@ -729,7 +794,7 @@ select:focus {
 
   background: var(--accent-soft);
 
-  border-radius: 9px;
+  border-radius: 99px;
 
   color: var(--accent);
 
@@ -1223,7 +1288,8 @@ select:focus {
   }
 
   input,
-  select {
+  select,
+  .food-picker-trigger {
     min-height: 37px;
 
     padding: 7px 8px;
@@ -1331,7 +1397,7 @@ select:focus {
 .metric-value { font-size: 1.12rem; }
 .metric-label { font-size: .73rem; }
 .meal-selector label { font-size: .84rem; }
-input, select { font-size: .94rem; }
+input, select, .food-picker-trigger { font-size: .94rem; }
 ::placeholder { font-size: .94rem; }
 .quick-btn { font-size: .79rem; }
 .multiplier-control button { font-size: 1.15rem; }
@@ -1362,7 +1428,7 @@ input, select { font-size: .94rem; }
   .metric-icon { font-size: .98rem; }
   .metric-value { font-size: .94rem; }
   .metric-label { font-size: .67rem; }
-  input, select { font-size: .86rem; }
+  input, select, .food-picker-trigger { font-size: .86rem; }
   ::placeholder { font-size: .86rem; }
   .quick-btn { font-size: .70rem; }
   .add-selected, .save-food-btn { font-size: .86rem; }
@@ -1375,28 +1441,7 @@ input, select { font-size: .94rem; }
   .quick-btn { font-size: .66rem; }
   .metric-value { font-size: .88rem; }
   .metric-label { font-size: .61rem; }
-  input, select, ::placeholder { font-size: .82rem; }
-}
-
-/* Riduzione e ottimizzazione per il menu "Scegli alimento" */
-#quick-select {
-  font-size: 0.72rem !important;
-}
-
-#quick-select option,
-#quick-select optgroup {
-  font-size: 0.70rem !important;
-}
-
-/* Regolazione per gli schermi dei cellulari */
-@media (max-width: 560px) {
-  #quick-select {
-    font-size: 0.65rem !important;
-  }
-  #quick-select option,
-  #quick-select optgroup {
-    font-size: 0.62rem !important;
-  }
+  input, select, .food-picker-trigger, ::placeholder { font-size: .82rem; }
 }
 
 </style>
@@ -1981,56 +2026,18 @@ input, select { font-size: .94rem; }
     </div>
 
 
-    <!-- FOOD SELECTOR -->
+    <!-- FOOD SELECTOR CUSTOM MODAL TRIGGER -->
 
     <div class="food-selector">
 
-      <select id="quick-select">
-
-        <option value="">
-          🍽️ Scegli alimento...
-        </option>
-
-        <optgroup
-          label="⭐ I tuoi alimenti"
-          id="custom-optgroup"
-        ></optgroup>
-
-
-        <optgroup label="🍽️ Alimenti predefiniti">
-
-          <option value="Barretta Perugina Nero 70% (35g)|189|3|14|11|0">
-            🍫 Barretta Perugina Nero 70%
-          </option>
-
-          <option value="Prosciutto e Melone|260|14|8|34|0">
-            🍈 Prosciutto e Melone
-          </option>
-
-          <option value="Salmone Grigliato (150g)|280|30|18|0|0">
-            🐟 Salmone 150g
-          </option>
-
-          <option value="Tonno al naturale (1 scatoletta)|60|14|1|0|0">
-            🐟 Tonno naturale
-          </option>
-
-          <option value="Pollo e Patate (200g/250g)|550|55|15|45|0">
-            🍗 Pollo e Patate
-          </option>
-
-          <option value="Spaghetti / Pasta (100g secchi)|450|12|5|85|0">
-            🍝 Pasta 100g
-          </option>
-
-          <option value="Sgombro in scatola (120g)|240|25|15|0|0">
-            🐟 Sgombro
-          </option>
-
-        </optgroup>
-
-      </select>
-
+      <button
+        type="button"
+        class="food-picker-trigger"
+        onclick="openFoodPicker()"
+      >
+        <span id="selected-food-label">🍽️ Scegli alimento...</span>
+        <small style="color:var(--muted); margin-left: auto;">▼</small>
+      </button>
 
       <div class="multiplier-control">
 
@@ -2165,6 +2172,49 @@ input, select { font-size: .94rem; }
 
   </section>
 
+
+</div>
+
+
+<!-- =====================================================
+     MODAL POPUP SELETTORE ALIMENTI CUSTOM
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="food-picker-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        🍽️ Seleziona alimento
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="closeFoodPicker()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <input
+      type="text"
+      id="food-search-input"
+      placeholder="🔍 Cerca alimento..."
+      oninput="filterFoodList()"
+      style="margin-bottom: 12px;"
+    >
+
+    <div id="food-options-container">
+      <!-- Generato dinamicamente via JS -->
+    </div>
+
+  </div>
 
 </div>
 
@@ -2574,6 +2624,16 @@ input, select { font-size: .94rem; }
 
 const CORRECT_PASSWORD = "Fitness-2o26@";
 
+const DEFAULT_PRESET_FOODS = [
+  { value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0", label: "🍫 Barretta Perugina Nero 70%", text: "Barretta Perugina Nero 70%" },
+  { value: "Prosciutto e Melone|260|14|8|34|0", label: "🍈 Prosciutto e Melone", text: "Prosciutto e Melone" },
+  { value: "Salmone Grigliato (150g)|280|30|18|0|0", label: "🐟 Salmone 150g", text: "Salmone Grigliato (150g)" },
+  { value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0", label: "🐟 Tonno naturale", text: "Tonno al naturale" },
+  { value: "Pollo e Patate (200g/250g)|550|55|15|45|0", label: "🍗 Pollo e Patate", text: "Pollo e Patate" },
+  { value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0", label: "🍝 Pasta 100g", text: "Spaghetti / Pasta" },
+  { value: "Sgombro in scatola (120g)|240|25|15|0|0", label: "🐟 Sgombro", text: "Sgombro in scatola" }
+];
+
 
 /* =========================================================
    VARIABILI
@@ -2584,6 +2644,8 @@ let savedFoods;
 let historyLogs;
 let log;
 
+let selectedFoodValue = "";
+let selectedFoodDisplayText = "";
 let lastEstimatedData = null;
 
 
@@ -2798,7 +2860,7 @@ function initApp() {
 
   updateTargetDisplays();
 
-  renderSavedFoods();
+  renderFoodPickerModal();
 
   saveAndRender();
 
@@ -2920,6 +2982,91 @@ function toggleEstimatorModal() {
       ? "none"
       : "flex";
 
+}
+
+
+/* =========================================================
+   FOOD PICKER CUSTOM MODAL
+========================================================= */
+
+function openFoodPicker() {
+  document.getElementById("food-search-input").value = "";
+  renderFoodPickerModal();
+  document.getElementById("food-picker-modal").style.display = "flex";
+}
+
+function closeFoodPicker() {
+  document.getElementById("food-picker-modal").style.display = "none";
+}
+
+function renderFoodPickerModal(filterText = "") {
+  const container = document.getElementById("food-options-container");
+  container.innerHTML = "";
+  const query = filterText.toLowerCase().trim();
+
+  // 1. Alimenti salvati dall'utente
+  const customMatches = savedFoods.filter(f => f.name.toLowerCase().includes(query));
+  if (customMatches.length > 0) {
+    const title = document.createElement("div");
+    title.className = "food-group-title";
+    title.innerText = "⭐ I tuoi alimenti";
+    container.appendChild(title);
+
+    const list = document.createElement("div");
+    list.className = "food-option-list";
+
+    customMatches.forEach(food => {
+      const val = `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.water || 0}`;
+      const label = `⭐ ${food.name}`;
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "food-option-item";
+      item.innerHTML = `<span>${escapeHTML(label)}</span><small style="color:var(--accent); font-weight:700;">${food.kcal} kcal</small>`;
+      item.onclick = () => selectFoodOption(val, label);
+      list.appendChild(item);
+    });
+    container.appendChild(list);
+  }
+
+  // 2. Alimenti predefiniti
+  const presetMatches = DEFAULT_PRESET_FOODS.filter(f => f.text.toLowerCase().includes(query) || f.label.toLowerCase().includes(query));
+  if (presetMatches.length > 0) {
+    const title = document.createElement("div");
+    title.className = "food-group-title";
+    title.innerText = "🍽️ Alimenti predefiniti";
+    container.appendChild(title);
+
+    const list = document.createElement("div");
+    list.className = "food-option-list";
+
+    presetMatches.forEach(food => {
+      const parts = food.value.split("|");
+      const kcalVal = parts[1];
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "food-option-item";
+      item.innerHTML = `<span>${escapeHTML(food.label)}</span><small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
+      item.onclick = () => selectFoodOption(food.value, food.label);
+      list.appendChild(item);
+    });
+    container.appendChild(list);
+  }
+
+  if (customMatches.length === 0 && presetMatches.length === 0) {
+    container.innerHTML = `<div class="log-empty">Nessun alimento trovato.</div>`;
+  }
+}
+
+function filterFoodList() {
+  const query = document.getElementById("food-search-input").value;
+  renderFoodPickerModal(query);
+}
+
+function selectFoodOption(value, label) {
+  selectedFoodValue = value;
+  selectedFoodDisplayText = label;
+  document.getElementById("selected-food-label").innerText = label;
+  closeFoodPicker();
 }
 
 
@@ -3477,46 +3624,6 @@ function updateTargetDisplays() {
 
 
 /* =========================================================
-   SAVED FOODS
-========================================================= */
-
-function renderSavedFoods() {
-
-  const group =
-    document.getElementById(
-      "custom-optgroup"
-    );
-
-
-  group.innerHTML = "";
-
-
-  savedFoods.forEach(
-    food => {
-
-      const opt =
-        document.createElement(
-          "option"
-        );
-
-
-      opt.value =
-        `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.water || 0}`;
-
-
-      opt.textContent =
-        `⭐ ${food.name} (${food.kcal} kcal)`;
-
-
-      group.appendChild(opt);
-
-    }
-  );
-
-}
-
-
-/* =========================================================
    ADD QUICK
 ========================================================= */
 
@@ -3570,13 +3677,8 @@ function addQuick(
 
 function addFromSelect() {
 
-  const select =
-    document.getElementById(
-      "quick-select"
-    );
-
-
-  if (!select.value) {
+  if (!selectedFoodValue) {
+    alert("Seleziona prima un alimento.");
     return;
   }
 
@@ -3590,7 +3692,7 @@ function addFromSelect() {
 
 
   const parts =
-    select.value.split("|");
+    selectedFoodValue.split("|");
 
 
   const meal =
@@ -3668,7 +3770,9 @@ function addFromSelect() {
   ).value = 1;
 
 
-  select.value = "";
+  selectedFoodValue = "";
+  selectedFoodDisplayText = "";
+  document.getElementById("selected-food-label").innerText = "🍽️ Scegli alimento...";
 
 
   saveAndRender();
@@ -3801,7 +3905,7 @@ function addCustom() {
     );
 
 
-    renderSavedFoods();
+    renderFoodPickerModal();
 
   }
 
