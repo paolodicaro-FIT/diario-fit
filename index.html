@@ -2600,6 +2600,15 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     <div
       class="gemini-hint"
+      id="gemini-change-key-link"
+      style="display:none; cursor:pointer;"
+      onclick="showGeminiKeyRow()"
+    >
+      🔑 Chiave già salvata su questo dispositivo — tocca qui per cambiarla.
+    </div>
+
+    <div
+      class="gemini-hint"
       id="gemini-hint"
     >
       La chiave resta salvata solo su questo dispositivo (localStorage) e
@@ -4341,22 +4350,34 @@ function toggleGeminiModal() {
     const usingHardcodedKey =
       !!GEMINI_API_KEY_HARDCODED;
 
+    const savedKey =
+      localStorage.getItem(
+        "diario_gemini_api_key"
+      ) || "";
+
+    const keyAlreadySet =
+      usingHardcodedKey || !!savedKey;
+
     document.getElementById(
       "gemini-key-row"
     ).style.display =
-      usingHardcodedKey ? "none" : "flex";
+      keyAlreadySet ? "none" : "flex";
 
     document.getElementById(
       "gemini-hint"
     ).style.display =
-      usingHardcodedKey ? "none" : "block";
+      keyAlreadySet ? "none" : "block";
+
+    document.getElementById(
+      "gemini-change-key-link"
+    ).style.display =
+      (!usingHardcodedKey && savedKey)
+        ? "block"
+        : "none";
 
     document.getElementById(
       "gemini-api-key"
-    ).value =
-      localStorage.getItem(
-        "diario_gemini_api_key"
-      ) || "";
+    ).value = savedKey;
 
     showGeminiError("");
 
@@ -4369,6 +4390,23 @@ function toggleGeminiModal() {
     ).style.display = "none";
 
   }
+
+}
+
+
+function showGeminiKeyRow() {
+
+  document.getElementById(
+    "gemini-key-row"
+  ).style.display = "flex";
+
+  document.getElementById(
+    "gemini-hint"
+  ).style.display = "block";
+
+  document.getElementById(
+    "gemini-change-key-link"
+  ).style.display = "none";
 
 }
 
