@@ -1848,12 +1848,21 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
       <h2>📚 Storico</h2>
 
-      <button
-        class="mini-btn"
-        onclick="toggleHistory()"
-      >
-        Chiudi
-      </button>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <button
+          class="mini-btn primary"
+          onclick="generatePrintableAllHistoryReport()"
+          title="Stampa tutti i giorni archiviati"
+        >
+          🖨️ Tutti
+        </button>
+        <button
+          class="mini-btn"
+          onclick="toggleHistory()"
+        >
+          Chiudi
+        </button>
+      </div>
 
     </div>
 
@@ -5964,6 +5973,15 @@ function renderHistory() {
 
           </div>
 
+          <button
+            class="mini-btn"
+            onclick="generatePrintableReport('${dateKey}')"
+            style="margin-top:6px;"
+            title="Apri il report stampabile di questa giornata"
+          >
+            🖨️ Report giornata
+          </button>
+
         </div>
 
       `;
@@ -6025,25 +6043,208 @@ function resetDay() {
    STAMPA PDF
 ========================================================= */
 
-function generatePrintableReport() {
+function generatePrintableReport(dateKey = null) {
 
-  let printWindow =
-    window.open(
-      "",
-      "_blank"
-    );
+  let selectedLog = log;
+  let reportDateKey = getLocalISODate();
+  let reportDateLabel = document.getElementById("display-date").innerText;
 
+  if (dateKey) {
+    const dayData = historyLogs[dateKey];
 
-  if (!printWindow) {
+    if (!dayData) {
+      alert("Giornata archiviata non trovata.");
+      return;
+    }
 
-    alert(
-      "Il browser ha bloccato la finestra di stampa."
-    );
-
-    return;
-
+    selectedLog = Array.isArray(dayData.log) ? dayData.log : [];
+    reportDateKey = dateKey;
+    reportDateLabel = formatReportDate(dateKey);
   }
 
+  openPrintableReportWindow(
+    selectedLog,
+    reportDateKey,
+    reportDateLabel
+  );
+
+}
+
+
+function generatePrintableAllHistoryReport() {
+
+  const keys = Object.keys(historyLogs)
+    .sort()
+    .reverse();
+
+  if (keys.length === 0) {
+    alert("Non ci sono giornate archiviate da stampare.");
+    return;
+  }
+
+  const printWindow = window.open("", "_blank");
+
+  if (!printWindow) {
+    alert("Il browser ha bloccato la finestra di stampa.");
+    return;
+  }
+
+  let pagesHtml = "";
+
+  keys.forEach((dateKey, index) => {
+
+    const dayData = historyLogs[dateKey];
+    const dayLog = Array.isArray(dayData.log) ? dayData.log : [];
+
+    pagesHtml += buildPrintableDayHtml(
+      dayLog,
+      dateKey,
+      formatReportDate(dateKey),
+      index > 0
+    );
+
+  });
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="it">
+    <head>
+      <meta charset="UTF-8">
+      <title>Diario FIT - Archivio completo</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 30px;
+          color: #111;
+        }
+        h1 { color:#d97706; margin-bottom:4px; }
+        h2 { margin-top:25px; }
+        .archive-header {
+          border-bottom:2px solid #d97706;
+          padding-bottom:8px;
+          margin-bottom:18px;
+        }
+        .subtitle { color:#666; margin-bottom:18px; }
+        .summary {
+          background:#f3f4f6;
+          padding:15px;
+          border-radius:10px;
+          margin-bottom:20px;
+        }
+        .metrics {
+          display:grid;
+          grid-template-columns:repeat(5,1fr);
+          gap:8px;
+        }
+        .metric {
+          background:white;
+          border:1px solid #ddd;
+          padding:10px;
+          text-align:center;
+          border-radius:7px;
+        }
+        .value { font-size:18px; font-weight:bold; }
+        .label { font-size:11px; color:#777; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td {
+          border:1px solid #ddd;
+          padding:7px;
+          text-align:left;
+          font-size:12px;
+        }
+        th { background:#f3f4f6; }
+        .page-break { page-break-before:always; break-before:page; }
+        .empty { color:#777; font-style:italic; }
+        @media print {
+          body { padding:0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>💪 Diario FIT - Archivio completo</h1>
+      <div class="subtitle">
+        Tutte le giornate archiviate · ${keys.length} giornate
+      </div>
+      ${pagesHtml}
+      <script>
+        window.onload = function() { window.print(); };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+}
+
+
+function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
+
+  const printWindow = window.open("", "_blank");
+
+  if (!printWindow) {
+    alert("Il browser ha bloccato la finestra di stampa.");
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="it">
+    <head>
+      <meta charset="UTF-8">
+      <title>Diario FIT - ${escapeHTML(dateLabel)}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 30px;
+          color:#111;
+        }
+        h1 { color:#d97706; margin-bottom:4px; }
+        .subtitle { color:#666; margin-bottom:25px; }
+        .summary {
+          background:#f3f4f6;
+          padding:15px;
+          border-radius:10px;
+          margin-bottom:20px;
+        }
+        .metrics {
+          display:grid;
+          grid-template-columns:repeat(5,1fr);
+          gap:8px;
+        }
+        .metric {
+          background:white;
+          border:1px solid #ddd;
+          padding:10px;
+          text-align:center;
+          border-radius:7px;
+        }
+        .value { font-size:18px; font-weight:bold; }
+        .label { font-size:11px; color:#777; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td {
+          border:1px solid #ddd;
+          padding:7px;
+          text-align:left;
+          font-size:12px;
+        }
+        th { background:#f3f4f6; }
+        @media print { body { padding:0; } }
+      </style>
+    </head>
+    <body>
+      ${buildPrintableDayHtml(dayLog, dateKey, dateLabel, false)}
+      <script>
+        window.onload = function() { window.print(); };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+}
+
+
+function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
 
   let totKcal = 0;
   let totPro = 0;
@@ -6051,200 +6252,72 @@ function generatePrintableReport() {
   let totCarb = 0;
   let totWater = 0;
 
+  dayLog.forEach(item => {
+    totKcal += Number(item.kcal) || 0;
+    totPro += Number(item.pro) || 0;
+    totFat += Number(item.fat) || 0;
+    totCarb += Number(item.carb) || 0;
+    totWater += Number(item.waterMl) || 0;
+  });
 
-  log.forEach(
-    item => {
+  let rowsHtml = "";
 
-      totKcal +=
-        item.kcal || 0;
+  dayLog.forEach(item => {
+    rowsHtml += `
+      <tr>
+        <td>${escapeHTML(item.time || "")}</td>
+        <td>${escapeHTML(item.meal || "")}</td>
+        <td>${escapeHTML(item.name || "")}</td>
+        <td>${item.kcal || 0}</td>
+        <td>${item.pro || 0}g</td>
+        <td>${item.fat || 0}g</td>
+        <td>${item.carb || 0}g</td>
+        <td>${item.waterMl || 0}ml</td>
+      </tr>
+    `;
+  });
 
-      totPro +=
-        item.pro || 0;
+  if (!rowsHtml) {
+    rowsHtml = `
+      <tr>
+        <td colspan="8" class="empty">Nessun alimento registrato.</td>
+      </tr>
+    `;
+  }
 
-      totFat +=
-        item.fat || 0;
-
-      totCarb +=
-        item.carb || 0;
-
-      totWater +=
-        item.waterMl || 0;
-
-    }
-  );
-
-
-  let html = `
-
-    <!DOCTYPE html>
-
-    <html lang="it">
-
-    <head>
-
-      <meta charset="UTF-8">
-
-      <title>
-        Diario FIT - Paolo
-      </title>
-
-      <style>
-
-        body {
-          font-family: Arial, sans-serif;
-          padding: 30px;
-          color: #111;
-        }
-
-        h1 {
-          color: #d97706;
-          margin-bottom: 4px;
-        }
-
-        h2 {
-          margin-top: 25px;
-        }
-
-        .subtitle {
-          color: #666;
-          margin-bottom: 25px;
-        }
-
-        .summary {
-          background: #f3f4f6;
-          padding: 15px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-        }
-
-        .metrics {
-          display: grid;
-          grid-template-columns:
-            repeat(5,1fr);
-          gap: 8px;
-        }
-
-        .metric {
-          background: white;
-          border: 1px solid #ddd;
-          padding: 10px;
-          text-align: center;
-          border-radius: 7px;
-        }
-
-        .value {
-          font-size: 18px;
-          font-weight: bold;
-        }
-
-        .label {
-          font-size: 11px;
-          color: #777;
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 10px;
-        }
-
-        th,
-        td {
-          border: 1px solid #ddd;
-          padding: 7px;
-          text-align: left;
-          font-size: 12px;
-        }
-
-        th {
-          background: #f3f4f6;
-        }
-
-        @media print {
-
-          body {
-            padding: 0;
-          }
-
-        }
-
-      </style>
-
-    </head>
-
-    <body>
-
-      <h1>
-        💪 Diario FIT di ${escapeHTML(localStorage.getItem("diario_user_name") || "Paolo")}
-      </h1>
-
-      <div class="subtitle">
-        monitoraggio quotidiano di ${escapeHTML(localStorage.getItem("diario_user_name") || "Paolo")}
-        · ${document.getElementById("display-date").innerText}
+  return `
+    <section class="${addPageBreak ? "page-break" : ""}">
+      <div class="archive-header">
+        <h2>📅 ${escapeHTML(dateLabel)}</h2>
       </div>
-
 
       <div class="summary">
-
         <div class="metrics">
-
           <div class="metric">
-            <div class="value">
-              ${totKcal}
-            </div>
-            <div class="label">
-              Kcal / ${TARGETS.kcal}
-            </div>
+            <div class="value">${totKcal}</div>
+            <div class="label">Kcal / ${TARGETS.kcal}</div>
           </div>
-
           <div class="metric">
-            <div class="value">
-              ${totPro}g
-            </div>
-            <div class="label">
-              Proteine / ${TARGETS.pro}g
-            </div>
+            <div class="value">${totPro}g</div>
+            <div class="label">Proteine / ${TARGETS.pro}g</div>
           </div>
-
           <div class="metric">
-            <div class="value">
-              ${totFat}g
-            </div>
-            <div class="label">
-              Grassi / ${TARGETS.fat}g
-            </div>
+            <div class="value">${totFat}g</div>
+            <div class="label">Grassi / ${TARGETS.fat}g</div>
           </div>
-
           <div class="metric">
-            <div class="value">
-              ${totCarb}g
-            </div>
-            <div class="label">
-              Carbo / ${TARGETS.carb}g
-            </div>
+            <div class="value">${totCarb}g</div>
+            <div class="label">Carbo / ${TARGETS.carb}g</div>
           </div>
-
           <div class="metric">
-            <div class="value">
-              ${totWater}ml
-            </div>
-            <div class="label">
-              Acqua / ${TARGETS.water}ml
-            </div>
+            <div class="value">${totWater}ml</div>
+            <div class="label">Acqua / ${TARGETS.water}ml</div>
           </div>
-
         </div>
-
       </div>
 
-
-      <h2>
-        Dettaglio alimenti
-      </h2>
-
-
+      <h2>Dettaglio alimenti</h2>
       <table>
-
         <tr>
           <th>Ora</th>
           <th>Pasto</th>
@@ -6255,82 +6328,29 @@ function generatePrintableReport() {
           <th>C</th>
           <th>H₂O</th>
         </tr>
-
-  `;
-
-
-  log.forEach(
-    item => {
-
-      html += `
-
-        <tr>
-
-          <td>
-            ${item.time}
-          </td>
-
-          <td>
-            ${escapeHTML(item.meal)}
-          </td>
-
-          <td>
-            ${escapeHTML(item.name)}
-          </td>
-
-          <td>
-            ${item.kcal}
-          </td>
-
-          <td>
-            ${item.pro}g
-          </td>
-
-          <td>
-            ${item.fat}g
-          </td>
-
-          <td>
-            ${item.carb}g
-          </td>
-
-          <td>
-            ${item.waterMl || 0}ml
-          </td>
-
-        </tr>
-
-      `;
-
-    }
-  );
-
-
-  html += `
-
+        ${rowsHtml}
       </table>
-
-      <script>
-
-        window.onload = function() {
-          window.print();
-        };
-
-      <\/script>
-
-    </body>
-
-    </html>
-
+    </section>
   `;
+}
 
 
-  printWindow.document.write(
-    html
-  );
+function formatReportDate(dateKey) {
 
-  printWindow.document.close();
+  const parts = String(dateKey).split("-").map(Number);
 
+  if (parts.length !== 3 || parts.some(Number.isNaN)) {
+    return dateKey;
+  }
+
+  const date = new Date(parts[0], parts[1] - 1, parts[2]);
+
+  return date.toLocaleDateString("it-IT", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 }
 
 </script>
