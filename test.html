@@ -2590,6 +2590,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
       <button
         class="gemini-key-save"
+        id="gemini-key-save-btn"
         onclick="saveGeminiApiKey()"
       >
         Salva
@@ -4392,6 +4393,20 @@ function saveGeminiApiKey() {
   );
 
   showGeminiError("");
+
+  const saveBtn =
+    document.getElementById(
+      "gemini-key-save-btn"
+    );
+
+  const originalLabel =
+    saveBtn.innerText;
+
+  saveBtn.innerText = "✓ Salvata";
+
+  setTimeout(() => {
+    saveBtn.innerText = originalLabel;
+  }, 1500);
 
 }
 
