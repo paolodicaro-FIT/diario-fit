@@ -1,0 +1,14 @@
+name = "diario-fit-api"
+main = "worker.js"
+compatibility_date = "2026-09-04"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "diario-fit"
+database_id = "INSERISCI-QUI-IL-DATABASE-ID"
+migrations_dir = "migrations"
+
+[vars]
+# Inserisci qui l'origine ESATTA della tua GitHub Pages, senza slash finale.
+# Esempio: https://tuonome.github.io
+ALLOWED_ORIGIN = "https://TUO-USERNAME.github.io"
