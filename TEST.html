@@ -3125,8 +3125,7 @@ async function saveUserDiaryToBackend(
 
 async function saveUserSettingsToBackend() {
 
-  const response = await apiFetch(
-  console.log("DEBUG RISPOSTA SALVATAGGIO TARGETS:", response);
+  await apiFetch(
     "/api/user/settings",
     {
       method: "PUT",
@@ -5044,7 +5043,6 @@ async function calculateAndApplyTargets() {
 
   toggleCalculatorModal();
 
-  console.log("DEBUG TARGETS PRIMA DEL SALVATAGGIO:", JSON.stringify(TARGETS));
   await saveUserSettingsToBackend();
 
 }
@@ -5170,7 +5168,6 @@ async function saveCustomTargets() {
 
   toggleTargetInputs();
 
-  console.log("DEBUG TARGETS PRIMA DEL SALVATAGGIO:", JSON.stringify(TARGETS));
   await saveUserSettingsToBackend();
 
 }
@@ -5616,7 +5613,6 @@ async function addCustom() {
   ).value = "";
 
 
-  console.log("DEBUG TARGETS PRIMA DEL SALVATAGGIO:", JSON.stringify(TARGETS));
   await saveUserSettingsToBackend();
 
   await saveAndRender();
