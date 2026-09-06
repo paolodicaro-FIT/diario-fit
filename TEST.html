@@ -3616,16 +3616,14 @@ function toggleAdminModal() {
     return;
   }
 
-  const isOpen =
-    modal.classList.contains("show");
+  modal.style.display =
+    modal.style.display === "flex"
+      ? "none"
+      : "flex";
 
-  if (isOpen) {
-    modal.classList.remove("show");
-    return;
+  if (modal.style.display === "flex") {
+    loadAdminUsers();
   }
-
-  modal.classList.add("show");
-  loadAdminUsers();
 
 }
 
