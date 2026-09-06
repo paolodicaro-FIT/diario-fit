@@ -3235,6 +3235,7 @@ async function validateStoredSession() {
     }
 
     currentUser = data.user;
+    console.log("DEBUG /api/me CURRENT USER:", JSON.stringify(currentUser));
 
     hideLoginOverlay();
     await initApp();
