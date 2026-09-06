@@ -1707,20 +1707,28 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     <h2>Diario FIT</h2>
 
     <p>
-      monitoraggio quotidiano di Paolo
+      Accedi al tuo diario personale
     </p>
+
+    <input
+      type="email"
+      id="login-email-input"
+      placeholder="Email"
+      autocomplete="username"
+      style="text-align:center;"
+    >
 
     <input
       type="password"
       id="login-password-input"
       placeholder="Password"
       autocomplete="current-password"
-      style="text-align:center;"
+      style="text-align:center;margin-top:8px;"
     >
 
     <button
       class="btn primary full"
-      onclick="checkPassword()"
+      onclick="loginToApp()"
       style="margin-top:8px;"
     >
       🔓 Accedi
@@ -1734,7 +1742,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         margin-bottom:0;
       "
     >
-      Password errata.
+      Email o password non corrette.
     </p>
 
   </div>
@@ -3144,7 +3152,7 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
    CONFIGURAZIONE
 ========================================================= */
 
-const CORRECT_PASSWORD = "Fitness-2o26@";
+
 
 const DEFAULT_PRESET_FOODS = [
   { value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0", label: "🍫 Barretta Perugina Nero 70%", text: "Barretta Perugina Nero 70%" },
@@ -3209,103 +3217,282 @@ const GEMINI_MODEL = "gemini-3.6-flash";
    AVVIO
 ========================================================= */
 
-window.addEventListener(
-  "DOMContentLoaded",
-  () => {
+const BACKEND_API_URL = "https://diario-fit-api.paolodicaro-3d.workers.dev";
+let currentUser = null;
 
-    importProfileFromUrlIfPresent();
 
-    const isAuth =
-      localStorage.getItem(
-        "diario_authenticated"
-      );
+async function validateStoredSession() {
 
-    if (isAuth === "true") {
+  const token =
+    localStorage.getItem("diario_backend_token");
 
-      document.getElementById(
-        "login-overlay"
-      ).style.display = "none";
-
-      document.getElementById(
-        "app-container"
-      ).style.display = "block";
-
-      initApp();
-
-    } else {
-
-      document.getElementById(
-        "login-overlay"
-      ).style.display = "flex";
-
-    }
-
+  if (!token) {
+    showLoginOverlay();
+    return false;
   }
-);
 
+  try {
 
-/* =========================================================
-   LOGIN
-========================================================= */
-
-function checkPassword() {
-
-  const inputVal =
-    document.getElementById(
-      "login-password-input"
-    ).value;
-
-  if (inputVal === CORRECT_PASSWORD) {
-
-    localStorage.setItem(
-      "diario_authenticated",
-      "true"
+    const response = await fetch(
+      BACKEND_API_URL + "/api/me",
+      {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      }
     );
 
-    document.getElementById(
-      "login-overlay"
-    ).style.display = "none";
+    const data = await response.json();
 
-    document.getElementById(
-      "app-container"
-    ).style.display = "block";
+    if (!response.ok || !data.ok || !data.user) {
+      throw new Error("SESSION_INVALID");
+    }
 
+    currentUser = data.user;
+
+    hideLoginOverlay();
     initApp();
 
-  } else {
+    return true;
 
-    document.getElementById(
-      "login-error"
-    ).style.display = "block";
+  } catch (error) {
 
+    localStorage.removeItem("diario_backend_token");
+    currentUser = null;
+    showLoginOverlay();
+
+    return false;
   }
-
 }
 
 
-function lockApp() {
-
-  localStorage.removeItem(
-    "diario_authenticated"
-  );
+function showLoginOverlay() {
 
   document.getElementById(
     "app-container"
   ).style.display = "none";
 
   document.getElementById(
-    "login-password-input"
-  ).value = "";
-
-  document.getElementById(
-    "login-error"
-  ).style.display = "none";
-
-  document.getElementById(
     "login-overlay"
   ).style.display = "flex";
 
+  const emailInput =
+    document.getElementById("login-email-input");
+
+  const passwordInput =
+    document.getElementById("login-password-input");
+
+  if (emailInput) {
+    emailInput.focus();
+  }
+
+  if (passwordInput) {
+    passwordInput.value = "";
+  }
+
+  const error =
+    document.getElementById("login-error");
+
+  if (error) {
+    error.style.display = "none";
+  }
 }
+
+
+function hideLoginOverlay() {
+
+  document.getElementById(
+    "login-overlay"
+  ).style.display = "none";
+
+  document.getElementById(
+    "app-container"
+  ).style.display = "block";
+}
+
+
+window.addEventListener(
+  "DOMContentLoaded",
+  () => {
+    validateStoredSession();
+  }
+);
+
+
+/* =========================================================
+   LOGIN CENTRALE
+========================================================= */
+
+async function loginToApp() {
+
+  const emailInput =
+    document.getElementById("login-email-input");
+
+  const passwordInput =
+    document.getElementById("login-password-input");
+
+  const error =
+    document.getElementById("login-error");
+
+  const email =
+    emailInput.value.trim();
+
+  const password =
+    passwordInput.value;
+
+  error.style.display = "none";
+
+  if (!email || !password) {
+
+    error.textContent =
+      "Inserisci email e password.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+  const button =
+    document.querySelector(
+      '#login-overlay button[onclick="loginToApp()"]'
+    );
+
+  const originalText =
+    button ? button.textContent : "";
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "⏳ Accesso...";
+  }
+
+  try {
+
+    const response = await fetch(
+      BACKEND_API_URL + "/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok || !data.token || !data.user) {
+
+      if (data.error === "INVALID_CREDENTIALS") {
+        throw new Error("INVALID_CREDENTIALS");
+      }
+
+      throw new Error("LOGIN_FAILED");
+    }
+
+    localStorage.setItem(
+      "diario_backend_token",
+      data.token
+    );
+
+    currentUser = data.user;
+
+    passwordInput.value = "";
+
+    hideLoginOverlay();
+
+    initApp();
+
+  } catch (error) {
+
+    localStorage.removeItem(
+      "diario_backend_token"
+    );
+
+    currentUser = null;
+
+    if (error.message === "INVALID_CREDENTIALS") {
+
+      errorMessage =
+        "Email o password non corrette.";
+
+    } else {
+
+      errorMessage =
+        "Impossibile collegarsi al server. Riprova.";
+    }
+
+    errorElement =
+      document.getElementById("login-error");
+
+    errorElement.textContent = errorMessage;
+    errorElement.style.display = "block";
+
+  } finally {
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText || "🔓 Accedi";
+    }
+  }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function lockApp() {
+
+  const token =
+    localStorage.getItem("diario_backend_token");
+
+  if (token) {
+
+    try {
+
+      await fetch(
+        BACKEND_API_URL + "/api/auth/logout",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    } catch (error) {
+      console.warn("Logout backend non riuscito.");
+    }
+  }
+
+  localStorage.removeItem(
+    "diario_backend_token"
+  );
+
+  currentUser = null;
+
+  showLoginOverlay();
+}
+
+
+document
+  .getElementById("login-email-input")
+  .addEventListener(
+    "keypress",
+    function(e) {
+
+      if (e.key === "Enter") {
+        document
+          .getElementById("login-password-input")
+          .focus();
+      }
+
+    }
+  );
 
 
 document
@@ -3315,7 +3502,7 @@ document
     function(e) {
 
       if (e.key === "Enter") {
-        checkPassword();
+        loginToApp();
       }
 
     }
