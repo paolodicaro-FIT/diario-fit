@@ -3071,13 +3071,13 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
 
 
 const DEFAULT_PRESET_FOODS = [
-  { value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0", label: "🍫 Barretta Perugina Nero 70%", text: "Barretta Perugina Nero 70%" },
-  { value: "Prosciutto e Melone|260|14|8|34|0", label: "🍈 Prosciutto e Melone", text: "Prosciutto e Melone" },
-  { value: "Salmone Grigliato (150g)|280|30|18|0|0", label: "🐟 Salmone 150g", text: "Salmone Grigliato (150g)" },
-  { value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0", label: "🐟 Tonno naturale", text: "Tonno al naturale" },
-  { value: "Pollo e Patate (200g/250g)|550|55|15|45|0", label: "🍗 Pollo e Patate", text: "Pollo e Patate" },
-  { value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0", label: "🍝 Pasta 100g", text: "Spaghetti / Pasta" },
-  { value: "Sgombro in scatola (120g)|240|25|15|0|0", label: "🐟 Sgombro", text: "Sgombro in scatola" }
+  { value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0", label: "🍫 Barretta Perugina Nero 70%", text: "Barretta Perugina Nero 70%", category: "Dolci" },
+  { value: "Prosciutto e Melone|260|14|8|34|0", label: "🍈 Prosciutto e Melone", text: "Prosciutto e Melone", category: "Frutta e frutta secca" },
+  { value: "Salmone Grigliato (150g)|280|30|18|0|0", label: "🐟 Salmone 150g", text: "Salmone Grigliato (150g)", category: "Secondi" },
+  { value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0", label: "🐟 Tonno naturale", text: "Tonno al naturale", category: "Secondi" },
+  { value: "Pollo e Patate (200g/250g)|550|55|15|45|0", label: "🍗 Pollo e Patate", text: "Pollo e Patate", category: "Secondi" },
+  { value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0", label: "🍝 Pasta 100g", text: "Spaghetti / Pasta", category: "Primi" },
+  { value: "Sgombro in scatola (120g)|240|25|15|0|0", label: "🐟 Sgombro", text: "Sgombro in scatola", category: "Secondi" }
 ];
 
 const DEFAULT_QUICK_ITEMS = [
@@ -4523,61 +4523,101 @@ function closeFoodPicker() {
 function renderFoodPickerModal(filterText = "") {
   const container = document.getElementById("food-options-container");
   container.innerHTML = "";
+
   const query = filterText.toLowerCase().trim();
 
-  // 1. Alimenti salvati dall'utente
-  const customMatches = savedFoods.filter(f => f.name.toLowerCase().includes(query));
-  if (customMatches.length > 0) {
-    const title = document.createElement("div");
-    title.className = "food-group-title";
-    title.innerText = "⭐ I tuoi alimenti";
-    container.appendChild(title);
+  const categories = [
+    { name: "Primi", emoji: "🍝" },
+    { name: "Secondi", emoji: "🍗" },
+    { name: "Contorni", emoji: "🥦" },
+    { name: "Frutta e frutta secca", emoji: "🍎" },
+    { name: "Dolci", emoji: "🍰" },
+    { name: "Colazione e bevande", emoji: "☕" },
+    { name: "Condimenti", emoji: "🫒" }
+  ];
+
+  let foundSomething = false;
+
+  function addFoodGroup(title, foods, isCustom = false) {
+    if (!foods.length) return;
+
+    foundSomething = true;
+
+    const groupTitle = document.createElement("div");
+    groupTitle.className = "food-group-title";
+    groupTitle.innerText = title;
+    container.appendChild(groupTitle);
 
     const list = document.createElement("div");
     list.className = "food-option-list";
 
-    customMatches.forEach(food => {
-      const val = `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.water || 0}`;
-      const label = `⭐ ${food.name}`;
+    foods.forEach(food => {
+      const val = isCustom
+        ? `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.water || 0}`
+        : food.value;
+
+      const label = isCustom
+        ? `⭐ ${food.name}`
+        : food.label;
+
+      const kcalVal = isCustom
+        ? food.kcal
+        : food.value.split("|")[1];
+
       const item = document.createElement("button");
       item.type = "button";
       item.className = "food-option-item";
-      item.innerHTML = `<span>${escapeHTML(label)}</span><small style="color:var(--accent); font-weight:700;">${food.kcal} kcal</small>`;
+
+      item.innerHTML =
+        `<span>${escapeHTML(label)}</span>` +
+        `<small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
+
       item.onclick = () => selectFoodOption(val, label);
+
       list.appendChild(item);
     });
+
     container.appendChild(list);
   }
 
-  // 2. Alimenti predefiniti
-  const presetMatches = DEFAULT_PRESET_FOODS.filter(f => f.text.toLowerCase().includes(query) || f.label.toLowerCase().includes(query));
-  if (presetMatches.length > 0) {
-    const title = document.createElement("div");
-    title.className = "food-group-title";
-    title.innerText = "🍽️ Alimenti predefiniti";
-    container.appendChild(title);
+  /* =======================================================
+     ⭐ I MIEI ALIMENTI
+  ======================================================= */
 
-    const list = document.createElement("div");
-    list.className = "food-option-list";
+  const customMatches = Array.isArray(savedFoods)
+    ? savedFoods.filter(food =>
+        food &&
+        food.name &&
+        food.name.toLowerCase().includes(query)
+      )
+    : [];
 
-    presetMatches.forEach(food => {
-      const parts = food.value.split("|");
-      const kcalVal = parts[1];
-      const item = document.createElement("button");
-      item.type = "button";
-      item.className = "food-option-item";
-      item.innerHTML = `<span>${escapeHTML(food.label)}</span><small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
-      item.onclick = () => selectFoodOption(food.value, food.label);
-      list.appendChild(item);
-    });
-    container.appendChild(list);
-  }
+  addFoodGroup("⭐ I miei alimenti", customMatches, true);
 
-  if (customMatches.length === 0 && presetMatches.length === 0) {
-    container.innerHTML = `<div class="log-empty">Nessun alimento trovato.</div>`;
+  /* =======================================================
+     🍽️ ALIMENTI PREDEFINITI PER CATEGORIA
+  ======================================================= */
+
+  categories.forEach(category => {
+    const matches = DEFAULT_PRESET_FOODS.filter(food =>
+      food.category === category.name &&
+      (
+        food.text.toLowerCase().includes(query) ||
+        food.label.toLowerCase().includes(query)
+      )
+    );
+
+    addFoodGroup(
+      `${category.emoji} ${category.name}`,
+      matches
+    );
+  });
+
+  if (!foundSomething) {
+    container.innerHTML =
+      `<div class="log-empty">Nessun alimento trovato.</div>`;
   }
 }
-
 function filterFoodList() {
   const query = document.getElementById("food-search-input").value;
   renderFoodPickerModal(query);
