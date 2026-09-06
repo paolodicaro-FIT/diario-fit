@@ -3176,128 +3176,127 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
 
 
 const DEFAULT_PRESET_FOODS = [
-  /* =======================================================
-     🥗 ANTIPASTI
-  ======================================================= */
-  {
-    value: "Bresaola — 100 g|152|33|2|0|0",
-    label: "🥩 Bresaola — 100 g",
-    text: "Bresaola — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Caprese (mozzarella e pomodoro) — 250 g|350|20|25|8|0",
-    label: "🧀 Caprese (mozzarella e pomodoro) — 250 g",
-    text: "Caprese (mozzarella e pomodoro) — 250 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Carpaccio di manzo — 100 g|120|23|3|0|0",
-    label: "🥩 Carpaccio di manzo — 100 g",
-    text: "Carpaccio di manzo — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Cocktail di gamberi — 150 g|180|24|6|8|0",
-    label: "🍤 Cocktail di gamberi — 150 g",
-    text: "Cocktail di gamberi — 150 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Olive verdi — 50 g|70|0.5|7|2|0",
-    label: "🫒 Olive verdi — 50 g",
-    text: "Olive verdi — 50 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Polpo e patate — 250 g|280|24|10|22|0",
-    label: "🐙 Polpo e patate — 250 g",
-    text: "Polpo e patate — 250 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Prosciutto crudo — 100 g|270|26|18|0|0",
-    label: "🥩 Prosciutto crudo — 100 g",
-    text: "Prosciutto crudo — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Salmone affumicato — 100 g|180|22|10|0|0",
-    label: "🐟 Salmone affumicato — 100 g",
-    text: "Salmone affumicato — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Sardine marinate — 100 g|200|22|12|2|0",
-    label: "🐟 Sardine marinate — 100 g",
-    text: "Sardine marinate — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Speck — 100 g|300|30|20|1|0",
-    label: "🥩 Speck — 100 g",
-    text: "Speck — 100 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Tonno e fagioli — 200 g|300|28|10|22|0",
-    label: "🐟 Tonno e fagioli — 200 g",
-    text: "Tonno e fagioli — 200 g",
-    category: "Antipasti"
-  },
-  {
-    value: "Verdure grigliate — 200 g|120|3|7|12|0",
-    label: "🥒 Verdure grigliate — 200 g",
-    text: "Verdure grigliate — 200 g",
-    category: "Antipasti"
-  },
+  // 🥗 ANTIPASTI
+  { category:"Antipasti", emoji:"🥩", label:"Bresaola — 100 g", value:"🥩 Bresaola — 100 g|152|33|2|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Carpaccio di manzo — 100 g", value:"🥩 Carpaccio di manzo — 100 g|120|23|3|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Prosciutto crudo — 100 g", value:"🥩 Prosciutto crudo — 100 g|270|26|18|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Speck — 100 g", value:"🥩 Speck — 100 g|300|30|20|1|0" },
+  { category:"Antipasti", emoji:"🍗", label:"Fesa di tacchino — 100 g", value:"🍗 Fesa di tacchino — 100 g|110|23|2|1|0" },
+  { category:"Antipasti", emoji:"🧀", label:"Mozzarella — 100 g", value:"🧀 Mozzarella — 100 g|250|18|19|1|0" },
+  { category:"Antipasti", emoji:"🍅", label:"Caprese — 250 g", value:"🍅 Caprese — 250 g|350|20|25|8|0" },
+  { category:"Antipasti", emoji:"🐟", label:"Salmone affumicato — 100 g", value:"🐟 Salmone affumicato — 100 g|180|22|10|0|0" },
+  { category:"Antipasti", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0" },
+  { category:"Antipasti", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0" },
+  { category:"Antipasti", emoji:"🐙", label:"Polpo — 100 g", value:"🐙 Polpo — 100 g|82|15|1|2|0" },
+  { category:"Antipasti", emoji:"🫒", label:"Olive verdi — 50 g", value:"🫒 Olive verdi — 50 g|70|0.5|7|2|0" },
+  { category:"Antipasti", emoji:"🥦", label:"Verdure grigliate — 200 g", value:"🥦 Verdure grigliate — 200 g|120|3|7|12|0" },
+  { category:"Antipasti", emoji:"🫘", label:"Hummus — 50 g", value:"🫘 Hummus — 50 g|120|4|8|8|0" },
 
-  /* =======================================================
-     🍽️ ALIMENTI PREDEFINITI GIÀ PRESENTI
-  ======================================================= */
-  {
-    value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0",
-    label: "🍫 Barretta Perugina Nero 70%",
-    text: "Barretta Perugina Nero 70%",
-    category: "Dolci"
-  },
-  {
-    value: "Prosciutto e Melone|260|14|8|34|0",
-    label: "🍈 Prosciutto e Melone",
-    text: "Prosciutto e Melone",
-    category: "Frutta e frutta secca"
-  },
-  {
-    value: "Salmone Grigliato (150g)|280|30|18|0|0",
-    label: "🐟 Salmone 150g",
-    text: "Salmone Grigliato (150g)",
-    category: "Secondi"
-  },
-  {
-    value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0",
-    label: "🐟 Tonno naturale",
-    text: "Tonno al naturale",
-    category: "Secondi"
-  },
-  {
-    value: "Pollo e Patate (200g/250g)|550|55|15|45|0",
-    label: "🍗 Pollo e Patate",
-    text: "Pollo e Patate",
-    category: "Secondi"
-  },
-  {
-    value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0",
-    label: "🍝 Pasta 100g",
-    text: "Spaghetti / Pasta",
-    category: "Primi"
-  },
-  {
-    value: "Sgombro in scatola (120g)|240|25|15|0|0",
-    label: "🐟 Sgombro",
-    text: "Sgombro in scatola",
-    category: "Secondi"
-  }
+  // 🍝 PRIMI
+  { category:"Primi", emoji:"🍝", label:"Pasta — 100 g secca", value:"🍝 Pasta — 100 g secca|350|12|1.5|72|0" },
+  { category:"Primi", emoji:"🍝", label:"Pasta integrale — 100 g secca", value:"🍝 Pasta integrale — 100 g secca|345|13|2.5|65|0" },
+  { category:"Primi", emoji:"🍚", label:"Riso — 100 g secco", value:"🍚 Riso — 100 g secco|360|7|0.7|80|0" },
+  { category:"Primi", emoji:"🍚", label:"Riso basmati — 100 g secco", value:"🍚 Riso basmati — 100 g secco|350|8|0.7|78|0" },
+  { category:"Primi", emoji:"🌾", label:"Cous cous — 100 g secco", value:"🌾 Cous cous — 100 g secco|360|12|1.5|72|0" },
+  { category:"Primi", emoji:"🌾", label:"Farro — 100 g secco", value:"🌾 Farro — 100 g secco|335|15|2.5|67|0" },
+  { category:"Primi", emoji:"🌾", label:"Orzo — 100 g secco", value:"🌾 Orzo — 100 g secco|350|10|2|73|0" },
+  { category:"Primi", emoji:"🌾", label:"Quinoa — 100 g secca", value:"🌾 Quinoa — 100 g secca|370|14|6|64|0" },
+  { category:"Primi", emoji:"🥔", label:"Gnocchi — 200 g", value:"🥔 Gnocchi — 200 g|300|6|1|63|0" },
+  { category:"Primi", emoji:"🍝", label:"Lasagne — 250 g", value:"🍝 Lasagne — 250 g|400|24|20|32|0" },
+  { category:"Primi", emoji:"🍚", label:"Risotto — 250 g", value:"🍚 Risotto — 250 g|350|9|12|50|0" },
+  { category:"Primi", emoji:"🍝", label:"Pasta al pomodoro — 250 g", value:"🍝 Pasta al pomodoro — 250 g|330|10|8|52|0" },
+
+  // 🍗 SECONDI
+  { category:"Secondi", emoji:"🍗", label:"Petto di pollo — 100 g", value:"🍗 Petto di pollo — 100 g|110|23|1.5|0|0" },
+  { category:"Secondi", emoji:"🍗", label:"Petto di tacchino — 100 g", value:"🍗 Petto di tacchino — 100 g|110|24|1|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Manzo magro — 100 g", value:"🥩 Manzo magro — 100 g|170|26|7|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Vitello — 100 g", value:"🥩 Vitello — 100 g|160|26|6|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Lonza di maiale — 100 g", value:"🥩 Lonza di maiale — 100 g|165|27|6|0|0" },
+  { category:"Secondi", emoji:"🥚", label:"Uovo — 1 pz", value:"🥚 Uovo — 1 pz|70|6.3|4.8|0.4|0" },
+  { category:"Secondi", emoji:"🥚", label:"Albume — 100 g", value:"🥚 Albume — 100 g|50|11|0.2|0.7|0" },
+  { category:"Secondi", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Salmone — 100 g", value:"🐟 Salmone — 100 g|208|20|13|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Sgombro — 100 g", value:"🐟 Sgombro — 100 g|205|19|14|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Orata — 100 g", value:"🐟 Orata — 100 g|120|20|4|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Branzino — 100 g", value:"🐟 Branzino — 100 g|120|20|4|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Merluzzo — 100 g", value:"🐟 Merluzzo — 100 g|82|18|1|0|0" },
+  { category:"Secondi", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0" },
+  { category:"Secondi", emoji:"🌱", label:"Tofu — 100 g", value:"🌱 Tofu — 100 g|145|16|9|2|0" },
+  { category:"Secondi", emoji:"🧀", label:"Fiocchi di latte — 200 g", value:"🧀 Fiocchi di latte — 200 g|196|26|9|3|0" },
+
+  // 🥦 CONTORNI
+  { category:"Contorni", emoji:"🥔", label:"Patate — 100 g", value:"🥔 Patate — 100 g|77|2|0.1|17|0" },
+  { category:"Contorni", emoji:"🍠", label:"Patate dolci — 100 g", value:"🍠 Patate dolci — 100 g|86|1.6|0.1|20|0" },
+  { category:"Contorni", emoji:"🥒", label:"Zucchine — 200 g", value:"🥒 Zucchine — 200 g|34|2.4|0.6|5|0" },
+  { category:"Contorni", emoji:"🍆", label:"Melanzane — 200 g", value:"🍆 Melanzane — 200 g|50|2|0.4|12|0" },
+  { category:"Contorni", emoji:"🫑", label:"Peperoni — 200 g", value:"🫑 Peperoni — 200 g|60|2|0.6|12|0" },
+  { category:"Contorni", emoji:"🥦", label:"Broccoli — 200 g", value:"🥦 Broccoli — 200 g|68|5.6|0.8|10|0" },
+  { category:"Contorni", emoji:"🥦", label:"Cavolfiore — 200 g", value:"🥦 Cavolfiore — 200 g|50|4|0.6|9|0" },
+  { category:"Contorni", emoji:"🥬", label:"Spinaci — 200 g", value:"🥬 Spinaci — 200 g|46|6|0.8|4|0" },
+  { category:"Contorni", emoji:"🫛", label:"Fagiolini — 200 g", value:"🫛 Fagiolini — 200 g|62|4|0.6|14|0" },
+  { category:"Contorni", emoji:"🥗", label:"Insalata mista — 150 g", value:"🥗 Insalata mista — 150 g|30|2|0.4|5|0" },
+  { category:"Contorni", emoji:"🍅", label:"Pomodori — 200 g", value:"🍅 Pomodori — 200 g|36|1.8|0.4|7|0" },
+  { category:"Contorni", emoji:"🥕", label:"Carote — 150 g", value:"🥕 Carote — 150 g|62|1.4|0.3|14|0" },
+
+  // 🍎 FRUTTA E FRUTTA SECCA
+  { category:"Frutta e frutta secca", emoji:"🍎", label:"Mela — 1 pz", value:"🍎 Mela — 1 pz|80|0.4|0.2|21|0" },
+  { category:"Frutta e frutta secca", emoji:"🍌", label:"Banana — 1 pz", value:"🍌 Banana — 1 pz|105|1.3|0.4|27|0" },
+  { category:"Frutta e frutta secca", emoji:"🍊", label:"Arancia — 1 pz", value:"🍊 Arancia — 1 pz|65|1.2|0.2|15|0" },
+  { category:"Frutta e frutta secca", emoji:"🍐", label:"Pera — 1 pz", value:"🍐 Pera — 1 pz|100|0.6|0.2|27|0" },
+  { category:"Frutta e frutta secca", emoji:"🥝", label:"Kiwi — 1 pz", value:"🥝 Kiwi — 1 pz|45|0.8|0.4|11|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Pesca — 1 pz", value:"🍑 Pesca — 1 pz|55|1.2|0.4|13|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Nettarina — 1 pz", value:"🍑 Nettarina — 1 pz|60|1.5|0.4|14|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Albicocche — 2 pz", value:"🍑 Albicocche — 2 pz|35|1|0.2|8|0" },
+  { category:"Frutta e frutta secca", emoji:"🍓", label:"Fragole — 200 g", value:"🍓 Fragole — 200 g|64|1.4|0.6|15|0" },
+  { category:"Frutta e frutta secca", emoji:"🫐", label:"Mirtilli — 100 g", value:"🫐 Mirtilli — 100 g|57|0.7|0.3|14|0" },
+  { category:"Frutta e frutta secca", emoji:"🍇", label:"Uva — 150 g", value:"🍇 Uva — 150 g|104|1|0.3|27|0" },
+  { category:"Frutta e frutta secca", emoji:"🍍", label:"Ananas — 150 g", value:"🍍 Ananas — 150 g|75|0.8|0.2|20|0" },
+  { category:"Frutta e frutta secca", emoji:"🍈", label:"Melone — 200 g", value:"🍈 Melone — 200 g|68|1.6|0.4|16|0" },
+  { category:"Frutta e frutta secca", emoji:"🥑", label:"Avocado — 1/2 pz", value:"🥑 Avocado — 1/2 pz|160|2|15|8|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Mandorle — 10 g", value:"🌰 Mandorle — 10 g|58|2.1|5|2.2|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Noci — 15 g", value:"🌰 Noci — 15 g|98|2.3|9.8|2|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Nocciole — 15 g", value:"🌰 Nocciole — 15 g|94|2.3|9.1|2.5|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Anacardi — 15 g", value:"🌰 Anacardi — 15 g|83|2.7|6.6|4.5|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Pistacchi — 15 g", value:"🌰 Pistacchi — 15 g|84|3|6.8|4.2|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Macadamia — 10 pz / ~25 g", value:"🌰 Macadamia — 10 pz / ~25 g|180|2|19|3|0" },
+
+  // 🍰 DOLCI
+  { category:"Dolci", emoji:"🍫", label:"Cioccolato fondente 70% — 20 g", value:"🍫 Cioccolato fondente 70% — 20 g|110|1.5|8|8|0" },
+  { category:"Dolci", emoji:"🍫", label:"Cioccolato al latte — 20 g", value:"🍫 Cioccolato al latte — 20 g|107|1.5|6|11|0" },
+  { category:"Dolci", emoji:"🍪", label:"Biscotti secchi — 30 g", value:"🍪 Biscotti secchi — 30 g|135|2|5|21|0" },
+  { category:"Dolci", emoji:"🍞", label:"Fette biscottate — 30 g", value:"🍞 Fette biscottate — 30 g|115|3|1|22|0" },
+  { category:"Dolci", emoji:"🥧", label:"Crostata — 100 g", value:"🥧 Crostata — 100 g|350|5|15|50|0" },
+  { category:"Dolci", emoji:"🍰", label:"Torta al cioccolato — 100 g", value:"🍰 Torta al cioccolato — 100 g|390|6|22|45|0" },
+  { category:"Dolci", emoji:"🍨", label:"Gelato — 100 g", value:"🍨 Gelato — 100 g|210|4|10|27|0" },
+  { category:"Dolci", emoji:"🍯", label:"Yogurt greco con miele — 200 g", value:"🍯 Yogurt greco con miele — 200 g|190|18|4|22|0" },
+  { category:"Dolci", emoji:"🍫", label:"Barretta proteica — 1 pz", value:"🍫 Barretta proteica — 1 pz|200|20|7|15|0" },
+
+  // ☕ COLAZIONE E BEVANDE
+  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 0% — 150 g", value:"🥣 Yogurt greco 0% — 150 g|90|15|0|5|0" },
+  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 2% — 150 g", value:"🥣 Yogurt greco 2% — 150 g|110|15|3|5|0" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Latte parzialmente scremato — 250 ml", value:"🥛 Latte parzialmente scremato — 250 ml|115|8|4|12|250" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Latte scremato — 250 ml", value:"🥛 Latte scremato — 250 ml|85|8.5|0.3|12|250" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Bevanda vegetale senza zuccheri — 250 ml", value:"🥛 Bevanda vegetale senza zuccheri — 250 ml|50|2|2|3|250" },
+  { category:"Colazione e bevande", emoji:"🥤", label:"Whey — 1 scoop", value:"🥤 Whey — 1 scoop|120|24|2|3|0" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Caffè espresso — 1 tazzina", value:"☕ Caffè espresso — 1 tazzina|2|0.2|0|0|30" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Caffè macchiato — 1 tazzina", value:"☕ Caffè macchiato — 1 tazzina|15|1|0.5|1|30" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Cappuccino — 1 tazza", value:"☕ Cappuccino — 1 tazza|90|5|4|8|150" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Mocaccino s/z — 1 tazza", value:"☕ Mocaccino s/z — 1 tazza|30|1|1|4|150" },
+  { category:"Colazione e bevande", emoji:"🍊", label:"Succo d'arancia — 200 ml", value:"🍊 Succo d'arancia — 200 ml|90|1.4|0.2|20|200" },
+  { category:"Colazione e bevande", emoji:"🍵", label:"Tè s/z — 250 ml", value:"🍵 Tè s/z — 250 ml|2|0|0|0|250" },
+
+  // 🫒 CONDIMENTI
+  { category:"Condimenti", emoji:"🫒", label:"Olio EVO — 10 g", value:"🫒 Olio EVO — 10 g|90|0|10|0|0" },
+  { category:"Condimenti", emoji:"🧈", label:"Burro — 10 g", value:"🧈 Burro — 10 g|75|0.1|8.3|0|0" },
+  { category:"Condimenti", emoji:"🧀", label:"Parmigiano — 10 g", value:"🧀 Parmigiano — 10 g|40|3.3|2.9|0|0" },
+  { category:"Condimenti", emoji:"🧀", label:"Grana — 10 g", value:"🧀 Grana — 10 g|40|3.3|2.9|0|0" },
+  { category:"Condimenti", emoji:"🥚", label:"Maionese — 15 g", value:"🥚 Maionese — 15 g|100|0.2|11|0.5|0" },
+  { category:"Condimenti", emoji:"🍅", label:"Ketchup — 15 g", value:"🍅 Ketchup — 15 g|17|0.3|0.1|4|0" },
+  { category:"Condimenti", emoji:"🍖", label:"Salsa BBQ — 15 g", value:"🍖 Salsa BBQ — 15 g|25|0.3|0.1|6|0" },
+  { category:"Condimenti", emoji:"🌿", label:"Pesto — 30 g", value:"🌿 Pesto — 30 g|150|3|14|3|0" },
+  { category:"Condimenti", emoji:"🍇", label:"Aceto balsamico — 10 g", value:"🍇 Aceto balsamico — 10 g|9|0|0|2|0" }
 ];
+
 
 const DEFAULT_QUICK_ITEMS = [
   { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (2 cup Whey + Creatina + 500ml H2O)", kcal: 200, pro: 40, fat: 2, carb: 3, water: 500 },
