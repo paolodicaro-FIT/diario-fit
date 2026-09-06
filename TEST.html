@@ -2550,6 +2550,20 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     </div>
 
+    <div
+      id="edit-food-status"
+      style="
+        display:none;
+        margin-top:12px;
+        padding:9px 10px;
+        border-radius:8px;
+        background:rgba(255,159,28,.08);
+        font-size:.8rem;
+        font-weight:700;
+        text-align:center;
+      "
+    ></div>
+
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
@@ -4898,11 +4912,23 @@ async function saveEditedFood() {
     return;
   }
 
+  const status = document.getElementById("edit-food-status");
+
+  const showStatus = (message, isError = false) => {
+    if (!status) return;
+
+    status.innerText = message;
+    status.style.color = isError
+      ? "#ff6b6b"
+      : "var(--accent)";
+    status.style.display = "block";
+  };
+
   const name =
     document.getElementById("edit-food-name").value.trim();
 
   if (!name) {
-    alert("Il nome dell'alimento non può essere vuoto.");
+    showStatus("⚠️ Inserisci il nome dell'alimento.", true);
     return;
   }
 
@@ -4931,7 +4957,7 @@ async function saveEditedFood() {
       value => Number.isNaN(value)
     )
   ) {
-    alert("Controlla i valori inseriti.");
+    showStatus("⚠️ Controlla i valori inseriti.", true);
     return;
   }
 
@@ -4949,8 +4975,6 @@ async function saveEditedFood() {
 
   closeEditFoodModal();
   renderFoodPickerModal();
-
-  alert("Alimento modificato e salvato.");
 }
 
 async function deleteSavedFood(index) {
