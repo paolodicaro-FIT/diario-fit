@@ -3125,7 +3125,8 @@ async function saveUserDiaryToBackend(
 
 async function saveUserSettingsToBackend() {
 
-  await apiFetch(
+  const response = await apiFetch(
+  console.log("DEBUG RISPOSTA SALVATAGGIO TARGETS:", response);
     "/api/user/settings",
     {
       method: "PUT",
