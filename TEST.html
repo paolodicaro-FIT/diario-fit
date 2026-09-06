@@ -4684,16 +4684,17 @@ function renderFoodPickerModal(filterText = "") {
       item.className = "food-option-item";
 
       if (isCustom) {
+        item.type = "button";
         item.innerHTML =
-          `<span style="flex:1;">${escapeHTML(label)}</span>` +
-          `<small style="color:var(--accent); font-weight:700; margin-right:8px;">${kcalVal} kcal</small>` +
-          `<span style="display:flex; gap:4px; flex-shrink:0;">` +
-            `<button type="button" title="Modifica alimento" ` +
-              `style="border:0; background:transparent; padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
-              `onclick="event.stopPropagation(); editSavedFood(${savedFoods.indexOf(food)})">✏️</button>` +
-            `<button type="button" title="Elimina alimento" ` +
-              `style="border:0; background:transparent; padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
-              `onclick="event.stopPropagation(); deleteSavedFood(${savedFoods.indexOf(food)})">🗑️</button>` +
+          `<span style="flex:1; min-width:0;">${escapeHTML(label)}</span>` +
+          `<small style="color:var(--accent); font-weight:700; margin-right:6px;">${kcalVal} kcal</small>` +
+          `<span style="display:flex; gap:2px; flex-shrink:0;">` +
+            `<span role="button" tabindex="0" title="Modifica alimento" ` +
+              `style="padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
+              `onclick="event.stopPropagation(); editSavedFood(${savedFoods.indexOf(food)})">✏️</span>` +
+            `<span role="button" tabindex="0" title="Elimina alimento" ` +
+              `style="padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
+              `onclick="event.stopPropagation(); deleteSavedFood(${savedFoods.indexOf(food)})">🗑️</span>` +
           `</span>`;
       } else {
         item.innerHTML =
