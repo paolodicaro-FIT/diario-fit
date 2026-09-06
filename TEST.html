@@ -2821,6 +2821,15 @@ input, select, .food-picker-trigger { font-size: .94rem; }
           Salva utente
         </button>
 
+        <button
+          class="btn"
+          id="admin-delete-user-btn"
+          onclick="deleteUserFromEditor()"
+          style="display:none;"
+        >
+          🗑️ Elimina utente
+        </button>
+
       </div>
 
     </div>
@@ -3822,6 +3831,14 @@ async function openUserEditor(userId) {
   editorView.dataset.userId =
     userId || "";
 
+  const deleteButton =
+    document.getElementById("admin-delete-user-btn");
+
+  if (deleteButton) {
+    deleteButton.style.display =
+      userId ? "inline-block" : "none";
+  }
+
   const help =
     document.getElementById("admin-password-help");
 
@@ -4102,6 +4119,27 @@ async function saveUser() {
     }
 
   }
+
+}
+
+
+async function deleteUserFromEditor() {
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  if (!editorView) {
+    return;
+  }
+
+  const userId =
+    editorView.dataset.userId || "";
+
+  if (!userId) {
+    return;
+  }
+
+  await deleteUser(userId);
 
 }
 
