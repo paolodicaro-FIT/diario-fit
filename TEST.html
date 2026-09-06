@@ -3039,6 +3039,164 @@ const BACKEND_API_URL = "https://diario-fit-api.paolodicaro-3d.workers.dev";
 let currentUser = null;
 
 
+async function apiFetch(path, options = {}) {
+
+  const token = localStorage.getItem("diario_backend_token");
+
+  if (!token) {
+    throw new Error("AUTH_REQUIRED");
+  }
+
+  const headers = {
+    ...(options.headers || {}),
+    "Authorization": "Bearer " + token
+  };
+
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(
+    BACKEND_API_URL + path,
+    {
+      ...options,
+      headers
+    }
+  );
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = {};
+  }
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "API_REQUEST_FAILED");
+  }
+
+  return data;
+}
+
+
+async function loadUserDiaryFromBackend(dateKey) {
+
+  const data = await apiFetch(
+    "/api/user/diary?date=" + encodeURIComponent(dateKey)
+  );
+
+  log = Array.isArray(data.log)
+    ? data.log
+    : [];
+
+  return data;
+}
+
+
+async function saveUserDiaryToBackend(
+  dateKey = getLocalISODate(),
+  summary = {}
+) {
+
+  await apiFetch(
+    "/api/user/diary",
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        date: dateKey,
+        log: Array.isArray(log) ? log : [],
+        summary:
+          summary && typeof summary === "object"
+            ? summary
+            : {}
+      })
+    }
+  );
+}
+
+
+async function saveUserSettingsToBackend() {
+
+  await apiFetch(
+    "/api/user/settings",
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        targets: TARGETS,
+        savedFoods: Array.isArray(savedFoods) ? savedFoods : [],
+        quickItems: Array.isArray(quickAddItems) ? quickAddItems : []
+      })
+    }
+  );
+}
+
+
+async function loadUserHistoryFromBackend() {
+
+  const data =
+    await apiFetch(
+      "/api/user/history?limit=1000"
+    );
+
+  historyLogs = {};
+
+  if (
+    Array.isArray(data.history)
+  ) {
+
+    data.history.forEach(
+      day => {
+
+        if (!day || !day.date) {
+          return;
+        }
+
+        historyLogs[day.date] = {
+          date: day.date,
+          log: Array.isArray(day.log)
+            ? day.log
+            : [],
+          summary:
+            day.summary &&
+            typeof day.summary === "object"
+              ? day.summary
+              : {}
+        };
+
+      }
+    );
+
+  }
+
+  return data;
+}
+
+
+async function loadUserDataFromBackend() {
+
+  const data = await apiFetch("/api/user/settings");
+
+  TARGETS = data.targets || {
+    kcal: 2000,
+    pro: 160,
+    fat: 65,
+    carb: 180,
+    water: 2500
+  };
+
+  savedFoods = Array.isArray(data.savedFoods)
+    ? data.savedFoods
+    : [];
+
+  quickAddItems = Array.isArray(data.quickItems) && data.quickItems.length
+    ? data.quickItems
+    : DEFAULT_QUICK_ITEMS;
+
+  return data;
+}
+
+
 async function validateStoredSession() {
 
   const token =
@@ -3070,7 +3228,7 @@ async function validateStoredSession() {
     currentUser = data.user;
 
     hideLoginOverlay();
-    initApp();
+    await initApp();
 
     return true;
 
@@ -3222,7 +3380,7 @@ async function loginToApp() {
 
     hideLoginOverlay();
 
-    initApp();
+    await initApp();
 
   } catch (error) {
 
@@ -4054,36 +4212,9 @@ async function deleteUser(userId) {
    INIT
 ========================================================= */
 
-function initApp() {
+async function initApp() {
 
-  TARGETS =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_targets"
-      )
-    ) || {
-      kcal: 2000,
-      pro: 160,
-      fat: 65,
-      carb: 180,
-      water: 2500
-    };
-
-
-  savedFoods =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_saved_foods"
-      )
-    ) || [];
-
-
-  quickAddItems =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_quick_items"
-      )
-    ) || DEFAULT_QUICK_ITEMS;
+  await loadUserDataFromBackend();
 
 
   profiles =
@@ -4094,12 +4225,7 @@ function initApp() {
     ) || [];
 
 
-  historyLogs =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_history"
-      )
-    ) || {};
+  await loadUserHistoryFromBackend();
 
 
   const todayObj = new Date();
@@ -4121,43 +4247,16 @@ function initApp() {
     getLocalISODate();
 
 
+  await loadUserDiaryFromBackend(isoDateStr);
+
+
   document.getElementById(
     "display-date"
   ).innerText =
     formattedDateStr;
 
 
-  let lastActiveDate =
-    localStorage.getItem(
-      "diario_last_date"
-    );
 
-
-  log =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_log"
-      )
-    ) || [];
-
-
-  if (
-    lastActiveDate &&
-    lastActiveDate !== isoDateStr &&
-    log.length > 0
-  ) {
-
-    archiveCurrentLog(lastActiveDate);
-
-    log = [];
-
-  }
-
-
-  localStorage.setItem(
-    "diario_last_date",
-    isoDateStr
-  );
 
 
   updateTargetDisplays();
@@ -4178,7 +4277,9 @@ function initApp() {
 
   }
 
-  saveAndRender();
+  renderLog();
+
+  updateDashboard();
 
 }
 
@@ -4789,7 +4890,7 @@ function applyGeminiToForm() {
    CALCOLATORE TARGET
 ========================================================= */
 
-function calculateAndApplyTargets() {
+async function calculateAndApplyTargets() {
 
   const gender =
     document.getElementById(
@@ -4926,17 +5027,14 @@ function calculateAndApplyTargets() {
   };
 
 
-  localStorage.setItem(
-    "diario_targets",
-    JSON.stringify(TARGETS)
-  );
+
 
 
   updateTargetDisplays();
 
   toggleCalculatorModal();
 
-  saveAndRender();
+  await saveUserSettingsToBackend();
 
 }
 
@@ -5000,7 +5098,7 @@ function toggleTargetInputs() {
 }
 
 
-function saveCustomTargets() {
+async function saveCustomTargets() {
 
   const k =
     parseInt(
@@ -5054,17 +5152,14 @@ function saveCustomTargets() {
     TARGETS.water = w;
 
 
-  localStorage.setItem(
-    "diario_targets",
-    JSON.stringify(TARGETS)
-  );
+
 
 
   updateTargetDisplays();
 
   toggleTargetInputs();
 
-  saveAndRender();
+  await saveUserSettingsToBackend();
 
 }
 
@@ -5199,7 +5294,7 @@ function applyUserDisplayName() {
 }
 
 
-function addQuick(
+async function addQuick(
   name,
   kcal,
   pro,
@@ -5238,7 +5333,7 @@ function addQuick(
   });
 
 
-  saveAndRender();
+  await saveAndRender();
 
 }
 
@@ -5247,7 +5342,7 @@ function addQuick(
    ADD FROM SELECT
 ========================================================= */
 
-function addFromSelect() {
+async function addFromSelect() {
 
   if (!selectedFoodValue) {
     alert("Seleziona prima un alimento.");
@@ -5347,7 +5442,7 @@ function addFromSelect() {
   document.getElementById("selected-food-label").innerText = "🍽️ Scegli alimento...";
 
 
-  saveAndRender();
+  await saveAndRender();
 
 }
 
@@ -5356,7 +5451,7 @@ function addFromSelect() {
    ADD CUSTOM
 ========================================================= */
 
-function addCustom() {
+async function addCustom() {
 
   const name =
     document
@@ -5471,10 +5566,7 @@ function addCustom() {
     });
 
 
-    localStorage.setItem(
-      "diario_saved_foods",
-      JSON.stringify(savedFoods)
-    );
+
 
 
     renderFoodPickerModal();
@@ -5512,7 +5604,9 @@ function addCustom() {
   ).value = "";
 
 
-  saveAndRender();
+  await saveUserSettingsToBackend();
+
+  await saveAndRender();
 
 }
 
@@ -5521,7 +5615,7 @@ function addCustom() {
    DELETE
 ========================================================= */
 
-function deleteItem(id) {
+async function deleteItem(id) {
 
   log =
     log.filter(
@@ -5530,7 +5624,7 @@ function deleteItem(id) {
     );
 
 
-  saveAndRender();
+  await saveAndRender();
 
 }
 
@@ -5539,13 +5633,9 @@ function deleteItem(id) {
    SAVE / RENDER
 ========================================================= */
 
-function saveAndRender() {
+async function saveAndRender() {
 
-  localStorage.setItem(
-    "diario_log",
-    JSON.stringify(log)
-  );
-
+  await saveUserDiaryToBackend();
 
   renderLog();
 
@@ -5851,7 +5941,7 @@ function escapeHTML(str) {
    ARCHIVIAZIONE
 ========================================================= */
 
-function archiveCurrentLog(dateKey) {
+async function archiveCurrentLog(dateKey) {
 
   const acquaTotOld =
     log.reduce(
@@ -5913,10 +6003,7 @@ function archiveCurrentLog(dateKey) {
   };
 
 
-  localStorage.setItem(
-    "diario_history",
-    JSON.stringify(historyLogs)
-  );
+  await saveUserDiaryToBackend(dateKey, historyLogs[dateKey].summary);
 
 }
 
@@ -6043,7 +6130,7 @@ function renderHistory() {
    CHIUSURA GIORNATA
 ========================================================= */
 
-function resetDay() {
+async function resetDay() {
 
   if (
     !confirm(
@@ -6062,7 +6149,7 @@ function resetDay() {
 
   if (log.length > 0) {
 
-    archiveCurrentLog(
+    await archiveCurrentLog(
       todayStr
     );
 
@@ -6071,8 +6158,8 @@ function resetDay() {
 
   log = [];
 
-
-  saveAndRender();
+  renderLog();
+  updateDashboard();
 
 
   alert(
