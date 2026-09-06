@@ -3182,7 +3182,7 @@ async function loadUserHistoryFromBackend() {
 
 async function loadUserDataFromBackend() {
 
-  const data = await apiFetch("/api/user/settings");
+  const data = await apiFetch("/api/user/settings?_=" + Date.now());
   console.log("DEBUG CURRENT USER:", JSON.stringify(currentUser));
   console.log("DEBUG SETTINGS DA D1:", JSON.stringify(data));
 
