@@ -4234,6 +4234,8 @@ async function initApp() {
 
   await loadUserHistoryFromBackend();
 
+  await finalizePendingClosedDay();
+
 
   const todayObj = new Date();
 
@@ -6003,9 +6005,7 @@ async function archiveCurrentLog(dateKey) {
         ) + "g",
 
       water:
-        acquaTotOld + "ml",
-
-      closed: true
+        acquaTotOld + "ml"
 
     }
 
@@ -6139,11 +6139,69 @@ function renderHistory() {
    CHIUSURA GIORNATA
 ========================================================= */
 
+async function finalizePendingClosedDay() {
+
+  const pendingDate =
+    localStorage.getItem(
+      "diario_closed_pending_date"
+    );
+
+  if (!pendingDate) {
+    return;
+  }
+
+  const todayStr =
+    getLocalISODate();
+
+  if (pendingDate >= todayStr) {
+    return;
+  }
+
+  const dayData =
+    historyLogs[pendingDate];
+
+  if (!dayData) {
+    localStorage.removeItem(
+      "diario_closed_pending_date"
+    );
+    return;
+  }
+
+  const summary = {
+    ...(dayData.summary || {}),
+    closed: true
+  };
+
+  historyLogs[pendingDate] = {
+    ...dayData,
+    summary
+  };
+
+  const savedLog = log;
+
+  log = Array.isArray(dayData.log)
+    ? dayData.log
+    : [];
+
+  await saveUserDiaryToBackend(
+    pendingDate,
+    summary
+  );
+
+  log = savedLog;
+
+  localStorage.removeItem(
+    "diario_closed_pending_date"
+  );
+
+}
+
+
 async function resetDay() {
 
   if (
     !confirm(
-      "Vuoi chiudere e archiviare la giornata corrente?"
+      "Vuoi chiudere la giornata corrente?"
     )
   ) {
 
@@ -6155,6 +6213,11 @@ async function resetDay() {
   const todayStr =
     getLocalISODate();
 
+  localStorage.setItem(
+    "diario_closed_pending_date",
+    todayStr
+  );
+
 
   if (log.length > 0) {
 
@@ -6165,14 +6228,12 @@ async function resetDay() {
   }
 
 
-  log = [];
-
   renderLog();
   updateDashboard();
 
 
   alert(
-    "Giornata archiviata con successo!"
+    "Giornata chiusa. Potrai ancora aggiungere alimenti o acqua fino a mezzanotte."
   );
 
 }
