@@ -3060,7 +3060,8 @@ async function apiFetch(path, options = {}) {
     BACKEND_API_URL + path,
     {
       ...options,
-      headers
+      headers,
+      cache: "no-store"
     }
   );
 
