@@ -802,21 +802,7 @@ textarea:focus {
   grid-column: 1 / -1;
 }
 
-.estimator-btn {
-  padding: 6px 9px;
 
-  border:
-    1px solid rgba(255,159,28,.35);
-
-  background: var(--accent-soft);
-
-  border-radius: 99px;
-
-  color: var(--accent);
-
-  font-size: .68rem;
-  font-weight: 800;
-}
 
 .section-actions {
   display: flex;
@@ -1645,7 +1631,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 .quick-btn { font-size: .79rem; }
 .multiplier-control button { font-size: 1.15rem; }
 .add-selected { font-size: .94rem; }
-.estimator-btn { font-size: .80rem; }
 .save-food-btn { font-size: .92rem; }
 .log-empty { font-size: .88rem; }
 .meal-header { font-size: .86rem; }
@@ -2276,13 +2261,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
           🤖 Chiedi a Gemini
         </button>
 
-        <button
-          class="estimator-btn"
-          onclick="toggleEstimatorModal()"
-        >
-          🔍 Stima
-        </button>
-
       </div>
 
     </div>
@@ -2401,148 +2379,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     <div id="food-options-container">
       <!-- Generato dinamicamente via JS -->
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     MODAL STIMA ALIMENTO
-===================================================== -->
-
-<div
-  class="modal-overlay"
-  id="estimator-modal"
->
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h3>
-        🔍 Stima alimento
-      </h3>
-
-      <button
-        class="modal-close"
-        onclick="toggleEstimatorModal()"
-      >
-        ✕
-      </button>
-
-    </div>
-
-
-    <p>
-      Inserisci il tipo di alimento e il peso stimato.
-      I valori sono una stima indicativa.
-    </p>
-
-
-    <label>
-      Nome alimento
-    </label>
-
-    <input
-      type="text"
-      id="est-name"
-      placeholder="es. Tagliata di carne"
-    >
-
-
-    <div class="inline-group">
-
-      <div>
-
-        <label>
-          Categoria
-        </label>
-
-        <select id="est-category">
-
-          <option value="lean_meat">
-            Carne magra
-          </option>
-
-          <option value="fat_meat">
-            Carne grassa
-          </option>
-
-          <option value="fish">
-            Pesce magro
-          </option>
-
-          <option value="fat_fish">
-            Pesce grasso
-          </option>
-
-          <option value="carb_dish">
-            Primo / Carboidrati
-          </option>
-
-          <option value="cheese">
-            Formaggio
-          </option>
-
-          <option value="fat_source">
-            Fonte di grassi
-          </option>
-
-          <option value="cooked_veg">
-            Verdura condita
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Grammi
-        </label>
-
-        <input
-          type="number"
-          id="est-grams"
-          value="150"
-        >
-
-      </div>
-
-    </div>
-
-
-    <div class="result-preview">
-
-      <b>Risultato:</b>
-
-      <div id="est-result-preview">
-        Calcola per vedere l'anteprima.
-      </div>
-
-    </div>
-
-
-    <div class="inline-group" style="margin-top:10px;">
-
-      <button
-        class="btn"
-        onclick="calculateEstimation()"
-      >
-        Calcola
-      </button>
-
-      <button
-        class="btn primary"
-        onclick="applyEstimationToForm()"
-      >
-        Usa valori
-      </button>
-
     </div>
 
   </div>
@@ -3101,14 +2937,6 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
     </p>
 
 
-    <h4>🔍 Stima alimento</h4>
-
-    <p>
-      Quando non conosci i valori esatti di un alimento,
-      puoi utilizzare la funzione di stima.
-    </p>
-
-
     <h4>🤖 Chiedi a Gemini</h4>
 
     <p>
@@ -3191,7 +3019,6 @@ let profiles;
 
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
-let lastEstimatedData = null;
 let lastGeminiData = null;
 let editingProfileId = null;
 
@@ -4459,19 +4286,6 @@ function toggleCalculatorModal() {
 }
 
 
-function toggleEstimatorModal() {
-
-  const modal =
-    document.getElementById(
-      "estimator-modal"
-    );
-
-  modal.style.display =
-    modal.style.display === "flex"
-      ? "none"
-      : "flex";
-
-}
 
 
 /* =========================================================
@@ -4556,207 +4370,6 @@ function selectFoodOption(value, label) {
   selectedFoodDisplayText = label;
   document.getElementById("selected-food-label").innerText = label;
   closeFoodPicker();
-}
-
-
-/* =========================================================
-   ESTIMATOR
-========================================================= */
-
-function calculateEstimation() {
-
-  const name =
-    document
-      .getElementById("est-name")
-      .value
-      .trim()
-    ||
-    "Piatto stimato";
-
-
-  const category =
-    document.getElementById(
-      "est-category"
-    ).value;
-
-
-  const grams =
-    parseFloat(
-      document.getElementById(
-        "est-grams"
-      ).value
-    ) || 100;
-
-
-  const profiles = {
-
-    lean_meat: {
-      kcal:120,
-      pro:23,
-      fat:3,
-      carb:0
-    },
-
-    fat_meat: {
-      kcal:230,
-      pro:18,
-      fat:17,
-      carb:0
-    },
-
-    fish: {
-      kcal:90,
-      pro:19,
-      fat:1.5,
-      carb:0
-    },
-
-    fat_fish: {
-      kcal:180,
-      pro:20,
-      fat:11,
-      carb:0
-    },
-
-    carb_dish: {
-      kcal:150,
-      pro:5,
-      fat:2,
-      carb:28
-    },
-
-    cheese: {
-      kcal:350,
-      pro:25,
-      fat:27,
-      carb:1
-    },
-
-    fat_source: {
-      kcal:600,
-      pro:10,
-      fat:55,
-      carb:10
-    },
-
-    cooked_veg: {
-      kcal:60,
-      pro:2,
-      fat:4,
-      carb:5
-    }
-
-  };
-
-
-  const p =
-    profiles[category]
-    ||
-    profiles.lean_meat;
-
-
-  const factor =
-    grams / 100;
-
-
-  const estKcal =
-    Math.round(
-      p.kcal * factor
-    );
-
-  const estPro =
-    Math.round(
-      p.pro * factor
-    );
-
-  const estFat =
-    Math.round(
-      p.fat * factor
-    );
-
-  const estCarb =
-    Math.round(
-      p.carb * factor
-    );
-
-
-  lastEstimatedData = {
-
-    name:
-      `${name} (${grams}g)`,
-
-    kcal: estKcal,
-
-    pro: estPro,
-
-    fat: estFat,
-
-    carb: estCarb
-
-  };
-
-
-  document.getElementById(
-    "est-result-preview"
-  ).innerHTML =
-
-    `<b>${lastEstimatedData.name}</b><br>` +
-
-    `🔥 ${estKcal} kcal · ` +
-
-    `🥩 ${estPro}g P · ` +
-
-    `🥑 ${estFat}g G · ` +
-
-    `🍞 ${estCarb}g C`;
-
-}
-
-
-function applyEstimationToForm() {
-
-  if (!lastEstimatedData) {
-    calculateEstimation();
-  }
-
-
-  document.getElementById(
-    "custom-name"
-  ).value =
-    lastEstimatedData.name;
-
-
-  document.getElementById(
-    "custom-kcal"
-  ).value =
-    lastEstimatedData.kcal;
-
-
-  document.getElementById(
-    "custom-pro"
-  ).value =
-    lastEstimatedData.pro;
-
-
-  document.getElementById(
-    "custom-fat"
-  ).value =
-    lastEstimatedData.fat;
-
-
-  document.getElementById(
-    "custom-carb"
-  ).value =
-    lastEstimatedData.carb;
-
-
-  document.getElementById(
-    "custom-water"
-  ).value = "";
-
-
-  toggleEstimatorModal();
-
 }
 
 
