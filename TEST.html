@@ -3556,7 +3556,7 @@ async function validateStoredSession() {
 
     hideLoginOverlay();
     showAppLoading();
-    await initApp();
+    await Promise.race([initApp(), new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT_INITAPP")), 10000))]);
 
     return true;
 
