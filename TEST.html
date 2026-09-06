@@ -2473,6 +2473,111 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
 <!-- =====================================================
+     MODAL MODIFICA ALIMENTO PERSONALE
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="edit-food-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        ✏️ Modifica alimento
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="closeEditFoodModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div class="free-grid">
+
+      <input
+        class="full"
+        type="text"
+        id="edit-food-name"
+        placeholder="Nome alimento e dose"
+      >
+
+      <input
+        type="number"
+        id="edit-food-kcal"
+        placeholder="Kcal"
+        step="0.1"
+        min="0"
+      >
+
+      <input
+        type="number"
+        id="edit-food-pro"
+        placeholder="Proteine g"
+        step="0.1"
+        min="0"
+      >
+
+      <input
+        type="number"
+        id="edit-food-fat"
+        placeholder="Grassi g"
+        step="0.1"
+        min="0"
+      >
+
+      <input
+        type="number"
+        id="edit-food-carb"
+        placeholder="Carboidrati g"
+        step="0.1"
+        min="0"
+      >
+
+      <input
+        class="full"
+        type="number"
+        id="edit-food-water"
+        placeholder="Acqua opzionale ml"
+        step="1"
+        min="0"
+      >
+
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:14px;">
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1;"
+        onclick="saveEditedFood()"
+      >
+        💾 Salva
+      </button>
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1; opacity:.75;"
+        onclick="closeEditFoodModal()"
+      >
+        Annulla
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      MODAL CHIEDI A GEMINI
 ===================================================== -->
 
@@ -4759,43 +4864,66 @@ function filterFoodList() {
 }
 
 
-async function editSavedFood(index) {
+let editingSavedFoodIndex = -1;
+
+function editSavedFood(index) {
   const food = savedFoods[index];
 
   if (!food) return;
 
-  const name = prompt(
-    "Nome alimento:",
-    food.name || ""
-  );
+  editingSavedFoodIndex = index;
 
-  if (name === null) return;
+  document.getElementById("edit-food-name").value = food.name || "";
+  document.getElementById("edit-food-kcal").value = food.kcal ?? 0;
+  document.getElementById("edit-food-pro").value = food.pro ?? 0;
+  document.getElementById("edit-food-fat").value = food.fat ?? 0;
+  document.getElementById("edit-food-carb").value = food.carb ?? 0;
+  document.getElementById("edit-food-water").value = food.water ?? 0;
 
-  const cleanName = name.trim();
+  document.getElementById("edit-food-modal").style.display = "flex";
+}
 
-  if (!cleanName) {
+function closeEditFoodModal() {
+  editingSavedFoodIndex = -1;
+  document.getElementById("edit-food-modal").style.display = "none";
+}
+
+async function saveEditedFood() {
+  if (editingSavedFoodIndex < 0) return;
+
+  const food = savedFoods[editingSavedFoodIndex];
+
+  if (!food) {
+    closeEditFoodModal();
+    return;
+  }
+
+  const name =
+    document.getElementById("edit-food-name").value.trim();
+
+  if (!name) {
     alert("Il nome dell'alimento non può essere vuoto.");
     return;
   }
 
   const kcal = parseFloat(
-    prompt("Kcal:", food.kcal ?? 0)
+    document.getElementById("edit-food-kcal").value
   );
 
   const pro = parseFloat(
-    prompt("Proteine (g):", food.pro ?? 0)
+    document.getElementById("edit-food-pro").value
   );
 
   const fat = parseFloat(
-    prompt("Grassi (g):", food.fat ?? 0)
+    document.getElementById("edit-food-fat").value
   );
 
   const carb = parseFloat(
-    prompt("Carboidrati (g):", food.carb ?? 0)
+    document.getElementById("edit-food-carb").value
   );
 
   const water = parseFloat(
-    prompt("Acqua (ml):", food.water ?? 0)
+    document.getElementById("edit-food-water").value
   );
 
   if (
@@ -4803,13 +4931,13 @@ async function editSavedFood(index) {
       value => Number.isNaN(value)
     )
   ) {
-    alert("Modifica annullata: uno o più valori non sono validi.");
+    alert("Controlla i valori inseriti.");
     return;
   }
 
-  savedFoods[index] = {
+  savedFoods[editingSavedFoodIndex] = {
     ...food,
-    name: cleanName,
+    name,
     kcal,
     pro,
     fat,
@@ -4818,6 +4946,8 @@ async function editSavedFood(index) {
   };
 
   await saveUserSettingsToBackend();
+
+  closeEditFoodModal();
   renderFoodPickerModal();
 
   alert("Alimento modificato e salvato.");
