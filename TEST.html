@@ -3086,9 +3086,16 @@ async function loadUserDiaryFromBackend(dateKey) {
     "/api/user/diary?date=" + encodeURIComponent(dateKey)
   );
 
-  log = Array.isArray(data.log)
-    ? data.log
-    : [];
+  if (
+    data.summary &&
+    data.summary.closed === true
+  ) {
+    log = [];
+  } else {
+    log = Array.isArray(data.log)
+      ? data.log
+      : [];
+  }
 
   return data;
 }
@@ -5996,7 +6003,9 @@ async function archiveCurrentLog(dateKey) {
         ) + "g",
 
       water:
-        acquaTotOld + "ml"
+        acquaTotOld + "ml",
+
+      closed: true
 
     }
 
