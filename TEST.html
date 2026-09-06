@@ -4683,9 +4683,23 @@ function renderFoodPickerModal(filterText = "") {
       item.type = "button";
       item.className = "food-option-item";
 
-      item.innerHTML =
-        `<span>${escapeHTML(label)}</span>` +
-        `<small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
+      if (isCustom) {
+        item.innerHTML =
+          `<span style="flex:1;">${escapeHTML(label)}</span>` +
+          `<small style="color:var(--accent); font-weight:700; margin-right:8px;">${kcalVal} kcal</small>` +
+          `<span style="display:flex; gap:4px; flex-shrink:0;">` +
+            `<button type="button" title="Modifica alimento" ` +
+              `style="border:0; background:transparent; padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
+              `onclick="event.stopPropagation(); editSavedFood(${savedFoods.indexOf(food)})">✏️</button>` +
+            `<button type="button" title="Elimina alimento" ` +
+              `style="border:0; background:transparent; padding:3px 5px; cursor:pointer; font-size:.9rem;" ` +
+              `onclick="event.stopPropagation(); deleteSavedFood(${savedFoods.indexOf(food)})">🗑️</button>` +
+          `</span>`;
+      } else {
+        item.innerHTML =
+          `<span>${escapeHTML(label)}</span>` +
+          `<small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
+      }
 
       item.onclick = () => selectFoodOption(val, label);
 
@@ -4736,6 +4750,90 @@ function renderFoodPickerModal(filterText = "") {
 function filterFoodList() {
   const query = document.getElementById("food-search-input").value;
   renderFoodPickerModal(query);
+}
+
+
+async function editSavedFood(index) {
+  const food = savedFoods[index];
+
+  if (!food) return;
+
+  const name = prompt(
+    "Nome alimento:",
+    food.name || ""
+  );
+
+  if (name === null) return;
+
+  const cleanName = name.trim();
+
+  if (!cleanName) {
+    alert("Il nome dell'alimento non può essere vuoto.");
+    return;
+  }
+
+  const kcal = parseFloat(
+    prompt("Kcal:", food.kcal ?? 0)
+  );
+
+  const pro = parseFloat(
+    prompt("Proteine (g):", food.pro ?? 0)
+  );
+
+  const fat = parseFloat(
+    prompt("Grassi (g):", food.fat ?? 0)
+  );
+
+  const carb = parseFloat(
+    prompt("Carboidrati (g):", food.carb ?? 0)
+  );
+
+  const water = parseFloat(
+    prompt("Acqua (ml):", food.water ?? 0)
+  );
+
+  if (
+    [kcal, pro, fat, carb, water].some(
+      value => Number.isNaN(value)
+    )
+  ) {
+    alert("Modifica annullata: uno o più valori non sono validi.");
+    return;
+  }
+
+  savedFoods[index] = {
+    ...food,
+    name: cleanName,
+    kcal,
+    pro,
+    fat,
+    carb,
+    water
+  };
+
+  await saveUserSettingsToBackend();
+  renderFoodPickerModal();
+
+  alert("Alimento modificato e salvato.");
+}
+
+async function deleteSavedFood(index) {
+  const food = savedFoods[index];
+
+  if (!food) return;
+
+  const confirmed = confirm(
+    `Vuoi eliminare "${food.name}" dai tuoi alimenti?`
+  );
+
+  if (!confirmed) return;
+
+  savedFoods.splice(index, 1);
+
+  await saveUserSettingsToBackend();
+  renderFoodPickerModal();
+
+  alert("Alimento eliminato.");
 }
 
 function selectFoodOption(value, label) {
