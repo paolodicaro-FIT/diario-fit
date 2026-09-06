@@ -4841,7 +4841,7 @@ function renderFoodPickerModal(filterText = "") {
     const matches = DEFAULT_PRESET_FOODS.filter(food =>
       food.category === category.name &&
       (
-        food.text.toLowerCase().includes(query) ||
+        food.label.toLowerCase().includes(query) ||
         food.label.toLowerCase().includes(query)
       )
     );
