@@ -2550,20 +2550,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     </div>
 
-    <div
-      id="edit-food-status"
-      style="
-        display:none;
-        margin-top:12px;
-        padding:9px 10px;
-        border-radius:8px;
-        background:rgba(255,159,28,.08);
-        font-size:.8rem;
-        font-weight:700;
-        text-align:center;
-      "
-    ></div>
-
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
@@ -3556,7 +3542,7 @@ async function validateStoredSession() {
 
     hideLoginOverlay();
     showAppLoading();
-    await Promise.race([initApp(), new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT_INITAPP")), 10000))]);
+    await initApp();
 
     return true;
 
@@ -4804,12 +4790,10 @@ function renderFoodPickerModal(filterText = "") {
       if (isCustom) {
         const foodIndex = savedFoods.indexOf(food);
 
-        item.dataset.foodIndex = String(foodIndex);
-
         item.innerHTML =
           `<span class="saved-food-name" style="flex:1; min-width:0; cursor:pointer;">${escapeHTML(label)}</span>` +
           `<small style="color:var(--accent); font-weight:700; margin-right:6px;">${kcalVal} kcal</small>` +
-          `<span class="saved-food-actions" style="display:flex; gap:3px; flex-shrink:0;">`
+          `<span style="display:flex; gap:3px; flex-shrink:0;">` +
             `<button type="button" title="Modifica alimento" ` +
               `style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;" ` +
               `onclick="editSavedFood(${foodIndex})">✏️</button>` +
@@ -4914,23 +4898,11 @@ async function saveEditedFood() {
     return;
   }
 
-  const status = document.getElementById("edit-food-status");
-
-  const showStatus = (message, isError = false) => {
-    if (!status) return;
-
-    status.innerText = message;
-    status.style.color = isError
-      ? "#ff6b6b"
-      : "var(--accent)";
-    status.style.display = "block";
-  };
-
   const name =
     document.getElementById("edit-food-name").value.trim();
 
   if (!name) {
-    showStatus("⚠️ Inserisci il nome dell'alimento.", true);
+    alert("Il nome dell'alimento non può essere vuoto.");
     return;
   }
 
@@ -4959,7 +4931,7 @@ async function saveEditedFood() {
       value => Number.isNaN(value)
     )
   ) {
-    showStatus("⚠️ Controlla i valori inseriti.", true);
+    alert("Controlla i valori inseriti.");
     return;
   }
 
@@ -4977,6 +4949,8 @@ async function saveEditedFood() {
 
   closeEditFoodModal();
   renderFoodPickerModal();
+
+  alert("Alimento modificato e salvato.");
 }
 
 async function deleteSavedFood(index) {
@@ -4984,46 +4958,18 @@ async function deleteSavedFood(index) {
 
   if (!food) return;
 
-  const container = document.getElementById("food-options-container");
-  const items = container.querySelectorAll(".food-option-item");
-
-  const item = Array.from(items).find(
-    el => el.dataset.foodIndex === String(index)
+  const confirmed = confirm(
+    `Vuoi eliminare "${food.name}" dai tuoi alimenti?`
   );
 
-  if (!item) return;
-
-  const name = item.querySelector(".saved-food-name");
-
-  if (!name) return;
-
-  const actions = item.querySelector(".saved-food-actions");
-
-  if (!actions) return;
-
-  name.innerText = `Eliminare "${food.name}"?`;
-  name.style.color = "#ff6b6b";
-
-  actions.innerHTML =
-    `<button type="button"
-      title="Conferma eliminazione"
-      style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;"
-      onclick="confirmDeleteSavedFood(${index})">✅</button>` +
-    `<button type="button"
-      title="Annulla"
-      style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;"
-      onclick="renderFoodPickerModal()">↩️</button>`;
-}
-
-async function confirmDeleteSavedFood(index) {
-  const food = savedFoods[index];
-
-  if (!food) return;
+  if (!confirmed) return;
 
   savedFoods.splice(index, 1);
 
   await saveUserSettingsToBackend();
   renderFoodPickerModal();
+
+  alert("Alimento eliminato.");
 }
 
 function selectFoodOption(value, label) {
