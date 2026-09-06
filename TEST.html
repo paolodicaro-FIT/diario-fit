@@ -4804,10 +4804,12 @@ function renderFoodPickerModal(filterText = "") {
       if (isCustom) {
         const foodIndex = savedFoods.indexOf(food);
 
+        item.dataset.foodIndex = String(foodIndex);
+
         item.innerHTML =
           `<span class="saved-food-name" style="flex:1; min-width:0; cursor:pointer;">${escapeHTML(label)}</span>` +
           `<small style="color:var(--accent); font-weight:700; margin-right:6px;">${kcalVal} kcal</small>` +
-          `<span style="display:flex; gap:3px; flex-shrink:0;">` +
+          `<span class="saved-food-actions" style="display:flex; gap:3px; flex-shrink:0;">`
             `<button type="button" title="Modifica alimento" ` +
               `style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;" ` +
               `onclick="editSavedFood(${foodIndex})">✏️</button>` +
@@ -4982,18 +4984,46 @@ async function deleteSavedFood(index) {
 
   if (!food) return;
 
-  const confirmed = confirm(
-    `Vuoi eliminare "${food.name}" dai tuoi alimenti?`
+  const container = document.getElementById("food-options-container");
+  const items = container.querySelectorAll(".food-option-item");
+
+  const item = Array.from(items).find(
+    el => el.dataset.foodIndex === String(index)
   );
 
-  if (!confirmed) return;
+  if (!item) return;
+
+  const name = item.querySelector(".saved-food-name");
+
+  if (!name) return;
+
+  const actions = item.querySelector(".saved-food-actions");
+
+  if (!actions) return;
+
+  name.innerText = `Eliminare "${food.name}"?`;
+  name.style.color = "#ff6b6b";
+
+  actions.innerHTML =
+    `<button type="button"
+      title="Conferma eliminazione"
+      style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;"
+      onclick="confirmDeleteSavedFood(${index})">✅</button>` +
+    `<button type="button"
+      title="Annulla"
+      style="border:0; background:transparent; padding:4px 5px; cursor:pointer; font-size:.9rem;"
+      onclick="renderFoodPickerModal()">↩️</button>`;
+}
+
+async function confirmDeleteSavedFood(index) {
+  const food = savedFoods[index];
+
+  if (!food) return;
 
   savedFoods.splice(index, 1);
 
   await saveUserSettingsToBackend();
   renderFoodPickerModal();
-
-  alert("Alimento eliminato.");
 }
 
 function selectFoodOption(value, label) {
