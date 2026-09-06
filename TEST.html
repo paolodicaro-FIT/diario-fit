@@ -2688,7 +2688,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     <div class="modal-header">
 
       <h3>
-        👑 Gestione profili
+        👑 Gestione utenti
       </h3>
 
       <button
@@ -2701,130 +2701,124 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     </div>
 
 
-    <!-- VISTA ELENCO -->
+    <!-- VISTA ELENCO UTENTI -->
 
-    <div id="admin-list-view">
+    <div id="admin-users-list-view">
 
       <p>
-        Crea un profilo per ogni amico o collega, con target,
-        inserimento rapido e alimenti preferiti dedicati. Poi copia
-        il link e inviaglielo: aprendolo sul proprio cellulare,
-        tablet o PC l'app si configura da sola su quel dispositivo.
+        Gestisci gli account che possono accedere a Diario FIT.
+        Puoi creare nuovi utenti, modificare nome, ruolo e stato,
+        reimpostare la password oppure eliminare un account.
       </p>
 
-      <div id="admin-profiles-list"></div>
+      <div id="admin-users-list"></div>
 
       <button
         class="btn primary full"
-        onclick="openProfileEditor(null)"
+        onclick="openUserEditor(null)"
       >
-        ＋ Nuovo profilo
+        ＋ Nuovo utente
       </button>
 
     </div>
 
 
-    <!-- VISTA EDITOR -->
+    <!-- VISTA EDITOR UTENTE -->
 
     <div
-      id="admin-editor-view"
+      id="admin-user-editor-view"
       style="display:none;"
     >
 
+      <div class="admin-subheading">
+        👤 Dati account
+      </div>
+
       <label>
-        Nome profilo
+        Nome
       </label>
 
       <input
         type="text"
-        id="prof-name"
-        placeholder="es. Marco"
+        id="admin-user-name"
+        placeholder="Nome utente"
+        autocomplete="off"
       >
 
-
-      <div class="admin-subheading">
-        🎯 Target giornalieri
-      </div>
-
-      <div class="inline-group">
-
-        <div>
-          <label>Kcal</label>
-          <input type="number" id="prof-kcal">
-        </div>
-
-        <div>
-          <label>Proteine g</label>
-          <input type="number" id="prof-pro">
-        </div>
-
-      </div>
-
-      <div class="inline-group">
-
-        <div>
-          <label>Grassi g</label>
-          <input type="number" id="prof-fat">
-        </div>
-
-        <div>
-          <label>Carboidrati g</label>
-          <input type="number" id="prof-carb">
-        </div>
-
-      </div>
 
       <label>
-        Acqua ml
+        Email
       </label>
 
-      <input type="number" id="prof-water">
+      <input
+        type="email"
+        id="admin-user-email"
+        placeholder="email@esempio.it"
+        autocomplete="off"
+      >
+
+
+      <div class="inline-group">
+
+        <div>
+          <label>Ruolo</label>
+
+          <select id="admin-user-role">
+            <option value="user">Utente</option>
+            <option value="admin">Amministratore</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Stato</label>
+
+          <select id="admin-user-status">
+            <option value="active">Attivo</option>
+            <option value="disabled">Disabilitato</option>
+          </select>
+        </div>
+
+      </div>
 
 
       <div class="admin-subheading">
-        ⚡ Inserimento rapido (tasti "1 tap")
+        🔑 Password
       </div>
 
-      <div id="prof-quick-rows"></div>
+      <p id="admin-password-help">
+        Lascia vuoto per mantenere la password attuale.
+      </p>
 
-      <button
-        type="button"
-        class="admin-add-row-btn"
-        onclick="addQuickRowToEditor()"
+      <input
+        type="password"
+        id="admin-user-password"
+        placeholder="Nuova password"
+        autocomplete="new-password"
       >
-        + Aggiungi tasto rapido
-      </button>
 
-
-      <div class="admin-subheading">
-        ⭐ Alimenti preferiti
-      </div>
-
-      <div id="prof-fav-rows"></div>
-
-      <button
-        type="button"
-        class="admin-add-row-btn"
-        onclick="addFavRowToEditor()"
+      <input
+        type="password"
+        id="admin-user-password-confirm"
+        placeholder="Ripeti nuova password"
+        autocomplete="new-password"
+        style="margin-top:8px;"
       >
-        + Aggiungi alimento preferito
-      </button>
 
 
       <div class="inline-group" style="margin-top:10px;">
 
         <button
           class="btn"
-          onclick="closeProfileEditor()"
+          onclick="closeUserEditor()"
         >
           Annulla
         </button>
 
         <button
           class="btn primary"
-          onclick="saveProfile()"
+          onclick="saveUser()"
         >
-          Salva profilo
+          Salva utente
         </button>
 
       </div>
@@ -2834,7 +2828,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
   </div>
 
 </div>
-
 
 <!-- =====================================================
      MODAL CALCOLATORE
@@ -3175,17 +3168,6 @@ const DEFAULT_QUICK_ITEMS = [
   { emoji: "☕", label: "Mocaccino", name: "Mocaccino s/z", kcal: 30, pro: 1, fat: 1, carb: 4, water: 0 },
   { emoji: "💧", label: "H2O +500 ml", name: "Acqua (+500ml)", kcal: 0, pro: 0, fat: 0, carb: 0, water: 500, isWater: true }
 ];
-
-/* -----------------------------------------------------------
-   ADMIN / PROFILI
-   Il tasto 👑 in alto compare solo se apri l'app con
-   ?admin=<codice qui sotto> nell'indirizzo (es. salvalo nei
-   preferiti sul tuo dispositivo). Non e' una vera sicurezza
-   server (qui non c'e' un server: e' tutto nel browser), e'
-   solo un modo per tenere il tasto nascosto agli amici.
------------------------------------------------------------ */
-const ADMIN_ACCESS_CODE = "paolo2026";
-
 
 /* =========================================================
    VARIABILI
@@ -3628,390 +3610,574 @@ function importProfileFromUrlIfPresent() {
 function toggleAdminModal() {
 
   const modal =
-    document.getElementById(
-      "admin-modal"
-    );
+    document.getElementById("admin-modal");
 
-  const opening =
-    modal.style.display !== "flex";
-
-  modal.style.display =
-    opening ? "flex" : "none";
-
-  if (opening) {
-    closeProfileEditor();
-    renderProfilesList();
-  }
-
-}
-
-
-function renderProfilesList() {
-
-  const container =
-    document.getElementById(
-      "admin-profiles-list"
-    );
-
-  container.innerHTML = "";
-
-  if (!profiles || profiles.length === 0) {
-
-    container.innerHTML =
-      `<div class="log-empty">Nessun profilo creato ancora.</div>`;
-
-    return;
-
-  }
-
-  profiles.forEach(p => {
-
-    const row =
-      document.createElement("div");
-
-    row.className = "profile-list-item";
-
-    row.innerHTML =
-      `<div class="profile-name">${escapeHTML(p.name)}</div>` +
-      `<div class="profile-actions"></div>`;
-
-    const actions =
-      row.querySelector(".profile-actions");
-
-    const editBtn =
-      document.createElement("button");
-    editBtn.innerText = "✏️";
-    editBtn.title = "Modifica";
-    editBtn.onclick = () => openProfileEditor(p.id);
-    actions.appendChild(editBtn);
-
-    const linkBtn =
-      document.createElement("button");
-    linkBtn.innerText = "🔗";
-    linkBtn.title = "Copia link di importazione";
-    linkBtn.onclick = () => copyProfileLink(p.id);
-    actions.appendChild(linkBtn);
-
-    const delBtn =
-      document.createElement("button");
-    delBtn.innerText = "🗑️";
-    delBtn.title = "Elimina";
-    delBtn.className = "danger";
-    delBtn.onclick = () => deleteProfile(p.id);
-    actions.appendChild(delBtn);
-
-    container.appendChild(row);
-
-  });
-
-}
-
-
-function openProfileEditor(id) {
-
-  editingProfileId = id;
-
-  document.getElementById(
-    "admin-list-view"
-  ).style.display = "none";
-
-  document.getElementById(
-    "admin-editor-view"
-  ).style.display = "block";
-
-  const profile =
-    id
-    ? profiles.find(p => p.id === id)
-    : null;
-
-  document.getElementById("prof-name").value =
-    profile ? profile.name : "";
-
-  const t =
-    (profile && profile.targets) || {
-      kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500
-    };
-
-  document.getElementById("prof-kcal").value = t.kcal;
-  document.getElementById("prof-pro").value = t.pro;
-  document.getElementById("prof-fat").value = t.fat;
-  document.getElementById("prof-carb").value = t.carb;
-  document.getElementById("prof-water").value = t.water;
-
-  document.getElementById("prof-quick-rows").innerHTML = "";
-  document.getElementById("prof-fav-rows").innerHTML = "";
-
-  const quickItems =
-    (profile && profile.quickItems) || DEFAULT_QUICK_ITEMS;
-
-  quickItems.forEach(item =>
-    addQuickRowToEditor(item)
-  );
-
-  const favFoods =
-    (profile && profile.favoriteFoods) || [];
-
-  favFoods.forEach(item =>
-    addFavRowToEditor(item)
-  );
-
-}
-
-
-function closeProfileEditor() {
-
-  editingProfileId = null;
-
-  document.getElementById(
-    "admin-editor-view"
-  ).style.display = "none";
-
-  document.getElementById(
-    "admin-list-view"
-  ).style.display = "block";
-
-}
-
-
-function addQuickRowToEditor(item) {
-
-  item = item || {
-    emoji: "🍽️", label: "", name: "",
-    kcal: 0, pro: 0, fat: 0, carb: 0, water: 0
-  };
-
-  const row =
-    document.createElement("div");
-
-  row.className = "repeatable-row";
-
-  row.innerHTML =
-    `<input class="rr-emoji" data-f="emoji" value="${escapeHTML(item.emoji || "")}" placeholder="🍽️">` +
-    `<input class="rr-label" data-f="label" value="${escapeHTML(item.label || "")}" placeholder="Etichetta">` +
-    `<input class="rr-name" data-f="name" value="${escapeHTML(item.name || "")}" placeholder="Nome alimento e dose">` +
-    `<input class="rr-num" type="number" data-f="kcal" value="${item.kcal || 0}" placeholder="Kcal">` +
-    `<input class="rr-num" type="number" data-f="pro" value="${item.pro || 0}" placeholder="Pro g">` +
-    `<input class="rr-num" type="number" data-f="fat" value="${item.fat || 0}" placeholder="Grassi g">` +
-    `<input class="rr-num" type="number" data-f="carb" value="${item.carb || 0}" placeholder="Carb g">` +
-    `<input class="rr-num" type="number" data-f="water" value="${item.water || 0}" placeholder="Acqua ml">` +
-    `<button type="button" class="row-remove">✕</button>`;
-
-  row.querySelector(".row-remove").onclick =
-    () => row.remove();
-
-  document.getElementById(
-    "prof-quick-rows"
-  ).appendChild(row);
-
-}
-
-
-function addFavRowToEditor(item) {
-
-  item = item || {
-    name: "", kcal: 0, pro: 0, fat: 0, carb: 0, water: 0
-  };
-
-  const row =
-    document.createElement("div");
-
-  row.className = "repeatable-row";
-
-  row.innerHTML =
-    `<input class="rr-name" data-f="name" value="${escapeHTML(item.name || "")}" placeholder="Nome alimento e dose">` +
-    `<input class="rr-num" type="number" data-f="kcal" value="${item.kcal || 0}" placeholder="Kcal">` +
-    `<input class="rr-num" type="number" data-f="pro" value="${item.pro || 0}" placeholder="Pro g">` +
-    `<input class="rr-num" type="number" data-f="fat" value="${item.fat || 0}" placeholder="Grassi g">` +
-    `<input class="rr-num" type="number" data-f="carb" value="${item.carb || 0}" placeholder="Carb g">` +
-    `<input class="rr-num" type="number" data-f="water" value="${item.water || 0}" placeholder="Acqua ml">` +
-    `<button type="button" class="row-remove">✕</button>`;
-
-  row.querySelector(".row-remove").onclick =
-    () => row.remove();
-
-  document.getElementById(
-    "prof-fav-rows"
-  ).appendChild(row);
-
-}
-
-
-function collectQuickRows() {
-
-  const rows =
-    document.querySelectorAll(
-      "#prof-quick-rows .repeatable-row"
-    );
-
-  return Array.from(rows).map(row => ({
-
-    emoji: row.querySelector('[data-f="emoji"]').value.trim() || "🍽️",
-    label: row.querySelector('[data-f="label"]').value.trim(),
-    name: row.querySelector('[data-f="name"]').value.trim(),
-    kcal: parseFloat(row.querySelector('[data-f="kcal"]').value) || 0,
-    pro: parseFloat(row.querySelector('[data-f="pro"]').value) || 0,
-    fat: parseFloat(row.querySelector('[data-f="fat"]').value) || 0,
-    carb: parseFloat(row.querySelector('[data-f="carb"]').value) || 0,
-    water: parseFloat(row.querySelector('[data-f="water"]').value) || 0
-
-  })).filter(item => item.name);
-
-}
-
-
-function collectFavRows() {
-
-  const rows =
-    document.querySelectorAll(
-      "#prof-fav-rows .repeatable-row"
-    );
-
-  return Array.from(rows).map(row => ({
-
-    name: row.querySelector('[data-f="name"]').value.trim(),
-    kcal: parseFloat(row.querySelector('[data-f="kcal"]').value) || 0,
-    pro: parseFloat(row.querySelector('[data-f="pro"]').value) || 0,
-    fat: parseFloat(row.querySelector('[data-f="fat"]').value) || 0,
-    carb: parseFloat(row.querySelector('[data-f="carb"]').value) || 0,
-    water: parseFloat(row.querySelector('[data-f="water"]').value) || 0
-
-  })).filter(item => item.name);
-
-}
-
-
-function saveProfile() {
-
-  const name =
-    document.getElementById("prof-name").value.trim();
-
-  if (!name) {
-    alert("Inserisci un nome per il profilo.");
+  if (!modal) {
     return;
   }
 
-  const profileData = {
+  const isOpen =
+    modal.classList.contains("show");
 
-    id:
-      editingProfileId
-      ||
-      ("p_" + Date.now()),
+  if (isOpen) {
+    modal.classList.remove("show");
+    return;
+  }
 
-    name,
+  modal.classList.add("show");
+  loadAdminUsers();
 
-    targets: {
-      kcal: parseFloat(document.getElementById("prof-kcal").value) || 0,
-      pro: parseFloat(document.getElementById("prof-pro").value) || 0,
-      fat: parseFloat(document.getElementById("prof-fat").value) || 0,
-      carb: parseFloat(document.getElementById("prof-carb").value) || 0,
-      water: parseFloat(document.getElementById("prof-water").value) || 0
-    },
+}
 
-    quickItems: collectQuickRows(),
 
-    favoriteFoods: collectFavRows()
+async function loadAdminUsers() {
 
-  };
+  const list =
+    document.getElementById("admin-users-list");
 
-  if (editingProfileId) {
+  if (!list) {
+    return;
+  }
 
-    const idx =
-      profiles.findIndex(p => p.id === editingProfileId);
+  list.innerHTML =
+    '<p style="opacity:.7;">⏳ Caricamento utenti...</p>';
 
-    if (idx > -1) {
-      profiles[idx] = profileData;
+  const token =
+    localStorage.getItem("diario_backend_token");
+
+  if (!token) {
+    list.innerHTML =
+      '<p style="color:var(--red);">Sessione non valida.</p>';
+    return;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        BACKEND_API_URL + "/api/admin/users",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok || !data.ok) {
+
+      if (data.error === "ADMIN_REQUIRED") {
+        throw new Error("ADMIN_REQUIRED");
+      }
+
+      throw new Error("ADMIN_USERS_FAILED");
+    }
+
+    renderAdminUsers(data.users || []);
+
+  } catch (error) {
+
+    console.error(
+      "Errore caricamento utenti:",
+      error
+    );
+
+    list.innerHTML =
+      '<p style="color:var(--red);">' +
+      'Impossibile caricare gli utenti.' +
+      '</p>';
+  }
+
+}
+
+
+function renderAdminUsers(users) {
+
+  const list =
+    document.getElementById("admin-users-list");
+
+  if (!list) {
+    return;
+  }
+
+  if (!users.length) {
+
+    list.innerHTML =
+      '<p style="opacity:.7;">Nessun utente presente.</p>';
+
+    return;
+  }
+
+  list.innerHTML =
+    users.map(user => {
+
+      const isCurrentUser =
+        currentUser &&
+        currentUser.id === user.id;
+
+      const roleLabel =
+        user.role === "admin"
+          ? "👑 Amministratore"
+          : "👤 Utente";
+
+      const statusLabel =
+        user.status === "active"
+          ? "🟢 Attivo"
+          : "🔴 Disabilitato";
+
+      return `
+        <div
+          class="admin-user-row"
+          style="
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding:12px;
+            margin-bottom:8px;
+            border:1px solid var(--border);
+            border-radius:12px;
+          "
+        >
+
+          <div style="min-width:0;flex:1;">
+
+            <strong>
+              ${escapeHtml(user.name || "Senza nome")}
+            </strong>
+
+            ${isCurrentUser
+              ? ' <span style="opacity:.7;">(tu)</span>'
+              : ''}
+
+            <div
+              style="
+                font-size:.85em;
+                opacity:.75;
+                overflow-wrap:anywhere;
+              "
+            >
+              ${escapeHtml(user.email)}
+            </div>
+
+            <div
+              style="
+                font-size:.8em;
+                margin-top:3px;
+                opacity:.75;
+              "
+            >
+              ${roleLabel} · ${statusLabel}
+            </div>
+
+          </div>
+
+          <button
+            class="btn"
+            onclick="openUserEditor('${user.id}')"
+          >
+            ✏️ Modifica
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+async function openUserEditor(userId) {
+
+  const listView =
+    document.getElementById("admin-users-list-view");
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  if (!listView || !editorView) {
+    return;
+  }
+
+  document.getElementById("admin-user-name").value = "";
+  document.getElementById("admin-user-email").value = "";
+  document.getElementById("admin-user-role").value = "user";
+  document.getElementById("admin-user-status").value = "active";
+  document.getElementById("admin-user-password").value = "";
+  document.getElementById("admin-user-password-confirm").value = "";
+
+  editorView.dataset.userId =
+    userId || "";
+
+  const help =
+    document.getElementById("admin-password-help");
+
+  if (userId) {
+
+    help.textContent =
+      "Lascia vuoto per mantenere la password attuale.";
+
+    const token =
+      localStorage.getItem("diario_backend_token");
+
+    try {
+
+      const response =
+        await fetch(
+          BACKEND_API_URL + "/api/admin/users",
+          {
+            method: "GET",
+            headers: {
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error("ADMIN_USERS_FAILED");
+      }
+
+      const user =
+        (data.users || []).find(
+          item => item.id === userId
+        );
+
+      if (!user) {
+        throw new Error("USER_NOT_FOUND");
+      }
+
+      document.getElementById("admin-user-name").value =
+        user.name || "";
+
+      document.getElementById("admin-user-email").value =
+        user.email || "";
+
+      document.getElementById("admin-user-role").value =
+        user.role === "admin" ? "admin" : "user";
+
+      document.getElementById("admin-user-status").value =
+        user.status === "disabled"
+          ? "disabled"
+          : "active";
+
+    } catch (error) {
+
+      alert(
+        "Impossibile caricare i dati dell'utente."
+      );
+
+      return;
     }
 
   } else {
 
-    profiles.push(profileData);
+    help.textContent =
+      "Inserisci una password di almeno 8 caratteri.";
 
   }
 
-  localStorage.setItem(
-    "diario_profiles",
-    JSON.stringify(profiles)
-  );
-
-  closeProfileEditor();
-  renderProfilesList();
+  listView.style.display = "none";
+  editorView.style.display = "block";
 
 }
 
 
-function deleteProfile(id) {
+function closeUserEditor() {
 
-  const profile =
-    profiles.find(p => p.id === id);
+  const listView =
+    document.getElementById("admin-users-list-view");
 
-  if (!profile) {
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  if (!listView || !editorView) {
     return;
   }
 
-  if (!confirm(`Eliminare il profilo "${profile.name}"?`)) {
-    return;
-  }
+  editorView.style.display = "none";
+  listView.style.display = "block";
 
-  profiles =
-    profiles.filter(p => p.id !== id);
-
-  localStorage.setItem(
-    "diario_profiles",
-    JSON.stringify(profiles)
-  );
-
-  renderProfilesList();
+  editorView.dataset.userId = "";
 
 }
 
 
-function copyProfileLink(id) {
+async function saveUser() {
 
-  const profile =
-    profiles.find(p => p.id === id);
+  const editorView =
+    document.getElementById("admin-user-editor-view");
 
-  if (!profile) {
+  if (!editorView) {
     return;
   }
 
-  const exportData = {
-    name: profile.name,
-    targets: profile.targets,
-    quickItems: profile.quickItems,
-    favoriteFoods: profile.favoriteFoods
-  };
+  const userId =
+    editorView.dataset.userId || "";
 
-  const encoded =
-    encodeURIComponent(
-      b64EncodeUnicode(
-        JSON.stringify(exportData)
-      )
+  const name =
+    document.getElementById("admin-user-name").value.trim();
+
+  const email =
+    document.getElementById("admin-user-email").value.trim();
+
+  const role =
+    document.getElementById("admin-user-role").value;
+
+  const status =
+    document.getElementById("admin-user-status").value;
+
+  const password =
+    document.getElementById("admin-user-password").value;
+
+  const passwordConfirm =
+    document.getElementById("admin-user-password-confirm").value;
+
+  if (!name) {
+    alert("Inserisci il nome dell'utente.");
+    return;
+  }
+
+  if (!email || !email.includes("@")) {
+    alert("Inserisci un indirizzo email valido.");
+    return;
+  }
+
+  if (!userId && !password) {
+    alert("Per un nuovo utente devi inserire una password.");
+    return;
+  }
+
+  if (password && password.length < 8) {
+    alert("La password deve contenere almeno 8 caratteri.");
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    alert("Le due password non coincidono.");
+    return;
+  }
+
+  const token =
+    localStorage.getItem("diario_backend_token");
+
+  const button =
+    document.querySelector(
+      '#admin-user-editor-view button[onclick="saveUser()"]'
     );
 
-  const link =
-    `${location.origin}${location.pathname}?profile=${encoded}`;
+  const originalText =
+    button ? button.textContent : "";
 
-  if (navigator.clipboard && navigator.clipboard.writeText) {
+  if (button) {
+    button.disabled = true;
+    button.textContent = "⏳ Salvataggio...";
+  }
 
-    navigator.clipboard.writeText(link)
-      .then(() => {
-        alert(
-          `Link copiato negli appunti! Invialo a ${profile.name}: ` +
-          `basta che lo apra sul suo cellulare/tablet/PC per configurare l'app.`
+  try {
+
+    let response;
+    let data;
+
+    if (!userId) {
+
+      response =
+        await fetch(
+          BACKEND_API_URL + "/api/admin/users",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              password: password,
+              role: role
+            })
+          }
         );
-      })
-      .catch(() => {
-        prompt(
-          "Copia manualmente questo link:",
-          link
+
+    } else {
+
+      const body = {
+        name: name,
+        email: email,
+        role: role,
+        status: status
+      };
+
+      if (password) {
+        body.password = password;
+      }
+
+      response =
+        await fetch(
+          BACKEND_API_URL +
+          "/api/admin/users/" +
+          encodeURIComponent(userId),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(body)
+          }
         );
-      });
 
-  } else {
+    }
 
-    prompt(
-      "Copia manualmente questo link:",
-      link
+    data =
+      await response.json();
+
+    if (!response.ok || !data.ok) {
+
+      if (data.error === "EMAIL_ALREADY_EXISTS") {
+        throw new Error(
+          "Esiste già un utente con questa email."
+        );
+      }
+
+      if (data.error === "PASSWORD_TOO_SHORT") {
+        throw new Error(
+          "La password deve contenere almeno 8 caratteri."
+        );
+      }
+
+      if (data.error === "INVALID_EMAIL") {
+        throw new Error(
+          "L'indirizzo email non è valido."
+        );
+      }
+
+      if (data.error === "ADMIN_REQUIRED") {
+        throw new Error(
+          "Non hai i permessi di amministratore."
+        );
+      }
+
+      throw new Error(
+        "Impossibile salvare l'utente."
+      );
+    }
+
+    closeUserEditor();
+    await loadAdminUsers();
+
+  } catch (error) {
+
+    console.error(
+      "Errore salvataggio utente:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "Impossibile salvare l'utente."
+    );
+
+  } finally {
+
+    if (button) {
+      button.disabled = false;
+      button.textContent =
+        originalText || "Salva utente";
+    }
+
+  }
+
+}
+
+
+async function deleteUser(userId) {
+
+  if (!userId) {
+    return;
+  }
+
+  if (
+    currentUser &&
+    currentUser.id === userId
+  ) {
+    alert(
+      "Non puoi eliminare il tuo stesso account."
+    );
+    return;
+  }
+
+  if (
+    !confirm(
+      "Eliminare definitivamente questo utente?"
+    )
+  ) {
+    return;
+  }
+
+  const token =
+    localStorage.getItem("diario_backend_token");
+
+  try {
+
+    const response =
+      await fetch(
+        BACKEND_API_URL +
+        "/api/admin/users/" +
+        encodeURIComponent(userId),
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok || !data.ok) {
+
+      if (data.error === "CANNOT_DELETE_SELF") {
+        throw new Error(
+          "Non puoi eliminare il tuo stesso account."
+        );
+      }
+
+      throw new Error(
+        "Impossibile eliminare l'utente."
+      );
+    }
+
+    await loadAdminUsers();
+
+  } catch (error) {
+
+    console.error(
+      "Errore eliminazione utente:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "Impossibile eliminare l'utente."
     );
 
   }
@@ -4137,17 +4303,13 @@ function initApp() {
 
   applyUserDisplayName();
 
-  if (
-    new URLSearchParams(location.search).get("admin")
-    ===
-    ADMIN_ACCESS_CODE
-  ) {
+  if (currentUser && currentUser.role === "admin") {
 
     document.getElementById(
       "admin-toolbar-btn"
     ).style.display = "inline-block";
 
-    renderProfilesList();
+    loadAdminUsers();
 
   }
 
@@ -5369,17 +5531,17 @@ function renderQuickGrid() {
 
 function applyUserDisplayName() {
 
-  const savedName =
-    localStorage.getItem(
-      "diario_user_name"
-    );
+  const userName =
+    currentUser && currentUser.name
+      ? currentUser.name
+      : localStorage.getItem("diario_user_name");
 
-  if (savedName) {
+  if (userName) {
 
     document.getElementById(
       "header-subtitle"
     ).innerText =
-      `diario di ${savedName}`;
+      `diario di ${userName}`;
 
   }
 
