@@ -3071,13 +3071,127 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
 
 
 const DEFAULT_PRESET_FOODS = [
-  { value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0", label: "🍫 Barretta Perugina Nero 70%", text: "Barretta Perugina Nero 70%", category: "Dolci" },
-  { value: "Prosciutto e Melone|260|14|8|34|0", label: "🍈 Prosciutto e Melone", text: "Prosciutto e Melone", category: "Frutta e frutta secca" },
-  { value: "Salmone Grigliato (150g)|280|30|18|0|0", label: "🐟 Salmone 150g", text: "Salmone Grigliato (150g)", category: "Secondi" },
-  { value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0", label: "🐟 Tonno naturale", text: "Tonno al naturale", category: "Secondi" },
-  { value: "Pollo e Patate (200g/250g)|550|55|15|45|0", label: "🍗 Pollo e Patate", text: "Pollo e Patate", category: "Secondi" },
-  { value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0", label: "🍝 Pasta 100g", text: "Spaghetti / Pasta", category: "Primi" },
-  { value: "Sgombro in scatola (120g)|240|25|15|0|0", label: "🐟 Sgombro", text: "Sgombro in scatola", category: "Secondi" }
+  /* =======================================================
+     🥗 ANTIPASTI
+  ======================================================= */
+  {
+    value: "Bresaola — 100 g|152|33|2|0|0",
+    label: "🥩 Bresaola — 100 g",
+    text: "Bresaola — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Caprese (mozzarella e pomodoro) — 250 g|350|20|25|8|0",
+    label: "🧀 Caprese (mozzarella e pomodoro) — 250 g",
+    text: "Caprese (mozzarella e pomodoro) — 250 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Carpaccio di manzo — 100 g|120|23|3|0|0",
+    label: "🥩 Carpaccio di manzo — 100 g",
+    text: "Carpaccio di manzo — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Cocktail di gamberi — 150 g|180|24|6|8|0",
+    label: "🍤 Cocktail di gamberi — 150 g",
+    text: "Cocktail di gamberi — 150 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Olive verdi — 50 g|70|0.5|7|2|0",
+    label: "🫒 Olive verdi — 50 g",
+    text: "Olive verdi — 50 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Polpo e patate — 250 g|280|24|10|22|0",
+    label: "🐙 Polpo e patate — 250 g",
+    text: "Polpo e patate — 250 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Prosciutto crudo — 100 g|270|26|18|0|0",
+    label: "🥩 Prosciutto crudo — 100 g",
+    text: "Prosciutto crudo — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Salmone affumicato — 100 g|180|22|10|0|0",
+    label: "🐟 Salmone affumicato — 100 g",
+    text: "Salmone affumicato — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Sardine marinate — 100 g|200|22|12|2|0",
+    label: "🐟 Sardine marinate — 100 g",
+    text: "Sardine marinate — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Speck — 100 g|300|30|20|1|0",
+    label: "🥩 Speck — 100 g",
+    text: "Speck — 100 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Tonno e fagioli — 200 g|300|28|10|22|0",
+    label: "🐟 Tonno e fagioli — 200 g",
+    text: "Tonno e fagioli — 200 g",
+    category: "Antipasti"
+  },
+  {
+    value: "Verdure grigliate — 200 g|120|3|7|12|0",
+    label: "🥒 Verdure grigliate — 200 g",
+    text: "Verdure grigliate — 200 g",
+    category: "Antipasti"
+  },
+
+  /* =======================================================
+     🍽️ ALIMENTI PREDEFINITI GIÀ PRESENTI
+  ======================================================= */
+  {
+    value: "Barretta Perugina Nero 70% (35g)|189|3|14|11|0",
+    label: "🍫 Barretta Perugina Nero 70%",
+    text: "Barretta Perugina Nero 70%",
+    category: "Dolci"
+  },
+  {
+    value: "Prosciutto e Melone|260|14|8|34|0",
+    label: "🍈 Prosciutto e Melone",
+    text: "Prosciutto e Melone",
+    category: "Frutta e frutta secca"
+  },
+  {
+    value: "Salmone Grigliato (150g)|280|30|18|0|0",
+    label: "🐟 Salmone 150g",
+    text: "Salmone Grigliato (150g)",
+    category: "Secondi"
+  },
+  {
+    value: "Tonno al naturale (1 scatoletta)|60|14|1|0|0",
+    label: "🐟 Tonno naturale",
+    text: "Tonno al naturale",
+    category: "Secondi"
+  },
+  {
+    value: "Pollo e Patate (200g/250g)|550|55|15|45|0",
+    label: "🍗 Pollo e Patate",
+    text: "Pollo e Patate",
+    category: "Secondi"
+  },
+  {
+    value: "Spaghetti / Pasta (100g secchi)|450|12|5|85|0",
+    label: "🍝 Pasta 100g",
+    text: "Spaghetti / Pasta",
+    category: "Primi"
+  },
+  {
+    value: "Sgombro in scatola (120g)|240|25|15|0|0",
+    label: "🐟 Sgombro",
+    text: "Sgombro in scatola",
+    category: "Secondi"
+  }
 ];
 
 const DEFAULT_QUICK_ITEMS = [
