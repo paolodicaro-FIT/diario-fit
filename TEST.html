@@ -3183,6 +3183,7 @@ async function loadUserHistoryFromBackend() {
 async function loadUserDataFromBackend() {
 
   const data = await apiFetch("/api/user/settings");
+  console.log("DEBUG SETTINGS DA D1:", JSON.stringify(data));
 
   TARGETS = data.targets || {
     kcal: 2000,
