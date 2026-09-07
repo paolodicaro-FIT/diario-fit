@@ -5484,8 +5484,14 @@ async function askGemini() {
       ||
       "Stima da foto";
 
+    const portion =
+      (result.portion && String(result.portion).trim())
+      ||
+      "";
+
     lastGeminiData = {
       name,
+      portion,
       kcal,
       pro,
       fat,
@@ -5496,6 +5502,11 @@ async function askGemini() {
       "gemini-result-content"
     ).innerHTML =
       `<b>${escapeHTML(lastGeminiData.name)}</b><br>` +
+      (
+        lastGeminiData.portion
+          ? `<span style="font-size:.84rem; opacity:.9;">🍽️ Porzione stimata: ${escapeHTML(lastGeminiData.portion)}</span><br>`
+          : ""
+      ) +
       `🔥 ${kcal} kcal · ` +
       `🥩 ${pro}g P · ` +
       `🥑 ${fat}g G · ` +
