@@ -3087,10 +3087,11 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
 
     <p>
       Descrivi liberamente cosa stai mangiando (anche
-      fuori casa) e Gemini stimera' kcal e macro,
-      compilando i campi dell'Inserimento libero.
-      Serve una chiave API Gemini gratuita, salvata solo
-      su questo dispositivo.
+      fuori casa) oppure scatta/allega una foto del pasto.
+      Gemini stimerà alimento, porzione, kcal e
+      macronutrienti, compilando i campi dell'Inserimento
+      libero. Non serve alcuna chiave API: è sufficiente
+      aver effettuato l'accesso a Diario FIT.
     </p>
 
 
@@ -3280,13 +3281,6 @@ let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let lastGeminiData = null;
 let editingProfileId = null;
-
-
-/* -----------------------------------------------------------
-   Incolla qui sotto, tra le virgolette, la tua chiave API
-   Se la lasci vuota, l'app tornera' a chiederla da video
-   come prima.
------------------------------------------------------------ */
 
 
 /* =========================================================
