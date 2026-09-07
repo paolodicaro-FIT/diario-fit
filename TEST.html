@@ -914,35 +914,6 @@ textarea:focus {
   opacity: .6;
 }
 
-.gemini-key-row {
-  display: flex;
-
-  gap: 7px;
-
-  margin-top: 4px;
-}
-
-.gemini-key-row input {
-  flex: 1;
-}
-
-.gemini-key-save {
-  padding: 0 12px;
-
-  border: 0;
-
-  border-radius: 10px;
-
-  background: var(--blue);
-
-  color: #0b0f14;
-
-  font-size: .78rem;
-  font-weight: 800;
-
-  white-space: nowrap;
-}
-
 .gemini-hint {
   color: var(--muted);
 
@@ -2639,42 +2610,8 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     </div>
 
 
-    <div
-      class="gemini-key-row"
-      id="gemini-backend-login-row"
-    >
-
-      <input
-        type="email"
-        id="gemini-login-email"
-        placeholder="Email"
-        autocomplete="username"
-      >
-
-      <input
-        type="password"
-        id="gemini-login-password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
-
-      <button
-        class="gemini-key-save"
-        id="gemini-login-btn"
-        onclick="loginToGeminiBackend()"
-      >
-        Accedi
-      </button>
-
-    </div>
-
-
-    <div
-      class="gemini-hint"
-      id="gemini-backend-status"
-    >
-      🔐 Gemini viene utilizzato tramite il server sicuro di Diario FIT.
-      La chiave API non viene salvata su questo dispositivo.
+    <div class="gemini-hint">
+      🔐 Gemini utilizza il server sicuro di Diario FIT.
     </div>
 
 
@@ -3344,7 +3281,6 @@ let selectedFoodDisplayText = "";
 let lastGeminiData = null;
 let editingProfileId = null;
 
-const GEMINI_MODEL = "gemini-3.6-flash";
 
 /* -----------------------------------------------------------
    Incolla qui sotto, tra le virgolette, la tua chiave API
@@ -5016,43 +4952,6 @@ function toggleGeminiModal() {
 
   if (opening) {
 
-    // Elimina eventuali vecchie chiavi Gemini salvate
-    // dalla versione precedente dell'app.
-    localStorage.removeItem(
-      "diario_gemini_api_key"
-    );
-
-    const token =
-      localStorage.getItem(
-        "diario_backend_token"
-      ) || "";
-
-    const loginRow =
-      document.getElementById(
-        "gemini-backend-login-row"
-      );
-
-    const status =
-      document.getElementById(
-        "gemini-backend-status"
-      );
-
-    if (token) {
-
-      loginRow.style.display = "none";
-
-      status.innerText =
-        "🔐 Collegato al server sicuro di Diario FIT.";
-
-    } else {
-
-      loginRow.style.display = "flex";
-
-      status.innerText =
-        "🔐 Accedi per utilizzare Gemini tramite il server sicuro di Diario FIT.";
-
-    }
-
     showGeminiError("");
 
     document.getElementById(
@@ -5062,113 +4961,6 @@ function toggleGeminiModal() {
     document.getElementById(
       "gemini-use-btn"
     ).style.display = "none";
-
-  }
-
-}
-
-
-async function loginToGeminiBackend() {
-
-  const email =
-    document.getElementById(
-      "gemini-login-email"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "gemini-login-password"
-    ).value;
-
-  showGeminiError("");
-
-  if (!email || !password) {
-
-    showGeminiError(
-      "Inserisci email e password per collegarti a Diario FIT."
-    );
-
-    return;
-
-  }
-
-  const loginBtn =
-    document.getElementById(
-      "gemini-login-btn"
-    );
-
-  const originalLabel =
-    loginBtn.innerText;
-
-  loginBtn.disabled = true;
-  loginBtn.innerText = "⏳ Accesso...";
-
-  try {
-
-    const response =
-      await fetch(
-        "https://diario-fit-api.paolodicaro-3d.workers.dev/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            password
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if (!response.ok || !data.ok || !data.token) {
-
-      throw new Error(
-        data.error === "INVALID_CREDENTIALS"
-          ? "Email o password non corrette."
-          : (
-              data.error
-              ||
-              `Errore di accesso HTTP ${response.status}.`
-            )
-      );
-
-    }
-
-    localStorage.setItem(
-      "diario_backend_token",
-      data.token
-    );
-
-    document.getElementById(
-      "gemini-backend-login-row"
-    ).style.display = "none";
-
-    document.getElementById(
-      "gemini-backend-status"
-    ).innerText =
-      "🔐 Collegato al server sicuro di Diario FIT.";
-
-    document.getElementById(
-      "gemini-login-password"
-    ).value = "";
-
-    showGeminiError("");
-
-  } catch (err) {
-
-    showGeminiError(
-      err.message
-      ||
-      "Impossibile effettuare l'accesso al server."
-    );
-
-  } finally {
-
-    loginBtn.disabled = false;
-    loginBtn.innerText = originalLabel;
 
   }
 
@@ -5382,12 +5174,8 @@ async function askGemini() {
   if (!token) {
 
     showGeminiError(
-      "Accedi prima al server di Diario FIT."
+      "Effettua prima l'accesso a Diario FIT."
     );
-
-    document.getElementById(
-      "gemini-backend-login-row"
-    ).style.display = "flex";
 
     return;
 
@@ -5437,15 +5225,6 @@ async function askGemini() {
       localStorage.removeItem(
         "diario_backend_token"
       );
-
-      document.getElementById(
-        "gemini-backend-login-row"
-      ).style.display = "flex";
-
-      document.getElementById(
-        "gemini-backend-status"
-      ).innerText =
-        "🔐 Sessione scaduta. Accedi nuovamente.";
 
       throw new Error(
         "La sessione è scaduta. Accedi nuovamente per utilizzare Gemini."
