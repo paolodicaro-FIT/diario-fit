@@ -2620,6 +2620,24 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       placeholder="es. Trancio di tagliata di manzo circa 200g con patate al forno e un bicchiere di vino rosso"
     ></textarea>
 
+    <div style="margin-top:10px;">
+      <label style="display:block; margin-bottom:6px;">
+        📷 Foto del pasto
+      </label>
+
+      <input
+        type="file"
+        id="gemini-photo-input"
+        accept="image/jpeg,image/png,image/webp"
+        capture="environment"
+      >
+
+      <div
+        id="gemini-photo-preview"
+        style="display:none; margin-top:8px;"
+      ></div>
+    </div>
+
 
     <div
       class="gemini-key-row"
@@ -5175,6 +5193,160 @@ function showGeminiError(msg) {
 }
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  const photoInput = document.getElementById("gemini-photo-input");
+
+  if (photoInput) {
+    photoInput.addEventListener("change", async () => {
+      const file = photoInput.files && photoInput.files[0];
+
+      try {
+        await prepareGeminiPhoto(file);
+        showGeminiError("");
+      } catch (err) {
+        geminiImageBase64 = "";
+        geminiImageMimeType = "";
+        photoInput.value = "";
+
+        const preview = document.getElementById(
+          "gemini-photo-preview"
+        );
+
+        if (preview) {
+          preview.innerHTML = "";
+          preview.style.display = "none";
+        }
+
+        showGeminiError(
+          err.message || "Errore nella preparazione della foto."
+        );
+      }
+    });
+  }
+});
+
+
+let geminiImageBase64 = "";
+let geminiImageMimeType = "";
+
+async function prepareGeminiPhoto(file) {
+  if (!file) {
+    geminiImageBase64 = "";
+    geminiImageMimeType = "";
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Formato foto non supportato. Usa JPG, PNG o WebP.");
+  }
+
+  const maxInputBytes = 10 * 1024 * 1024;
+
+  if (file.size > maxInputBytes) {
+    throw new Error("La foto è troppo grande. Scegli un'immagine più leggera.");
+  }
+
+  const image = await createImageBitmap(file);
+
+  const maxDimension = 1280;
+  const scale = Math.min(
+    1,
+    maxDimension / Math.max(image.width, image.height)
+  );
+
+  const canvas = document.createElement("canvas");
+
+  canvas.width = Math.max(1, Math.round(image.width * scale));
+  canvas.height = Math.max(1, Math.round(image.height * scale));
+
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    image.close();
+    throw new Error("Impossibile preparare la foto.");
+  }
+
+  ctx.drawImage(
+    image,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  image.close();
+
+  let quality = 0.82;
+  let blob = null;
+
+  for (let i = 0; i < 6; i++) {
+    blob = await new Promise(resolve =>
+      canvas.toBlob(
+        resolve,
+        "image/jpeg",
+        quality
+      )
+    );
+
+    if (!blob) {
+      throw new Error("Impossibile comprimere la foto.");
+    }
+
+    if (blob.size <= 120000) {
+      break;
+    }
+
+    quality -= 0.08;
+  }
+
+  if (!blob || blob.size > 120000) {
+    throw new Error("La foto non può essere ridotta abbastanza per Gemini.");
+  }
+
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const comma = result.indexOf(",");
+
+      resolve(
+        comma >= 0
+          ? result.slice(comma + 1)
+          : result
+      );
+    };
+
+    reader.onerror = () =>
+      reject(new Error("Impossibile leggere la foto."));
+
+    reader.readAsDataURL(blob);
+  });
+
+  geminiImageBase64 = base64;
+  geminiImageMimeType = "image/jpeg";
+
+  const preview = document.getElementById(
+    "gemini-photo-preview"
+  );
+
+  if (preview) {
+    preview.innerHTML =
+      `<div style="font-size:.82rem; color:var(--accent); font-weight:700;">` +
+      `📷 Foto pronta per l'analisi` +
+      `</div>`;
+
+    preview.style.display = "block";
+  }
+}
+
+
 async function askGemini() {
 
   const description =
@@ -5192,10 +5364,10 @@ async function askGemini() {
     "gemini-use-btn"
   ).style.display = "none";
 
-  if (!description) {
+  if (!description && !geminiImageBase64) {
 
     showGeminiError(
-      "Descrivi prima cosa stai mangiando."
+      "Descrivi cosa stai mangiando oppure scegli una foto."
     );
 
     return;
@@ -5244,7 +5416,9 @@ async function askGemini() {
             "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
-            description
+            description,
+            imageBase64: geminiImageBase64 || "",
+            imageMimeType: geminiImageMimeType || ""
           })
         }
       );
@@ -5306,7 +5480,9 @@ async function askGemini() {
     const name =
       (result.name && String(result.name).trim())
       ||
-      description;
+      description
+      ||
+      "Stima da foto";
 
     lastGeminiData = {
       name,
