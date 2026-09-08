@@ -1981,6 +1981,12 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       </div>
 
       <div class="target-item">
+        🍬
+        <strong id="box-target-sugar">50</strong>
+        g
+      </div>
+
+      <div class="target-item">
         💧
         <strong id="box-target-water">2500</strong>
         ml
@@ -2018,6 +2024,12 @@ input, select, .food-picker-trigger { font-size: .94rem; }
           type="number"
           id="target-carb-input"
           placeholder="Carboidrati"
+        >
+
+        <input
+          type="number"
+          id="target-sugar-input"
+          placeholder="Zuccheri"
         >
 
         <input
@@ -2148,6 +2160,32 @@ input, select, .food-picker-trigger { font-size: .94rem; }
           <div
             class="progress-fill"
             id="bar-carb"
+          ></div>
+        </div>
+
+      </div>
+
+
+      <div class="metric">
+
+        <div class="metric-icon">🍬</div>
+
+        <div
+          class="metric-value"
+          id="tot-sugar"
+        >
+          0g
+        </div>
+
+        <div class="metric-label">
+          Zuccheri /
+          <span id="target-sugar-val">50</span>g
+        </div>
+
+        <div class="progress">
+          <div
+            class="progress-fill"
+            id="bar-sugar"
           ></div>
         </div>
 
@@ -2361,6 +2399,12 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       >
 
       <input
+        type="number"
+        id="custom-sugar"
+        placeholder="Zuccheri g"
+      >
+
+      <input
         class="full"
         type="number"
         id="custom-water"
@@ -2510,6 +2554,14 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         type="number"
         id="edit-food-carb"
         placeholder="Carboidrati g"
+        step="0.1"
+        min="0"
+      >
+
+      <input
+        type="number"
+        id="edit-food-sugar"
+        placeholder="Zuccheri g"
         step="0.1"
         min="0"
       >
@@ -3168,137 +3220,137 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
 
 const DEFAULT_PRESET_FOODS = [
   // 🥗 ANTIPASTI
-  { category:"Antipasti", emoji:"🥩", label:"Bresaola — 100 g", value:"🥩 Bresaola — 100 g|152|33|2|0|0" },
-  { category:"Antipasti", emoji:"🥩", label:"Carpaccio di manzo — 100 g", value:"🥩 Carpaccio di manzo — 100 g|120|23|3|0|0" },
-  { category:"Antipasti", emoji:"🥩", label:"Prosciutto crudo — 100 g", value:"🥩 Prosciutto crudo — 100 g|270|26|18|0|0" },
-  { category:"Antipasti", emoji:"🥩", label:"Speck — 100 g", value:"🥩 Speck — 100 g|300|30|20|1|0" },
-  { category:"Antipasti", emoji:"🍗", label:"Fesa di tacchino — 100 g", value:"🍗 Fesa di tacchino — 100 g|110|23|2|1|0" },
-  { category:"Antipasti", emoji:"🧀", label:"Mozzarella — 100 g", value:"🧀 Mozzarella — 100 g|250|18|19|1|0" },
-  { category:"Antipasti", emoji:"🍅", label:"Caprese — 250 g", value:"🍅 Caprese — 250 g|350|20|25|8|0" },
-  { category:"Antipasti", emoji:"🐟", label:"Salmone affumicato — 100 g", value:"🐟 Salmone affumicato — 100 g|180|22|10|0|0" },
-  { category:"Antipasti", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0" },
-  { category:"Antipasti", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0" },
-  { category:"Antipasti", emoji:"🐙", label:"Polpo — 100 g", value:"🐙 Polpo — 100 g|82|15|1|2|0" },
-  { category:"Antipasti", emoji:"🫒", label:"Olive verdi — 50 g", value:"🫒 Olive verdi — 50 g|70|0.5|7|2|0" },
-  { category:"Antipasti", emoji:"🥦", label:"Verdure grigliate — 200 g", value:"🥦 Verdure grigliate — 200 g|120|3|7|12|0" },
-  { category:"Antipasti", emoji:"🫘", label:"Hummus — 50 g", value:"🫘 Hummus — 50 g|120|4|8|8|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Bresaola — 100 g", value:"🥩 Bresaola — 100 g|152|33|2|0|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Carpaccio di manzo — 100 g", value:"🥩 Carpaccio di manzo — 100 g|120|23|3|0|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Prosciutto crudo — 100 g", value:"🥩 Prosciutto crudo — 100 g|270|26|18|0|0|0" },
+  { category:"Antipasti", emoji:"🥩", label:"Speck — 100 g", value:"🥩 Speck — 100 g|300|30|20|1|0.5|0" },
+  { category:"Antipasti", emoji:"🍗", label:"Fesa di tacchino — 100 g", value:"🍗 Fesa di tacchino — 100 g|110|23|2|1|1|0" },
+  { category:"Antipasti", emoji:"🧀", label:"Mozzarella — 100 g", value:"🧀 Mozzarella — 100 g|250|18|19|1|1|0" },
+  { category:"Antipasti", emoji:"🍅", label:"Caprese — 250 g", value:"🍅 Caprese — 250 g|350|20|25|8|6|0" },
+  { category:"Antipasti", emoji:"🐟", label:"Salmone affumicato — 100 g", value:"🐟 Salmone affumicato — 100 g|180|22|10|0|0|0" },
+  { category:"Antipasti", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0|0" },
+  { category:"Antipasti", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0|0" },
+  { category:"Antipasti", emoji:"🐙", label:"Polpo — 100 g", value:"🐙 Polpo — 100 g|82|15|1|2|0|0" },
+  { category:"Antipasti", emoji:"🫒", label:"Olive verdi — 50 g", value:"🫒 Olive verdi — 50 g|70|0.5|7|2|0|0" },
+  { category:"Antipasti", emoji:"🥦", label:"Verdure grigliate — 200 g", value:"🥦 Verdure grigliate — 200 g|120|3|7|12|7|0" },
+  { category:"Antipasti", emoji:"🫘", label:"Hummus — 50 g", value:"🫘 Hummus — 50 g|120|4|8|8|0.5|0" },
 
   // 🍝 PRIMI
-  { category:"Primi", emoji:"🍝", label:"Pasta — 100 g secca", value:"🍝 Pasta — 100 g secca|350|12|1.5|72|0" },
-  { category:"Primi", emoji:"🍝", label:"Pasta integrale — 100 g secca", value:"🍝 Pasta integrale — 100 g secca|345|13|2.5|65|0" },
-  { category:"Primi", emoji:"🍚", label:"Riso — 100 g secco", value:"🍚 Riso — 100 g secco|360|7|0.7|80|0" },
-  { category:"Primi", emoji:"🍚", label:"Riso basmati — 100 g secco", value:"🍚 Riso basmati — 100 g secco|350|8|0.7|78|0" },
-  { category:"Primi", emoji:"🌾", label:"Cous cous — 100 g secco", value:"🌾 Cous cous — 100 g secco|360|12|1.5|72|0" },
-  { category:"Primi", emoji:"🌾", label:"Farro — 100 g secco", value:"🌾 Farro — 100 g secco|335|15|2.5|67|0" },
-  { category:"Primi", emoji:"🌾", label:"Orzo — 100 g secco", value:"🌾 Orzo — 100 g secco|350|10|2|73|0" },
-  { category:"Primi", emoji:"🌾", label:"Quinoa — 100 g secca", value:"🌾 Quinoa — 100 g secca|370|14|6|64|0" },
-  { category:"Primi", emoji:"🥔", label:"Gnocchi — 200 g", value:"🥔 Gnocchi — 200 g|300|6|1|63|0" },
-  { category:"Primi", emoji:"🍝", label:"Lasagne — 250 g", value:"🍝 Lasagne — 250 g|400|24|20|32|0" },
-  { category:"Primi", emoji:"🍚", label:"Risotto — 250 g", value:"🍚 Risotto — 250 g|350|9|12|50|0" },
-  { category:"Primi", emoji:"🍝", label:"Pasta al pomodoro — 250 g", value:"🍝 Pasta al pomodoro — 250 g|330|10|8|52|0" },
+  { category:"Primi", emoji:"🍝", label:"Pasta — 100 g secca", value:"🍝 Pasta — 100 g secca|350|12|1.5|72|3.5|0" },
+  { category:"Primi", emoji:"🍝", label:"Pasta integrale — 100 g secca", value:"🍝 Pasta integrale — 100 g secca|345|13|2.5|65|2.5|0" },
+  { category:"Primi", emoji:"🍚", label:"Riso — 100 g secco", value:"🍚 Riso — 100 g secco|360|7|0.7|80|0.1|0" },
+  { category:"Primi", emoji:"🍚", label:"Riso basmati — 100 g secco", value:"🍚 Riso basmati — 100 g secco|350|8|0.7|78|0.1|0" },
+  { category:"Primi", emoji:"🌾", label:"Cous cous — 100 g secco", value:"🌾 Cous cous — 100 g secco|360|12|1.5|72|2|0" },
+  { category:"Primi", emoji:"🌾", label:"Farro — 100 g secco", value:"🌾 Farro — 100 g secco|335|15|2.5|67|0.5|0" },
+  { category:"Primi", emoji:"🌾", label:"Orzo — 100 g secco", value:"🌾 Orzo — 100 g secco|350|10|2|73|0.7|0" },
+  { category:"Primi", emoji:"🌾", label:"Quinoa — 100 g secca", value:"🌾 Quinoa — 100 g secca|370|14|6|64|2.5|0" },
+  { category:"Primi", emoji:"🥔", label:"Gnocchi — 200 g", value:"🥔 Gnocchi — 200 g|300|6|1|63|2|0" },
+  { category:"Primi", emoji:"🍝", label:"Lasagne — 250 g", value:"🍝 Lasagne — 250 g|400|24|20|32|6|0" },
+  { category:"Primi", emoji:"🍚", label:"Risotto — 250 g", value:"🍚 Risotto — 250 g|350|9|12|50|3|0" },
+  { category:"Primi", emoji:"🍝", label:"Pasta al pomodoro — 250 g", value:"🍝 Pasta al pomodoro — 250 g|330|10|8|52|8|0" },
 
   // 🍗 SECONDI
-  { category:"Secondi", emoji:"🍗", label:"Petto di pollo — 100 g", value:"🍗 Petto di pollo — 100 g|110|23|1.5|0|0" },
-  { category:"Secondi", emoji:"🍗", label:"Petto di tacchino — 100 g", value:"🍗 Petto di tacchino — 100 g|110|24|1|0|0" },
-  { category:"Secondi", emoji:"🥩", label:"Manzo magro — 100 g", value:"🥩 Manzo magro — 100 g|170|26|7|0|0" },
-  { category:"Secondi", emoji:"🥩", label:"Vitello — 100 g", value:"🥩 Vitello — 100 g|160|26|6|0|0" },
-  { category:"Secondi", emoji:"🥩", label:"Lonza di maiale — 100 g", value:"🥩 Lonza di maiale — 100 g|165|27|6|0|0" },
-  { category:"Secondi", emoji:"🥚", label:"Uovo — 1 pz", value:"🥚 Uovo — 1 pz|70|6.3|4.8|0.4|0" },
-  { category:"Secondi", emoji:"🥚", label:"Albume — 100 g", value:"🥚 Albume — 100 g|50|11|0.2|0.7|0" },
-  { category:"Secondi", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0" },
-  { category:"Secondi", emoji:"🐟", label:"Salmone — 100 g", value:"🐟 Salmone — 100 g|208|20|13|0|0" },
-  { category:"Secondi", emoji:"🐟", label:"Sgombro — 100 g", value:"🐟 Sgombro — 100 g|205|19|14|0|0" },
-  { category:"Secondi", emoji:"🐟", label:"Orata — 100 g", value:"🐟 Orata — 100 g|120|20|4|0|0" },
-  { category:"Secondi", emoji:"🐟", label:"Branzino — 100 g", value:"🐟 Branzino — 100 g|120|20|4|0|0" },
-  { category:"Secondi", emoji:"🐟", label:"Merluzzo — 100 g", value:"🐟 Merluzzo — 100 g|82|18|1|0|0" },
-  { category:"Secondi", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0" },
-  { category:"Secondi", emoji:"🌱", label:"Tofu — 100 g", value:"🌱 Tofu — 100 g|145|16|9|2|0" },
-  { category:"Secondi", emoji:"🧀", label:"Fiocchi di latte — 200 g", value:"🧀 Fiocchi di latte — 200 g|196|26|9|3|0" },
+  { category:"Secondi", emoji:"🍗", label:"Petto di pollo — 100 g", value:"🍗 Petto di pollo — 100 g|110|23|1.5|0|0|0" },
+  { category:"Secondi", emoji:"🍗", label:"Petto di tacchino — 100 g", value:"🍗 Petto di tacchino — 100 g|110|24|1|0|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Manzo magro — 100 g", value:"🥩 Manzo magro — 100 g|170|26|7|0|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Vitello — 100 g", value:"🥩 Vitello — 100 g|160|26|6|0|0|0" },
+  { category:"Secondi", emoji:"🥩", label:"Lonza di maiale — 100 g", value:"🥩 Lonza di maiale — 100 g|165|27|6|0|0|0" },
+  { category:"Secondi", emoji:"🥚", label:"Uovo — 1 pz", value:"🥚 Uovo — 1 pz|70|6.3|4.8|0.4|0.2|0" },
+  { category:"Secondi", emoji:"🥚", label:"Albume — 100 g", value:"🥚 Albume — 100 g|50|11|0.2|0.7|0.7|0" },
+  { category:"Secondi", emoji:"🐟", label:"Tonno naturale — 100 g", value:"🐟 Tonno naturale — 100 g|116|26|1|0|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Salmone — 100 g", value:"🐟 Salmone — 100 g|208|20|13|0|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Sgombro — 100 g", value:"🐟 Sgombro — 100 g|205|19|14|0|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Orata — 100 g", value:"🐟 Orata — 100 g|120|20|4|0|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Branzino — 100 g", value:"🐟 Branzino — 100 g|120|20|4|0|0|0" },
+  { category:"Secondi", emoji:"🐟", label:"Merluzzo — 100 g", value:"🐟 Merluzzo — 100 g|82|18|1|0|0|0" },
+  { category:"Secondi", emoji:"🦐", label:"Gamberi — 100 g", value:"🦐 Gamberi — 100 g|85|20|1|0|0|0" },
+  { category:"Secondi", emoji:"🌱", label:"Tofu — 100 g", value:"🌱 Tofu — 100 g|145|16|9|2|0.5|0" },
+  { category:"Secondi", emoji:"🧀", label:"Fiocchi di latte — 200 g", value:"🧀 Fiocchi di latte — 200 g|196|26|9|3|6|0" },
 
   // 🥦 CONTORNI
-  { category:"Contorni", emoji:"🥔", label:"Patate — 100 g", value:"🥔 Patate — 100 g|77|2|0.1|17|0" },
-  { category:"Contorni", emoji:"🍠", label:"Patate dolci — 100 g", value:"🍠 Patate dolci — 100 g|86|1.6|0.1|20|0" },
-  { category:"Contorni", emoji:"🥒", label:"Zucchine — 200 g", value:"🥒 Zucchine — 200 g|34|2.4|0.6|5|0" },
-  { category:"Contorni", emoji:"🍆", label:"Melanzane — 200 g", value:"🍆 Melanzane — 200 g|50|2|0.4|12|0" },
-  { category:"Contorni", emoji:"🫑", label:"Peperoni — 200 g", value:"🫑 Peperoni — 200 g|60|2|0.6|12|0" },
-  { category:"Contorni", emoji:"🥦", label:"Broccoli — 200 g", value:"🥦 Broccoli — 200 g|68|5.6|0.8|10|0" },
-  { category:"Contorni", emoji:"🥦", label:"Cavolfiore — 200 g", value:"🥦 Cavolfiore — 200 g|50|4|0.6|9|0" },
-  { category:"Contorni", emoji:"🥬", label:"Spinaci — 200 g", value:"🥬 Spinaci — 200 g|46|6|0.8|4|0" },
-  { category:"Contorni", emoji:"🫛", label:"Fagiolini — 200 g", value:"🫛 Fagiolini — 200 g|62|4|0.6|14|0" },
-  { category:"Contorni", emoji:"🥗", label:"Insalata mista — 150 g", value:"🥗 Insalata mista — 150 g|30|2|0.4|5|0" },
-  { category:"Contorni", emoji:"🍅", label:"Pomodori — 200 g", value:"🍅 Pomodori — 200 g|36|1.8|0.4|7|0" },
-  { category:"Contorni", emoji:"🥕", label:"Carote — 150 g", value:"🥕 Carote — 150 g|62|1.4|0.3|14|0" },
+  { category:"Contorni", emoji:"🥔", label:"Patate — 100 g", value:"🥔 Patate — 100 g|77|2|0.1|17|1|0" },
+  { category:"Contorni", emoji:"🍠", label:"Patate dolci — 100 g", value:"🍠 Patate dolci — 100 g|86|1.6|0.1|20|6|0" },
+  { category:"Contorni", emoji:"🥒", label:"Zucchine — 200 g", value:"🥒 Zucchine — 200 g|34|2.4|0.6|5|3|0" },
+  { category:"Contorni", emoji:"🍆", label:"Melanzane — 200 g", value:"🍆 Melanzane — 200 g|50|2|0.4|12|7|0" },
+  { category:"Contorni", emoji:"🫑", label:"Peperoni — 200 g", value:"🫑 Peperoni — 200 g|60|2|0.6|12|8|0" },
+  { category:"Contorni", emoji:"🥦", label:"Broccoli — 200 g", value:"🥦 Broccoli — 200 g|68|5.6|0.8|10|3|0" },
+  { category:"Contorni", emoji:"🥦", label:"Cavolfiore — 200 g", value:"🥦 Cavolfiore — 200 g|50|4|0.6|9|4|0" },
+  { category:"Contorni", emoji:"🥬", label:"Spinaci — 200 g", value:"🥬 Spinaci — 200 g|46|6|0.8|4|0.8|0" },
+  { category:"Contorni", emoji:"🫛", label:"Fagiolini — 200 g", value:"🫛 Fagiolini — 200 g|62|4|0.6|14|5|0" },
+  { category:"Contorni", emoji:"🥗", label:"Insalata mista — 150 g", value:"🥗 Insalata mista — 150 g|30|2|0.4|5|3|0" },
+  { category:"Contorni", emoji:"🍅", label:"Pomodori — 200 g", value:"🍅 Pomodori — 200 g|36|1.8|0.4|7|5|0" },
+  { category:"Contorni", emoji:"🥕", label:"Carote — 150 g", value:"🥕 Carote — 150 g|62|1.4|0.3|14|7|0" },
 
   // 🍎 FRUTTA E FRUTTA SECCA
-  { category:"Frutta e frutta secca", emoji:"🍎", label:"Mela — 1 pz", value:"🍎 Mela — 1 pz|80|0.4|0.2|21|0" },
-  { category:"Frutta e frutta secca", emoji:"🍌", label:"Banana — 1 pz", value:"🍌 Banana — 1 pz|105|1.3|0.4|27|0" },
-  { category:"Frutta e frutta secca", emoji:"🍊", label:"Arancia — 1 pz", value:"🍊 Arancia — 1 pz|65|1.2|0.2|15|0" },
-  { category:"Frutta e frutta secca", emoji:"🍐", label:"Pera — 1 pz", value:"🍐 Pera — 1 pz|100|0.6|0.2|27|0" },
-  { category:"Frutta e frutta secca", emoji:"🥝", label:"Kiwi — 1 pz", value:"🥝 Kiwi — 1 pz|45|0.8|0.4|11|0" },
-  { category:"Frutta e frutta secca", emoji:"🍑", label:"Pesca — 1 pz", value:"🍑 Pesca — 1 pz|55|1.2|0.4|13|0" },
-  { category:"Frutta e frutta secca", emoji:"🍑", label:"Nettarina — 1 pz", value:"🍑 Nettarina — 1 pz|60|1.5|0.4|14|0" },
-  { category:"Frutta e frutta secca", emoji:"🍑", label:"Albicocche — 2 pz", value:"🍑 Albicocche — 2 pz|35|1|0.2|8|0" },
-  { category:"Frutta e frutta secca", emoji:"🍓", label:"Fragole — 200 g", value:"🍓 Fragole — 200 g|64|1.4|0.6|15|0" },
-  { category:"Frutta e frutta secca", emoji:"🫐", label:"Mirtilli — 100 g", value:"🫐 Mirtilli — 100 g|57|0.7|0.3|14|0" },
-  { category:"Frutta e frutta secca", emoji:"🍇", label:"Uva — 150 g", value:"🍇 Uva — 150 g|104|1|0.3|27|0" },
-  { category:"Frutta e frutta secca", emoji:"🍍", label:"Ananas — 150 g", value:"🍍 Ananas — 150 g|75|0.8|0.2|20|0" },
-  { category:"Frutta e frutta secca", emoji:"🍈", label:"Melone — 200 g", value:"🍈 Melone — 200 g|68|1.6|0.4|16|0" },
-  { category:"Frutta e frutta secca", emoji:"🥑", label:"Avocado — 1/2 pz", value:"🥑 Avocado — 1/2 pz|160|2|15|8|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Mandorle — 10 g", value:"🌰 Mandorle — 10 g|58|2.1|5|2.2|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Noci — 15 g", value:"🌰 Noci — 15 g|98|2.3|9.8|2|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Nocciole — 15 g", value:"🌰 Nocciole — 15 g|94|2.3|9.1|2.5|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Anacardi — 15 g", value:"🌰 Anacardi — 15 g|83|2.7|6.6|4.5|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Pistacchi — 15 g", value:"🌰 Pistacchi — 15 g|84|3|6.8|4.2|0" },
-  { category:"Frutta e frutta secca", emoji:"🌰", label:"Macadamia — 10 pz / ~25 g", value:"🌰 Macadamia — 10 pz / ~25 g|180|2|19|3|0" },
+  { category:"Frutta e frutta secca", emoji:"🍎", label:"Mela — 1 pz", value:"🍎 Mela — 1 pz|80|0.4|0.2|21|16|0" },
+  { category:"Frutta e frutta secca", emoji:"🍌", label:"Banana — 1 pz", value:"🍌 Banana — 1 pz|105|1.3|0.4|27|14|0" },
+  { category:"Frutta e frutta secca", emoji:"🍊", label:"Arancia — 1 pz", value:"🍊 Arancia — 1 pz|65|1.2|0.2|15|12|0" },
+  { category:"Frutta e frutta secca", emoji:"🍐", label:"Pera — 1 pz", value:"🍐 Pera — 1 pz|100|0.6|0.2|27|17|0" },
+  { category:"Frutta e frutta secca", emoji:"🥝", label:"Kiwi — 1 pz", value:"🥝 Kiwi — 1 pz|45|0.8|0.4|11|6|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Pesca — 1 pz", value:"🍑 Pesca — 1 pz|55|1.2|0.4|13|11|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Nettarina — 1 pz", value:"🍑 Nettarina — 1 pz|60|1.5|0.4|14|11|0" },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Albicocche — 2 pz", value:"🍑 Albicocche — 2 pz|35|1|0.2|8|7|0" },
+  { category:"Frutta e frutta secca", emoji:"🍓", label:"Fragole — 200 g", value:"🍓 Fragole — 200 g|64|1.4|0.6|15|10|0" },
+  { category:"Frutta e frutta secca", emoji:"🫐", label:"Mirtilli — 100 g", value:"🫐 Mirtilli — 100 g|57|0.7|0.3|14|10|0" },
+  { category:"Frutta e frutta secca", emoji:"🍇", label:"Uva — 150 g", value:"🍇 Uva — 150 g|104|1|0.3|27|23|0" },
+  { category:"Frutta e frutta secca", emoji:"🍍", label:"Ananas — 150 g", value:"🍍 Ananas — 150 g|75|0.8|0.2|20|15|0" },
+  { category:"Frutta e frutta secca", emoji:"🍈", label:"Melone — 200 g", value:"🍈 Melone — 200 g|68|1.6|0.4|16|14|0" },
+  { category:"Frutta e frutta secca", emoji:"🥑", label:"Avocado — 1/2 pz", value:"🥑 Avocado — 1/2 pz|160|2|15|8|0.7|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Mandorle — 10 g", value:"🌰 Mandorle — 10 g|58|2.1|5|2.2|0.4|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Noci — 15 g", value:"🌰 Noci — 15 g|98|2.3|9.8|2|0.6|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Nocciole — 15 g", value:"🌰 Nocciole — 15 g|94|2.3|9.1|2.5|0.7|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Anacardi — 15 g", value:"🌰 Anacardi — 15 g|83|2.7|6.6|4.5|1.1|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Pistacchi — 15 g", value:"🌰 Pistacchi — 15 g|84|3|6.8|4.2|1.4|0" },
+  { category:"Frutta e frutta secca", emoji:"🌰", label:"Macadamia — 10 pz / ~25 g", value:"🌰 Macadamia — 10 pz / ~25 g|180|2|19|3|1|0" },
 
   // 🍰 DOLCI
-  { category:"Dolci", emoji:"🍫", label:"Cioccolato fondente 70% — 20 g", value:"🍫 Cioccolato fondente 70% — 20 g|110|1.5|8|8|0" },
-  { category:"Dolci", emoji:"🍫", label:"Cioccolato al latte — 20 g", value:"🍫 Cioccolato al latte — 20 g|107|1.5|6|11|0" },
-  { category:"Dolci", emoji:"🍪", label:"Biscotti secchi — 30 g", value:"🍪 Biscotti secchi — 30 g|135|2|5|21|0" },
-  { category:"Dolci", emoji:"🍞", label:"Fette biscottate — 30 g", value:"🍞 Fette biscottate — 30 g|115|3|1|22|0" },
-  { category:"Dolci", emoji:"🥧", label:"Crostata — 100 g", value:"🥧 Crostata — 100 g|350|5|15|50|0" },
-  { category:"Dolci", emoji:"🍰", label:"Torta al cioccolato — 100 g", value:"🍰 Torta al cioccolato — 100 g|390|6|22|45|0" },
-  { category:"Dolci", emoji:"🍨", label:"Gelato — 100 g", value:"🍨 Gelato — 100 g|210|4|10|27|0" },
-  { category:"Dolci", emoji:"🍯", label:"Yogurt greco con miele — 200 g", value:"🍯 Yogurt greco con miele — 200 g|190|18|4|22|0" },
-  { category:"Dolci", emoji:"🍫", label:"Barretta proteica — 1 pz", value:"🍫 Barretta proteica — 1 pz|200|20|7|15|0" },
+  { category:"Dolci", emoji:"🍫", label:"Cioccolato fondente 70% — 20 g", value:"🍫 Cioccolato fondente 70% — 20 g|110|1.5|8|8|2.5|0" },
+  { category:"Dolci", emoji:"🍫", label:"Cioccolato al latte — 20 g", value:"🍫 Cioccolato al latte — 20 g|107|1.5|6|11|10|0" },
+  { category:"Dolci", emoji:"🍪", label:"Biscotti secchi — 30 g", value:"🍪 Biscotti secchi — 30 g|135|2|5|21|6|0" },
+  { category:"Dolci", emoji:"🍞", label:"Fette biscottate — 30 g", value:"🍞 Fette biscottate — 30 g|115|3|1|22|3|0" },
+  { category:"Dolci", emoji:"🥧", label:"Crostata — 100 g", value:"🥧 Crostata — 100 g|350|5|15|50|25|0" },
+  { category:"Dolci", emoji:"🍰", label:"Torta al cioccolato — 100 g", value:"🍰 Torta al cioccolato — 100 g|390|6|22|45|30|0" },
+  { category:"Dolci", emoji:"🍨", label:"Gelato — 100 g", value:"🍨 Gelato — 100 g|210|4|10|27|20|0" },
+  { category:"Dolci", emoji:"🍯", label:"Yogurt greco con miele — 200 g", value:"🍯 Yogurt greco con miele — 200 g|190|18|4|22|18|0" },
+  { category:"Dolci", emoji:"🍫", label:"Barretta proteica — 1 pz", value:"🍫 Barretta proteica — 1 pz|200|20|7|15|2|0" },
 
   // ☕ COLAZIONE E BEVANDE
-  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 0% — 150 g", value:"🥣 Yogurt greco 0% — 150 g|90|15|0|5|0" },
-  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 2% — 150 g", value:"🥣 Yogurt greco 2% — 150 g|110|15|3|5|0" },
-  { category:"Colazione e bevande", emoji:"🥛", label:"Latte parzialmente scremato — 250 ml", value:"🥛 Latte parzialmente scremato — 250 ml|115|8|4|12|250" },
-  { category:"Colazione e bevande", emoji:"🥛", label:"Latte scremato — 250 ml", value:"🥛 Latte scremato — 250 ml|85|8.5|0.3|12|250" },
-  { category:"Colazione e bevande", emoji:"🥛", label:"Bevanda vegetale senza zuccheri — 250 ml", value:"🥛 Bevanda vegetale senza zuccheri — 250 ml|50|2|2|3|250" },
-  { category:"Colazione e bevande", emoji:"🥤", label:"Whey — 1 scoop", value:"🥤 Whey — 1 scoop|120|24|2|3|0" },
-  { category:"Colazione e bevande", emoji:"☕", label:"Caffè espresso — 1 tazzina", value:"☕ Caffè espresso — 1 tazzina|2|0.2|0|0|30" },
-  { category:"Colazione e bevande", emoji:"☕", label:"Caffè macchiato — 1 tazzina", value:"☕ Caffè macchiato — 1 tazzina|15|1|0.5|1|30" },
-  { category:"Colazione e bevande", emoji:"☕", label:"Cappuccino — 1 tazza", value:"☕ Cappuccino — 1 tazza|90|5|4|8|150" },
-  { category:"Colazione e bevande", emoji:"☕", label:"Mocaccino s/z — 1 tazza", value:"☕ Mocaccino s/z — 1 tazza|30|1|1|4|150" },
-  { category:"Colazione e bevande", emoji:"🍊", label:"Succo d'arancia — 200 ml", value:"🍊 Succo d'arancia — 200 ml|90|1.4|0.2|20|200" },
-  { category:"Colazione e bevande", emoji:"🍵", label:"Tè s/z — 250 ml", value:"🍵 Tè s/z — 250 ml|2|0|0|0|250" },
+  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 0% — 150 g", value:"🥣 Yogurt greco 0% — 150 g|90|15|0|5|5.5|0" },
+  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 2% — 150 g", value:"🥣 Yogurt greco 2% — 150 g|110|15|3|5|5.5|0" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Latte parzialmente scremato — 250 ml", value:"🥛 Latte parzialmente scremato — 250 ml|115|8|4|12|12|250" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Latte scremato — 250 ml", value:"🥛 Latte scremato — 250 ml|85|8.5|0.3|12|12|250" },
+  { category:"Colazione e bevande", emoji:"🥛", label:"Bevanda vegetale senza zuccheri — 250 ml", value:"🥛 Bevanda vegetale senza zuccheri — 250 ml|50|2|2|3|0.5|250" },
+  { category:"Colazione e bevande", emoji:"🥤", label:"Whey — 1 scoop", value:"🥤 Whey — 1 scoop|120|24|2|3|1.5|0" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Caffè espresso — 1 tazzina", value:"☕ Caffè espresso — 1 tazzina|2|0.2|0|0|0|30" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Caffè macchiato — 1 tazzina", value:"☕ Caffè macchiato — 1 tazzina|15|1|0.5|1|1|30" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Cappuccino — 1 tazza", value:"☕ Cappuccino — 1 tazza|90|5|4|8|8|150" },
+  { category:"Colazione e bevande", emoji:"☕", label:"Mocaccino s/z — 1 tazza", value:"☕ Mocaccino s/z — 1 tazza|30|1|1|4|3|150" },
+  { category:"Colazione e bevande", emoji:"🍊", label:"Succo d'arancia — 200 ml", value:"🍊 Succo d'arancia — 200 ml|90|1.4|0.2|20|18|200" },
+  { category:"Colazione e bevande", emoji:"🍵", label:"Tè s/z — 250 ml", value:"🍵 Tè s/z — 250 ml|2|0|0|0|0|250" },
 
   // 🫒 CONDIMENTI
-  { category:"Condimenti", emoji:"🫒", label:"Olio EVO — 10 g", value:"🫒 Olio EVO — 10 g|90|0|10|0|0" },
-  { category:"Condimenti", emoji:"🧈", label:"Burro — 10 g", value:"🧈 Burro — 10 g|75|0.1|8.3|0|0" },
-  { category:"Condimenti", emoji:"🧀", label:"Parmigiano — 10 g", value:"🧀 Parmigiano — 10 g|40|3.3|2.9|0|0" },
-  { category:"Condimenti", emoji:"🧀", label:"Grana — 10 g", value:"🧀 Grana — 10 g|40|3.3|2.9|0|0" },
-  { category:"Condimenti", emoji:"🥚", label:"Maionese — 15 g", value:"🥚 Maionese — 15 g|100|0.2|11|0.5|0" },
-  { category:"Condimenti", emoji:"🍅", label:"Ketchup — 15 g", value:"🍅 Ketchup — 15 g|17|0.3|0.1|4|0" },
-  { category:"Condimenti", emoji:"🍖", label:"Salsa BBQ — 15 g", value:"🍖 Salsa BBQ — 15 g|25|0.3|0.1|6|0" },
-  { category:"Condimenti", emoji:"🌿", label:"Pesto — 30 g", value:"🌿 Pesto — 30 g|150|3|14|3|0" },
-  { category:"Condimenti", emoji:"🍇", label:"Aceto balsamico — 10 g", value:"🍇 Aceto balsamico — 10 g|9|0|0|2|0" }
+  { category:"Condimenti", emoji:"🫒", label:"Olio EVO — 10 g", value:"🫒 Olio EVO — 10 g|90|0|10|0|0|0" },
+  { category:"Condimenti", emoji:"🧈", label:"Burro — 10 g", value:"🧈 Burro — 10 g|75|0.1|8.3|0|0.1|0" },
+  { category:"Condimenti", emoji:"🧀", label:"Parmigiano — 10 g", value:"🧀 Parmigiano — 10 g|40|3.3|2.9|0|0|0" },
+  { category:"Condimenti", emoji:"🧀", label:"Grana — 10 g", value:"🧀 Grana — 10 g|40|3.3|2.9|0|0|0" },
+  { category:"Condimenti", emoji:"🥚", label:"Maionese — 15 g", value:"🥚 Maionese — 15 g|100|0.2|11|0.5|0.1|0" },
+  { category:"Condimenti", emoji:"🍅", label:"Ketchup — 15 g", value:"🍅 Ketchup — 15 g|17|0.3|0.1|4|3|0" },
+  { category:"Condimenti", emoji:"🍖", label:"Salsa BBQ — 15 g", value:"🍖 Salsa BBQ — 15 g|25|0.3|0.1|6|4|0" },
+  { category:"Condimenti", emoji:"🌿", label:"Pesto — 30 g", value:"🌿 Pesto — 30 g|150|3|14|3|0.5|0" },
+  { category:"Condimenti", emoji:"🍇", label:"Aceto balsamico — 10 g", value:"🍇 Aceto balsamico — 10 g|9|0|0|2|2|0" }
 ];
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (2 cup Whey + Creatina + 500ml H2O)", kcal: 200, pro: 40, fat: 2, carb: 3, water: 500 },
-  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (1 cup)", kcal: 160, pro: 23, fat: 0, carb: 8, water: 0 },
-  { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, water: 400 },
-  { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (1 Cup Whey + 300ml H2O)", kcal: 100, pro: 20, fat: 1, carb: 1.5, water: 300 },
-  { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 180, pro: 2, fat: 19, carb: 3, water: 0 },
-  { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di Latte (200g)", kcal: 196, pro: 26, fat: 9, carb: 3, water: 0 },
-  { emoji: "🫐", label: "Mirtilli 250g", name: "Mirtilli (250g)", kcal: 140, pro: 2, fat: 1, carb: 35, water: 0 },
-  { emoji: "☕", label: "Mocaccino", name: "Mocaccino s/z", kcal: 30, pro: 1, fat: 1, carb: 4, water: 0 },
-  { emoji: "💧", label: "H2O +500 ml", name: "Acqua (+500ml)", kcal: 0, pro: 0, fat: 0, carb: 0, water: 500, isWater: true }
+  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (2 cup Whey + Creatina + 500ml H2O)", kcal: 200, pro: 40, fat: 2, carb: 3, sugar: 2, water: 500 },
+  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (1 cup)", kcal: 160, pro: 23, fat: 0, carb: 8, sugar: 5, water: 0 },
+  { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 400 },
+  { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (1 Cup Whey + 300ml H2O)", kcal: 100, pro: 20, fat: 1, carb: 1.5, sugar: 1, water: 300 },
+  { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 180, pro: 2, fat: 19, carb: 3, sugar: 1, water: 0 },
+  { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di Latte (200g)", kcal: 196, pro: 26, fat: 9, carb: 3, sugar: 3, water: 0 },
+  { emoji: "🫐", label: "Mirtilli 250g", name: "Mirtilli (250g)", kcal: 140, pro: 2, fat: 1, carb: 35, sugar: 24, water: 0 },
+  { emoji: "☕", label: "Mocaccino", name: "Mocaccino s/z", kcal: 30, pro: 1, fat: 1, carb: 4, sugar: 3, water: 0 },
+  { emoji: "💧", label: "H2O +500 ml", name: "Acqua (+500ml)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500, isWater: true }
 ];
 
 /* =========================================================
@@ -3381,7 +3433,11 @@ async function loadUserDiaryFromBackend(dateKey) {
     log = [];
   } else {
     log = Array.isArray(data.log)
-      ? data.log
+      ? data.log.map(item => ({
+          ...item,
+          sugar:
+            item.sugar ?? 0
+        }))
       : [];
   }
 
@@ -3450,7 +3506,11 @@ async function loadUserHistoryFromBackend() {
         historyLogs[day.date] = {
           date: day.date,
           log: Array.isArray(day.log)
-            ? day.log
+            ? day.log.map(item => ({
+                ...item,
+                sugar:
+                  item.sugar ?? 0
+              }))
             : [],
           summary:
             day.summary &&
@@ -3477,15 +3537,28 @@ async function loadUserDataFromBackend() {
     pro: 160,
     fat: 65,
     carb: 180,
+    sugar: 50,
     water: 2500
   };
 
+  if (TARGETS.sugar == null) {
+    TARGETS.sugar = 50;
+  }
+
   savedFoods = Array.isArray(data.savedFoods)
-    ? data.savedFoods
+    ? data.savedFoods.map(food => ({
+        ...food,
+        sugar:
+          food.sugar ?? 0
+      }))
     : [];
 
   quickAddItems = Array.isArray(data.quickItems) && data.quickItems.length
-    ? data.quickItems
+    ? data.quickItems.map(item => ({
+        ...item,
+        sugar:
+          item.sugar ?? 0
+      }))
     : DEFAULT_QUICK_ITEMS;
 
   return data;
@@ -3855,7 +3928,7 @@ function importProfileFromUrlIfPresent() {
         "diario_targets",
         JSON.stringify(
           profile.targets ||
-          { kcal: 2000, pro: 160, fat: 65, carb: 180, water: 2500 }
+          { kcal: 2000, pro: 160, fat: 65, carb: 180, sugar: 50, water: 2500 }
         )
       );
 
@@ -4927,7 +5000,7 @@ function renderFoodPickerModal(filterText = "") {
 
     foods.forEach(food => {
       const val = isCustom
-        ? `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.water || 0}`
+        ? `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.sugar || 0}|${food.water || 0}`
         : food.value;
 
       const label = isCustom
@@ -5032,6 +5105,7 @@ function editSavedFood(index) {
   document.getElementById("edit-food-pro").value = food.pro ?? 0;
   document.getElementById("edit-food-fat").value = food.fat ?? 0;
   document.getElementById("edit-food-carb").value = food.carb ?? 0;
+  document.getElementById("edit-food-sugar").value = food.sugar ?? 0;
   document.getElementById("edit-food-water").value = food.water ?? 0;
 
   document.getElementById("edit-food-modal").style.display = "flex";
@@ -5076,12 +5150,16 @@ async function saveEditedFood() {
     document.getElementById("edit-food-carb").value
   );
 
+  const sugar = parseFloat(
+    document.getElementById("edit-food-sugar").value
+  );
+
   const water = parseFloat(
     document.getElementById("edit-food-water").value
   );
 
   if (
-    [kcal, pro, fat, carb, water].some(
+    [kcal, pro, fat, carb, sugar, water].some(
       value => Number.isNaN(value)
     )
   ) {
@@ -5096,6 +5174,7 @@ async function saveEditedFood() {
     pro,
     fat,
     carb,
+    sugar,
     water
   };
 
@@ -5457,6 +5536,9 @@ async function askGemini() {
     const carb =
       Math.round(Number(result.carb) * 10) / 10;
 
+    const sugar =
+      Math.round(Number(result.sugar || 0) * 10) / 10;
+
     const name =
       (result.name && String(result.name).trim())
       ||
@@ -5475,7 +5557,8 @@ async function askGemini() {
       kcal,
       pro,
       fat,
-      carb
+      carb,
+      sugar
     };
 
     document.getElementById(
@@ -5490,7 +5573,8 @@ async function askGemini() {
       `🔥 ${kcal} kcal · ` +
       `🥩 ${pro}g P · ` +
       `🥑 ${fat}g G · ` +
-      `🍞 ${carb}g C`;
+      `🍞 ${carb}g C · ` +
+      `🍬 ${sugar}g Z`;
 
     document.getElementById(
       "gemini-result-preview"
@@ -5548,6 +5632,11 @@ function applyGeminiToForm() {
     "custom-carb"
   ).value =
     lastGeminiData.carb;
+
+  document.getElementById(
+    "custom-sugar"
+  ).value =
+    lastGeminiData.sugar;
 
   document.getElementById(
     "custom-water"
@@ -5693,6 +5782,9 @@ async function calculateAndApplyTargets() {
     carb:
       targetCarb,
 
+    sugar:
+      50,
+
     water:
       2500
 
@@ -5757,6 +5849,12 @@ function toggleTargetInputs() {
 
 
     document.getElementById(
+      "target-sugar-input"
+    ).value =
+      TARGETS.sugar;
+
+
+    document.getElementById(
       "target-water-input"
     ).value =
       TARGETS.water;
@@ -5800,6 +5898,13 @@ async function saveCustomTargets() {
       ).value
     );
 
+  const sugar =
+    parseInt(
+      document.getElementById(
+        "target-sugar-input"
+      ).value
+    );
+
   const w =
     parseInt(
       document.getElementById(
@@ -5819,6 +5924,9 @@ async function saveCustomTargets() {
 
   if (!isNaN(c))
     TARGETS.carb = c;
+
+  if (!isNaN(sugar))
+    TARGETS.sugar = sugar;
 
   if (!isNaN(w))
     TARGETS.water = w;
@@ -5867,6 +5975,12 @@ function updateTargetDisplays() {
 
 
   document.getElementById(
+    "box-target-sugar"
+  ).innerText =
+    TARGETS.sugar;
+
+
+  document.getElementById(
     "box-target-water"
   ).innerText =
     TARGETS.water;
@@ -5894,6 +6008,12 @@ function updateTargetDisplays() {
     "target-carb-val"
   ).innerText =
     TARGETS.carb;
+
+
+  document.getElementById(
+    "target-sugar-val"
+  ).innerText =
+    TARGETS.sugar;
 
 
   document.getElementById(
@@ -5937,6 +6057,7 @@ function renderQuickGrid() {
         item.pro,
         item.fat,
         item.carb,
+        item.sugar || 0,
         item.water || 0
       );
 
@@ -5972,6 +6093,7 @@ async function addQuick(
   pro,
   fat,
   carb,
+  sugar = 0,
   waterMl = 0
 ) {
 
@@ -6004,6 +6126,8 @@ async function addQuick(
     fat,
 
     carb,
+
+    sugar,
 
     waterMl
 
@@ -6063,6 +6187,7 @@ document.getElementById("meal-category").addEventListener("change", () => {
     "custom-pro",
     "custom-fat",
     "custom-carb",
+    "custom-sugar",
     "custom-water"
   ];
 
@@ -6145,9 +6270,21 @@ async function addFromSelect() {
     );
 
 
+  let sugar = 0;
+  let waterIndex = 5;
+
+  if (parts.length >= 7) {
+    sugar =
+      Math.round(
+        parseFloat(parts[5] || 0) * mult
+      );
+
+    waterIndex = 6;
+  }
+
   const waterMl =
     Math.round(
-      parseFloat(parts[5] || 0) * mult
+      parseFloat(parts[waterIndex] || 0) * mult
     );
 
 
@@ -6169,6 +6306,8 @@ async function addFromSelect() {
     fat,
 
     carb,
+
+    sugar,
 
     waterMl
 
@@ -6235,6 +6374,14 @@ async function addCustom() {
     parseFloat(
       document.getElementById(
         "custom-carb"
+      ).value
+    ) || 0;
+
+
+  const sugar =
+    parseFloat(
+      document.getElementById(
+        "custom-sugar"
       ).value
     ) || 0;
 
@@ -6311,6 +6458,7 @@ async function addCustom() {
       pro,
       fat,
       carb,
+      sugar,
       water: waterMl
 
     });
@@ -6346,6 +6494,11 @@ async function addCustom() {
 
   document.getElementById(
     "custom-carb"
+  ).value = "";
+
+
+  document.getElementById(
+    "custom-sugar"
   ).value = "";
 
 
@@ -6406,6 +6559,7 @@ function updateDashboard() {
   let totPro = 0;
   let totFat = 0;
   let totCarb = 0;
+  let totSugar = 0;
   let totWater = 0;
 
 
@@ -6423,6 +6577,9 @@ function updateDashboard() {
 
       totCarb +=
         item.carb || 0;
+
+      totSugar +=
+        item.sugar || 0;
 
       totWater +=
         item.waterMl || 0;
@@ -6456,6 +6613,12 @@ function updateDashboard() {
 
 
   document.getElementById(
+    "tot-sugar"
+  ).innerText =
+    totSugar + "g";
+
+
+  document.getElementById(
     "tot-water"
   ).innerText =
     totWater + "ml";
@@ -6486,6 +6649,13 @@ function updateDashboard() {
     "bar-carb",
     totCarb,
     TARGETS.carb
+  );
+
+
+  updateProgressBar(
+    "bar-sugar",
+    totSugar,
+    TARGETS.sugar
   );
 
 
@@ -6636,7 +6806,8 @@ function renderLog() {
                 🔥 ${item.kcal} kcal ·
                 P ${item.pro}g ·
                 G ${item.fat}g ·
-                C ${item.carb}g
+                C ${item.carb}g ·
+                🍬 ${item.sugar || 0}g
 
                 ${
                   item.waterMl
@@ -6744,6 +6915,14 @@ async function archiveCurrentLog(dateKey) {
           (sum, item) =>
             sum +
             (item.carb || 0),
+          0
+        ) + "g",
+
+      sugar:
+        log.reduce(
+          (sum, item) =>
+            sum +
+            (item.sugar || 0),
           0
         ) + "g",
 
@@ -7193,6 +7372,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
   let totPro = 0;
   let totFat = 0;
   let totCarb = 0;
+  let totSugar = 0;
   let totWater = 0;
 
   dayLog.forEach(item => {
@@ -7200,6 +7380,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
     totPro += Number(item.pro) || 0;
     totFat += Number(item.fat) || 0;
     totCarb += Number(item.carb) || 0;
+    totSugar += Number(item.sugar) || 0;
     totWater += Number(item.waterMl) || 0;
   });
 
@@ -7215,6 +7396,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
         <td>${item.pro || 0}g</td>
         <td>${item.fat || 0}g</td>
         <td>${item.carb || 0}g</td>
+        <td>${item.sugar || 0}g</td>
         <td>${item.waterMl || 0}ml</td>
       </tr>
     `;
@@ -7223,7 +7405,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
   if (!rowsHtml) {
     rowsHtml = `
       <tr>
-        <td colspan="8" class="empty">Nessun alimento registrato.</td>
+        <td colspan="9" class="empty">Nessun alimento registrato.</td>
       </tr>
     `;
   }
@@ -7253,6 +7435,10 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
             <div class="label">Carbo / ${TARGETS.carb}g</div>
           </div>
           <div class="metric">
+            <div class="value">${totSugar}g</div>
+            <div class="label">Zuccheri / ${TARGETS.sugar}g</div>
+          </div>
+          <div class="metric">
             <div class="value">${totWater}ml</div>
             <div class="label">Acqua / ${TARGETS.water}ml</div>
           </div>
@@ -7269,6 +7455,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
           <th>P</th>
           <th>G</th>
           <th>C</th>
+          <th>Z</th>
           <th>H₂O</th>
         </tr>
         ${rowsHtml}
