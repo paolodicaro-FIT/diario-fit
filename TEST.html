@@ -1753,9 +1753,9 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     </p>
 
     <input
-      type="email"
+      type="text"
       id="login-email-input"
-      placeholder="Email"
+      placeholder="Utente"
       autocomplete="username"
       style="text-align:center;"
     >
@@ -1784,7 +1784,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         margin-bottom:0;
       "
     >
-      Email o password non corrette.
+      Utente o password non corretti.
     </p>
 
   </div>
@@ -2601,7 +2601,27 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         id="gemini-photo-input"
         accept="image/jpeg,image/png,image/webp"
         capture="environment"
+        style="display:none;"
       >
+
+      <label
+        for="gemini-photo-input"
+        style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          gap:6px;
+          padding:8px 12px;
+          border-radius:10px;
+          background:var(--blue);
+          color:#0b0f14;
+          font-size:.82rem;
+          font-weight:800;
+          cursor:pointer;
+        "
+      >
+        📷 Scatta foto
+      </label>
 
       <div
         id="gemini-photo-preview"
@@ -2729,15 +2749,26 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 
       <label>
-        Email
+        Utente
       </label>
 
       <input
-        type="email"
-        id="admin-user-email"
-        placeholder="email@esempio.it"
+        type="text"
+        id="admin-user-username"
+        placeholder="Generato automaticamente"
         autocomplete="off"
+        readonly
       >
+
+      <button
+        type="button"
+        class="btn"
+        id="admin-generate-credentials-btn"
+        onclick="generateAdminCredentials()"
+        style="margin-top:8px;width:100%;"
+      >
+        🎲 Genera UTENTE e PASSWORD
+      </button>
 
 
       <div class="inline-group">
@@ -4014,7 +4045,7 @@ function renderAdminUsers(users) {
                 overflow-wrap:anywhere;
               "
             >
-              ${escapeHtml(user.email)}
+              ${escapeHtml(user.username || user.email || "")}
             </div>
 
             <div
@@ -4069,7 +4100,7 @@ async function openUserEditor(userId) {
   }
 
   document.getElementById("admin-user-name").value = "";
-  document.getElementById("admin-user-email").value = "";
+  document.getElementById("admin-user-username").value = "";
   document.getElementById("admin-user-role").value = "user";
   document.getElementById("admin-user-status").value = "active";
   document.getElementById("admin-user-password").value = "";
@@ -4084,6 +4115,16 @@ async function openUserEditor(userId) {
   if (deleteButton) {
     deleteButton.style.display =
       userId ? "inline-block" : "none";
+  }
+
+  const generateCredentialsButton =
+    document.getElementById(
+      "admin-generate-credentials-btn"
+    );
+
+  if (generateCredentialsButton) {
+    generateCredentialsButton.style.display =
+      userId ? "none" : "inline-flex";
   }
 
   const help =
@@ -4129,8 +4170,8 @@ async function openUserEditor(userId) {
       document.getElementById("admin-user-name").value =
         user.name || "";
 
-      document.getElementById("admin-user-email").value =
-        user.email || "";
+      document.getElementById("admin-user-username").value =
+        user.username || "";
 
       document.getElementById("admin-user-role").value =
         user.role === "admin" ? "admin" : "user";
@@ -4182,6 +4223,91 @@ function closeUserEditor() {
 }
 
 
+function generateAdminCredentials() {
+
+  const usernameField =
+    document.getElementById("admin-user-username");
+
+  const passwordField =
+    document.getElementById("admin-user-password");
+
+  const passwordConfirmField =
+    document.getElementById("admin-user-password-confirm");
+
+  if (
+    !usernameField ||
+    !passwordField ||
+    !passwordConfirmField
+  ) {
+    return;
+  }
+
+  if (
+    !window.crypto ||
+    !window.crypto.getRandomValues
+  ) {
+    alert(
+      "Il browser non supporta la generazione sicura delle credenziali."
+    );
+    return;
+  }
+
+  const usernameBytes =
+    new Uint8Array(4);
+
+  crypto.getRandomValues(usernameBytes);
+
+  const usernameNumber =
+    1000 +
+    (
+      (
+        usernameBytes[0] * 256 +
+        usernameBytes[1]
+      ) % 9000
+    );
+
+  const username =
+    "utente" +
+    String(usernameNumber);
+
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+  const passwordBytes =
+    new Uint8Array(8);
+
+  crypto.getRandomValues(passwordBytes);
+
+  let password = "";
+
+  for (const byte of passwordBytes) {
+    password +=
+      chars[byte % chars.length];
+  }
+
+  usernameField.value =
+    username;
+
+  passwordField.value =
+    password;
+
+  passwordConfirmField.value =
+    password;
+
+  usernameField.dispatchEvent(
+    new Event("input", { bubbles:true })
+  );
+
+  passwordField.dispatchEvent(
+    new Event("input", { bubbles:true })
+  );
+
+  passwordConfirmField.dispatchEvent(
+    new Event("input", { bubbles:true })
+  );
+}
+
+
 async function saveUser() {
 
   const editorView =
@@ -4197,8 +4323,8 @@ async function saveUser() {
   const name =
     document.getElementById("admin-user-name").value.trim();
 
-  const email =
-    document.getElementById("admin-user-email").value.trim();
+  const username =
+    document.getElementById("admin-user-username").value.trim();
 
   const role =
     document.getElementById("admin-user-role").value;
@@ -4217,15 +4343,131 @@ async function saveUser() {
     return;
   }
 
-  if (!email || !email.includes("@")) {
-    alert("Inserisci un indirizzo email valido.");
+  /*
+   * NUOVO UTENTE
+   * Username e password vengono generati automaticamente dal server.
+   */
+  if (!userId) {
+
+    const token =
+      localStorage.getItem("diario_backend_token");
+
+    const button =
+      document.querySelector(
+        '#admin-user-editor-view button[onclick="saveUser()"]'
+      );
+
+    const originalText =
+      button ? button.textContent : "";
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "⏳ Creazione...";
+    }
+
+    try {
+
+      const response =
+        await fetch(
+          BACKEND_API_URL + "/api/admin/users",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+              name: name,
+              username: username,
+              password: password,
+              role: role
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok || !data.ok) {
+
+        if (data.error === "USERNAME_GENERATION_FAILED") {
+          throw new Error(
+            "Impossibile generare automaticamente l'utente."
+          );
+        }
+
+        if (data.error === "ADMIN_REQUIRED") {
+          throw new Error(
+            "Non hai i permessi di amministratore."
+          );
+        }
+
+        throw new Error(
+          "Impossibile creare il nuovo utente."
+        );
+      }
+
+      const generatedUsername =
+        data.credentials &&
+        data.credentials.username
+          ? data.credentials.username
+          : "";
+
+      const generatedPassword =
+        data.credentials &&
+        data.credentials.password
+          ? data.credentials.password
+          : "";
+
+      if (!generatedUsername || !generatedPassword) {
+        throw new Error(
+          "Il server non ha restituito le credenziali generate."
+        );
+      }
+
+      await loadAdminUsers();
+
+      closeUserEditor();
+
+      alert(
+        "NUOVO UTENTE CREATO\n\n" +
+        "👤 UTENTE: " + generatedUsername + "\n" +
+        "🔑 PASSWORD: " + generatedPassword +
+        "\n\n" +
+        "Annota queste credenziali: " +
+        "la password non verrà mostrata nuovamente."
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Errore creazione utente:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "Impossibile creare il nuovo utente."
+      );
+
+    } finally {
+
+      if (button) {
+        button.disabled = false;
+        button.textContent =
+          originalText || "Salva utente";
+      }
+
+    }
+
     return;
   }
 
-  if (!userId && !password) {
-    alert("Per un nuovo utente devi inserire una password.");
-    return;
-  }
+  /*
+   * UTENTE ESISTENTE
+   * Manteniamo la possibilità di modificare
+   * nome, ruolo, stato e password.
+   */
 
   if (password && password.length < 8) {
     alert("La password deve contenere almeno 8 caratteri.");
@@ -4255,79 +4497,39 @@ async function saveUser() {
 
   try {
 
-    let response;
-    let data;
+    const body = {
+      name: name,
+      role: role,
+      status: status
+    };
 
-    if (!userId) {
-
-      response =
-        await fetch(
-          BACKEND_API_URL + "/api/admin/users",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-              name: name,
-              email: email,
-              password: password,
-              role: role
-            })
-          }
-        );
-
-    } else {
-
-      const body = {
-        name: name,
-        email: email,
-        role: role,
-        status: status
-      };
-
-      if (password) {
-        body.password = password;
-      }
-
-      response =
-        await fetch(
-          BACKEND_API_URL +
-          "/api/admin/users/" +
-          encodeURIComponent(userId),
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify(body)
-          }
-        );
-
+    if (password) {
+      body.password = password;
     }
 
-    data =
+    const response =
+      await fetch(
+        BACKEND_API_URL +
+        "/api/admin/users/" +
+        encodeURIComponent(userId),
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify(body)
+        }
+      );
+
+    const data =
       await response.json();
 
     if (!response.ok || !data.ok) {
 
-      if (data.error === "EMAIL_ALREADY_EXISTS") {
-        throw new Error(
-          "Esiste già un utente con questa email."
-        );
-      }
-
       if (data.error === "PASSWORD_TOO_SHORT") {
         throw new Error(
           "La password deve contenere almeno 8 caratteri."
-        );
-      }
-
-      if (data.error === "INVALID_EMAIL") {
-        throw new Error(
-          "L'indirizzo email non è valido."
         );
       }
 
@@ -4368,7 +4570,6 @@ async function saveUser() {
   }
 
 }
-
 
 async function deleteUserFromEditor() {
 
@@ -5801,6 +6002,49 @@ async function addQuick(
   await saveAndRender();
 
 }
+
+
+/* =========================================================
+   RESET AL CAMBIO DEL TIPO DI PASTO
+========================================================= */
+
+document.getElementById("meal-category").addEventListener("change", () => {
+
+  selectedFoodValue = "";
+  selectedFoodDisplayText = "";
+  lastGeminiData = null;
+
+  const selectedLabel =
+    document.getElementById("selected-food-label");
+
+  if (selectedLabel) {
+    selectedLabel.innerText = "🍽️ Scegli alimento...";
+  }
+
+  const multiplier =
+    document.getElementById("portion-multiplier");
+
+  if (multiplier) {
+    multiplier.value = 1;
+  }
+
+  const customFields = [
+    "custom-name",
+    "custom-kcal",
+    "custom-pro",
+    "custom-fat",
+    "custom-carb",
+    "custom-water"
+  ];
+
+  customFields.forEach(id => {
+    const field = document.getElementById(id);
+    if (field) {
+      field.value = "";
+    }
+  });
+
+});
 
 
 /* =========================================================
