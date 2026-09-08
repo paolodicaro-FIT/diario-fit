@@ -6105,7 +6105,144 @@ function openQuickCustomizeModal() {
 
   if (!modal) return;
 
+  renderQuickCustomizeList();
   modal.style.display = "flex";
+}
+
+
+function renderQuickCustomizeList() {
+
+  const container =
+    document.getElementById(
+      "quick-customize-list"
+    );
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const editableItems =
+    quickAddItems.filter(
+      item => !item.isWater
+    ).slice(0, 8);
+
+  editableItems.forEach((item, index) => {
+
+    const row =
+      document.createElement("div");
+
+    row.style.cssText =
+      "display:grid;" +
+      "grid-template-columns:32px 1fr;" +
+      "gap:8px;" +
+      "align-items:center;" +
+      "margin-bottom:9px;";
+
+    const number =
+      document.createElement("strong");
+
+    number.textContent =
+      String(index + 1);
+
+    number.style.textAlign =
+      "center";
+
+    const select =
+      document.createElement("select");
+
+    select.id =
+      `quick-custom-select-${index}`;
+
+    select.style.width =
+      "100%";
+
+    const current =
+      document.createElement("option");
+
+    current.value = "";
+    current.textContent =
+      `${item.emoji || "🍽️"} ${item.label}`;
+
+    current.selected = true;
+
+    select.appendChild(current);
+
+    if (
+      Array.isArray(savedFoods) &&
+      savedFoods.length
+    ) {
+
+      const group =
+        document.createElement("optgroup");
+
+      group.label =
+        "⭐ I miei alimenti";
+
+      savedFoods.forEach((food, foodIndex) => {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          `saved:${foodIndex}`;
+
+        option.textContent =
+          `⭐ ${food.name}`;
+
+        group.appendChild(option);
+
+      });
+
+      select.appendChild(group);
+    }
+
+    const categories =
+      [...new Set(
+        DEFAULT_PRESET_FOODS.map(
+          food => food.category
+        )
+      )];
+
+    categories.forEach(category => {
+
+      const group =
+        document.createElement("optgroup");
+
+      group.label = category;
+
+      DEFAULT_PRESET_FOODS
+        .forEach((food, foodIndex) => {
+
+          if (
+            food.category !== category
+          ) {
+            return;
+          }
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            `preset:${foodIndex}`;
+
+          option.textContent =
+            `${food.emoji} ${food.label}`;
+
+          group.appendChild(option);
+
+        });
+
+      select.appendChild(group);
+
+    });
+
+    row.appendChild(number);
+    row.appendChild(select);
+
+    container.appendChild(row);
+
+  });
+
 }
 
 
