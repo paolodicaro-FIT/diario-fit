@@ -2273,9 +2273,21 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
       <h2>⚡ Inserimento rapido</h2>
 
-      <small>
-        1 tap
-      </small>
+      <div style="display:flex; align-items:center; gap:8px;">
+
+        <small>
+          1 tap
+        </small>
+
+        <button
+          type="button"
+          class="mini-btn"
+          onclick="openQuickCustomizeModal()"
+        >
+          ⚙️
+        </button>
+
+      </div>
 
     </div>
 
@@ -2286,18 +2298,6 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     >
       <!-- Generato dinamicamente via JS da renderQuickGrid() -->
     </div>
-
-    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-      <button
-        type="button"
-        class="save-food-btn"
-        style="padding:7px 12px; font-size:.82rem;"
-        onclick="openQuickCustomizeModal()"
-      >
-        ⚙️ Personalizza
-      </button>
-    </div>
-
 
     <!-- FOOD SELECTOR CUSTOM MODAL TRIGGER -->
 
@@ -6105,7 +6105,7 @@ function openQuickCustomizeModal() {
 
   if (!modal) return;
 
-  modal.classList.add("active");
+  modal.style.display = "flex";
 }
 
 
@@ -6118,7 +6118,7 @@ function closeQuickCustomizeModal() {
 
   if (!modal) return;
 
-  modal.classList.remove("active");
+  modal.style.display = "none";
 }
 
 
