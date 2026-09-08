@@ -2287,6 +2287,17 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       <!-- Generato dinamicamente via JS da renderQuickGrid() -->
     </div>
 
+    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+      <button
+        type="button"
+        class="save-food-btn"
+        style="padding:7px 12px; font-size:.82rem;"
+        onclick="openQuickCustomizeModal()"
+      >
+        ⚙️ Personalizza
+      </button>
+    </div>
+
 
     <!-- FOOD SELECTOR CUSTOM MODAL TRIGGER -->
 
@@ -2484,6 +2495,63 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     <div id="food-options-container">
       <!-- Generato dinamicamente via JS -->
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL PERSONALIZZA INSERIMENTI RAPIDI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="quick-customize-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        ⚙️ Personalizza rapidi
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="closeQuickCustomizeModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div id="quick-customize-list">
+      <!-- Generato dinamicamente via JS -->
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:14px;">
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1;"
+        onclick="saveQuickCustomization()"
+      >
+        💾 Salva
+      </button>
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1; opacity:.75;"
+        onclick="closeQuickCustomizeModal()"
+      >
+        Annulla
+      </button>
+
     </div>
 
   </div>
@@ -6027,6 +6095,32 @@ function updateTargetDisplays() {
 /* =========================================================
    ADD QUICK
 ========================================================= */
+
+function openQuickCustomizeModal() {
+
+  const modal =
+    document.getElementById(
+      "quick-customize-modal"
+    );
+
+  if (!modal) return;
+
+  modal.classList.add("active");
+}
+
+
+function closeQuickCustomizeModal() {
+
+  const modal =
+    document.getElementById(
+      "quick-customize-modal"
+    );
+
+  if (!modal) return;
+
+  modal.classList.remove("active");
+}
+
 
 function renderQuickGrid() {
 
