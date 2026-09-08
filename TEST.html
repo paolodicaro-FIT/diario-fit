@@ -6001,6 +6001,24 @@ async function addQuick(
 
   await saveAndRender();
 
+  resetMealCategory();
+
+}
+
+
+/* =========================================================
+   RESET DEL TIPO DI PASTO
+========================================================= */
+
+function resetMealCategory() {
+
+  const mealCategory =
+    document.getElementById("meal-category");
+
+  if (mealCategory) {
+    mealCategory.value = "";
+  }
+
 }
 
 
@@ -6152,6 +6170,8 @@ async function addFromSelect() {
 
 
   await saveAndRender();
+
+  resetMealCategory();
 
 }
 
@@ -6316,6 +6336,8 @@ async function addCustom() {
   await saveUserSettingsToBackend();
 
   await saveAndRender();
+
+  resetMealCategory();
 
 }
 
