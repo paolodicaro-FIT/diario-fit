@@ -6156,16 +6156,37 @@ function renderQuickCustomizeList() {
     select.style.width =
       "100%";
 
-    const current =
+    const emptyOption =
       document.createElement("option");
 
-    current.value = "";
-    current.textContent =
-      `${item.emoji || "🍽️"} ${item.label}`;
+    emptyOption.value =
+      "empty";
 
-    current.selected = true;
+    emptyOption.textContent =
+      "— Nessun alimento —";
 
-    select.appendChild(current);
+    select.appendChild(emptyOption);
+
+
+    if (item.isEmpty) {
+
+      emptyOption.selected = true;
+
+    } else {
+
+      const current =
+        document.createElement("option");
+
+      current.value = "";
+
+      current.textContent =
+        `${item.emoji || "🍽️"} ${item.label}`;
+
+      current.selected = true;
+
+      select.appendChild(current);
+
+    }
 
     if (
       Array.isArray(savedFoods) &&
@@ -6246,6 +6267,153 @@ function renderQuickCustomizeList() {
 }
 
 
+async function saveQuickCustomization() {
+
+  const currentEditable =
+    quickAddItems.filter(
+      item => !item.isWater
+    ).slice(0, 8);
+
+  const updated = [];
+
+  for (let index = 0; index < 8; index++) {
+
+    const select =
+      document.getElementById(
+        `quick-custom-select-${index}`
+      );
+
+    const value =
+      select ? select.value : "";
+
+    const current =
+      currentEditable[index] || {
+        isEmpty: true,
+        emoji: "",
+        label: ""
+      };
+
+
+    if (value === "") {
+
+      updated.push(current);
+      continue;
+
+    }
+
+
+    if (value === "empty") {
+
+      updated.push({
+        isEmpty: true,
+        emoji: "",
+        label: "",
+        name: "",
+        kcal: 0,
+        pro: 0,
+        fat: 0,
+        carb: 0,
+        sugar: 0,
+        water: 0
+      });
+
+      continue;
+
+    }
+
+
+    if (value.startsWith("saved:")) {
+
+      const foodIndex =
+        Number(value.split(":")[1]);
+
+      const food =
+        savedFoods[foodIndex];
+
+      if (food) {
+
+        updated.push({
+          emoji: "⭐",
+          label: food.name,
+          name: food.name,
+          kcal: Number(food.kcal) || 0,
+          pro: Number(food.pro) || 0,
+          fat: Number(food.fat) || 0,
+          carb: Number(food.carb) || 0,
+          sugar: Number(food.sugar) || 0,
+          water: Number(food.water) || 0
+        });
+
+      } else {
+
+        updated.push(current);
+
+      }
+
+      continue;
+
+    }
+
+
+    if (value.startsWith("preset:")) {
+
+      const foodIndex =
+        Number(value.split(":")[1]);
+
+      const food =
+        DEFAULT_PRESET_FOODS[foodIndex];
+
+      if (food) {
+
+        const parts =
+          String(food.value || "").split("|");
+
+        updated.push({
+          emoji: food.emoji || "🍽️",
+          label: food.label,
+          name: parts[0] || food.label,
+          kcal: Number(parts[1]) || 0,
+          pro: Number(parts[2]) || 0,
+          fat: Number(parts[3]) || 0,
+          carb: Number(parts[4]) || 0,
+          sugar: Number(parts[5]) || 0,
+          water: Number(parts[6]) || 0
+        });
+
+      } else {
+
+        updated.push(current);
+
+      }
+
+    }
+
+  }
+
+
+  const waterItem =
+    quickAddItems.find(
+      item => item.isWater
+    ) ||
+    DEFAULT_QUICK_ITEMS.find(
+      item => item.isWater
+    );
+
+
+  quickAddItems =
+    waterItem
+      ? [...updated, waterItem]
+      : updated;
+
+
+  await saveUserSettingsToBackend();
+
+  renderQuickGrid();
+
+  closeQuickCustomizeModal();
+}
+
+
 function closeQuickCustomizeModal() {
 
   const modal =
@@ -6269,6 +6437,10 @@ function renderQuickGrid() {
   container.innerHTML = "";
 
   quickAddItems.forEach(item => {
+
+    if (item.isEmpty) {
+      return;
+    }
 
     const btn =
       document.createElement("button");
