@@ -2198,6 +2198,10 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
       <select id="meal-category">
 
+        <option value="" selected>
+          🍽️ Scegli pasto...
+        </option>
+
         <option value="Snack / Integrazione">
           🥤 Snack / Integrazione
         </option>
@@ -4732,6 +4736,8 @@ async function initApp() {
 
   await loadUserDiaryFromBackend(isoDateStr);
 
+  resetMealCategory();
+
 
   document.getElementById(
     "display-date"
@@ -5974,6 +5980,11 @@ async function addQuick(
       "meal-category"
     ).value;
 
+  if (!meal) {
+    alert("⚠️ Seleziona prima il tipo di pasto.");
+    return;
+  }
+
 
   log.push({
 
@@ -6093,6 +6104,11 @@ async function addFromSelect() {
     document.getElementById(
       "meal-category"
     ).value;
+
+  if (!meal) {
+    alert("⚠️ Seleziona prima il tipo di pasto.");
+    return;
+  }
 
 
   const baseName =
@@ -6235,6 +6251,11 @@ async function addCustom() {
     document.getElementById(
       "meal-category"
     ).value;
+
+  if (!meal) {
+    alert("⚠️ Seleziona prima il tipo di pasto.");
+    return;
+  }
 
 
   if (!name) {
