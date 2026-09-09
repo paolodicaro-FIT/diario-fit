@@ -43,6 +43,112 @@ href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22
 
 
 /* =========================================================
+   TEMA CHIARO
+========================================================= */
+
+html[data-theme="light"] {
+  --bg: #f4f6f8;
+  --bg-soft: #eef1f4;
+  --card: #ffffff;
+  --card-2: #f5f7f9;
+
+  --text: #17202a;
+  --subtext: #52606d;
+  --muted: #718096;
+
+  --border: rgba(30,41,59,.14);
+
+  --shadow:
+    0 10px 30px rgba(15,23,42,.10);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255,159,28,.10),
+      transparent 30%
+    ),
+    var(--bg);
+}
+
+html[data-theme="light"] #login-overlay {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,159,28,.12),
+      transparent 45%
+    ),
+    var(--bg);
+}
+
+html[data-theme="light"] .login-card {
+  background: rgba(255,255,255,.97);
+  box-shadow:
+    0 25px 70px rgba(15,23,42,.16);
+}
+
+html[data-theme="light"] .modal-overlay {
+  background:
+    rgba(30,41,59,.38);
+}
+
+html[data-theme="light"] .modal-content {
+  background: var(--card);
+  box-shadow:
+    0 25px 70px rgba(15,23,42,.18);
+}
+
+html[data-theme="light"] .loading-plate {
+  background:
+    radial-gradient(
+      circle,
+      var(--bg) 0 13px,
+      rgba(255,159,28,.90) 14px 20px,
+      #dfe4e9 21px 34px,
+      rgba(255,159,28,.90) 35px 42px,
+      #dfe4e9 43px
+    );
+}
+
+html[data-theme="light"] .loading-text {
+  color: var(--text);
+}
+
+.theme-selector {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0,1fr));
+
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.theme-choice {
+  min-height: 38px;
+
+  padding: 7px 5px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 9px;
+
+  background: var(--card-2);
+  color: var(--text);
+
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.theme-choice.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #111827;
+}
+
+
+/* =========================================================
    RESET
 ========================================================= */
 
@@ -3281,12 +3387,188 @@ Il sistema di calcolo dei fabbisogni e dei target energetici si basa su equazion
       all'app.
     </p>
 
+
+    <h4>🌗 Tema</h4>
+
+    <p>
+      Scegli l'aspetto di Diario FIT.
+      Automatico segue il tema del dispositivo.
+    </p>
+
+    <div class="theme-selector">
+
+      <button
+        type="button"
+        class="theme-choice"
+        data-theme-choice="dark"
+        onclick="setThemePreference('dark')"
+      >
+        🌙 Scuro
+      </button>
+
+      <button
+        type="button"
+        class="theme-choice"
+        data-theme-choice="light"
+        onclick="setThemePreference('light')"
+      >
+        ☀️ Chiaro
+      </button>
+
+      <button
+        type="button"
+        class="theme-choice"
+        data-theme-choice="auto"
+        onclick="setThemePreference('auto')"
+      >
+        🔄 Automatico
+      </button>
+
+    </div>
+
   </div>
 
 </div>
 
 
 <script>
+
+/* =========================================================
+   TEMA
+========================================================= */
+
+const THEME_STORAGE_KEY =
+  "diario_theme";
+
+
+function getThemePreference() {
+
+  const saved =
+    localStorage.getItem(
+      THEME_STORAGE_KEY
+    );
+
+  if (
+    saved === "dark"
+    ||
+    saved === "light"
+    ||
+    saved === "auto"
+  ) {
+    return saved;
+  }
+
+  return "auto";
+}
+
+
+function getResolvedTheme(
+  preference = getThemePreference()
+) {
+
+  if (preference === "auto") {
+
+    return window.matchMedia(
+      "(prefers-color-scheme: light)"
+    ).matches
+      ? "light"
+      : "dark";
+
+  }
+
+  return preference;
+}
+
+
+function applyTheme() {
+
+  const preference =
+    getThemePreference();
+
+  const resolved =
+    getResolvedTheme(
+      preference
+    );
+
+  document.documentElement.setAttribute(
+    "data-theme",
+    resolved
+  );
+
+  const metaTheme =
+    document.querySelector(
+      'meta[name="theme-color"]'
+    );
+
+  if (metaTheme) {
+    metaTheme.setAttribute(
+      "content",
+      resolved === "light"
+        ? "#f4f6f8"
+        : "#0b0f14"
+    );
+  }
+
+  document.querySelectorAll(
+    ".theme-choice"
+  ).forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.themeChoice === preference
+    );
+
+  });
+
+}
+
+
+function setThemePreference(
+  preference
+) {
+
+  if (
+    ![
+      "dark",
+      "light",
+      "auto"
+    ].includes(preference)
+  ) {
+    return;
+  }
+
+  localStorage.setItem(
+    THEME_STORAGE_KEY,
+    preference
+  );
+
+  applyTheme();
+
+}
+
+
+const themeMediaQuery =
+  window.matchMedia(
+    "(prefers-color-scheme: light)"
+  );
+
+
+themeMediaQuery.addEventListener(
+  "change",
+  () => {
+
+    if (
+      getThemePreference() === "auto"
+    ) {
+      applyTheme();
+    }
+
+  }
+);
+
+
+applyTheme();
+
 
 /* =========================================================
    CONFIGURAZIONE
