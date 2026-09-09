@@ -1632,6 +1632,95 @@ textarea:focus {
 
 
 /* =========================================================
+   PULSANTE PROGRESSI NEL SOTTOTITOLO
+========================================================= */
+
+.header-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.header-subtitle-row .header-subtitle {
+  margin-top: 0;
+}
+
+.header-progress-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  min-height: 24px;
+  padding: 2px 7px;
+
+  border:
+    1px solid rgba(255,159,28,.22);
+
+  border-radius: 8px;
+
+  background:
+    rgba(255,159,28,.07);
+
+  color: var(--subtext);
+
+  font-size: .64rem;
+  font-weight: 800;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background .2s,
+    border-color .2s,
+    color .2s;
+}
+
+.header-progress-btn:hover {
+  background:
+    rgba(255,159,28,.13);
+
+  border-color:
+    rgba(255,159,28,.40);
+
+  color: var(--accent);
+}
+
+html[data-theme="light"] .header-progress-btn {
+  background:
+    rgba(255,159,28,.08);
+}
+
+@media (max-width: 560px) {
+
+  .header-subtitle-row {
+    gap: 5px;
+  }
+
+  .header-progress-btn {
+    min-height: 21px;
+    padding: 1px 5px;
+    border-radius: 7px;
+    font-size: .58rem;
+  }
+
+}
+
+@media (max-width: 370px) {
+
+  .header-progress-btn {
+    padding: 1px 4px;
+  }
+
+  .header-progress-btn span {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
    PROGRESSI PESO
 ========================================================= */
 
@@ -2469,11 +2558,24 @@ html[data-theme="light"]
         </span>
       </button>
 
-      <div
-        class="header-subtitle"
-        id="header-subtitle"
-      >
-        diario di PAOLO
+      <div class="header-subtitle-row">
+
+        <div
+          class="header-subtitle"
+          id="header-subtitle"
+        >
+          diario di PAOLO
+        </div>
+
+        <button
+          type="button"
+          class="header-progress-btn"
+          onclick="toggleProgressModal()"
+          title="Progressi peso"
+        >
+          ⚖️ <span>Progressi</span>
+        </button>
+
       </div>
 
     </div>
@@ -2507,13 +2609,6 @@ html[data-theme="light"]
         📅 <span class="label">Storico</span>
       </button>
 
-      <button
-        class="toolbar-btn"
-        onclick="toggleProgressModal()"
-        title="Progressi"
-      >
-        ⚖️ <span class="label">Progressi</span>
-      </button>
 
       <button
         class="toolbar-btn danger"
