@@ -2225,6 +2225,144 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
 /* CARD METRICHE */
 
+/* Target impostati: valore e unità sulla stessa riga */
+.target-value-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px;
+
+  margin-top: 1px;
+
+  white-space: nowrap;
+}
+
+.target-item .target-value-line strong {
+  display: inline;
+
+  margin-top: 0;
+}
+
+.target-value-line > span {
+  color: var(--subtext);
+  font-size: .72em;
+  font-weight: 700;
+}
+
+
+/* Dashboard compatto: raggiunto / target / unità */
+.dashboard-grid .metric {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.dashboard-grid .metric-icon {
+  margin-bottom: 3px;
+}
+
+.metric-reading {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+
+  gap: 2px;
+
+  min-width: 0;
+
+  white-space: nowrap;
+
+  line-height: 1.05;
+}
+
+.dashboard-grid .metric-reading .metric-value {
+  font-size: .98rem;
+  font-weight: 900;
+}
+
+.metric-separator {
+  color: var(--muted);
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.metric-target {
+  color: var(--subtext);
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.metric-unit {
+  color: var(--muted);
+  font-size: .58rem;
+  font-weight: 700;
+}
+
+.dashboard-grid .progress {
+  margin-top: 5px;
+}
+
+@media (max-width: 560px) {
+
+  .target-item {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .target-value-line {
+    gap: 2px;
+  }
+
+  .dashboard-grid .metric {
+    padding:
+      5px 3px;
+  }
+
+  .dashboard-grid .metric-icon {
+    width: 26px;
+    height: 26px;
+
+    margin-bottom: 2px;
+
+    font-size: .88rem;
+  }
+
+  .dashboard-grid .metric-reading .metric-value {
+    font-size: .82rem;
+  }
+
+  .metric-separator,
+  .metric-target {
+    font-size: .58rem;
+  }
+
+  .metric-unit {
+    font-size: .50rem;
+  }
+
+  .dashboard-grid .progress {
+    margin-top: 4px;
+  }
+
+}
+
+@media (max-width: 370px) {
+
+  .dashboard-grid .metric-reading .metric-value {
+    font-size: .75rem;
+  }
+
+  .metric-separator,
+  .metric-target {
+    font-size: .53rem;
+  }
+
+  .metric-unit {
+    font-size: .46rem;
+  }
+
+}
+
+
 .dashboard-grid .metric {
   position: relative;
 
@@ -2721,38 +2859,50 @@ html[data-theme="light"]
 
       <div class="target-item">
         🔥
-        <strong id="box-target-kcal">2000</strong>
-        kcal
+        <span class="target-value-line">
+          <strong id="box-target-kcal">2000</strong>
+          <span>kcal</span>
+        </span>
       </div>
 
       <div class="target-item">
         🥩
-        <strong id="box-target-pro">160</strong>
-        P
+        <span class="target-value-line">
+          <strong id="box-target-pro">160</strong>
+          <span>P</span>
+        </span>
       </div>
 
       <div class="target-item">
         🥑
-        <strong id="box-target-fat">65</strong>
-        G
+        <span class="target-value-line">
+          <strong id="box-target-fat">65</strong>
+          <span>G</span>
+        </span>
       </div>
 
       <div class="target-item">
         🍞
-        <strong id="box-target-carb">180</strong>
-        C
+        <span class="target-value-line">
+          <strong id="box-target-carb">180</strong>
+          <span>C</span>
+        </span>
       </div>
 
       <div class="target-item">
         🍬
-        <strong id="box-target-sugar">50</strong>
-        g
+        <span class="target-value-line">
+          <strong id="box-target-sugar">50</strong>
+          <span>g</span>
+        </span>
       </div>
 
       <div class="target-item target-water-wide">
         💧
-        <strong id="box-target-water">2500</strong>
-        ml
+        <span class="target-value-line">
+          <strong id="box-target-water">2500</strong>
+          <span>ml</span>
+        </span>
       </div>
 
     </div>
@@ -2829,16 +2979,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">🔥</div>
 
-        <div
-          class="metric-value"
-          id="tot-kcal"
-        >
-          0
-        </div>
-
-        <div class="metric-label">
-          Kcal /
-          <span id="target-kcal-val">2000</span>
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-kcal"
+          >0</span>
+          <span class="metric-unit">kcal</span>
         </div>
 
         <div class="progress">
@@ -2855,16 +3001,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">🥩</div>
 
-        <div
-          class="metric-value"
-          id="tot-pro"
-        >
-          0g
-        </div>
-
-        <div class="metric-label">
-          P /
-          <span id="target-pro-val">160</span>g
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-pro"
+          >0</span>
+          <span class="metric-unit">g</span>
         </div>
 
         <div class="progress">
@@ -2881,16 +3023,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">🥑</div>
 
-        <div
-          class="metric-value"
-          id="tot-fat"
-        >
-          0g
-        </div>
-
-        <div class="metric-label">
-          G /
-          <span id="target-fat-val">65</span>g
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-fat"
+          >0</span>
+          <span class="metric-unit">g</span>
         </div>
 
         <div class="progress">
@@ -2907,16 +3045,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">🍞</div>
 
-        <div
-          class="metric-value"
-          id="tot-carb"
-        >
-          0g
-        </div>
-
-        <div class="metric-label">
-          C /
-          <span id="target-carb-val">180</span>g
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-carb"
+          >0</span>
+          <span class="metric-unit">g</span>
         </div>
 
         <div class="progress">
@@ -2933,16 +3067,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">🍬</div>
 
-        <div
-          class="metric-value"
-          id="tot-sugar"
-        >
-          0g
-        </div>
-
-        <div class="metric-label">
-          Zuccheri /
-          <span id="target-sugar-val">50</span>g
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-sugar"
+          >0</span>
+          <span class="metric-unit">g</span>
         </div>
 
         <div class="progress">
@@ -2959,16 +3089,12 @@ html[data-theme="light"]
 
         <div class="metric-icon">💧</div>
 
-        <div
-          class="metric-value"
-          id="tot-water"
-        >
-          0ml
-        </div>
-
-        <div class="metric-label">
-          H₂O /
-          <span id="target-water-val">2500</span>
+        <div class="metric-reading">
+          <span
+            class="metric-value"
+            id="tot-water"
+          >0</span>
+          <span class="metric-unit">ml</span>
         </div>
 
         <div class="progress">
@@ -7889,41 +8015,6 @@ function updateTargetDisplays() {
     TARGETS.water;
 
 
-  document.getElementById(
-    "target-kcal-val"
-  ).innerText =
-    TARGETS.kcal;
-
-
-  document.getElementById(
-    "target-pro-val"
-  ).innerText =
-    TARGETS.pro;
-
-
-  document.getElementById(
-    "target-fat-val"
-  ).innerText =
-    TARGETS.fat;
-
-
-  document.getElementById(
-    "target-carb-val"
-  ).innerText =
-    TARGETS.carb;
-
-
-  document.getElementById(
-    "target-sugar-val"
-  ).innerText =
-    TARGETS.sugar;
-
-
-  document.getElementById(
-    "target-water-val"
-  ).innerText =
-    TARGETS.water;
-
 }
 
 
@@ -8837,31 +8928,31 @@ function updateDashboard() {
   document.getElementById(
     "tot-pro"
   ).innerText =
-    totPro + "g";
+    totPro;
 
 
   document.getElementById(
     "tot-fat"
   ).innerText =
-    totFat + "g";
+    totFat;
 
 
   document.getElementById(
     "tot-carb"
   ).innerText =
-    totCarb + "g";
+    totCarb;
 
 
   document.getElementById(
     "tot-sugar"
   ).innerText =
-    totSugar + "g";
+    totSugar;
 
 
   document.getElementById(
     "tot-water"
   ).innerText =
-    totWater + "ml";
+    totWater;
 
 
   updateProgressBar(
