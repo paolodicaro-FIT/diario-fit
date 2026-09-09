@@ -430,6 +430,31 @@ button:active {
   color: var(--accent);
 }
 
+.header-title-btn {
+  display: block;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.header-title-btn:hover {
+  opacity: .85;
+}
+
+.header-title-btn:focus-visible {
+  outline:
+    2px solid var(--accent);
+
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+
 .header-subtitle {
   margin-top: 2px;
 
@@ -1947,9 +1972,14 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     <div class="brand">
 
-      <h1 class="header-title">
+      <button
+        type="button"
+        class="header-title header-title-btn"
+        onclick="toggleInfoModal()"
+        title="Informazioni su Diario FIT"
+      >
         💪 Diario <span>FIT</span>
-      </h1>
+      </button>
 
       <div
         class="header-subtitle"
@@ -3279,6 +3309,94 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     >
       Calcola e imposta target
     </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL INFO
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="info-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        💪 Diario FIT
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleInfoModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <h4>🎯 Cos'è Diario FIT</h4>
+
+    <p>
+      Diario FIT è un diario alimentare personale
+      pensato per monitorare in modo semplice e rapido
+      l'alimentazione quotidiana.
+    </p>
+
+
+    <h4>📊 Cosa controlla</h4>
+
+    <p>
+      Tiene sotto controllo calorie, proteine,
+      grassi, carboidrati, zuccheri e acqua,
+      confrontandoli con i tuoi target giornalieri.
+    </p>
+
+
+    <h4>🍽️ Come usarlo</h4>
+
+    <p>
+      Seleziona il pasto, registra gli alimenti
+      tramite i pulsanti rapidi, il catalogo,
+      l'inserimento libero oppure Gemini.
+      Il registro e i totali della giornata
+      si aggiornano automaticamente.
+    </p>
+
+
+    <h4>🤖 Supporto Gemini</h4>
+
+    <p>
+      Puoi descrivere un alimento o fotografare
+      un pasto per ottenere una stima indicativa
+      di porzione, calorie e macronutrienti.
+    </p>
+
+
+    <h4>📚 Storico</h4>
+
+    <p>
+      Le giornate precedenti vengono archiviate
+      nello storico per permetterti di controllare
+      l'andamento nel tempo.
+    </p>
+
+
+    <h4>ℹ️ Nota importante</h4>
+
+    <p>
+      Diario FIT è uno strumento di monitoraggio
+      personale e non sostituisce il parere
+      di un medico o di un professionista
+      della nutrizione.
+    </p>
 
   </div>
 
@@ -5305,6 +5423,21 @@ function changeMultiplier(amount) {
 /* =========================================================
    MODALS
 ========================================================= */
+
+function toggleInfoModal() {
+
+  const modal =
+    document.getElementById(
+      "info-modal"
+    );
+
+  modal.style.display =
+    modal.style.display === "flex"
+      ? "none"
+      : "flex";
+
+}
+
 
 function toggleHelpModal() {
 
