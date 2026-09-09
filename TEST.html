@@ -1632,6 +1632,245 @@ textarea:focus {
 
 
 /* =========================================================
+   PULSANTE PROGRESSI NEL SOTTOTITOLO
+========================================================= */
+
+.header-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.header-subtitle-row .header-subtitle {
+  margin-top: 0;
+}
+
+.header-progress-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  min-height: 24px;
+  padding: 2px 7px;
+
+  border:
+    1px solid rgba(255,159,28,.22);
+
+  border-radius: 8px;
+
+  background:
+    rgba(255,159,28,.07);
+
+  color: var(--subtext);
+
+  font-size: .64rem;
+  font-weight: 800;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background .2s,
+    border-color .2s,
+    color .2s;
+}
+
+.header-progress-btn:hover {
+  background:
+    rgba(255,159,28,.13);
+
+  border-color:
+    rgba(255,159,28,.40);
+
+  color: var(--accent);
+}
+
+html[data-theme="light"] .header-progress-btn {
+  background:
+    rgba(255,159,28,.08);
+}
+
+@media (max-width: 560px) {
+
+  .header-subtitle-row {
+    gap: 5px;
+  }
+
+  .header-progress-btn {
+    min-height: 21px;
+    padding: 1px 5px;
+    border-radius: 7px;
+    font-size: .58rem;
+  }
+
+}
+
+@media (max-width: 370px) {
+
+  .header-progress-btn {
+    padding: 1px 4px;
+  }
+
+  .header-progress-btn span {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   PROGRESSI PESO
+========================================================= */
+
+.progress-modal-content {
+  max-width: 560px;
+}
+
+.progress-weight-entry {
+  padding: 2px 0 10px;
+}
+
+.progress-weight-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.progress-weight-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.progress-weight-input-wrap input {
+  width: 100%;
+  height: 42px;
+  padding-right: 40px;
+}
+
+.progress-weight-input-wrap span {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: .76rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.progress-save-btn {
+  flex: 0 0 auto;
+  min-width: 82px;
+  height: 42px;
+  padding: 0 14px;
+}
+
+.progress-message {
+  min-height: 18px;
+  margin-top: 6px;
+  color: var(--subtext);
+  font-size: .68rem;
+}
+
+.progress-message.success {
+  color: var(--green);
+}
+
+.progress-message.error {
+  color: var(--red);
+}
+
+.progress-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px;
+  margin: 4px 0 14px;
+}
+
+.progress-summary-item {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+  text-align: center;
+}
+
+.progress-summary-item span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: .65rem;
+  font-weight: 700;
+}
+
+.progress-summary-item strong {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.progress-chart-section {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.progress-chart-title {
+  margin-bottom: 8px;
+  color: var(--subtext);
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.progress-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 250px;
+}
+
+#progress-weight-chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.progress-empty {
+  padding: 22px 8px;
+  color: var(--muted);
+  font-size: .74rem;
+  text-align: center;
+}
+
+html[data-theme="light"] .progress-summary-item {
+  background: var(--card-2);
+}
+
+@media (max-width: 560px) {
+  .progress-modal-content {
+    padding: 13px;
+  }
+
+  .progress-weight-row {
+    gap: 6px;
+  }
+
+  .progress-save-btn {
+    min-width: 72px;
+    padding: 0 10px;
+  }
+
+  .progress-chart-wrap {
+    height: 220px;
+  }
+
+  .progress-summary-item {
+    padding: 8px 5px;
+  }
+}
+
+
+/* =========================================================
    RESPONSIVE DESKTOP
 ========================================================= */
 
@@ -2319,11 +2558,24 @@ html[data-theme="light"]
         </span>
       </button>
 
-      <div
-        class="header-subtitle"
-        id="header-subtitle"
-      >
-        diario di PAOLO
+      <div class="header-subtitle-row">
+
+        <div
+          class="header-subtitle"
+          id="header-subtitle"
+        >
+          diario di PAOLO
+        </div>
+
+        <button
+          type="button"
+          class="header-progress-btn"
+          onclick="toggleProgressModal()"
+          title="Progressi peso"
+        >
+          ⚖️ <span>Progressi</span>
+        </button>
+
       </div>
 
     </div>
@@ -2356,6 +2608,7 @@ html[data-theme="light"]
       >
         📅 <span class="label">Storico</span>
       </button>
+
 
       <button
         class="toolbar-btn danger"
@@ -3650,6 +3903,109 @@ html[data-theme="light"]
 
   </div>
 
+</div>
+
+
+<!-- =====================================================
+     MODAL PROGRESSI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="progress-modal"
+>
+  <div class="modal-content progress-modal-content">
+
+    <div class="modal-header">
+      <h3>⚖️ Progressi</h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleProgressModal()"
+        title="Chiudi"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="progress-weight-entry">
+
+      <label for="progress-weight-input">
+        Peso attuale
+      </label>
+
+      <div class="progress-weight-row">
+
+        <div class="progress-weight-input-wrap">
+          <input
+            type="number"
+            id="progress-weight-input"
+            min="20"
+            max="500"
+            step="0.1"
+            inputmode="decimal"
+            placeholder="es. 78,4"
+          >
+          <span>kg</span>
+        </div>
+
+        <button
+          type="button"
+          class="btn primary progress-save-btn"
+          onclick="saveCurrentWeight()"
+        >
+          Salva
+        </button>
+
+      </div>
+
+      <div
+        class="progress-message"
+        id="progress-message"
+      ></div>
+
+    </div>
+
+    <div
+      class="progress-summary"
+      id="progress-summary"
+      style="display:none;"
+    >
+      <div class="progress-summary-item">
+        <span>Ultimo peso</span>
+        <strong id="progress-latest-weight">—</strong>
+      </div>
+
+      <div class="progress-summary-item">
+        <span>Variazione</span>
+        <strong id="progress-weight-change">—</strong>
+      </div>
+    </div>
+
+    <div class="progress-chart-section">
+
+      <div class="progress-chart-title">
+        Andamento peso
+      </div>
+
+      <div
+        class="progress-empty"
+        id="progress-empty"
+      >
+        Nessuna rilevazione registrata.
+      </div>
+
+      <div
+        class="progress-chart-wrap"
+        id="progress-chart-wrap"
+        style="display:none;"
+      >
+        <canvas id="progress-weight-chart"></canvas>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 
@@ -5799,6 +6155,623 @@ function toggleInfoModal() {
       : "flex";
 
 }
+
+
+let weightHistory = [];
+
+
+async function toggleProgressModal() {
+
+  const modal =
+    document.getElementById(
+      "progress-modal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  if (
+    getComputedStyle(modal).display !== "none"
+  ) {
+    modal.style.display = "none";
+    return;
+  }
+
+  modal.style.display = "flex";
+
+  const input =
+    document.getElementById(
+      "progress-weight-input"
+    );
+
+  const message =
+    document.getElementById(
+      "progress-message"
+    );
+
+  if (message) {
+    message.textContent = "";
+    message.className = "progress-message";
+  }
+
+  try {
+
+    await loadWeightHistory();
+
+    if (
+      input &&
+      weightHistory.length
+    ) {
+      input.value =
+        Number(
+          weightHistory[
+            weightHistory.length - 1
+          ].weight
+        ).toFixed(1);
+    }
+
+    setTimeout(
+      () => input?.focus(),
+      50
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    showProgressMessage(
+      "Impossibile caricare lo storico peso.",
+      "error"
+    );
+
+  }
+
+}
+
+
+async function loadWeightHistory() {
+
+  const data =
+    await apiFetch(
+      "/api/user/weight?limit=1000"
+    );
+
+  weightHistory =
+    Array.isArray(data.history)
+      ? data.history
+          .map(item => ({
+            date: String(item.date || ""),
+            weight: Number(item.weight)
+          }))
+          .filter(item =>
+            item.date &&
+            Number.isFinite(item.weight)
+          )
+          .sort(
+            (a, b) =>
+              a.date.localeCompare(b.date)
+          )
+      : [];
+
+  renderWeightProgress();
+
+  return data;
+}
+
+
+async function saveCurrentWeight() {
+
+  const input =
+    document.getElementById(
+      "progress-weight-input"
+    );
+
+  if (!input) {
+    return;
+  }
+
+  const normalized =
+    String(input.value || "")
+      .trim()
+      .replace(",", ".");
+
+  const weight =
+    Number(normalized);
+
+  if (
+    !Number.isFinite(weight) ||
+    weight < 20 ||
+    weight > 500
+  ) {
+    showProgressMessage(
+      "Inserisci un peso valido tra 20 e 500 kg.",
+      "error"
+    );
+    return;
+  }
+
+  const button =
+    document.querySelector(
+      "#progress-modal .progress-save-btn"
+    );
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Salvo…";
+  }
+
+  showProgressMessage(
+    "Salvataggio in corso…"
+  );
+
+  try {
+
+    await apiFetch(
+      "/api/user/weight",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          date: getLocalISODate(),
+          weight:
+            Math.round(weight * 10) / 10
+        })
+      }
+    );
+
+    await loadWeightHistory();
+
+    input.value =
+      (
+        Math.round(weight * 10) / 10
+      ).toFixed(1);
+
+    showProgressMessage(
+      "Peso salvato.",
+      "success"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    showProgressMessage(
+      "Errore durante il salvataggio del peso.",
+      "error"
+    );
+
+  } finally {
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Salva";
+    }
+
+  }
+
+}
+
+
+function showProgressMessage(
+  text,
+  type = ""
+) {
+
+  const element =
+    document.getElementById(
+      "progress-message"
+    );
+
+  if (!element) {
+    return;
+  }
+
+  element.textContent = text;
+
+  element.className =
+    "progress-message" +
+    (type ? " " + type : "");
+
+}
+
+
+function renderWeightProgress() {
+
+  const summary =
+    document.getElementById(
+      "progress-summary"
+    );
+
+  const empty =
+    document.getElementById(
+      "progress-empty"
+    );
+
+  const chartWrap =
+    document.getElementById(
+      "progress-chart-wrap"
+    );
+
+  if (!weightHistory.length) {
+
+    if (summary) {
+      summary.style.display = "none";
+    }
+
+    if (empty) {
+      empty.style.display = "block";
+    }
+
+    if (chartWrap) {
+      chartWrap.style.display = "none";
+    }
+
+    return;
+  }
+
+  const first =
+    weightHistory[0];
+
+  const latest =
+    weightHistory[
+      weightHistory.length - 1
+    ];
+
+  const change =
+    latest.weight - first.weight;
+
+  const latestEl =
+    document.getElementById(
+      "progress-latest-weight"
+    );
+
+  const changeEl =
+    document.getElementById(
+      "progress-weight-change"
+    );
+
+  if (latestEl) {
+    latestEl.textContent =
+      latest.weight.toFixed(1) + " kg";
+  }
+
+  if (changeEl) {
+
+    if (weightHistory.length < 2) {
+      changeEl.textContent = "—";
+    } else {
+      changeEl.textContent =
+        (change > 0 ? "+" : "") +
+        change.toFixed(1) +
+        " kg";
+    }
+
+  }
+
+  if (summary) {
+    summary.style.display = "grid";
+  }
+
+  if (empty) {
+    empty.style.display = "none";
+  }
+
+  if (chartWrap) {
+    chartWrap.style.display = "block";
+  }
+
+  requestAnimationFrame(
+    drawWeightChart
+  );
+
+}
+
+
+function drawWeightChart() {
+
+  const canvas =
+    document.getElementById(
+      "progress-weight-chart"
+    );
+
+  const wrap =
+    document.getElementById(
+      "progress-chart-wrap"
+    );
+
+  if (
+    !canvas ||
+    !wrap ||
+    !weightHistory.length
+  ) {
+    return;
+  }
+
+  const rect =
+    wrap.getBoundingClientRect();
+
+  if (
+    rect.width <= 0 ||
+    rect.height <= 0
+  ) {
+    return;
+  }
+
+  const dpr =
+    window.devicePixelRatio || 1;
+
+  canvas.width =
+    Math.round(rect.width * dpr);
+
+  canvas.height =
+    Math.round(rect.height * dpr);
+
+  const ctx =
+    canvas.getContext("2d");
+
+  ctx.setTransform(
+    dpr, 0, 0, dpr, 0, 0
+  );
+
+  const width = rect.width;
+  const height = rect.height;
+
+  ctx.clearRect(
+    0, 0, width, height
+  );
+
+  const styles =
+    getComputedStyle(
+      document.documentElement
+    );
+
+  const textColor =
+    styles.getPropertyValue(
+      "--muted"
+    ).trim() || "#8b98a8";
+
+  const accent =
+    styles.getPropertyValue(
+      "--accent"
+    ).trim() || "#ff9f1c";
+
+  const border =
+    styles.getPropertyValue(
+      "--border"
+    ).trim() ||
+    "rgba(255,255,255,.10)";
+
+  const left = 42;
+  const right = 12;
+  const top = 14;
+  const bottom = 32;
+
+  const plotWidth =
+    width - left - right;
+
+  const plotHeight =
+    height - top - bottom;
+
+  const weights =
+    weightHistory.map(
+      item => item.weight
+    );
+
+  let minWeight =
+    Math.min(...weights);
+
+  let maxWeight =
+    Math.max(...weights);
+
+  if (minWeight === maxWeight) {
+    minWeight -= 1;
+    maxWeight += 1;
+  } else {
+    const padding =
+      Math.max(
+        (maxWeight - minWeight) * .15,
+        .5
+      );
+
+    minWeight -= padding;
+    maxWeight += padding;
+  }
+
+  ctx.font =
+    "10px system-ui, sans-serif";
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = border;
+  ctx.fillStyle = textColor;
+
+  const gridLines = 4;
+
+  for (
+    let i = 0;
+    i <= gridLines;
+    i++
+  ) {
+
+    const y =
+      top +
+      (plotHeight / gridLines) * i;
+
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(
+      width - right,
+      y
+    );
+    ctx.stroke();
+
+    const value =
+      maxWeight -
+      (
+        (maxWeight - minWeight) /
+        gridLines
+      ) * i;
+
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(
+      value.toFixed(1),
+      left - 6,
+      y
+    );
+
+  }
+
+  const count =
+    weightHistory.length;
+
+  const points =
+    weightHistory.map(
+      (item, index) => {
+
+        const x =
+          count === 1
+            ? left + plotWidth / 2
+            : left +
+              (
+                plotWidth *
+                index /
+                (count - 1)
+              );
+
+        const y =
+          top +
+          (
+            (
+              maxWeight -
+              item.weight
+            ) /
+            (
+              maxWeight -
+              minWeight
+            )
+          ) *
+          plotHeight;
+
+        return {
+          x,
+          y,
+          item
+        };
+
+      }
+    );
+
+  if (points.length > 1) {
+
+    ctx.beginPath();
+
+    points.forEach(
+      (point, index) => {
+
+        if (index === 0) {
+          ctx.moveTo(
+            point.x,
+            point.y
+          );
+        } else {
+          ctx.lineTo(
+            point.x,
+            point.y
+          );
+        }
+
+      }
+    );
+
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+  }
+
+  points.forEach(point => {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      point.x,
+      point.y,
+      3.5,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle = accent;
+    ctx.fill();
+
+  });
+
+  const labelIndexes =
+    count <= 4
+      ? points.map(
+          (_, index) => index
+        )
+      : [
+          0,
+          Math.round(
+            (count - 1) / 2
+          ),
+          count - 1
+        ];
+
+  ctx.fillStyle = textColor;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.font =
+    "10px system-ui, sans-serif";
+
+  [...new Set(labelIndexes)]
+    .forEach(index => {
+
+      const point =
+        points[index];
+
+      const parts =
+        point.item.date.split("-");
+
+      const label =
+        parts.length === 3
+          ? parts[2] + "/" + parts[1]
+          : point.item.date;
+
+      ctx.fillText(
+        label,
+        point.x,
+        height - bottom + 10
+      );
+
+    });
+
+}
+
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    const modal =
+      document.getElementById(
+        "progress-modal"
+      );
+
+    if (
+      modal &&
+      getComputedStyle(modal).display !== "none" &&
+      weightHistory.length
+    ) {
+      drawWeightChart();
+    }
+
+  }
+);
 
 
 function toggleHelpModal() {
