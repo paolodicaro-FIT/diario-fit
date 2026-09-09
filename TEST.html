@@ -1950,6 +1950,278 @@ input, select, .food-picker-trigger { font-size: .94rem; }
   input, select, .food-picker-trigger, ::placeholder { font-size: .82rem; }
 }
 
+
+/* =========================================================
+   DIARIO FIT - HEADER + DASHBOARD 2.0
+========================================================= */
+
+.header-title-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-brand-icon {
+  display: block;
+
+  width: 27px;
+  height: 27px;
+
+  flex: 0 0 27px;
+
+  border-radius: 8px;
+
+  object-fit: cover;
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10),
+    0 3px 10px rgba(0,0,0,.20);
+}
+
+.header-title-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+
+/* CARD METRICHE */
+
+.dashboard-grid .metric {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.012)
+    ),
+    var(--card-2);
+
+  border:
+    1px solid var(--metric-border, var(--border));
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 4px 14px rgba(0,0,0,.10);
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.dashboard-grid .metric::before {
+  content: "";
+
+  position: absolute;
+
+  width: 42px;
+  height: 42px;
+
+  top: -18px;
+  right: -18px;
+
+  border-radius: 50%;
+
+  background:
+    var(--metric-glow, transparent);
+
+  filter: blur(13px);
+
+  opacity: .55;
+
+  pointer-events: none;
+}
+
+.dashboard-grid .metric-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 29px;
+  height: 29px;
+
+  margin:
+    0 auto 4px;
+
+  border-radius: 50%;
+
+  background:
+    var(
+      --metric-icon-bg,
+      rgba(255,159,28,.12)
+    );
+
+  border:
+    1px solid
+    var(
+      --metric-border,
+      rgba(255,159,28,.25)
+    );
+
+  box-shadow:
+    0 0 12px
+    var(
+      --metric-glow,
+      rgba(255,159,28,.10)
+    );
+
+  font-size: .94rem;
+}
+
+.dashboard-grid .metric-value {
+  color:
+    var(
+      --metric-color,
+      var(--accent)
+    );
+
+  text-shadow:
+    0 0 12px
+    var(
+      --metric-glow,
+      transparent
+    );
+}
+
+.dashboard-grid .metric-label {
+  color: var(--subtext);
+}
+
+
+/* CALORIE */
+
+.metric.kcal {
+  --metric-color: #ff9f1c;
+  --metric-border: rgba(255,159,28,.36);
+  --metric-icon-bg: rgba(255,159,28,.13);
+  --metric-glow: rgba(255,159,28,.28);
+}
+
+
+/* PROTEINE */
+
+.metric.protein {
+  --metric-color: #4ade80;
+  --metric-border: rgba(74,222,128,.35);
+  --metric-icon-bg: rgba(74,222,128,.12);
+  --metric-glow: rgba(74,222,128,.26);
+}
+
+
+/* GRASSI */
+
+.metric.fat {
+  --metric-color: #facc15;
+  --metric-border: rgba(250,204,21,.34);
+  --metric-icon-bg: rgba(250,204,21,.11);
+  --metric-glow: rgba(250,204,21,.24);
+}
+
+
+/* CARBOIDRATI */
+
+.metric.carb {
+  --metric-color: #38bdf8;
+  --metric-border: rgba(56,189,248,.35);
+  --metric-icon-bg: rgba(56,189,248,.11);
+  --metric-glow: rgba(56,189,248,.25);
+}
+
+
+/* ZUCCHERI */
+
+.metric.sugar {
+  --metric-color: #f472b6;
+  --metric-border: rgba(244,114,182,.35);
+  --metric-icon-bg: rgba(244,114,182,.11);
+  --metric-glow: rgba(244,114,182,.25);
+}
+
+
+/* ACQUA */
+
+.metric.water {
+  --metric-color: #38bdf8;
+  --metric-border: rgba(56,189,248,.38);
+  --metric-icon-bg: rgba(56,189,248,.12);
+  --metric-glow: rgba(56,189,248,.28);
+}
+
+.metric.water .metric-value {
+  color:
+    var(--metric-color);
+}
+
+
+/* TEMA CHIARO */
+
+html[data-theme="light"]
+.dashboard-grid .metric {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(241,245,249,.96)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 4px 14px rgba(15,23,42,.07);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 560px) {
+
+  .header-brand-icon {
+    width: 24px;
+    height: 24px;
+
+    flex-basis: 24px;
+
+    border-radius: 7px;
+  }
+
+  .header-title-btn {
+    gap: 5px;
+  }
+
+  .dashboard-grid .metric-icon {
+    width: 25px;
+    height: 25px;
+
+    margin-bottom: 3px;
+
+    font-size: .82rem;
+  }
+
+}
+
+
+@media (max-width: 370px) {
+
+  .header-brand-icon {
+    width: 22px;
+    height: 22px;
+
+    flex-basis: 22px;
+  }
+
+  .dashboard-grid .metric-icon {
+    width: 23px;
+    height: 23px;
+
+    font-size: .76rem;
+  }
+
+}
+
+
 </style>
 </head>
 
@@ -2037,7 +2309,14 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         onclick="toggleInfoModal()"
         title="Informazioni su Diario FIT"
       >
-        💪 Diario <span>FIT</span>
+        <img
+          src="icon-192.png"
+          alt=""
+          class="header-brand-icon"
+        >
+        <span class="header-title-text">
+          Diario <span>FIT</span>
+        </span>
       </button>
 
       <div
@@ -2293,7 +2572,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 
     <div class="dashboard-grid">
 
-      <div class="metric">
+      <div class="metric kcal">
 
         <div class="metric-icon">🔥</div>
 
@@ -2319,7 +2598,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       </div>
 
 
-      <div class="metric">
+      <div class="metric protein">
 
         <div class="metric-icon">🥩</div>
 
@@ -2345,7 +2624,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       </div>
 
 
-      <div class="metric">
+      <div class="metric fat">
 
         <div class="metric-icon">🥑</div>
 
@@ -2371,7 +2650,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       </div>
 
 
-      <div class="metric">
+      <div class="metric carb">
 
         <div class="metric-icon">🍞</div>
 
@@ -2397,7 +2676,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
       </div>
 
 
-      <div class="metric">
+      <div class="metric sugar">
 
         <div class="metric-icon">🍬</div>
 
