@@ -7420,6 +7420,56 @@ function renderHistory() {
       const dayData =
         historyLogs[dateKey];
 
+      const dayLog =
+        Array.isArray(dayData.log)
+          ? dayData.log
+          : [];
+
+      const calculatedSummary =
+        dayLog.reduce(
+          (tot, item) => {
+            tot.kcal += Number(item.kcal) || 0;
+            tot.pro += Number(item.pro) || 0;
+            tot.fat += Number(item.fat) || 0;
+            tot.carb += Number(item.carb) || 0;
+            tot.sugar += Number(item.sugar) || 0;
+            tot.water += Number(item.waterMl ?? item.water) || 0;
+            return tot;
+          },
+          {
+            kcal: 0,
+            pro: 0,
+            fat: 0,
+            carb: 0,
+            sugar: 0,
+            water: 0
+          }
+        );
+
+      const storedSummary =
+        dayData.summary || {};
+
+      const summary = {
+        kcal:
+          storedSummary.kcal ??
+          calculatedSummary.kcal,
+        pro:
+          storedSummary.pro ??
+          calculatedSummary.pro,
+        fat:
+          storedSummary.fat ??
+          calculatedSummary.fat,
+        carb:
+          storedSummary.carb ??
+          calculatedSummary.carb,
+        sugar:
+          storedSummary.sugar ??
+          calculatedSummary.sugar,
+        water:
+          storedSummary.water ??
+          calculatedSummary.water
+      };
+
 
       html += `
 
@@ -7431,11 +7481,12 @@ function renderHistory() {
 
           <div class="history-summary">
 
-            🔥 ${dayData.summary.kcal} kcal ·
-            P ${dayData.summary.pro} ·
-            G ${dayData.summary.fat} ·
-            C ${dayData.summary.carb} ·
-            💧 ${dayData.summary.water}
+            🔥 ${summary.kcal} kcal ·
+            P ${summary.pro} ·
+            G ${summary.fat} ·
+            C ${summary.carb} ·
+            Z ${summary.sugar} ·
+            💧 ${summary.water}
 
           </div>
 
