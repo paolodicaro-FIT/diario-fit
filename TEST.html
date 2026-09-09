@@ -507,6 +507,10 @@ button:active {
   font-size: .78rem;
 }
 
+.target-water-wide {
+  grid-column: 1 / -1;
+}
+
 
 /* =========================================================
    DASHBOARD
@@ -556,6 +560,10 @@ button:active {
 
 .metric.water .metric-value {
   color: var(--cyan);
+}
+
+.dashboard-grid .metric.water {
+  grid-column: 1 / -1;
 }
 
 .metric-label {
@@ -1986,7 +1994,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
         g
       </div>
 
-      <div class="target-item">
+      <div class="target-item target-water-wide">
         💧
         <strong id="box-target-water">2500</strong>
         ml
