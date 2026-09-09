@@ -4519,6 +4519,20 @@ function toggleAdminModal() {
     return;
   }
 
+  if (
+    !currentUser
+    ||
+    currentUser.role !== "admin"
+  ) {
+    modal.style.display = "none";
+
+    alert(
+      "Accesso riservato all'amministratore."
+    );
+
+    return;
+  }
+
   modal.style.display =
     modal.style.display === "flex"
       ? "none"
@@ -5368,14 +5382,24 @@ async function initApp() {
 
   applyUserDisplayName();
 
-  if (currentUser && currentUser.role === "admin") {
-
+  const adminToolbarBtn =
     document.getElementById(
       "admin-toolbar-btn"
-    ).style.display = "inline-block";
+    );
 
+  if (adminToolbarBtn) {
+    adminToolbarBtn.style.display =
+      currentUser &&
+      currentUser.role === "admin"
+        ? "inline-block"
+        : "none";
+  }
+
+  if (
+    currentUser &&
+    currentUser.role === "admin"
+  ) {
     loadAdminUsers();
-
   }
 
   renderLog();
