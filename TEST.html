@@ -7527,61 +7527,130 @@ function renderHistory() {
 
 async function finalizePendingClosedDay() {
 
-  const pendingDate =
-    localStorage.getItem(
-      "diario_closed_pending_date"
-    );
-
-  if (!pendingDate) {
-    return;
-  }
-
   const todayStr =
     getLocalISODate();
 
-  if (pendingDate >= todayStr) {
-    return;
-  }
+  const datesToClose =
+    Object.keys(historyLogs)
+      .filter(dateKey => {
+        const dayData =
+          historyLogs[dateKey];
 
-  const dayData =
-    historyLogs[pendingDate];
+        return (
+          dateKey < todayStr
+          &&
+          dayData
+          &&
+          dayData.summary?.closed !== true
+        );
+      })
+      .sort();
 
-  if (!dayData) {
+
+  if (datesToClose.length === 0) {
+
     localStorage.removeItem(
       "diario_closed_pending_date"
     );
+
     return;
   }
 
-  const summary = {
-    ...(dayData.summary || {}),
-    closed: true
-  };
-
-  historyLogs[pendingDate] = {
-    ...dayData,
-    summary
-  };
 
   const savedLog = log;
 
-  log = Array.isArray(dayData.log)
-    ? dayData.log
-    : [];
 
-  await saveUserDiaryToBackend(
-    pendingDate,
-    summary
-  );
+  try {
 
-  log = savedLog;
+    for (const dateKey of datesToClose) {
+
+      const dayData =
+        historyLogs[dateKey];
+
+      const dayLog =
+        Array.isArray(dayData.log)
+          ? dayData.log
+          : [];
+
+
+      const totals =
+        dayLog.reduce(
+          (tot, item) => {
+
+            tot.kcal +=
+              Number(item.kcal) || 0;
+
+            tot.pro +=
+              Number(item.pro) || 0;
+
+            tot.fat +=
+              Number(item.fat) || 0;
+
+            tot.carb +=
+              Number(item.carb) || 0;
+
+            tot.sugar +=
+              Number(item.sugar) || 0;
+
+            tot.water +=
+              Number(
+                item.waterMl ??
+                item.water
+              ) || 0;
+
+            return tot;
+
+          },
+          {
+            kcal: 0,
+            pro: 0,
+            fat: 0,
+            carb: 0,
+            sugar: 0,
+            water: 0
+          }
+        );
+
+
+      const summary = {
+        kcal: totals.kcal,
+        pro: totals.pro + "g",
+        fat: totals.fat + "g",
+        carb: totals.carb + "g",
+        sugar: totals.sugar + "g",
+        water: totals.water + "ml",
+        closed: true
+      };
+
+
+      historyLogs[dateKey] = {
+        ...dayData,
+        summary
+      };
+
+
+      log = dayLog;
+
+
+      await saveUserDiaryToBackend(
+        dateKey,
+        summary
+      );
+
+    }
+
+  } finally {
+
+    log = savedLog;
+
+  }
+
 
   localStorage.removeItem(
     "diario_closed_pending_date"
   );
 
 }
-
 
 async function resetDay() {
 
