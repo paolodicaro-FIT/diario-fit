@@ -433,26 +433,61 @@ button:active {
 .header-title-btn {
   display: block;
 
-  padding: 0;
+  padding: 5px 9px;
 
-  border: 0;
-  background: transparent;
+  border:
+    1px solid rgba(255,159,28,.38);
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.08),
+      rgba(255,159,28,.025)
+    ),
+    var(--card-2);
+
+  color: var(--text);
 
   text-align: left;
 
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.10);
+
   cursor: pointer;
+
+  transition:
+    border-color .18s ease,
+    background .18s ease,
+    transform .12s ease,
+    box-shadow .18s ease;
 }
 
 .header-title-btn:hover {
-  opacity: .85;
+  border-color:
+    rgba(255,159,28,.70);
+
+  background:
+    var(--accent-soft);
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.14);
+}
+
+.header-title-btn:active {
+  transform:
+    translateY(1px);
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.12);
 }
 
 .header-title-btn:focus-visible {
   outline:
     2px solid var(--accent);
 
-  outline-offset: 3px;
-  border-radius: 5px;
+  outline-offset: 2px;
 }
 
 .header-subtitle {
