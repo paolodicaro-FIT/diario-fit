@@ -9941,6 +9941,21 @@ function applyGeminiToForm() {
     "custom-water"
   ).value = "";
 
+
+  const portionText =
+    String(lastGeminiData.portion || "");
+
+  const weightMatch =
+    portionText.match(/(\d+(?:[.,]\d+)?)\s*g\b/i);
+
+  document.getElementById(
+    "custom-weight"
+  ).value =
+    weightMatch
+      ? weightMatch[1].replace(",", ".")
+      : "";
+
+
   toggleGeminiModal();
 
 }
