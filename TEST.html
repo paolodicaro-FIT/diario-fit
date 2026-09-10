@@ -3379,12 +3379,14 @@ html[data-theme="light"]
    PASTI SALVATI - SWITCH AGGIORNA PASTO
 ========================================================= */
 
-.saved-meal-update-row {
+.modal-content label.saved-meal-update-row {
   display:flex;
   align-items:center;
   gap:10px;
   width:100%;
+  margin:0;
   cursor:pointer;
+  color:var(--subtext);
 }
 
 .saved-meal-update-icon {
@@ -3415,16 +3417,22 @@ html[data-theme="light"]
 
 .saved-meal-switch {
   position:relative;
-  flex:0 0 auto;
+  display:inline-block;
+  flex:0 0 46px;
   width:46px;
   height:26px;
+  margin-left:auto;
 }
 
 .saved-meal-switch input {
-  position:absolute;
-  opacity:0;
-  width:1px;
-  height:1px;
+  position:absolute !important;
+  opacity:0 !important;
+  width:1px !important;
+  height:1px !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
   pointer-events:none;
 }
 
