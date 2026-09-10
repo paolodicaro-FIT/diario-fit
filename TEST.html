@@ -4442,15 +4442,54 @@ html[data-theme="light"]
       ＋ Aggiungi alimento al pasto
     </button>
 
+    <div
+      id="saved-meal-use-options"
+      style="
+        display:none;
+        margin-top:14px;
+        padding:10px 12px;
+        border:1px solid rgba(255,255,255,.10);
+        border-radius:12px;
+      "
+    >
+      <label
+        style="
+          display:flex;
+          align-items:center;
+          gap:8px;
+          cursor:pointer;
+        "
+      >
+        <input
+          type="checkbox"
+          id="saved-meal-update-original"
+        >
+        <span>
+          Salva anche le modifiche nel pasto
+        </span>
+      </label>
+    </div>
+
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
+        id="saved-meal-save-btn"
         type="button"
         class="save-food-btn"
         style="flex:1;"
         onclick="saveSavedMeal()"
       >
         💾 Salva
+      </button>
+
+      <button
+        id="saved-meal-use-btn"
+        type="button"
+        class="save-food-btn"
+        style="flex:1; display:none;"
+        onclick="addSavedMealToDiary()"
+      >
+        ➕ Aggiungi al diario
       </button>
 
       <button
@@ -5772,11 +5811,13 @@ let profiles;
 
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
+let foodPickerMode = "normal";
 let lastGeminiData = null;
 let editingProfileId = null;
 
 let editingSavedMealIndex = -1;
 let savedMealDraftItems = [];
+let savedMealEditorMode = "create";
 
 
 /* =========================================================
@@ -8120,6 +8161,8 @@ function toggleCalculatorModal() {
 ========================================================= */
 
 function openFoodPicker() {
+  foodPickerMode = "normal";
+
   document.getElementById("food-search-input").value = "";
   renderFoodPickerModal();
   document.getElementById("food-picker-modal").style.display = "flex";
@@ -8140,12 +8183,76 @@ function closeSavedMealsModal() {
 }
 
 
+function addFoodToSavedMeal() {
+  foodPickerMode = "savedMeal";
+
+  const searchInput =
+    document.getElementById("food-search-input");
+
+  if (searchInput) {
+    searchInput.value = "";
+  }
+
+  renderFoodPickerModal();
+
+  document.getElementById(
+    "food-picker-modal"
+  ).style.display = "flex";
+}
+
+
+function updateSavedMealEditorModeUI() {
+  const saveBtn =
+    document.getElementById("saved-meal-save-btn");
+
+  const useBtn =
+    document.getElementById("saved-meal-use-btn");
+
+  const useOptions =
+    document.getElementById("saved-meal-use-options");
+
+  const updateOriginal =
+    document.getElementById("saved-meal-update-original");
+
+  const isUseMode =
+    savedMealEditorMode === "use";
+
+  if (saveBtn) {
+    saveBtn.style.display =
+      isUseMode
+        ? "none"
+        : "";
+  }
+
+  if (useBtn) {
+    useBtn.style.display =
+      isUseMode
+        ? ""
+        : "none";
+  }
+
+  if (useOptions) {
+    useOptions.style.display =
+      isUseMode
+        ? ""
+        : "none";
+  }
+
+  if (updateOriginal) {
+    updateOriginal.checked = false;
+  }
+}
+
+
 function createSavedMeal() {
+  savedMealEditorMode = "create";
   editingSavedMealIndex = -1;
   savedMealDraftItems = [];
 
   document.getElementById("saved-meal-editor-title").innerText =
     "🍽️ Nuovo pasto";
+
+  updateSavedMealEditorModeUI();
 
   document.getElementById("saved-meal-name").value = "";
 
@@ -8187,6 +8294,104 @@ function renderSavedMealsList() {
     `;
     return;
   }
+
+  container.innerHTML =
+    savedMeals.map((meal, index) => {
+
+      const items =
+        Array.isArray(meal.items)
+          ? meal.items
+          : [];
+
+      const totalKcal =
+        items.reduce((sum, item) => {
+          const mult =
+            Number(item.multiplier) > 0
+              ? Number(item.multiplier)
+              : 1;
+
+          return sum +
+            ((Number(item.kcal) || 0) * mult);
+        }, 0);
+
+      const itemCount = items.length;
+
+      return `
+        <div
+          style="
+            padding:12px;
+            margin-bottom:10px;
+            border:1px solid rgba(255,255,255,.10);
+            border-radius:14px;
+          "
+        >
+          <div
+            style="
+              display:flex;
+              align-items:flex-start;
+              gap:10px;
+            "
+          >
+            <div style="flex:1; min-width:0;">
+
+              <div style="
+                font-weight:800;
+                line-height:1.25;
+              ">
+                ${escapeHTML(meal.name || "Pasto senza nome")}
+              </div>
+
+              <small style="
+                display:block;
+                margin-top:4px;
+                color:var(--muted);
+              ">
+                ${itemCount} ${itemCount === 1 ? "alimento" : "alimenti"}
+                · ${Math.round(totalKcal)} kcal
+              </small>
+
+            </div>
+          </div>
+
+          <div
+            style="
+              display:flex;
+              gap:6px;
+              margin-top:10px;
+            "
+          >
+
+            <button
+              type="button"
+              class="save-food-btn"
+              style="flex:1;"
+              onclick="useSavedMeal(${index})"
+            >
+              ➕ Usa
+            </button>
+
+            <button
+              type="button"
+              class="mini-btn"
+              title="Modifica pasto"
+              onclick="editSavedMeal(${index})"
+            >
+              ✏️
+            </button>
+
+            <button
+              type="button"
+              class="mini-btn"
+              title="Elimina pasto"
+              onclick="deleteSavedMeal(${index})"
+            >
+              🗑️
+            </button>
+
+          </div>
+        </div>
+      `;
+    }).join("");
 }
 
 
@@ -8430,10 +8635,568 @@ async function deleteSavedFood(index) {
 }
 
 function selectFoodOption(value, label) {
+
+  if (foodPickerMode === "savedMeal") {
+
+    const parts = String(value || "").split("|");
+
+    if (parts.length < 5) {
+      foodPickerMode = "normal";
+      alert("Impossibile leggere i dati dell'alimento.");
+      return;
+    }
+
+    let sugar = 0;
+    let waterIndex = 5;
+
+    if (parts.length >= 7) {
+      sugar = parseFloat(parts[5] || 0) || 0;
+      waterIndex = 6;
+    }
+
+    savedMealDraftItems.push({
+      name: parts[0],
+      kcal: parseFloat(parts[1] || 0) || 0,
+      pro: parseFloat(parts[2] || 0) || 0,
+      fat: parseFloat(parts[3] || 0) || 0,
+      carb: parseFloat(parts[4] || 0) || 0,
+      sugar,
+      waterMl: parseFloat(parts[waterIndex] || 0) || 0,
+      multiplier: 1
+    });
+
+    foodPickerMode = "normal";
+    closeFoodPicker();
+    renderSavedMealDraftItems();
+    return;
+  }
+
   selectedFoodValue = value;
   selectedFoodDisplayText = label;
   document.getElementById("selected-food-label").innerText = label;
   closeFoodPicker();
+}
+
+
+function useSavedMeal(index) {
+  const meal =
+    Array.isArray(savedMeals)
+      ? savedMeals[index]
+      : null;
+
+  if (!meal) {
+    return;
+  }
+
+  savedMealEditorMode = "use";
+  editingSavedMealIndex = index;
+
+  savedMealDraftItems =
+    Array.isArray(meal.items)
+      ? meal.items.map(item => ({
+          name: item.name || "",
+          kcal: Number(item.kcal) || 0,
+          pro: Number(item.pro) || 0,
+          fat: Number(item.fat) || 0,
+          carb: Number(item.carb) || 0,
+          sugar: Number(item.sugar) || 0,
+          waterMl: Number(item.waterMl) || 0,
+          multiplier:
+            Number(item.multiplier) > 0
+              ? Number(item.multiplier)
+              : 1
+        }))
+      : [];
+
+  document.getElementById(
+    "saved-meal-editor-title"
+  ).innerText = "🍽️ Usa pasto";
+
+  updateSavedMealEditorModeUI();
+
+  document.getElementById(
+    "saved-meal-name"
+  ).value = meal.name || "";
+
+  renderSavedMealDraftItems();
+
+  document.getElementById(
+    "saved-meals-modal"
+  ).style.display = "none";
+
+  document.getElementById(
+    "saved-meal-editor-modal"
+  ).style.display = "flex";
+}
+
+
+async function addSavedMealToDiary() {
+  const mealCategory =
+    document.getElementById("meal-category").value;
+
+  if (!mealCategory) {
+    alert("⚠️ Seleziona prima il tipo di pasto.");
+    return;
+  }
+
+  if (
+    !Array.isArray(savedMealDraftItems) ||
+    savedMealDraftItems.length === 0
+  ) {
+    alert("Il pasto non contiene alimenti.");
+    return;
+  }
+
+  const updateOriginal =
+    document.getElementById(
+      "saved-meal-update-original"
+    )?.checked === true;
+
+  let nextId = Date.now();
+
+  const usedIds =
+    new Set(
+      Array.isArray(log)
+        ? log.map(item => Number(item.id))
+        : []
+    );
+
+  function getUniqueDiaryId() {
+    while (usedIds.has(nextId)) {
+      nextId++;
+    }
+
+    const id = nextId;
+
+    usedIds.add(id);
+    nextId++;
+
+    return id;
+  }
+
+  const time = getCurrentTimeStr();
+
+  savedMealDraftItems.forEach(item => {
+    const mult =
+      Number(item.multiplier) > 0
+        ? Number(item.multiplier)
+        : 1;
+
+    const baseName =
+      item.name || "Alimento";
+
+    const name =
+      mult === 1
+        ? baseName
+        : `${baseName} (${mult}x)`;
+
+    log.push({
+      id: getUniqueDiaryId(),
+      time,
+      meal: mealCategory,
+      name,
+      kcal: Math.round(
+        (Number(item.kcal) || 0) * mult
+      ),
+      pro: Math.round(
+        (Number(item.pro) || 0) * mult
+      ),
+      fat: Math.round(
+        (Number(item.fat) || 0) * mult
+      ),
+      carb: Math.round(
+        (Number(item.carb) || 0) * mult
+      ),
+      sugar: Math.round(
+        (Number(item.sugar) || 0) * mult
+      ),
+      waterMl: Math.round(
+        (Number(item.waterMl) || 0) * mult
+      )
+    });
+  });
+
+  if (
+    updateOriginal &&
+    editingSavedMealIndex >= 0 &&
+    Array.isArray(savedMeals) &&
+    savedMeals[editingSavedMealIndex]
+  ) {
+    savedMeals[editingSavedMealIndex] = {
+      ...savedMeals[editingSavedMealIndex],
+
+      name:
+        document.getElementById(
+          "saved-meal-name"
+        ).value.trim() ||
+        savedMeals[editingSavedMealIndex].name,
+
+      items:
+        savedMealDraftItems.map(item => ({
+          name: item.name || "",
+          kcal: Number(item.kcal) || 0,
+          pro: Number(item.pro) || 0,
+          fat: Number(item.fat) || 0,
+          carb: Number(item.carb) || 0,
+          sugar: Number(item.sugar) || 0,
+          waterMl: Number(item.waterMl) || 0,
+          multiplier:
+            Number(item.multiplier) > 0
+              ? Number(item.multiplier)
+              : 1
+        }))
+    };
+
+    await saveUserSettingsToBackend();
+  }
+
+  await saveAndRender();
+
+  closeSavedMealEditor();
+
+  resetMealCategory();
+
+  alert("Pasto aggiunto al diario.");
+}
+
+
+async function deleteSavedMeal(index) {
+  const meal =
+    Array.isArray(savedMeals)
+      ? savedMeals[index]
+      : null;
+
+  if (!meal) {
+    return;
+  }
+
+  const confirmed = confirm(
+    `Vuoi eliminare il pasto "${meal.name || "senza nome"}"?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  savedMeals.splice(index, 1);
+
+  await saveUserSettingsToBackend();
+
+  renderSavedMealsList();
+
+  alert("Pasto eliminato.");
+}
+
+
+function editSavedMeal(index) {
+  savedMealEditorMode = "edit";
+
+  const meal =
+    Array.isArray(savedMeals)
+      ? savedMeals[index]
+      : null;
+
+  if (!meal) {
+    return;
+  }
+
+  editingSavedMealIndex = index;
+
+  savedMealDraftItems =
+    Array.isArray(meal.items)
+      ? meal.items.map(item => ({
+          name: item.name || "",
+          kcal: Number(item.kcal) || 0,
+          pro: Number(item.pro) || 0,
+          fat: Number(item.fat) || 0,
+          carb: Number(item.carb) || 0,
+          sugar: Number(item.sugar) || 0,
+          waterMl: Number(item.waterMl) || 0,
+          multiplier:
+            Number(item.multiplier) > 0
+              ? Number(item.multiplier)
+              : 1
+        }))
+      : [];
+
+  document.getElementById(
+    "saved-meal-editor-title"
+  ).innerText = "✏️ Modifica pasto";
+
+  updateSavedMealEditorModeUI();
+
+  document.getElementById(
+    "saved-meal-name"
+  ).value = meal.name || "";
+
+  renderSavedMealDraftItems();
+
+  document.getElementById(
+    "saved-meals-modal"
+  ).style.display = "none";
+
+  document.getElementById(
+    "saved-meal-editor-modal"
+  ).style.display = "flex";
+}
+
+
+async function saveSavedMeal() {
+  const name =
+    document.getElementById(
+      "saved-meal-name"
+    ).value.trim();
+
+  if (!name) {
+    alert("Inserisci un nome per il pasto.");
+    return;
+  }
+
+  if (
+    !Array.isArray(savedMealDraftItems) ||
+    savedMealDraftItems.length === 0
+  ) {
+    alert("Aggiungi almeno un alimento al pasto.");
+    return;
+  }
+
+  const mealData = {
+    id:
+      editingSavedMealIndex >= 0 &&
+      savedMeals[editingSavedMealIndex] &&
+      savedMeals[editingSavedMealIndex].id
+        ? savedMeals[editingSavedMealIndex].id
+        : `meal_${Date.now()}`,
+
+    name,
+
+    items:
+      savedMealDraftItems.map(item => ({
+        name: item.name,
+        kcal: Number(item.kcal) || 0,
+        pro: Number(item.pro) || 0,
+        fat: Number(item.fat) || 0,
+        carb: Number(item.carb) || 0,
+        sugar: Number(item.sugar) || 0,
+        waterMl: Number(item.waterMl) || 0,
+        multiplier:
+          Number(item.multiplier) > 0
+            ? Number(item.multiplier)
+            : 1
+      }))
+  };
+
+  if (!Array.isArray(savedMeals)) {
+    savedMeals = [];
+  }
+
+  if (
+    editingSavedMealIndex >= 0 &&
+    savedMeals[editingSavedMealIndex]
+  ) {
+    savedMeals[editingSavedMealIndex] = mealData;
+  } else {
+    savedMeals.push(mealData);
+  }
+
+  await saveUserSettingsToBackend();
+
+  closeSavedMealEditor();
+
+  renderSavedMealsList();
+
+  document.getElementById(
+    "saved-meals-modal"
+  ).style.display = "flex";
+
+  alert("Pasto salvato.");
+}
+
+
+function renderSavedMealDraftItems() {
+  const container =
+    document.getElementById("saved-meal-items");
+
+  if (!container) {
+    return;
+  }
+
+  if (
+    !Array.isArray(savedMealDraftItems) ||
+    savedMealDraftItems.length === 0
+  ) {
+    container.innerHTML = `
+      <div style="
+        padding:12px;
+        text-align:center;
+        color:var(--muted);
+        border:1px dashed rgba(255,255,255,.12);
+        border-radius:14px;
+      ">
+        Nessun alimento aggiunto
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML =
+    savedMealDraftItems.map((item, index) => {
+
+      const mult =
+        Number(item.multiplier) > 0
+          ? Number(item.multiplier)
+          : 1;
+
+      const kcal =
+        Math.round(
+          (Number(item.kcal) || 0) * mult
+        );
+
+      return `
+        <div
+          style="
+            padding:10px 12px;
+            margin-bottom:8px;
+            border:1px solid rgba(255,255,255,.10);
+            border-radius:12px;
+          "
+        >
+          <div
+            style="
+              display:flex;
+              align-items:center;
+              gap:8px;
+            "
+          >
+            <span style="flex:1; min-width:0;">
+              ${escapeHTML(item.name)}
+            </span>
+
+            <small style="
+              color:var(--accent);
+              font-weight:700;
+              white-space:nowrap;
+            ">
+              ${kcal} kcal
+            </small>
+
+            <button
+              type="button"
+              title="Rimuovi alimento"
+              onclick="removeSavedMealDraftItem(${index})"
+              style="
+                border:0;
+                background:transparent;
+                padding:4px 5px;
+                cursor:pointer;
+                font-size:.9rem;
+              "
+            >
+              🗑️
+            </button>
+          </div>
+
+          <div
+            style="
+              display:flex;
+              align-items:center;
+              justify-content:flex-end;
+              gap:6px;
+              margin-top:8px;
+            "
+          >
+            <button
+              type="button"
+              class="mini-btn"
+              onclick="changeSavedMealItemMultiplier(${index}, -0.5)"
+            >
+              −
+            </button>
+
+            <input
+              type="number"
+              value="${mult}"
+              min="0.5"
+              step="0.5"
+              onchange="setSavedMealItemMultiplier(${index}, this.value)"
+              style="
+                width:64px;
+                text-align:center;
+                padding:6px 4px;
+              "
+            >
+
+            <button
+              type="button"
+              class="mini-btn"
+              onclick="changeSavedMealItemMultiplier(${index}, 0.5)"
+            >
+              ＋
+            </button>
+
+            <small style="
+              color:var(--muted);
+              min-width:20px;
+            ">
+              ×
+            </small>
+          </div>
+        </div>
+      `;
+    }).join("");
+}
+
+
+function changeSavedMealItemMultiplier(index, delta) {
+  const item = savedMealDraftItems[index];
+
+  if (!item) {
+    return;
+  }
+
+  const current =
+    Number(item.multiplier) > 0
+      ? Number(item.multiplier)
+      : 1;
+
+  item.multiplier =
+    Math.max(
+      0.5,
+      Math.round((current + delta) * 10) / 10
+    );
+
+  renderSavedMealDraftItems();
+}
+
+
+function setSavedMealItemMultiplier(index, value) {
+  const item = savedMealDraftItems[index];
+
+  if (!item) {
+    return;
+  }
+
+  const parsed = parseFloat(value);
+
+  item.multiplier =
+    Number.isFinite(parsed) && parsed > 0
+      ? Math.max(0.5, parsed)
+      : 1;
+
+  renderSavedMealDraftItems();
+}
+
+
+function removeSavedMealDraftItem(index) {
+  if (
+    !Array.isArray(savedMealDraftItems) ||
+    !savedMealDraftItems[index]
+  ) {
+    return;
+  }
+
+  savedMealDraftItems.splice(index, 1);
+  renderSavedMealDraftItems();
 }
 
 
