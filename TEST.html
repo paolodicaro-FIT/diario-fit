@@ -8163,9 +8163,14 @@ function toggleCalculatorModal() {
 function openFoodPicker() {
   foodPickerMode = "normal";
 
+  const modal =
+    document.getElementById("food-picker-modal");
+
+  modal.dataset.pickerMode = "normal";
+
   document.getElementById("food-search-input").value = "";
   renderFoodPickerModal();
-  document.getElementById("food-picker-modal").style.display = "flex";
+  modal.style.display = "flex";
 }
 
 function closeFoodPicker() {
@@ -8186,6 +8191,11 @@ function closeSavedMealsModal() {
 function addFoodToSavedMeal() {
   foodPickerMode = "savedMeal";
 
+  const modal =
+    document.getElementById("food-picker-modal");
+
+  modal.dataset.pickerMode = "savedMeal";
+
   const searchInput =
     document.getElementById("food-search-input");
 
@@ -8195,9 +8205,7 @@ function addFoodToSavedMeal() {
 
   renderFoodPickerModal();
 
-  document.getElementById(
-    "food-picker-modal"
-  ).style.display = "flex";
+  modal.style.display = "flex";
 }
 
 
@@ -8636,7 +8644,13 @@ async function deleteSavedFood(index) {
 
 function selectFoodOption(value, label) {
 
-  if (foodPickerMode === "savedMeal") {
+  const pickerMode =
+    document.getElementById("food-picker-modal")
+      ?.dataset.pickerMode ||
+    foodPickerMode ||
+    "normal";
+
+  if (pickerMode === "savedMeal") {
 
     const parts = String(value || "").split("|");
 
