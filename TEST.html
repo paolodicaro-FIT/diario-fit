@@ -10892,6 +10892,7 @@ document.getElementById("meal-category").addEventListener("change", () => {
   selectedFoodValue = "";
   selectedFoodDisplayText = "";
   lastGeminiData = null;
+  geminiWeightBase = null;
 
   const selectedLabel =
     document.getElementById("selected-food-label");
@@ -10914,6 +10915,7 @@ document.getElementById("meal-category").addEventListener("change", () => {
     "custom-fat",
     "custom-carb",
     "custom-sugar",
+    "custom-weight",
     "custom-water"
   ];
 
@@ -11035,7 +11037,9 @@ async function addFromSelect() {
 
     sugar,
 
-    waterMl
+    waterMl,
+
+    weight
 
   });
 
@@ -11171,7 +11175,9 @@ async function addCustom() {
 
     sugar,
 
-    waterMl
+    waterMl,
+
+    weight
 
   });
 
@@ -11251,6 +11257,8 @@ async function addCustom() {
   await saveUserSettingsToBackend();
 
   await saveAndRender();
+
+  geminiWeightBase = null;
 
   resetMealCategory();
 
