@@ -8174,7 +8174,23 @@ function openFoodPicker() {
 }
 
 function closeFoodPicker() {
-  document.getElementById("food-picker-modal").style.display = "none";
+  const modal =
+    document.getElementById("food-picker-modal");
+
+  const pickerMode =
+    modal?.dataset.pickerMode ||
+    foodPickerMode ||
+    "normal";
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  if (pickerMode === "savedMeal") {
+    document.getElementById(
+      "saved-meal-editor-modal"
+    ).style.display = "flex";
+  }
 }
 
 
@@ -8204,6 +8220,10 @@ function addFoodToSavedMeal() {
   }
 
   renderFoodPickerModal();
+
+  document.getElementById(
+    "saved-meal-editor-modal"
+  ).style.display = "none";
 
   modal.style.display = "flex";
 }
