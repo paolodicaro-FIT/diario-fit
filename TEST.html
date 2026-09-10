@@ -3374,6 +3374,98 @@ html[data-theme="light"]
 }
 
 
+
+/* =========================================================
+   PASTI SALVATI - SWITCH AGGIORNA PASTO
+========================================================= */
+
+.saved-meal-update-row {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  cursor:pointer;
+}
+
+.saved-meal-update-icon {
+  flex:0 0 auto;
+  font-size:1.05rem;
+  line-height:1;
+}
+
+.saved-meal-update-text {
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.saved-meal-update-title {
+  font-weight:700;
+  font-size:.88rem;
+  line-height:1.2;
+}
+
+.saved-meal-update-subtitle {
+  color:var(--muted);
+  font-size:.72rem;
+  line-height:1.25;
+}
+
+.saved-meal-switch {
+  position:relative;
+  flex:0 0 auto;
+  width:46px;
+  height:26px;
+}
+
+.saved-meal-switch input {
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+  pointer-events:none;
+}
+
+.saved-meal-switch-slider {
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  transition:.2s ease;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.28);
+}
+
+.saved-meal-switch-slider::before {
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:2px;
+  top:2px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.35);
+  transition:.2s ease;
+}
+
+.saved-meal-switch input:checked + .saved-meal-switch-slider {
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+.saved-meal-switch input:checked + .saved-meal-switch-slider::before {
+  transform:translateX(20px);
+}
+
+.saved-meal-switch input:focus-visible + .saved-meal-switch-slider {
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+
 </style>
 </head>
 
@@ -4452,21 +4544,35 @@ html[data-theme="light"]
         border-radius:12px;
       "
     >
-      <label
-        style="
-          display:flex;
-          align-items:center;
-          gap:8px;
-          cursor:pointer;
-        "
-      >
-        <input
-          type="checkbox"
-          id="saved-meal-update-original"
-        >
-        <span>
-          Salva anche le modifiche nel pasto
+      <label class="saved-meal-update-row">
+
+        <span class="saved-meal-update-icon">
+          🔄
         </span>
+
+        <span class="saved-meal-update-text">
+
+          <span class="saved-meal-update-title">
+            Salva anche le modifiche nel pasto
+          </span>
+
+          <span class="saved-meal-update-subtitle">
+            Aggiorna il pasto salvato con le quantità modificate
+          </span>
+
+        </span>
+
+        <span class="saved-meal-switch">
+
+          <input
+            type="checkbox"
+            id="saved-meal-update-original"
+          >
+
+          <span class="saved-meal-switch-slider"></span>
+
+        </span>
+
       </label>
     </div>
 
