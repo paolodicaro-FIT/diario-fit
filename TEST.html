@@ -10853,7 +10853,9 @@ async function addQuick(
 
     sugar,
 
-    waterMl
+    waterMl,
+
+    weight
 
   });
 
@@ -11118,6 +11120,14 @@ async function addCustom() {
     ) || 0;
 
 
+  const weight =
+    parseFloat(
+      document.getElementById(
+        "custom-weight"
+      ).value
+    ) || 0;
+
+
   const meal =
     document.getElementById(
       "meal-category"
@@ -11225,6 +11235,11 @@ async function addCustom() {
 
   document.getElementById(
     "custom-sugar"
+  ).value = "";
+
+
+  document.getElementById(
+    "custom-weight"
   ).value = "";
 
 
@@ -11694,6 +11709,12 @@ function renderLog() {
                 G ${item.fat}g ·
                 C ${item.carb}g ·
                 🍬 ${item.sugar || 0}g
+
+                ${
+                  item.weight
+                    ? ` · ⚖️ ${item.weight}g`
+                    : ""
+                }
 
                 ${
                   item.waterMl
@@ -12398,6 +12419,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
         <td>${escapeHTML(item.time || "")}</td>
         <td>${escapeHTML(item.meal || "")}</td>
         <td>${escapeHTML(item.name || "")}</td>
+        <td>${Number(item.weight) > 0 ? `${item.weight}g` : "—"}</td>
         <td>${item.kcal || 0}</td>
         <td>${item.pro || 0}g</td>
         <td>${item.fat || 0}g</td>
@@ -12411,7 +12433,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
   if (!rowsHtml) {
     rowsHtml = `
       <tr>
-        <td colspan="9" class="empty">Nessun alimento registrato.</td>
+        <td colspan="10" class="empty">Nessun alimento registrato.</td>
       </tr>
     `;
   }
@@ -12457,6 +12479,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
           <th>Ora</th>
           <th>Pasto</th>
           <th>Alimento</th>
+          <th>Peso</th>
           <th>Kcal</th>
           <th>P</th>
           <th>G</th>
