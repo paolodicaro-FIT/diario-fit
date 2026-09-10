@@ -947,6 +947,217 @@ textarea:focus {
 }
 
 
+
+/* =========================================================
+   QUICK ADD 2.0 - CARD COMPATTE
+========================================================= */
+
+.quick-btn {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 7px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.012)
+    ),
+    var(--card-2);
+
+  border:
+    1px solid rgba(255,159,28,.28);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 3px 10px rgba(0,0,0,.10);
+
+  text-align: left;
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.quick-btn::before {
+  content: "";
+
+  position: absolute;
+
+  width: 38px;
+  height: 38px;
+
+  left: -14px;
+  top: -15px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,159,28,.22);
+
+  filter: blur(13px);
+
+  opacity: .55;
+
+  pointer-events: none;
+}
+
+.quick-btn-icon {
+  position: relative;
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  flex: 0 0 25px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,159,28,.12);
+
+  border:
+    1px solid rgba(255,159,28,.32);
+
+  box-shadow:
+    0 0 10px rgba(255,159,28,.14);
+
+  font-size: .88rem;
+  line-height: 1;
+}
+
+.quick-btn-label {
+  position: relative;
+  z-index: 1;
+
+  min-width: 0;
+
+  color: var(--text);
+
+  font-weight: 800;
+  line-height: 1.08;
+}
+
+.quick-btn:hover {
+  border-color:
+    rgba(255,159,28,.58);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.10),
+      rgba(255,159,28,.025)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 4px 12px rgba(0,0,0,.12),
+    0 0 12px rgba(255,159,28,.10);
+}
+
+.quick-btn.water {
+  border-color:
+    rgba(56,189,248,.38);
+}
+
+.quick-btn.water::before {
+  background:
+    rgba(56,189,248,.26);
+}
+
+.quick-btn.water .quick-btn-icon {
+  background:
+    rgba(56,189,248,.12);
+
+  border-color:
+    rgba(56,189,248,.38);
+
+  box-shadow:
+    0 0 10px rgba(56,189,248,.18);
+}
+
+.quick-btn.water:hover {
+  border-color:
+    rgba(56,189,248,.65);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.10),
+      rgba(56,189,248,.025)
+    ),
+    var(--card-2);
+}
+
+
+/* Tema chiaro */
+
+html[data-theme="light"] .quick-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(241,245,249,.96)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 3px 10px rgba(15,23,42,.07);
+}
+
+html[data-theme="light"] .quick-btn-label {
+  color: var(--text);
+}
+
+
+/* Manteniamo invariato l'ingombro mobile */
+
+@media (max-width: 560px) {
+
+  .quick-btn {
+    gap: 5px;
+  }
+
+  .quick-btn-icon {
+    width: 22px;
+    height: 22px;
+
+    flex-basis: 22px;
+
+    font-size: .76rem;
+  }
+
+}
+
+@media (max-width: 370px) {
+
+  .quick-btn {
+    gap: 4px;
+  }
+
+  .quick-btn-icon {
+    width: 20px;
+    height: 20px;
+
+    flex-basis: 20px;
+
+    font-size: .70rem;
+  }
+
+}
+
 /* =========================================================
    SELECT FOOD CUSTOM MODAL
 ========================================================= */
@@ -2187,6 +2398,570 @@ input, select, .food-picker-trigger { font-size: .94rem; }
   .metric-value { font-size: .88rem; }
   .metric-label { font-size: .61rem; }
   input, select, .food-picker-trigger, ::placeholder { font-size: .82rem; }
+}
+
+
+
+/* =========================================================
+   PULSANTI 2.0 - ESTENSIONE STILE QUICK APPROVATO
+   Esclusi volutamente:
+   - quick-btn (già approvati)
+   - modal-close
+   - multiplier-control button
+   - theme-choice
+   - micro pulsanti modifica/elimina alimenti
+========================================================= */
+
+/* ---------- BASE NEUTRA ---------- */
+
+.toolbar-btn,
+.mini-btn,
+.btn,
+.food-picker-trigger {
+  position: relative;
+  overflow: hidden;
+
+  border-color: rgba(255,159,28,.24);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.012)
+    ),
+    var(--card-2);
+
+  color: var(--text);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 3px 10px rgba(0,0,0,.10);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    color .18s ease;
+}
+
+.toolbar-btn:hover,
+.mini-btn:hover,
+.btn:hover,
+.food-picker-trigger:hover {
+  border-color: rgba(255,159,28,.55);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.09),
+      rgba(255,159,28,.022)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 4px 12px rgba(0,0,0,.12),
+    0 0 12px rgba(255,159,28,.09);
+}
+
+
+/* ---------- AZIONI ARANCIONI ---------- */
+
+.btn.primary,
+.mini-btn.primary,
+.toolbar-btn.accent,
+.add-selected,
+.save-food-btn {
+  position: relative;
+  overflow: hidden;
+
+  border:
+    1px solid rgba(255,159,28,.46);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.18),
+      rgba(255,159,28,.065)
+    ),
+    var(--card-2);
+
+  color: var(--accent);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 3px 10px rgba(0,0,0,.10),
+    0 0 11px rgba(255,159,28,.10);
+
+  text-shadow:
+    0 0 10px rgba(255,159,28,.16);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.btn.primary:hover,
+.mini-btn.primary:hover,
+.toolbar-btn.accent:hover,
+.add-selected:hover,
+.save-food-btn:hover {
+  border-color: rgba(255,159,28,.72);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.25),
+      rgba(255,159,28,.09)
+    ),
+    var(--card-2);
+
+  color: var(--accent-light);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 4px 13px rgba(0,0,0,.13),
+    0 0 15px rgba(255,159,28,.16);
+}
+
+
+/* ---------- GEMINI / BLU ---------- */
+
+.gemini-btn {
+  position: relative;
+  overflow: hidden;
+
+  border-color: rgba(96,165,250,.44);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(96,165,250,.15),
+      rgba(96,165,250,.045)
+    ),
+    var(--card-2);
+
+  color: var(--blue);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 3px 10px rgba(0,0,0,.09),
+    0 0 11px rgba(96,165,250,.11);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.gemini-btn:hover {
+  border-color: rgba(96,165,250,.70);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(96,165,250,.22),
+      rgba(96,165,250,.07)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 4px 12px rgba(0,0,0,.12),
+    0 0 15px rgba(96,165,250,.17);
+}
+
+
+/* ---------- ADMIN / VIOLA ---------- */
+
+.toolbar-btn.purple {
+  border-color: rgba(167,139,250,.46);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(167,139,250,.15),
+      rgba(167,139,250,.045)
+    ),
+    var(--card-2);
+
+  color: var(--purple);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 3px 10px rgba(0,0,0,.09),
+    0 0 11px rgba(167,139,250,.11);
+}
+
+.toolbar-btn.purple:hover {
+  border-color: rgba(167,139,250,.72);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(167,139,250,.22),
+      rgba(167,139,250,.07)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 4px 12px rgba(0,0,0,.12),
+    0 0 15px rgba(167,139,250,.17);
+}
+
+
+/* ---------- CHIUDI / ELIMINA / ROSSO ---------- */
+
+.toolbar-btn.danger,
+.delete-btn {
+  position: relative;
+  overflow: hidden;
+
+  border-color: rgba(251,113,133,.40);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,113,133,.12),
+      rgba(251,113,133,.035)
+    ),
+    var(--card-2);
+
+  color: var(--red);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 3px 10px rgba(0,0,0,.09),
+    0 0 10px rgba(251,113,133,.09);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.toolbar-btn.danger:hover,
+.delete-btn:hover {
+  border-color: rgba(251,113,133,.68);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,113,133,.19),
+      rgba(251,113,133,.055)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 4px 12px rgba(0,0,0,.12),
+    0 0 14px rgba(251,113,133,.14);
+}
+
+
+/* ---------- PROGRESSI: STESSO LOOK, STESSE DIMENSIONI ---------- */
+
+.header-progress-btn {
+  position: relative;
+  overflow: hidden;
+
+  border-color: rgba(255,159,28,.34);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.12),
+      rgba(255,159,28,.035)
+    ),
+    var(--card-2);
+
+  color: var(--subtext);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 2px 8px rgba(0,0,0,.08),
+    0 0 9px rgba(255,159,28,.08);
+}
+
+.header-progress-btn:hover {
+  border-color: rgba(255,159,28,.58);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.18),
+      rgba(255,159,28,.055)
+    ),
+    var(--card-2);
+
+  color: var(--accent);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 3px 10px rgba(0,0,0,.10),
+    0 0 12px rgba(255,159,28,.12);
+}
+
+
+/* ---------- PRESSIONE ---------- */
+
+.toolbar-btn:active,
+.mini-btn:active,
+.btn:active,
+.food-picker-trigger:active,
+.add-selected:active,
+.save-food-btn:active,
+.gemini-btn:active,
+.delete-btn:active,
+.header-progress-btn:active {
+  transform: translateY(1px) scale(.985);
+}
+
+
+/* ---------- TEMA CHIARO ---------- */
+
+html[data-theme="light"] .toolbar-btn,
+html[data-theme="light"] .mini-btn,
+html[data-theme="light"] .btn,
+html[data-theme="light"] .food-picker-trigger {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.99),
+      rgba(241,245,249,.95)
+    );
+
+  color: var(--text);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 3px 10px rgba(15,23,42,.07);
+}
+
+html[data-theme="light"] .btn.primary,
+html[data-theme="light"] .mini-btn.primary,
+html[data-theme="light"] .toolbar-btn.accent,
+html[data-theme="light"] .add-selected,
+html[data-theme="light"] .save-food-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.18),
+      rgba(255,255,255,.94)
+    );
+
+  color: #b86100;
+
+  border-color: rgba(217,119,6,.46);
+
+  text-shadow: none;
+}
+
+html[data-theme="light"] .gemini-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(96,165,250,.16),
+      rgba(255,255,255,.95)
+    );
+}
+
+html[data-theme="light"] .toolbar-btn.purple {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(167,139,250,.16),
+      rgba(255,255,255,.95)
+    );
+}
+
+html[data-theme="light"] .toolbar-btn.danger,
+html[data-theme="light"] .delete-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,113,133,.13),
+      rgba(255,255,255,.95)
+    );
+}
+
+html[data-theme="light"] .header-progress-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.11),
+      rgba(255,255,255,.94)
+    );
+}
+
+
+/* ---------- DISABLED ---------- */
+
+.btn:disabled,
+.mini-btn:disabled,
+.toolbar-btn:disabled,
+.gemini-btn:disabled,
+.add-selected:disabled,
+.save-food-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+
+/* =========================================================
+   TARGET GIORNALIERI 2.0 - STILE METRICHE
+   Solo grafica: dimensioni e griglia restano invariate
+========================================================= */
+
+.target-summary-grid .target-item {
+  position: relative;
+  overflow: hidden;
+
+  --target-color: #ff9f1c;
+  --target-border: rgba(255,159,28,.34);
+  --target-bg: rgba(255,159,28,.075);
+  --target-glow: rgba(255,159,28,.20);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.050),
+      rgba(255,255,255,.010)
+    ),
+    var(--card-2);
+
+  border:
+    1px solid var(--target-border);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 3px 10px rgba(0,0,0,.08),
+    0 0 10px var(--target-glow);
+}
+
+
+/* Piccolo punto luce, come nelle metriche */
+
+.target-summary-grid .target-item::before {
+  content: "";
+
+  position: absolute;
+
+  width: 34px;
+  height: 34px;
+
+  top: -18px;
+  right: -16px;
+
+  border-radius: 50%;
+
+  background:
+    var(--target-glow);
+
+  filter: blur(12px);
+
+  opacity: .55;
+
+  pointer-events: none;
+}
+
+
+/* Valore numerico */
+
+.target-summary-grid .target-item strong {
+  position: relative;
+  z-index: 1;
+
+  color:
+    var(--target-color);
+
+  text-shadow:
+    0 0 10px var(--target-glow);
+}
+
+
+/* 🔥 CALORIE */
+
+.target-summary-grid .target-item:nth-child(1) {
+  --target-color: #ff9f1c;
+  --target-border: rgba(255,159,28,.36);
+  --target-glow: rgba(255,159,28,.22);
+}
+
+
+/* 🥩 PROTEINE */
+
+.target-summary-grid .target-item:nth-child(2) {
+  --target-color: #4ade80;
+  --target-border: rgba(74,222,128,.35);
+  --target-glow: rgba(74,222,128,.20);
+}
+
+
+/* 🥑 GRASSI */
+
+.target-summary-grid .target-item:nth-child(3) {
+  --target-color: #facc15;
+  --target-border: rgba(250,204,21,.34);
+  --target-glow: rgba(250,204,21,.18);
+}
+
+
+/* 🍞 CARBOIDRATI */
+
+.target-summary-grid .target-item:nth-child(4) {
+  --target-color: #38bdf8;
+  --target-border: rgba(56,189,248,.35);
+  --target-glow: rgba(56,189,248,.20);
+}
+
+
+/* 🍬 ZUCCHERI */
+
+.target-summary-grid .target-item:nth-child(5) {
+  --target-color: #f472b6;
+  --target-border: rgba(244,114,182,.35);
+  --target-glow: rgba(244,114,182,.20);
+}
+
+
+/* 💧 ACQUA */
+
+.target-summary-grid .target-item:nth-child(6) {
+  --target-color: #38bdf8;
+  --target-border: rgba(56,189,248,.38);
+  --target-glow: rgba(56,189,248,.22);
+}
+
+
+/* TEMA CHIARO */
+
+html[data-theme="light"]
+.target-summary-grid .target-item {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.99),
+      rgba(241,245,249,.95)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 3px 10px rgba(15,23,42,.06),
+    0 0 8px var(--target-glow);
+}
+
+html[data-theme="light"]
+.target-summary-grid .target-item strong {
+  text-shadow: none;
 }
 
 
@@ -8461,8 +9236,9 @@ function renderQuickGrid() {
         ? "quick-btn water"
         : "quick-btn";
 
-    btn.innerText =
-      `${item.emoji} ${item.label}`;
+    btn.innerHTML =
+      `<span class="quick-btn-icon">${escapeHTML(item.emoji || "")}</span>` +
+      `<span class="quick-btn-label">${escapeHTML(item.label || "")}</span>`;
 
     btn.onclick = () =>
       addQuick(
