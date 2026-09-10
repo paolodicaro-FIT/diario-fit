@@ -3843,6 +3843,20 @@ html[data-theme="light"]
 
 
   <!-- ===================================================
+       COSA MI MANCA OGGI
+  ==================================================== -->
+
+  <button
+    type="button"
+    class="btn full"
+    onclick="openMissingTodayModal()"
+    style="margin:0 0 10px;"
+  >
+    💡 Cosa mi manca oggi?
+  </button>
+
+
+  <!-- ===================================================
        DASHBOARD
   ==================================================== -->
 
@@ -4616,6 +4630,67 @@ html[data-theme="light"]
       </button>
 
     </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL COSA MI MANCA OGGI
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="missing-today-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        💡 Cosa mi manca oggi?
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="closeMissingTodayModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div id="missing-today-summary">
+
+      <div id="missing-kcal"></div>
+      <div id="missing-pro"></div>
+      <div id="missing-fat"></div>
+      <div id="missing-carb"></div>
+      <div id="missing-sugar"></div>
+      <div id="missing-water"></div>
+
+    </div>
+
+
+    <div
+      id="missing-today-gemini"
+      style="display:none; margin-top:14px;"
+    >
+      <!-- Suggerimenti Gemini -->
+    </div>
+
+
+    <button
+      type="button"
+      class="save-food-btn"
+      style="width:100%; margin-top:14px;"
+      onclick="closeMissingTodayModal()"
+    >
+      Chiudi
+    </button>
 
   </div>
 
@@ -11048,6 +11123,166 @@ async function saveAndRender() {
 /* =========================================================
    DASHBOARD
 ========================================================= */
+
+
+/* =========================================================
+   COSA MI MANCA OGGI
+========================================================= */
+
+function openMissingTodayModal() {
+
+  let totKcal = 0;
+  let totPro = 0;
+  let totFat = 0;
+  let totCarb = 0;
+  let totSugar = 0;
+  let totWater = 0;
+
+  log.forEach(item => {
+    totKcal += item.kcal || 0;
+    totPro += item.pro || 0;
+    totFat += item.fat || 0;
+    totCarb += item.carb || 0;
+    totSugar += item.sugar || 0;
+    totWater += item.waterMl || 0;
+  });
+
+
+  function renderMissingValue(
+    elementId,
+    icon,
+    label,
+    current,
+    target,
+    unit
+  ) {
+
+    const element =
+      document.getElementById(elementId);
+
+    if (!element) return;
+
+    const diff =
+      Math.round((target - current) * 10) / 10;
+
+    let statusText = "";
+    let statusSymbol = "";
+
+    if (diff > 0) {
+      statusSymbol = "→";
+      statusText =
+        `mancano ${diff}${unit}`;
+    } else if (diff < 0) {
+      statusSymbol = "✓";
+      statusText =
+        `superato di ${Math.abs(diff)}${unit}`;
+    } else {
+      statusSymbol = "✓";
+      statusText =
+        "target raggiunto";
+    }
+
+    element.innerHTML = `
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 0;
+        border-bottom:1px solid rgba(255,255,255,.08);
+      ">
+        <span style="font-size:1.1rem;">
+          ${icon}
+        </span>
+
+        <span style="
+          flex:1;
+          min-width:0;
+        ">
+          <strong>${label}</strong><br>
+          <small style="color:var(--muted);">
+            ${current}${unit} / ${target}${unit}
+          </small>
+        </span>
+
+        <span style="
+          text-align:right;
+          font-weight:800;
+        ">
+          ${statusSymbol}
+          ${statusText}
+        </span>
+      </div>
+    `;
+  }
+
+
+  renderMissingValue(
+    "missing-kcal",
+    "🔥",
+    "Calorie",
+    totKcal,
+    TARGETS.kcal,
+    " kcal"
+  );
+
+  renderMissingValue(
+    "missing-pro",
+    "🥩",
+    "Proteine",
+    totPro,
+    TARGETS.pro,
+    " g"
+  );
+
+  renderMissingValue(
+    "missing-fat",
+    "🥑",
+    "Grassi",
+    totFat,
+    TARGETS.fat,
+    " g"
+  );
+
+  renderMissingValue(
+    "missing-carb",
+    "🍞",
+    "Carboidrati",
+    totCarb,
+    TARGETS.carb,
+    " g"
+  );
+
+  renderMissingValue(
+    "missing-sugar",
+    "🍬",
+    "Zuccheri",
+    totSugar,
+    TARGETS.sugar,
+    " g"
+  );
+
+  renderMissingValue(
+    "missing-water",
+    "💧",
+    "Acqua",
+    totWater,
+    TARGETS.water,
+    " ml"
+  );
+
+
+  document.getElementById(
+    "missing-today-modal"
+  ).style.display = "flex";
+}
+
+
+function closeMissingTodayModal() {
+  document.getElementById(
+    "missing-today-modal"
+  ).style.display = "none";
+}
+
 
 function updateDashboard() {
 
