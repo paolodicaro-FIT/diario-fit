@@ -4228,6 +4228,7 @@ html[data-theme="light"]
           placeholder="0"
           min="0"
           step="1"
+          oninput="recalculateCustomFromWeight()"
         >
       </label>
 
@@ -6033,6 +6034,8 @@ let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let foodPickerMode = "normal";
 let lastGeminiData = null;
+
+let geminiWeightBase = null;
 let editingProfileId = null;
 
 let editingSavedMealIndex = -1;
@@ -9901,6 +9904,86 @@ async function askGemini() {
 }
 
 
+
+function recalculateCustomFromWeight() {
+
+  if (
+    !geminiWeightBase ||
+    !geminiWeightBase.weight ||
+    geminiWeightBase.weight <= 0
+  ) {
+    return;
+  }
+
+  const newWeight =
+    parseFloat(
+      document.getElementById(
+        "custom-weight"
+      ).value
+    );
+
+  if (
+    !Number.isFinite(newWeight) ||
+    newWeight <= 0
+  ) {
+    return;
+  }
+
+  const ratio =
+    newWeight / geminiWeightBase.weight;
+
+
+  function setScaledValue(
+    elementId,
+    baseValue,
+    decimals = 1
+  ) {
+
+    const value =
+      (Number(baseValue) || 0) * ratio;
+
+    document.getElementById(
+      elementId
+    ).value =
+      Number(
+        value.toFixed(decimals)
+      );
+  }
+
+
+  setScaledValue(
+    "custom-kcal",
+    geminiWeightBase.kcal,
+    0
+  );
+
+  setScaledValue(
+    "custom-pro",
+    geminiWeightBase.pro,
+    1
+  );
+
+  setScaledValue(
+    "custom-fat",
+    geminiWeightBase.fat,
+    1
+  );
+
+  setScaledValue(
+    "custom-carb",
+    geminiWeightBase.carb,
+    1
+  );
+
+  setScaledValue(
+    "custom-sugar",
+    geminiWeightBase.sugar,
+    1
+  );
+
+}
+
+
 function applyGeminiToForm() {
 
   if (!lastGeminiData) {
@@ -9948,12 +10031,31 @@ function applyGeminiToForm() {
   const weightMatch =
     portionText.match(/(\d+(?:[.,]\d+)?)\s*g\b/i);
 
+  const estimatedWeight =
+    weightMatch
+      ? parseFloat(
+          weightMatch[1].replace(",", ".")
+        )
+      : null;
+
+
   document.getElementById(
     "custom-weight"
   ).value =
-    weightMatch
-      ? weightMatch[1].replace(",", ".")
-      : "";
+    estimatedWeight || "";
+
+
+  geminiWeightBase =
+    estimatedWeight && estimatedWeight > 0
+      ? {
+          weight: estimatedWeight,
+          kcal: Number(lastGeminiData.kcal) || 0,
+          pro: Number(lastGeminiData.pro) || 0,
+          fat: Number(lastGeminiData.fat) || 0,
+          carb: Number(lastGeminiData.carb) || 0,
+          sugar: Number(lastGeminiData.sugar) || 0
+        }
+      : null;
 
 
   toggleGeminiModal();
