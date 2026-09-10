@@ -4390,6 +4390,86 @@ html[data-theme="light"]
 
 
 <!-- =====================================================
+     MODAL NUOVO / MODIFICA PASTO SALVATO
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="saved-meal-editor-modal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3 id="saved-meal-editor-title">
+        🍽️ Nuovo pasto
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="closeSavedMealEditor()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div class="free-grid">
+
+      <input
+        class="full"
+        type="text"
+        id="saved-meal-name"
+        placeholder="Nome pasto"
+      >
+
+    </div>
+
+    <div
+      id="saved-meal-items"
+      style="margin-top:12px;"
+    >
+      <!-- Componenti generati dinamicamente via JS -->
+    </div>
+
+    <button
+      type="button"
+      class="save-food-btn"
+      style="width:100%; margin-top:12px;"
+      onclick="addFoodToSavedMeal()"
+    >
+      ＋ Aggiungi alimento al pasto
+    </button>
+
+    <div style="display:flex; gap:10px; margin-top:14px;">
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1;"
+        onclick="saveSavedMeal()"
+      >
+        💾 Salva
+      </button>
+
+      <button
+        type="button"
+        class="save-food-btn"
+        style="flex:1; opacity:.75;"
+        onclick="closeSavedMealEditor()"
+      >
+        Annulla
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      MODAL CHIEDI A GEMINI
 ===================================================== -->
 
@@ -5694,6 +5774,9 @@ let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let lastGeminiData = null;
 let editingProfileId = null;
+
+let editingSavedMealIndex = -1;
+let savedMealDraftItems = [];
 
 
 /* =========================================================
@@ -8048,11 +8131,62 @@ function closeFoodPicker() {
 
 
 function openSavedMealsModal() {
+  renderSavedMealsList();
   document.getElementById("saved-meals-modal").style.display = "flex";
 }
 
 function closeSavedMealsModal() {
   document.getElementById("saved-meals-modal").style.display = "none";
+}
+
+
+function createSavedMeal() {
+  editingSavedMealIndex = -1;
+  savedMealDraftItems = [];
+
+  document.getElementById("saved-meal-editor-title").innerText =
+    "🍽️ Nuovo pasto";
+
+  document.getElementById("saved-meal-name").value = "";
+
+  document.getElementById("saved-meal-items").innerHTML = "";
+
+  document.getElementById("saved-meals-modal").style.display = "none";
+  document.getElementById("saved-meal-editor-modal").style.display = "flex";
+}
+
+
+function closeSavedMealEditor() {
+  editingSavedMealIndex = -1;
+  savedMealDraftItems = [];
+
+  document.getElementById("saved-meal-editor-modal").style.display = "none";
+}
+
+
+function renderSavedMealsList() {
+  const container = document.getElementById("saved-meals-list");
+
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!Array.isArray(savedMeals) || savedMeals.length === 0) {
+    container.innerHTML = `
+      <div style="
+        padding:16px;
+        text-align:center;
+        color:var(--muted);
+        border:1px dashed rgba(255,255,255,.12);
+        border-radius:14px;
+      ">
+        Nessun pasto salvato
+      </div>
+    `;
+    return;
+  }
 }
 
 
