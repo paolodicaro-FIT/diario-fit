@@ -9922,11 +9922,10 @@ function recalculateCustomFromWeight() {
       ).value
     );
 
-  if (!Number.isFinite(newWeight)) {
-    return;
-  }
-
-  if (newWeight <= 0) {
+  if (
+    !Number.isFinite(newWeight) ||
+    newWeight <= 0
+  ) {
 
     document.getElementById("custom-kcal").value = 0;
     document.getElementById("custom-pro").value = 0;
