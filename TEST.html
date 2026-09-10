@@ -4668,7 +4668,7 @@ const DEFAULT_PRESET_FOODS = [
 const DEFAULT_QUICK_ITEMS = [
   { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (2 cup Whey + Creatina + 500ml H2O)", kcal: 200, pro: 40, fat: 2, carb: 3, sugar: 2, water: 500 },
   { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (1 cup)", kcal: 160, pro: 23, fat: 0, carb: 8, sugar: 5, water: 0 },
-  { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 400ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 400 },
+  { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
   { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (1 Cup Whey + 300ml H2O)", kcal: 100, pro: 20, fat: 1, carb: 1.5, sugar: 1, water: 300 },
   { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 180, pro: 2, fat: 19, carb: 3, sugar: 1, water: 0 },
   { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di Latte (200g)", kcal: 196, pro: 26, fat: 9, carb: 3, sugar: 3, water: 0 },
@@ -4884,6 +4884,33 @@ async function loadUserDataFromBackend() {
           item.sugar ?? 0
       }))
     : DEFAULT_QUICK_ITEMS;
+
+  let preWoUpdated = false;
+
+  quickAddItems = quickAddItems.map(item => {
+    if (
+      item &&
+      item.label === "Pre W.O." &&
+      Number(item.water) === 400
+    ) {
+      preWoUpdated = true;
+
+      return {
+        ...item,
+        name: String(item.name || "").replace(
+          "400ml H2O",
+          "500ml H2O"
+        ),
+        water: 500
+      };
+    }
+
+    return item;
+  });
+
+  if (preWoUpdated) {
+    await saveUserSettingsToBackend();
+  }
 
   return data;
 }
@@ -7580,6 +7607,31 @@ async function askGemini() {
       ||
       "";
 
+    const condiment =
+      (result.condiment && String(result.condiment).trim())
+      ||
+      "";
+
+    const confidence =
+      (result.confidence && String(result.confidence).trim().toLowerCase())
+      ||
+      "media";
+
+    const kcalMin =
+      Number.isFinite(Number(result.kcal_min))
+        ? Math.round(Number(result.kcal_min))
+        : kcal;
+
+    const kcalMax =
+      Number.isFinite(Number(result.kcal_max))
+        ? Math.round(Number(result.kcal_max))
+        : kcal;
+
+    const warning =
+      (result.warning && String(result.warning).trim())
+      ||
+      "";
+
     lastGeminiData = {
       name,
       portion,
@@ -7587,8 +7639,25 @@ async function askGemini() {
       pro,
       fat,
       carb,
-      sugar
+      sugar,
+      condiment,
+      confidence,
+      kcalMin,
+      kcalMax,
+      warning
     };
+
+    const confidenceLabel =
+      lastGeminiData.confidence === "alta"
+        ? "🟢 Alta"
+        : lastGeminiData.confidence === "bassa"
+          ? "🔴 Bassa"
+          : "🟡 Media";
+
+    const showKcalRange =
+      lastGeminiData.kcalMin !== lastGeminiData.kcal
+      ||
+      lastGeminiData.kcalMax !== lastGeminiData.kcal;
 
     document.getElementById(
       "gemini-result-content"
@@ -7603,7 +7672,23 @@ async function askGemini() {
       `🥩 ${pro}g P · ` +
       `🥑 ${fat}g G · ` +
       `🍞 ${carb}g C · ` +
-      `🍬 ${sugar}g Z`;
+      `🍬 ${sugar}g Z` +
+      (
+        showKcalRange
+          ? `<br><span style="font-size:.82rem; opacity:.9;">📊 Intervallo stimato: ${lastGeminiData.kcalMin}–${lastGeminiData.kcalMax} kcal</span>`
+          : ""
+      ) +
+      (
+        lastGeminiData.condiment
+          ? `<br><span style="font-size:.82rem; opacity:.9;">🫒 Condimento: ${escapeHTML(lastGeminiData.condiment)}</span>`
+          : ""
+      ) +
+      `<br><span style="font-size:.82rem; opacity:.9;">🎯 Affidabilità: ${confidenceLabel}</span>` +
+      (
+        lastGeminiData.warning
+          ? `<br><span style="font-size:.80rem; opacity:.88;">⚠️ ${escapeHTML(lastGeminiData.warning)}</span>`
+          : ""
+      );
 
     document.getElementById(
       "gemini-result-preview"
