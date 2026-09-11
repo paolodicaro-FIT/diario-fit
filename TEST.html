@@ -5658,7 +5658,7 @@ html[data-theme="light"]
 
 
   <!-- ===================================================
-       COSA MI MANCA OGGI
+       A CHE PUNTO SONO OGGI
   ==================================================== -->
 
   <button
@@ -5667,7 +5667,7 @@ html[data-theme="light"]
     onclick="openMissingTodayModal()"
     style="margin:0 0 10px;"
   >
-    💡 Cosa mi manca oggi?
+    💡 A che punto sono oggi?
   </button>
 
 
@@ -6504,7 +6504,7 @@ html[data-theme="light"]
 
 
 <!-- =====================================================
-     MODAL COSA MI MANCA OGGI
+     MODAL A CHE PUNTO SONO OGGI
 ===================================================== -->
 
 <div
@@ -6517,7 +6517,7 @@ html[data-theme="light"]
     <div class="modal-header">
 
       <h3>
-        💡 Cosa mi manca oggi?
+        💡 A che punto sono oggi?
       </h3>
 
       <button
@@ -6540,6 +6540,17 @@ html[data-theme="light"]
       <div id="missing-water"></div>
 
     </div>
+
+
+    <button
+      type="button"
+      id="missing-today-gemini-btn"
+      class="gemini-btn"
+      style="width:100%; margin-top:14px;"
+      onclick="askMissingTodayGemini()"
+    >
+      🤖 Suggeriscimi cosa potrei mangiare
+    </button>
 
 
     <div
@@ -8224,6 +8235,8 @@ let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let foodPickerMode = "normal";
 let lastGeminiData = null;
+
+let missingTodaySnapshot = null;
 
 let geminiWeightBase = null;
 let editingProfileId = null;
@@ -13490,7 +13503,7 @@ async function saveAndRender() {
 
 
 /* =========================================================
-   COSA MI MANCA OGGI
+   A CHE PUNTO SONO OGGI
 ========================================================= */
 
 function openMissingTodayModal() {
@@ -13510,6 +13523,38 @@ function openMissingTodayModal() {
     totSugar += item.sugar || 0;
     totWater += item.waterMl || 0;
   });
+
+
+  missingTodaySnapshot = {
+    current: {
+      kcal: totKcal,
+      pro: totPro,
+      fat: totFat,
+      carb: totCarb,
+      sugar: totSugar,
+      water: totWater
+    },
+
+    targets: {
+      kcal: TARGETS.kcal,
+      pro: TARGETS.pro,
+      fat: TARGETS.fat,
+      carb: TARGETS.carb,
+      sugar: TARGETS.sugar,
+      water: TARGETS.water
+    }
+  };
+
+
+  const geminiBox =
+    document.getElementById(
+      "missing-today-gemini"
+    );
+
+  if (geminiBox) {
+    geminiBox.style.display = "none";
+    geminiBox.innerHTML = "";
+  }
 
 
   function renderMissingValue(
@@ -13638,6 +13683,227 @@ function openMissingTodayModal() {
   document.getElementById(
     "missing-today-modal"
   ).style.display = "flex";
+}
+
+
+async function askMissingTodayGemini() {
+
+  const box =
+    document.getElementById(
+      "missing-today-gemini"
+    );
+
+  const btn =
+    document.getElementById(
+      "missing-today-gemini-btn"
+    );
+
+  if (
+    !box ||
+    !btn ||
+    !missingTodaySnapshot
+  ) {
+    return;
+  }
+
+  const originalLabel =
+    btn.innerText;
+
+  btn.disabled = true;
+  btn.innerText = "⏳ Sto pensando...";
+
+  box.style.display = "block";
+  box.innerHTML = `
+    <div style="
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      text-align:center;
+    ">
+      🤖 Gemini sta preparando alcune proposte...
+    </div>
+  `;
+
+  try {
+
+    const data =
+      await apiFetch(
+        "/api/gemini/suggestions",
+        {
+          method: "POST",
+          body: JSON.stringify(
+            missingTodaySnapshot
+          )
+        }
+      );
+
+    const result =
+      data.result || {};
+
+    const suggestions =
+      Array.isArray(result.suggestions)
+        ? result.suggestions
+        : [];
+
+    if (suggestions.length < 1) {
+      throw new Error(
+        "Nessun suggerimento disponibile."
+      );
+    }
+
+    const cards =
+      suggestions
+        .map((item, index) => {
+
+          return `
+            <div style="
+              margin-top:10px;
+              padding:12px;
+              border-radius:14px;
+              background:rgba(255,255,255,.045);
+              border:1px solid rgba(255,255,255,.08);
+            ">
+
+              <div style="
+                display:flex;
+                align-items:flex-start;
+                gap:8px;
+              ">
+                <span style="
+                  font-size:1.05rem;
+                  font-weight:900;
+                  color:var(--accent);
+                ">
+                  ${index + 1}.
+                </span>
+
+                <div style="flex:1; min-width:0;">
+
+                  <div style="
+                    font-weight:900;
+                    margin-bottom:3px;
+                  ">
+                    ${escapeHTML(item.name || "Proposta")}
+                  </div>
+
+                  ${
+                    item.portion
+                      ? `
+                        <div style="
+                          font-size:.82rem;
+                          color:var(--muted);
+                          margin-bottom:6px;
+                        ">
+                          🍽️ ${escapeHTML(item.portion)}
+                        </div>
+                      `
+                      : ""
+                  }
+
+                  <div style="
+                    font-size:.84rem;
+                    line-height:1.45;
+                    margin-bottom:7px;
+                  ">
+                    ${escapeHTML(item.reason || "")}
+                  </div>
+
+                  <div style="
+                    font-size:.80rem;
+                    line-height:1.5;
+                    color:var(--muted);
+                  ">
+                    🔥 ${Number(item.kcal) || 0} kcal ·
+                    🥩 ${Number(item.pro) || 0}g P ·
+                    🥑 ${Number(item.fat) || 0}g G ·
+                    🍞 ${Number(item.carb) || 0}g C ·
+                    🍬 ${Number(item.sugar) || 0}g Z
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          `;
+        })
+        .join("");
+
+    box.innerHTML = `
+      <div style="
+        padding:12px;
+        border-radius:16px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255,159,28,.10),
+            rgba(80,190,255,.06)
+          );
+        border:1px solid rgba(255,159,28,.18);
+      ">
+
+        <div style="
+          font-weight:900;
+          margin-bottom:5px;
+        ">
+          🤖 Suggerimenti Gemini
+        </div>
+
+        ${
+          result.summary
+            ? `
+              <div style="
+                font-size:.86rem;
+                line-height:1.45;
+                color:var(--muted);
+              ">
+                ${escapeHTML(result.summary)}
+              </div>
+            `
+            : ""
+        }
+
+        ${cards}
+
+        <div style="
+          margin-top:10px;
+          font-size:.74rem;
+          line-height:1.4;
+          color:var(--muted);
+          opacity:.9;
+        ">
+          ℹ️ Le proposte sono indicative: puoi scegliere liberamente
+          cosa mangiare e modificarne quantità o composizione.
+        </div>
+
+      </div>
+    `;
+
+  } catch (err) {
+
+    box.innerHTML = `
+      <div style="
+        padding:12px;
+        border-radius:14px;
+        background:rgba(255,90,90,.08);
+        border:1px solid rgba(255,90,90,.18);
+        line-height:1.45;
+      ">
+        ⚠️ ${escapeHTML(
+          err.message ||
+          "Errore nella richiesta a Gemini."
+        )}
+      </div>
+    `;
+
+  } finally {
+
+    btn.disabled = false;
+    btn.innerText = originalLabel;
+
+  }
+
 }
 
 
