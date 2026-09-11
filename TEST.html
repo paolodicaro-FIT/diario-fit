@@ -3129,6 +3129,807 @@ html[data-theme="light"] .header-progress-btn {
 }
 
 
+
+/* =========================================================
+   PULSANTE RIEPILOGO SETTIMANALE
+========================================================= */
+
+.header-weekly-btn {
+  border-color:
+    rgba(74,222,128,.34);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(74,222,128,.12),
+      rgba(56,189,248,.035)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 2px 8px rgba(0,0,0,.08),
+    0 0 9px rgba(74,222,128,.08);
+}
+
+.header-weekly-btn:hover {
+  border-color:
+    rgba(74,222,128,.58);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(74,222,128,.18),
+      rgba(56,189,248,.055)
+    ),
+    var(--card-2);
+
+  color: var(--green);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 3px 10px rgba(0,0,0,.10),
+    0 0 12px rgba(74,222,128,.14);
+}
+
+html[data-theme="light"] .header-weekly-btn {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(74,222,128,.12),
+      rgba(255,255,255,.94)
+    );
+}
+
+
+
+/* =========================================================
+   RIEPILOGO SETTIMANALE — GLASS GLOW
+========================================================= */
+
+.weekly-summary-modal-content {
+  max-width: 620px;
+
+  border:
+    1px solid rgba(74,222,128,.68);
+
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(74,222,128,.07),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(56,189,248,.06),
+      transparent 36%
+    ),
+    var(--card);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 0 0 1px rgba(74,222,128,.06),
+    0 0 16px rgba(74,222,128,.18),
+    0 0 34px rgba(56,189,248,.08),
+    0 24px 70px rgba(0,0,0,.42);
+
+  backdrop-filter:
+    blur(14px);
+}
+
+.weekly-summary-intro {
+  margin:
+    -2px 0 12px;
+
+  color:
+    var(--subtext);
+
+  font-size:
+    .76rem;
+
+  font-weight:
+    700;
+}
+
+.weekly-summary-placeholder {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    7px;
+
+  min-height:
+    190px;
+
+  padding:
+    20px 16px;
+
+  text-align:
+    center;
+
+  border:
+    1px solid rgba(74,222,128,.24);
+
+  border-radius:
+    16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(74,222,128,.055),
+      rgba(56,189,248,.025)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 16px rgba(74,222,128,.08);
+}
+
+.weekly-summary-placeholder-icon {
+  font-size:
+    2rem;
+
+  line-height:
+    1;
+
+  filter:
+    drop-shadow(
+      0 0 8px rgba(74,222,128,.35)
+    );
+}
+
+.weekly-summary-placeholder strong {
+  color:
+    var(--text);
+
+  font-size:
+    .94rem;
+}
+
+.weekly-summary-placeholder span {
+  max-width:
+    360px;
+
+  color:
+    var(--subtext);
+
+  font-size:
+    .74rem;
+
+  line-height:
+    1.45;
+}
+
+html[data-theme="light"]
+.weekly-summary-modal-content {
+  border-color:
+    rgba(34,197,94,.48);
+
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(34,197,94,.08),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(14,165,233,.06),
+      transparent 36%
+    ),
+    var(--card);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 0 12px rgba(34,197,94,.12),
+    0 18px 44px rgba(15,23,42,.12);
+}
+
+@media (max-width: 560px) {
+
+  .weekly-summary-modal-content {
+    padding:
+      13px;
+  }
+
+  .weekly-summary-intro {
+    font-size:
+      .69rem;
+  }
+
+  .weekly-summary-placeholder {
+    min-height:
+      160px;
+
+    padding:
+      16px 12px;
+  }
+
+  .weekly-summary-placeholder-icon {
+    font-size:
+      1.7rem;
+  }
+
+  .weekly-summary-placeholder strong {
+    font-size:
+      .86rem;
+  }
+
+  .weekly-summary-placeholder span {
+    font-size:
+      .68rem;
+  }
+
+}
+
+
+
+
+/* =========================================================
+   RIEPILOGO SETTIMANALE — CONTENUTI
+========================================================= */
+
+.weekly-summary-intro {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    10px;
+
+  flex-wrap:
+    wrap;
+}
+
+.weekly-summary-days-count {
+  padding:
+    3px 7px;
+
+  border:
+    1px solid rgba(74,222,128,.24);
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(74,222,128,.07);
+
+  color:
+    var(--green);
+
+  font-size:
+    .64rem;
+
+  font-weight:
+    900;
+
+  white-space:
+    nowrap;
+}
+
+
+.weekly-summary-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0,1fr));
+
+  gap:
+    8px;
+
+  margin-bottom:
+    10px;
+}
+
+
+.weekly-summary-card {
+  position:
+    relative;
+
+  overflow:
+    hidden;
+
+  min-width:
+    0;
+
+  padding:
+    10px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius:
+    13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.015)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 5px 16px rgba(0,0,0,.10);
+
+  backdrop-filter:
+    blur(10px);
+}
+
+
+.weekly-summary-card::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    70px;
+
+  height:
+    70px;
+
+  right:
+    -28px;
+
+  bottom:
+    -34px;
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.08),
+      transparent 70%
+    );
+
+  pointer-events:
+    none;
+}
+
+
+.weekly-summary-card-top {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    5px;
+
+  margin-bottom:
+    6px;
+}
+
+
+.weekly-summary-icon {
+  font-size:
+    .86rem;
+
+  line-height:
+    1;
+}
+
+
+.weekly-summary-label {
+  min-width:
+    0;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+
+  color:
+    var(--subtext);
+
+  font-size:
+    .61rem;
+
+  font-weight:
+    800;
+
+  white-space:
+    nowrap;
+}
+
+
+.weekly-summary-card strong {
+  display:
+    block;
+
+  margin-bottom:
+    3px;
+
+  color:
+    var(--text);
+
+  font-size:
+    1.02rem;
+
+  line-height:
+    1.05;
+}
+
+
+.weekly-summary-target {
+  display:
+    block;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+
+  color:
+    var(--muted);
+
+  font-size:
+    .57rem;
+
+  font-weight:
+    700;
+
+  white-space:
+    nowrap;
+}
+
+
+.weekly-kcal {
+  border-color:
+    rgba(255,159,28,.22);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(255,159,28,.07);
+}
+
+.weekly-pro {
+  border-color:
+    rgba(239,68,68,.20);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(239,68,68,.06);
+}
+
+.weekly-fat {
+  border-color:
+    rgba(74,222,128,.20);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(74,222,128,.06);
+}
+
+.weekly-carb {
+  border-color:
+    rgba(56,189,248,.22);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(56,189,248,.07);
+}
+
+.weekly-sugar {
+  border-color:
+    rgba(244,114,182,.22);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(244,114,182,.07);
+}
+
+.weekly-water {
+  border-color:
+    rgba(34,211,238,.24);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 11px rgba(34,211,238,.08);
+}
+
+
+.weekly-summary-chart-section {
+  padding:
+    10px;
+
+  border:
+    1px solid rgba(74,222,128,.46);
+
+  border-radius:
+    15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(74,222,128,.045),
+      rgba(56,189,248,.025)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 12px rgba(74,222,128,.12),
+    0 0 24px rgba(56,189,248,.05);
+}
+
+
+.weekly-summary-chart-header {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    8px;
+
+  margin-bottom:
+    10px;
+}
+
+
+.weekly-summary-chart-header strong {
+  color:
+    var(--text);
+
+  font-size:
+    .72rem;
+}
+
+
+.weekly-summary-chart-header span {
+  color:
+    var(--muted);
+
+  font-size:
+    .58rem;
+
+  font-weight:
+    700;
+}
+
+
+.weekly-summary-days {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(7, minmax(0,1fr));
+
+  gap:
+    5px;
+
+  align-items:
+    end;
+
+  min-height:
+    100px;
+}
+
+
+.weekly-day-item {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    flex-end;
+
+  gap:
+    4px;
+
+  min-width:
+    0;
+}
+
+
+.weekly-day-value {
+  color:
+    var(--subtext);
+
+  font-size:
+    .50rem;
+
+  font-weight:
+    800;
+
+  white-space:
+    nowrap;
+}
+
+
+.weekly-day-track {
+  display:
+    flex;
+
+  align-items:
+    flex-end;
+
+  width:
+    100%;
+
+  max-width:
+    28px;
+
+  height:
+    62px;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  border-radius:
+    7px;
+
+  background:
+    rgba(255,255,255,.025);
+}
+
+
+.weekly-day-bar {
+  width:
+    100%;
+
+  min-height:
+    2px;
+
+  border-radius:
+    6px 6px 3px 3px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(74,222,128,.95),
+      rgba(56,189,248,.78)
+    );
+
+  box-shadow:
+    0 0 8px rgba(74,222,128,.18);
+}
+
+
+.weekly-day-label {
+  color:
+    var(--muted);
+
+  font-size:
+    .50rem;
+
+  font-weight:
+    800;
+
+  text-align:
+    center;
+
+  white-space:
+    nowrap;
+}
+
+
+.weekly-day-item.today
+.weekly-day-label {
+  color:
+    var(--green);
+
+  text-shadow:
+    0 0 6px rgba(74,222,128,.25);
+}
+
+
+.weekly-day-item.no-data {
+  opacity:
+    .40;
+}
+
+
+html[data-theme="light"]
+.weekly-summary-card,
+html[data-theme="light"]
+.weekly-summary-chart-section {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.96),
+      rgba(248,250,252,.82)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    0 5px 14px rgba(15,23,42,.06);
+}
+
+
+@media (max-width: 560px) {
+
+  .weekly-summary-grid {
+    grid-template-columns:
+      repeat(3, minmax(0,1fr));
+
+    gap:
+      6px;
+  }
+
+  .weekly-summary-card {
+    padding:
+      8px 7px;
+  }
+
+  .weekly-summary-label {
+    font-size:
+      .55rem;
+  }
+
+  .weekly-summary-card strong {
+    font-size:
+      .88rem;
+  }
+
+  .weekly-summary-target {
+    font-size:
+      .51rem;
+  }
+
+  .weekly-summary-chart-section {
+    padding:
+      8px 6px;
+  }
+
+  .weekly-summary-days {
+    gap:
+      3px;
+
+    min-height:
+      92px;
+  }
+
+  .weekly-day-track {
+    max-width:
+      23px;
+
+    height:
+      56px;
+  }
+
+  .weekly-day-value,
+  .weekly-day-label {
+    font-size:
+      .45rem;
+  }
+
+}
+
+
 /* =========================================================
    PROGRESSI PESO
 ========================================================= */
@@ -5733,6 +6534,15 @@ html[data-theme="light"]
           ⚖️ <span>Progressi</span>
         </button>
 
+        <button
+          type="button"
+          class="header-progress-btn header-weekly-btn"
+          onclick="toggleWeeklySummaryModal()"
+          title="Riepilogo settimanale"
+        >
+          📊 <span>Settimana</span>
+        </button>
+
       </div>
 
     </div>
@@ -7516,6 +8326,190 @@ html[data-theme="light"]
         style="display:none;"
       >
         <canvas id="progress-weight-chart"></canvas>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- =====================================================
+     MODAL RIEPILOGO SETTIMANALE
+===================================================== -->
+
+<div
+  class="modal-overlay"
+  id="weekly-summary-modal"
+>
+  <div class="modal-content weekly-summary-modal-content">
+
+    <div class="modal-header">
+      <h3>📊 Riepilogo settimanale</h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleWeeklySummaryModal()"
+        title="Chiudi"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="weekly-summary-intro">
+      <span id="weekly-summary-period">
+        Ultimi 7 giorni, includendo oggi.
+      </span>
+
+      <span
+        class="weekly-summary-days-count"
+        id="weekly-summary-days-count"
+      >
+        —
+      </span>
+    </div>
+
+    <div class="weekly-summary-grid">
+
+      <div
+        class="weekly-summary-card weekly-kcal"
+        id="weekly-card-kcal"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">🔥</span>
+          <span class="weekly-summary-label">Calorie</span>
+        </div>
+
+        <strong id="weekly-average-kcal">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-kcal"
+        >
+          —
+        </span>
+      </div>
+
+
+      <div
+        class="weekly-summary-card weekly-pro"
+        id="weekly-card-pro"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">🥩</span>
+          <span class="weekly-summary-label">Proteine</span>
+        </div>
+
+        <strong id="weekly-average-pro">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-pro"
+        >
+          —
+        </span>
+      </div>
+
+
+      <div
+        class="weekly-summary-card weekly-fat"
+        id="weekly-card-fat"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">🥑</span>
+          <span class="weekly-summary-label">Grassi</span>
+        </div>
+
+        <strong id="weekly-average-fat">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-fat"
+        >
+          —
+        </span>
+      </div>
+
+
+      <div
+        class="weekly-summary-card weekly-carb"
+        id="weekly-card-carb"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">🍞</span>
+          <span class="weekly-summary-label">Carboidrati</span>
+        </div>
+
+        <strong id="weekly-average-carb">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-carb"
+        >
+          —
+        </span>
+      </div>
+
+
+      <div
+        class="weekly-summary-card weekly-sugar"
+        id="weekly-card-sugar"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">🍬</span>
+          <span class="weekly-summary-label">Zuccheri</span>
+        </div>
+
+        <strong id="weekly-average-sugar">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-sugar"
+        >
+          —
+        </span>
+      </div>
+
+
+      <div
+        class="weekly-summary-card weekly-water"
+        id="weekly-card-water"
+      >
+        <div class="weekly-summary-card-top">
+          <span class="weekly-summary-icon">💧</span>
+          <span class="weekly-summary-label">Acqua</span>
+        </div>
+
+        <strong id="weekly-average-water">—</strong>
+
+        <span
+          class="weekly-summary-target"
+          id="weekly-target-water"
+        >
+          —
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="weekly-summary-chart-section">
+
+      <div class="weekly-summary-chart-header">
+        <strong>
+          Andamento giornaliero
+        </strong>
+
+        <span>
+          calorie rispetto al target
+        </span>
+      </div>
+
+      <div
+        class="weekly-summary-days"
+        id="weekly-summary-days"
+      >
       </div>
 
     </div>
@@ -10243,6 +11237,31 @@ function changeMultiplier(amount) {
 /* =========================================================
    MODALS
 ========================================================= */
+
+function toggleWeeklySummaryModal() {
+
+  const modal =
+    document.getElementById(
+      "weekly-summary-modal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  if (
+    getComputedStyle(modal).display !== "none"
+  ) {
+    modal.style.display = "none";
+    return;
+  }
+
+  renderWeeklySummary();
+
+  modal.style.display = "flex";
+
+}
+
 
 function toggleInfoModal() {
 
@@ -14235,6 +15254,671 @@ async function saveAndRender() {
 /* =========================================================
    DASHBOARD
 ========================================================= */
+
+
+/* =========================================================
+   RIEPILOGO NUTRIZIONALE — HELPER COMUNI
+========================================================= */
+
+function calculateNutritionSummary(
+  sourceLog
+) {
+
+  const items =
+    Array.isArray(sourceLog)
+      ? sourceLog
+      : [];
+
+  const totals =
+    items.reduce(
+      (tot, item) => {
+
+        tot.kcal +=
+          Number(item.kcal) || 0;
+
+        tot.pro +=
+          Number(item.pro) || 0;
+
+        tot.fat +=
+          Number(item.fat) || 0;
+
+        tot.carb +=
+          Number(item.carb) || 0;
+
+        tot.sugar +=
+          Number(item.sugar) || 0;
+
+        tot.water +=
+          Number(
+            item.waterMl ??
+            item.water
+          ) || 0;
+
+        return tot;
+      },
+      {
+        kcal: 0,
+        pro: 0,
+        fat: 0,
+        carb: 0,
+        sugar: 0,
+        water: 0
+      }
+    );
+
+  return {
+    kcal:
+      Math.round(totals.kcal),
+
+    pro:
+      Math.round(
+        totals.pro * 10
+      ) / 10,
+
+    fat:
+      Math.round(
+        totals.fat * 10
+      ) / 10,
+
+    carb:
+      Math.round(
+        totals.carb * 10
+      ) / 10,
+
+    sugar:
+      Math.round(
+        totals.sugar * 10
+      ) / 10,
+
+    water:
+      Math.round(totals.water)
+  };
+
+}
+
+
+function normalizeNutritionValue(
+  value,
+  fallback = 0
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return fallback;
+  }
+
+  const normalized =
+    parseFloat(
+      String(value)
+        .replace(",", ".")
+    );
+
+  return Number.isFinite(normalized)
+    ? normalized
+    : fallback;
+}
+
+
+function getWeeklyNutritionData() {
+
+  const todayKey =
+    getLocalISODate();
+
+  const todayDate =
+    new Date(
+      todayKey + "T00:00:00"
+    );
+
+  const days = [];
+
+  for (
+    let offset = 6;
+    offset >= 0;
+    offset--
+  ) {
+
+    const date =
+      new Date(todayDate);
+
+    date.setDate(
+      todayDate.getDate() - offset
+    );
+
+    const year =
+      date.getFullYear();
+
+    const month =
+      String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
+
+    const day =
+      String(
+        date.getDate()
+      ).padStart(2, "0");
+
+    const dateKey =
+      `${year}-${month}-${day}`;
+
+    let sourceLog = [];
+    let storedSummary = {};
+
+    if (dateKey === todayKey) {
+
+      sourceLog =
+        Array.isArray(log)
+          ? log
+          : [];
+
+    } else {
+
+      const dayData =
+        historyLogs?.[dateKey];
+
+      sourceLog =
+        Array.isArray(dayData?.log)
+          ? dayData.log
+          : [];
+
+      storedSummary =
+        dayData?.summary &&
+        typeof dayData.summary === "object"
+          ? dayData.summary
+          : {};
+    }
+
+    const calculated =
+      calculateNutritionSummary(
+        sourceLog
+      );
+
+    const summary = {
+      kcal:
+        normalizeNutritionValue(
+          storedSummary.kcal,
+          calculated.kcal
+        ),
+
+      pro:
+        normalizeNutritionValue(
+          storedSummary.pro,
+          calculated.pro
+        ),
+
+      fat:
+        normalizeNutritionValue(
+          storedSummary.fat,
+          calculated.fat
+        ),
+
+      carb:
+        normalizeNutritionValue(
+          storedSummary.carb,
+          calculated.carb
+        ),
+
+      sugar:
+        normalizeNutritionValue(
+          storedSummary.sugar,
+          calculated.sugar
+        ),
+
+      water:
+        normalizeNutritionValue(
+          storedSummary.water,
+          calculated.water
+        )
+    };
+
+    const hasData =
+      sourceLog.length > 0
+      ||
+      Object.values(summary).some(
+        value =>
+          Number(value) > 0
+      );
+
+    days.push({
+      date: dateKey,
+      isToday:
+        dateKey === todayKey,
+      hasData,
+      summary
+    });
+
+  }
+
+  return days;
+}
+
+
+function calculateWeeklyNutritionOverview() {
+
+  const days =
+    getWeeklyNutritionData();
+
+  const availableDays =
+    days.filter(
+      day => day.hasData
+    );
+
+  const totals = {
+    kcal: 0,
+    pro: 0,
+    fat: 0,
+    carb: 0,
+    sugar: 0,
+    water: 0
+  };
+
+  availableDays.forEach(
+    day => {
+
+      totals.kcal +=
+        Number(
+          day.summary.kcal
+        ) || 0;
+
+      totals.pro +=
+        Number(
+          day.summary.pro
+        ) || 0;
+
+      totals.fat +=
+        Number(
+          day.summary.fat
+        ) || 0;
+
+      totals.carb +=
+        Number(
+          day.summary.carb
+        ) || 0;
+
+      totals.sugar +=
+        Number(
+          day.summary.sugar
+        ) || 0;
+
+      totals.water +=
+        Number(
+          day.summary.water
+        ) || 0;
+
+    }
+  );
+
+  const count =
+    availableDays.length;
+
+  const averages =
+    count > 0
+      ? {
+          kcal:
+            Math.round(
+              totals.kcal / count
+            ),
+
+          pro:
+            Math.round(
+              totals.pro / count * 10
+            ) / 10,
+
+          fat:
+            Math.round(
+              totals.fat / count * 10
+            ) / 10,
+
+          carb:
+            Math.round(
+              totals.carb / count * 10
+            ) / 10,
+
+          sugar:
+            Math.round(
+              totals.sugar / count * 10
+            ) / 10,
+
+          water:
+            Math.round(
+              totals.water / count
+            )
+        }
+      : {
+          kcal: 0,
+          pro: 0,
+          fat: 0,
+          carb: 0,
+          sugar: 0,
+          water: 0
+        };
+
+  return {
+    days,
+    availableDays,
+    availableDaysCount:
+      count,
+    totals,
+    averages
+  };
+
+}
+
+
+
+/* =========================================================
+   RIEPILOGO SETTIMANALE — RENDER
+========================================================= */
+
+function renderWeeklySummary() {
+
+  const overview =
+    calculateWeeklyNutritionOverview();
+
+  const {
+    days,
+    availableDaysCount,
+    averages
+  } = overview;
+
+
+  const formatDateShort =
+    dateKey => {
+
+      const parts =
+        dateKey.split("-");
+
+      if (parts.length !== 3) {
+        return dateKey;
+      }
+
+      return `${parts[2]}/${parts[1]}`;
+    };
+
+
+  const formatDayLabel =
+    dateKey => {
+
+      const date =
+        new Date(
+          dateKey + "T12:00:00"
+        );
+
+      return date
+        .toLocaleDateString(
+          "it-IT",
+          {
+            weekday: "short"
+          }
+        )
+        .replace(".", "");
+    };
+
+
+  const periodElement =
+    document.getElementById(
+      "weekly-summary-period"
+    );
+
+  if (
+    periodElement &&
+    days.length
+  ) {
+
+    periodElement.textContent =
+      `${formatDateShort(days[0].date)} – `
+      + `${formatDateShort(days[days.length - 1].date)}`;
+
+  }
+
+
+  const countElement =
+    document.getElementById(
+      "weekly-summary-days-count"
+    );
+
+  if (countElement) {
+
+    countElement.textContent =
+      availableDaysCount === 1
+        ? "1 giorno con dati"
+        : `${availableDaysCount} giorni con dati`;
+
+  }
+
+
+  const metrics = [
+    {
+      key: "kcal",
+      unit: " kcal"
+    },
+    {
+      key: "pro",
+      unit: " g"
+    },
+    {
+      key: "fat",
+      unit: " g"
+    },
+    {
+      key: "carb",
+      unit: " g"
+    },
+    {
+      key: "sugar",
+      unit: " g"
+    },
+    {
+      key: "water",
+      unit: " ml"
+    }
+  ];
+
+
+  metrics.forEach(
+    metric => {
+
+      const averageElement =
+        document.getElementById(
+          `weekly-average-${metric.key}`
+        );
+
+      const targetElement =
+        document.getElementById(
+          `weekly-target-${metric.key}`
+        );
+
+      const average =
+        Number(
+          averages[metric.key]
+        ) || 0;
+
+      const target =
+        Number(
+          TARGETS?.[metric.key]
+        ) || 0;
+
+
+      if (averageElement) {
+
+        averageElement.textContent =
+          availableDaysCount > 0
+            ? `${average}${metric.unit}`
+            : "—";
+
+      }
+
+
+      if (targetElement) {
+
+        if (
+          availableDaysCount === 0 ||
+          target <= 0
+        ) {
+
+          targetElement.textContent =
+            target > 0
+              ? `Target ${target}${metric.unit}`
+              : "Target non impostato";
+
+          return;
+        }
+
+
+        const percentage =
+          Math.round(
+            (average / target) * 100
+          );
+
+
+        const difference =
+          Math.round(
+            (average - target) * 10
+          ) / 10;
+
+
+        let comparison = "";
+
+        if (difference > 0) {
+
+          comparison =
+            `+${difference}${metric.unit}`;
+
+        } else if (difference < 0) {
+
+          comparison =
+            `${difference}${metric.unit}`;
+
+        } else {
+
+          comparison =
+            "in target";
+
+        }
+
+
+        targetElement.textContent =
+          `Target ${target}${metric.unit}`
+          + ` · ${percentage}%`
+          + ` · ${comparison}`;
+
+      }
+
+    }
+  );
+
+
+  const daysContainer =
+    document.getElementById(
+      "weekly-summary-days"
+    );
+
+  if (!daysContainer) {
+    return;
+  }
+
+
+  const kcalTarget =
+    Number(
+      TARGETS?.kcal
+    ) || 0;
+
+
+  const maxKcal =
+    Math.max(
+      kcalTarget,
+      ...days.map(
+        day =>
+          day.hasData
+            ? Number(
+                day.summary.kcal
+              ) || 0
+            : 0
+      ),
+      1
+    );
+
+
+  daysContainer.innerHTML =
+    days.map(
+      day => {
+
+        const kcal =
+          day.hasData
+            ? Math.round(
+                Number(
+                  day.summary.kcal
+                ) || 0
+              )
+            : 0;
+
+
+        const height =
+          day.hasData
+            ? Math.max(
+                4,
+                Math.min(
+                  100,
+                  Math.round(
+                    (kcal / maxKcal) * 100
+                  )
+                )
+              )
+            : 0;
+
+
+        const classes = [
+          "weekly-day-item"
+        ];
+
+        if (day.isToday) {
+          classes.push("today");
+        }
+
+        if (!day.hasData) {
+          classes.push("no-data");
+        }
+
+
+        const valueLabel =
+          day.hasData
+            ? kcal
+            : "—";
+
+
+        return `
+          <div class="${classes.join(" ")}">
+
+            <div class="weekly-day-value">
+              ${valueLabel}
+            </div>
+
+            <div class="weekly-day-track">
+              <div
+                class="weekly-day-bar"
+                style="height:${height}%;"
+                title="${
+                  day.hasData
+                    ? `${kcal} kcal`
+                    : "Nessun dato"
+                }"
+              ></div>
+            </div>
+
+            <div class="weekly-day-label">
+              ${formatDayLabel(day.date)}
+            </div>
+
+          </div>
+        `;
+
+      }
+    )
+    .join("");
+
+}
 
 
 /* =========================================================
