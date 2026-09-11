@@ -2558,7 +2558,7 @@ html[data-theme="light"]
     inset 0 1px 0 rgba(255,255,255,.035);
 }
 
-#help-modal .help2-hero-icon {
+#help-modal .help2-hero-logo-wrap {
   display: flex;
 
   align-items: center;
@@ -2566,22 +2566,44 @@ html[data-theme="light"]
 
   flex: 0 0 auto;
 
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
+
+  padding: 2px;
 
   border:
-    1px solid rgba(56,189,248,.28);
+    1px solid rgba(255,159,28,.22);
 
-  border-radius: 13px;
+  border-radius: 12px;
 
   background:
-    rgba(56,189,248,.08);
-
-  font-size: 1.35rem;
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.08),
+      rgba(56,189,248,.06)
+    );
 
   box-shadow:
-    0 0 14px rgba(56,189,248,.07);
+    0 0 12px rgba(255,159,28,.07),
+    0 0 12px rgba(56,189,248,.05),
+    inset 0 1px 0 rgba(255,255,255,.04);
 }
+
+#help-modal .help2-logo {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 9px;
+
+  filter:
+    drop-shadow(0 0 5px rgba(255,159,28,.14))
+    drop-shadow(0 0 5px rgba(56,189,248,.10));
+}
+
 
 #help-modal .help2-kicker {
   color: #38bdf8;
@@ -2932,13 +2954,15 @@ html[data-theme="light"]
     border-radius: 12px;
   }
 
-  #help-modal .help2-hero-icon {
-    width: 38px;
-    height: 38px;
+  #help-modal .help2-hero-logo-wrap {
+    width: 36px;
+    height: 36px;
 
     border-radius: 10px;
+  }
 
-    font-size: 1.08rem;
+  #help-modal .help2-logo {
+    border-radius: 7px;
   }
 
   #help-modal .help2-hero h2 {
@@ -7404,7 +7428,7 @@ html[data-theme="light"]
     <div class="modal-header help2-header">
 
       <h3>
-        ❓ Help
+        📖 Help
       </h3>
 
       <button
@@ -7420,8 +7444,12 @@ html[data-theme="light"]
 
     <section class="help2-hero">
 
-      <div class="help2-hero-icon">
-        📖
+      <div class="help2-hero-logo-wrap">
+        <img
+          src="DiarioFITGLASS.png"
+          alt="Diario FIT"
+          class="help2-logo"
+        >
       </div>
 
       <div>
