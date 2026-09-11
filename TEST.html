@@ -7162,12 +7162,17 @@ html[data-theme="light"]
       style="display:none;"
     >
       <div class="progress-summary-item">
-        <span>Ultimo peso</span>
+        <span>Peso attuale</span>
         <strong id="progress-latest-weight">—</strong>
       </div>
 
       <div class="progress-summary-item">
-        <span>Variazione</span>
+        <span>Peso trend</span>
+        <strong id="progress-trend-weight">—</strong>
+      </div>
+
+      <div class="progress-summary-item">
+        <span>7 giorni</span>
         <strong id="progress-weight-change">—</strong>
       </div>
     </div>
@@ -10152,6 +10157,93 @@ function showProgressMessage(
 }
 
 
+function calculateWeightTrend(
+  history,
+  alpha = 0.35
+) {
+
+  if (!history.length) {
+    return [];
+  }
+
+  const trend = [];
+
+  let currentTrend =
+    Number(history[0].weight);
+
+  trend.push(currentTrend);
+
+  for (
+    let i = 1;
+    i < history.length;
+    i++
+  ) {
+
+    const weight =
+      Number(history[i].weight);
+
+    currentTrend =
+      alpha * weight +
+      (1 - alpha) * currentTrend;
+
+    trend.push(currentTrend);
+  }
+
+  return trend;
+}
+
+
+function getWeightChangeOverDays(
+  history,
+  days
+) {
+
+  if (history.length < 2) {
+    return null;
+  }
+
+  const latest =
+    history[
+      history.length - 1
+    ];
+
+  const latestDate =
+    new Date(
+      latest.date + "T00:00:00"
+    );
+
+  const targetTime =
+    latestDate.getTime() -
+    days * 24 * 60 * 60 * 1000;
+
+  let reference = null;
+
+  for (const item of history) {
+
+    const itemTime =
+      new Date(
+        item.date + "T00:00:00"
+      ).getTime();
+
+    if (itemTime <= targetTime) {
+      reference = item;
+    } else {
+      break;
+    }
+
+  }
+
+  if (!reference) {
+    return null;
+  }
+
+  return (
+    latest.weight -
+    reference.weight
+  );
+}
+
+
 function renderWeightProgress() {
 
   const summary =
@@ -10186,20 +10278,37 @@ function renderWeightProgress() {
     return;
   }
 
-  const first =
-    weightHistory[0];
-
   const latest =
     weightHistory[
       weightHistory.length - 1
     ];
 
-  const change =
-    latest.weight - first.weight;
+  const trend =
+    calculateWeightTrend(
+      weightHistory
+    );
+
+  const latestTrend =
+    trend.length
+      ? trend[
+          trend.length - 1
+        ]
+      : null;
+
+  const change7 =
+    getWeightChangeOverDays(
+      weightHistory,
+      7
+    );
 
   const latestEl =
     document.getElementById(
       "progress-latest-weight"
+    );
+
+  const trendEl =
+    document.getElementById(
+      "progress-trend-weight"
     );
 
   const changeEl =
@@ -10209,17 +10318,28 @@ function renderWeightProgress() {
 
   if (latestEl) {
     latestEl.textContent =
-      latest.weight.toFixed(1) + " kg";
+      latest.weight.toFixed(1) +
+      " kg";
+  }
+
+  if (trendEl) {
+    trendEl.textContent =
+      Number.isFinite(latestTrend)
+        ? latestTrend.toFixed(1) +
+          " kg"
+        : "—";
   }
 
   if (changeEl) {
 
-    if (weightHistory.length < 2) {
+    if (
+      !Number.isFinite(change7)
+    ) {
       changeEl.textContent = "—";
     } else {
       changeEl.textContent =
-        (change > 0 ? "+" : "") +
-        change.toFixed(1) +
+        (change7 > 0 ? "+" : "") +
+        change7.toFixed(1) +
         " kg";
     }
 
@@ -10312,6 +10432,11 @@ function drawWeightChart() {
       "--accent"
     ).trim() || "#ff9f1c";
 
+  const trendColor =
+    styles.getPropertyValue(
+      "--cyan"
+    ).trim() || "#38bdf8";
+
   const border =
     styles.getPropertyValue(
       "--border"
@@ -10329,21 +10454,32 @@ function drawWeightChart() {
   const plotHeight =
     height - top - bottom;
 
+  const trendValues =
+    calculateWeightTrend(
+      weightHistory
+    );
+
   const weights =
     weightHistory.map(
       item => item.weight
     );
 
+  const allValues = [
+    ...weights,
+    ...trendValues
+  ].filter(Number.isFinite);
+
   let minWeight =
-    Math.min(...weights);
+    Math.min(...allValues);
 
   let maxWeight =
-    Math.max(...weights);
+    Math.max(...allValues);
 
   if (minWeight === maxWeight) {
     minWeight -= 1;
     maxWeight += 1;
   } else {
+
     const padding =
       Math.max(
         (maxWeight - minWeight) * .15,
@@ -10352,6 +10488,85 @@ function drawWeightChart() {
 
     minWeight -= padding;
     maxWeight += padding;
+
+  }
+
+  const dateTimes =
+    weightHistory.map(
+      item =>
+        Date.parse(
+          item.date + "T00:00:00Z"
+        )
+    );
+
+  const validDateTimes =
+    dateTimes.filter(
+      Number.isFinite
+    );
+
+  const minDate =
+    validDateTimes.length
+      ? Math.min(...validDateTimes)
+      : 0;
+
+  const maxDate =
+    validDateTimes.length
+      ? Math.max(...validDateTimes)
+      : 0;
+
+  function getPointX(
+    index
+  ) {
+
+    if (
+      weightHistory.length === 1 ||
+      minDate === maxDate ||
+      !Number.isFinite(
+        dateTimes[index]
+      )
+    ) {
+      return (
+        left +
+        plotWidth / 2
+      );
+    }
+
+    return (
+      left +
+      (
+        (
+          dateTimes[index] -
+          minDate
+        ) /
+        (
+          maxDate -
+          minDate
+        )
+      ) *
+      plotWidth
+    );
+
+  }
+
+  function getPointY(
+    value
+  ) {
+
+    return (
+      top +
+      (
+        (
+          maxWeight -
+          value
+        ) /
+        (
+          maxWeight -
+          minWeight
+        )
+      ) *
+      plotHeight
+    );
+
   }
 
   ctx.font =
@@ -10404,40 +10619,78 @@ function drawWeightChart() {
 
   const points =
     weightHistory.map(
-      (item, index) => {
+      (item, index) => ({
+        x: getPointX(index),
+        y: getPointY(
+          item.weight
+        ),
+        item
+      })
+    );
 
-        const x =
-          count === 1
-            ? left + plotWidth / 2
-            : left +
-              (
-                plotWidth *
-                index /
-                (count - 1)
-              );
+  const trendPoints =
+    weightHistory.map(
+      (item, index) => ({
+        x: getPointX(index),
+        y: getPointY(
+          trendValues[index]
+        ),
+        item,
+        value:
+          trendValues[index]
+      })
+    );
 
-        const y =
-          top +
-          (
-            (
-              maxWeight -
-              item.weight
-            ) /
-            (
-              maxWeight -
-              minWeight
-            )
-          ) *
-          plotHeight;
+  if (
+    trendPoints.length > 1
+  ) {
 
-        return {
-          x,
-          y,
-          item
-        };
+    ctx.save();
+
+    ctx.beginPath();
+
+    trendPoints.forEach(
+      (point, index) => {
+
+        if (index === 0) {
+          ctx.moveTo(
+            point.x,
+            point.y
+          );
+        } else {
+          ctx.lineTo(
+            point.x,
+            point.y
+          );
+        }
 
       }
     );
+
+    ctx.strokeStyle =
+      trendColor;
+
+    ctx.lineWidth = 3;
+
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    ctx.setLineDash(
+      [7, 5]
+    );
+
+    ctx.shadowColor =
+      trendColor;
+
+    ctx.shadowBlur = 7;
+
+    ctx.globalAlpha = .88;
+
+    ctx.stroke();
+
+    ctx.restore();
+
+  }
 
   if (points.length > 1) {
 
@@ -10528,7 +10781,6 @@ function drawWeightChart() {
     });
 
 }
-
 
 window.addEventListener(
   "resize",
