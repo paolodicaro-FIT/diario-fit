@@ -3316,7 +3316,8 @@ html[data-theme="light"] .header-progress-btn {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.06),
     0 10px 26px rgba(0,0,0,.18),
-    0 0 22px rgba(56,189,248,.035);
+    -8px 0 24px rgba(255,159,28,.045),
+    8px 0 24px rgba(56,189,248,.055);
 
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -3360,11 +3361,21 @@ html[data-theme="light"] .header-progress-btn {
   filter: blur(5px);
 }
 
-.progress-chart-title {
+.progress-chart-header {
   position: relative;
   z-index: 1;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
   margin-bottom: 6px;
+}
+
+.progress-chart-title {
+  display: flex;
+  align-items: center;
 
   color: var(--text);
 
@@ -3379,6 +3390,55 @@ html[data-theme="light"] .header-progress-btn {
 .progress-chart-title::before {
   content: "📈";
   margin-right: 5px;
+
+  filter:
+    drop-shadow(
+      0 0 6px rgba(255,159,28,.22)
+    );
+}
+
+.progress-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--muted);
+
+  font-size: .58rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.progress-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress-legend-line {
+  display: inline-block;
+
+  width: 15px;
+  height: 3px;
+
+  border-radius: 999px;
+}
+
+.progress-legend-line.real {
+  background: var(--accent);
+
+  box-shadow:
+    0 0 7px rgba(255,159,28,.55);
+}
+
+.progress-legend-line.trend {
+  height: 0;
+
+  border-top:
+    2px dashed var(--cyan);
+
+  box-shadow:
+    0 0 7px rgba(56,189,248,.55);
 }
 
 .progress-chart-wrap {
@@ -3449,6 +3509,20 @@ html[data-theme="light"] .progress-chart-section {
   .progress-save-btn {
     min-width: 72px;
     padding: 0 10px;
+  }
+
+  .progress-chart-header {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .progress-chart-legend {
+    gap: 7px;
+    font-size: .52rem;
+  }
+
+  .progress-legend-line {
+    width: 12px;
   }
 
   .progress-chart-wrap {
@@ -7361,8 +7435,27 @@ html[data-theme="light"]
 
     <div class="progress-chart-section">
 
-      <div class="progress-chart-title">
-        Andamento peso
+      <div class="progress-chart-header">
+
+        <div class="progress-chart-title">
+          Andamento peso
+        </div>
+
+        <div
+          class="progress-chart-legend"
+          aria-label="Legenda grafico peso"
+        >
+          <span class="progress-legend-item">
+            <span class="progress-legend-line real"></span>
+            Peso reale
+          </span>
+
+          <span class="progress-legend-item">
+            <span class="progress-legend-line trend"></span>
+            Peso trend
+          </span>
+        </div>
+
       </div>
 
       <div
