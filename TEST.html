@@ -2816,6 +2816,444 @@ html[data-theme="light"] .header-progress-btn {
 
 
 
+
+/* =========================================================
+   INSERIMENTO LIBERO 2.0
+   Glass / glow compatto - solo grafica
+========================================================= */
+
+.free-entry-card {
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 92% 4%,
+      rgba(96,165,250,.075),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 5% 100%,
+      rgba(255,159,28,.055),
+      transparent 34%
+    ),
+    var(--card);
+}
+
+.free-entry-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.025),
+      transparent 42%
+    );
+}
+
+.free-entry-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.free-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.free-entry-title {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 7px;
+}
+
+.free-entry-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+
+  border:
+    1px solid rgba(255,159,28,.28);
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.12),
+      rgba(255,159,28,.035)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 0 11px rgba(255,159,28,.09);
+
+  font-size: .88rem;
+}
+
+.free-entry-title h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: .92rem;
+  line-height: 1.05;
+}
+
+.free-entry-title small {
+  display: block;
+  margin-top: 2px;
+
+  color: var(--muted);
+  font-size: .60rem;
+  line-height: 1.15;
+}
+
+.free-entry-gemini {
+  flex: 0 0 auto;
+  min-height: 30px;
+
+  padding: 5px 9px;
+  border-radius: 10px;
+
+  font-size: .68rem;
+}
+
+
+.free-entry-name {
+  margin-bottom: 7px;
+}
+
+.free-entry-name label,
+.free-entry-macros label,
+.free-entry-secondary label {
+  display: block;
+  margin: 0;
+}
+
+.free-entry-name label > span,
+.free-entry-macros label > span,
+.free-entry-secondary label > span {
+  display: block;
+
+  margin: 0 0 4px;
+
+  color: var(--muted);
+  font-size: .63rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.free-entry-name input {
+  width: 100%;
+  min-height: 38px;
+
+  border-color:
+    rgba(255,159,28,.24);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.012)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 10px rgba(255,159,28,.055);
+}
+
+
+.free-entry-macros {
+  display: grid;
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+
+  gap: 5px;
+  margin-bottom: 7px;
+}
+
+.free-metric {
+  --free-color: 255,159,28;
+
+  position: relative;
+  overflow: hidden;
+
+  padding: 6px;
+
+  border:
+    1px solid rgba(var(--free-color),.25);
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(var(--free-color),.085),
+      rgba(var(--free-color),.022)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 0 9px rgba(var(--free-color),.055);
+}
+
+.free-metric-kcal {
+  --free-color: 255,159,28;
+  grid-column: span 2;
+}
+
+.free-metric-pro {
+  --free-color: 96,165,250;
+  grid-column: span 2;
+}
+
+.free-metric-fat {
+  --free-color: 250,204,21;
+  grid-column: span 2;
+}
+
+.free-metric-carb {
+  --free-color: 52,211,153;
+  grid-column: 2 / span 2;
+}
+
+.free-metric-sugar {
+  --free-color: 244,114,182;
+  grid-column: 4 / span 2;
+}
+
+.free-metric > span {
+  color:
+    rgb(var(--free-color)) !important;
+}
+
+.free-metric input {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+
+  padding: 5px 6px;
+
+  border:
+    1px solid rgba(var(--free-color),.16);
+
+  border-radius: 8px;
+
+  background:
+    rgba(0,0,0,.10);
+
+  font-size: .80rem;
+  text-align: center;
+  font-weight: 800;
+}
+
+
+.free-entry-secondary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.free-secondary-field {
+  padding: 6px 7px;
+
+  border:
+    1px solid rgba(148,163,184,.17);
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.035),
+      rgba(255,255,255,.010)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.free-input-unit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  align-items: center;
+  gap: 5px;
+}
+
+.free-input-unit input {
+  min-width: 0;
+  width: 100%;
+  min-height: 31px;
+
+  padding: 5px 6px;
+
+  text-align: center;
+  font-weight: 800;
+}
+
+.free-input-unit small {
+  min-width: 20px;
+
+  color: var(--muted);
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+
+.free-entry-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: 0;
+  min-height: 36px;
+
+  border-radius: 10px;
+
+  font-size: .80rem;
+}
+
+.free-entry-save span {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+
+/* Tema chiaro */
+
+html[data-theme="light"] .free-entry-card {
+  background:
+    radial-gradient(
+      circle at 92% 4%,
+      rgba(96,165,250,.09),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 5% 100%,
+      rgba(255,159,28,.07),
+      transparent 34%
+    ),
+    var(--card);
+}
+
+html[data-theme="light"] .free-entry-name input,
+html[data-theme="light"] .free-metric,
+html[data-theme="light"] .free-secondary-field {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(241,245,249,.90)
+    );
+}
+
+html[data-theme="light"] .free-metric input {
+  background:
+    rgba(255,255,255,.78);
+}
+
+
+/* Mobile */
+
+@media (max-width: 560px) {
+
+  .free-entry-header {
+    margin-bottom: 7px;
+  }
+
+  .free-entry-title h2 {
+    font-size: .88rem;
+  }
+
+  .free-entry-title small {
+    font-size: .57rem;
+  }
+
+  .free-entry-gemini {
+    padding: 5px 8px;
+    font-size: .64rem;
+  }
+
+  .free-entry-macros {
+    gap: 4px;
+  }
+
+  .free-metric {
+    padding: 5px;
+  }
+
+  .free-metric > span {
+    font-size: .58rem !important;
+  }
+
+  .free-metric input {
+    min-height: 30px;
+    padding: 4px 5px;
+    font-size: .74rem;
+  }
+
+  .free-entry-secondary {
+    gap: 5px;
+  }
+
+  .free-secondary-field {
+    padding: 5px 6px;
+  }
+
+  .free-entry-save {
+    min-height: 34px;
+    font-size: .76rem;
+  }
+}
+
+
+@media (max-width: 370px) {
+
+  .free-entry-title small {
+    display: none;
+  }
+
+  .free-entry-title-icon {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+  }
+
+  .free-entry-gemini {
+    padding: 4px 7px;
+  }
+
+  .free-metric > span {
+    font-size: .54rem !important;
+  }
+
+  .free-input-unit small {
+    font-size: .57rem;
+  }
+}
+
+
+/* =========================================================
 /* =========================================================
    TARGET GIORNALIERI 2.0 - STILE METRICHE
    Solo grafica: dimensioni e griglia restano invariate
@@ -4140,43 +4578,50 @@ html[data-theme="light"]
 
 
   <!-- ===================================================
-       INSERIMENTO LIBERO
+       INSERIMENTO LIBERO 2.0
   ==================================================== -->
 
-  <section class="card">
+  <section class="card free-entry-card">
 
-    <div class="section-title">
+    <div class="free-entry-header">
 
-      <h2>✍️ Inserimento libero</h2>
-
-      <div class="section-actions">
-
-        <button
-          class="gemini-btn"
-          onclick="toggleGeminiModal()"
-        >
-          🤖 Chiedi a Gemini
-        </button>
-
+      <div class="free-entry-title">
+        <span class="free-entry-title-icon">✍️</span>
+        <div>
+          <h2>Inserimento libero</h2>
+          <small>Compila manualmente o usa Gemini</small>
+        </div>
       </div>
+
+      <button
+        type="button"
+        class="gemini-btn free-entry-gemini"
+        onclick="toggleGeminiModal()"
+      >
+        🤖 Gemini
+      </button>
 
     </div>
 
 
-    <div class="free-grid">
+    <div class="free-entry-name">
 
-      <label class="full">
-        <span>Alimento</span>
+      <label>
+        <span>🍽️ Alimento</span>
         <input
-          class="full"
           type="text"
           id="custom-name"
           placeholder="Nome alimento e dose"
         >
       </label>
 
-      <label>
-        <span>Kcal</span>
+    </div>
+
+
+    <div class="free-entry-macros">
+
+      <label class="free-metric free-metric-kcal">
+        <span>🔥 Kcal</span>
         <input
           type="number"
           id="custom-kcal"
@@ -4184,8 +4629,8 @@ html[data-theme="light"]
         >
       </label>
 
-      <label>
-        <span>Proteine (g)</span>
+      <label class="free-metric free-metric-pro">
+        <span>🥩 Proteine</span>
         <input
           type="number"
           id="custom-pro"
@@ -4193,8 +4638,8 @@ html[data-theme="light"]
         >
       </label>
 
-      <label>
-        <span>Grassi (g)</span>
+      <label class="free-metric free-metric-fat">
+        <span>🥑 Grassi</span>
         <input
           type="number"
           id="custom-fat"
@@ -4202,8 +4647,8 @@ html[data-theme="light"]
         >
       </label>
 
-      <label>
-        <span>Carboidrati (g)</span>
+      <label class="free-metric free-metric-carb">
+        <span>🍞 Carbo</span>
         <input
           type="number"
           id="custom-carb"
@@ -4211,8 +4656,8 @@ html[data-theme="light"]
         >
       </label>
 
-      <label>
-        <span>Zuccheri (g)</span>
+      <label class="free-metric free-metric-sugar">
+        <span>🍬 Zuccheri</span>
         <input
           type="number"
           id="custom-sugar"
@@ -4220,35 +4665,48 @@ html[data-theme="light"]
         >
       </label>
 
-      <label>
-        <span>Peso (g)</span>
-        <input
-          type="number"
-          id="custom-weight"
-          placeholder="0"
-          min="0"
-          step="1"
-          oninput="recalculateCustomFromWeight()"
-        >
+    </div>
+
+
+    <div class="free-entry-secondary">
+
+      <label class="free-secondary-field">
+        <span>⚖️ Peso</span>
+        <div class="free-input-unit">
+          <input
+            type="number"
+            id="custom-weight"
+            placeholder="0"
+            min="0"
+            step="1"
+            oninput="recalculateCustomFromWeight()"
+          >
+          <small>g</small>
+        </div>
       </label>
 
-      <label>
-        <span>Acqua (ml)</span>
-        <input
-          type="number"
-          id="custom-water"
-          placeholder="Opzionale"
-        >
+      <label class="free-secondary-field">
+        <span>💧 Acqua</span>
+        <div class="free-input-unit">
+          <input
+            type="number"
+            id="custom-water"
+            placeholder="0"
+          >
+          <small>ml</small>
+        </div>
       </label>
 
     </div>
 
 
     <button
-      class="save-food-btn"
+      type="button"
+      class="save-food-btn free-entry-save"
       onclick="addCustom()"
     >
-      ＋ Aggiungi e salva alimento
+      <span>＋</span>
+      Aggiungi e salva
     </button>
 
   </section>
