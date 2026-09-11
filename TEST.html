@@ -2479,6 +2479,543 @@ html[data-theme="light"]
 }
 
 
+
+/* =========================================================
+   HELP 2.0 - GLASS / GLOW
+========================================================= */
+
+#help-modal {
+  background:
+    radial-gradient(
+      circle at 18% 10%,
+      rgba(56,189,248,.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 88% 88%,
+      rgba(255,159,28,.07),
+      transparent 34%
+    ),
+    rgba(3,7,12,.82);
+}
+
+#help-modal .help2-content {
+  max-width: 720px;
+
+  padding: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20,27,36,.97),
+      rgba(10,16,24,.98)
+    );
+
+  border:
+    1px solid rgba(56,189,248,.18);
+
+  box-shadow:
+    0 28px 85px rgba(0,0,0,.62),
+    0 0 30px rgba(56,189,248,.045),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#help-modal .help2-header {
+  margin-bottom: 9px;
+}
+
+#help-modal .help2-header h3 {
+  color: var(--subtext);
+
+  font-size: .78rem;
+}
+
+
+#help-modal .help2-hero {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  margin-bottom: 9px;
+
+  padding: 10px 11px;
+
+  border:
+    1px solid rgba(56,189,248,.20);
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.075),
+      rgba(255,159,28,.035)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#help-modal .help2-hero-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 45px;
+  height: 45px;
+
+  border:
+    1px solid rgba(56,189,248,.28);
+
+  border-radius: 13px;
+
+  background:
+    rgba(56,189,248,.08);
+
+  font-size: 1.35rem;
+
+  box-shadow:
+    0 0 14px rgba(56,189,248,.07);
+}
+
+#help-modal .help2-kicker {
+  color: #38bdf8;
+
+  font-size: .52rem;
+  font-weight: 900;
+
+  letter-spacing: .12em;
+}
+
+#help-modal .help2-hero h2 {
+  margin: 2px 0 3px;
+
+  color: var(--text);
+
+  font-size: 1.08rem;
+}
+
+#help-modal .help2-hero h2 span {
+  color: var(--accent);
+}
+
+#help-modal .help2-hero p {
+  margin: 0;
+
+  font-size: .68rem;
+
+  line-height: 1.4;
+}
+
+
+#help-modal .help2-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 7px;
+}
+
+#help-modal .help2-card {
+  padding: 9px;
+
+  border:
+    1px solid rgba(255,255,255,.075);
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.035),
+      rgba(255,255,255,.014)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+#help-modal .help2-card-wide {
+  grid-column: 1 / -1;
+}
+
+#help-modal .help2-gemini {
+  grid-column: 1 / -1;
+
+  border-color:
+    rgba(56,189,248,.20);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.065),
+      rgba(255,255,255,.016)
+    );
+}
+
+#help-modal .help2-card-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 5px;
+}
+
+#help-modal .help2-card-title > span {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 26px;
+  height: 26px;
+
+  border:
+    1px solid rgba(255,159,28,.18);
+
+  border-radius: 8px;
+
+  background:
+    rgba(255,159,28,.07);
+
+  font-size: .82rem;
+}
+
+#help-modal .help2-card h4 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: .75rem;
+}
+
+#help-modal .help2-card p {
+  margin: 0 0 6px;
+
+  font-size: .68rem;
+
+  line-height: 1.45;
+}
+
+#help-modal .help2-card p:last-child {
+  margin-bottom: 0;
+}
+
+#help-modal .help2-card strong {
+  color: var(--text);
+}
+
+#help-modal .help2-tip {
+  margin: 7px 0;
+
+  padding: 7px 8px;
+
+  border-left:
+    2px solid #38bdf8;
+
+  border-radius: 0 8px 8px 0;
+
+  background:
+    rgba(56,189,248,.05);
+
+  color: var(--subtext);
+
+  font-size: .65rem;
+
+  line-height: 1.45;
+}
+
+
+#help-modal .help2-science {
+  margin-top: 9px;
+
+  padding: 10px;
+
+  border:
+    1px solid rgba(255,159,28,.16);
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.045),
+      rgba(255,255,255,.014)
+    );
+}
+
+#help-modal .help2-science-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 7px;
+}
+
+#help-modal .help2-science-header > span {
+  font-size: 1.15rem;
+}
+
+#help-modal .help2-science-header h3 {
+  margin: 1px 0 0;
+
+  color: var(--text);
+
+  font-size: .80rem;
+}
+
+#help-modal .help2-science > p {
+  margin: 0 0 6px;
+
+  font-size: .67rem;
+
+  line-height: 1.45;
+}
+
+#help-modal .help2-science-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 6px;
+
+  margin-top: 8px;
+}
+
+#help-modal .help2-science-item {
+  padding: 8px;
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255,255,255,.022);
+}
+
+#help-modal .help2-science-item strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--text);
+
+  font-size: .67rem;
+}
+
+#help-modal .help2-science-item p {
+  margin: 0;
+
+  font-size: .62rem;
+
+  line-height: 1.42;
+}
+
+
+#help-modal .help2-warning {
+  margin-top: 8px;
+
+  padding: 9px 10px;
+
+  border:
+    1px solid rgba(251,191,36,.18);
+
+  border-radius: 12px;
+
+  background:
+    rgba(251,191,36,.045);
+}
+
+#help-modal .help2-warning-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-bottom: 5px;
+
+  color: #fbbf24;
+
+  font-size: .70rem;
+}
+
+#help-modal .help2-warning p {
+  margin: 0 0 5px;
+
+  font-size: .63rem;
+
+  line-height: 1.43;
+}
+
+#help-modal .help2-warning p:last-child {
+  margin-bottom: 0;
+}
+
+
+html[data-theme="light"]
+#help-modal .help2-content {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.985),
+      rgba(244,247,251,.985)
+    );
+
+  box-shadow:
+    0 25px 65px rgba(15,23,42,.16);
+}
+
+html[data-theme="light"]
+#help-modal .help2-card,
+html[data-theme="light"]
+#help-modal .help2-science-item {
+  background:
+    rgba(255,255,255,.80);
+
+  border-color:
+    rgba(15,23,42,.08);
+}
+
+html[data-theme="light"]
+#help-modal .help2-gemini {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.08),
+      rgba(255,255,255,.92)
+    );
+}
+
+
+@media (max-width: 560px) {
+
+  #help-modal {
+    padding: 7px;
+  }
+
+  #help-modal .help2-content {
+    max-height: 94vh;
+
+    padding: 9px;
+
+    border-radius: 15px;
+  }
+
+  #help-modal .help2-header {
+    margin-bottom: 7px;
+
+    padding-bottom: 6px;
+  }
+
+  #help-modal .help2-hero {
+    gap: 8px;
+
+    padding: 8px;
+
+    margin-bottom: 7px;
+
+    border-radius: 12px;
+  }
+
+  #help-modal .help2-hero-icon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+
+    font-size: 1.08rem;
+  }
+
+  #help-modal .help2-hero h2 {
+    font-size: .94rem;
+  }
+
+  #help-modal .help2-hero p {
+    font-size: .61rem;
+  }
+
+  #help-modal .help2-grid {
+    grid-template-columns: 1fr;
+
+    gap: 6px;
+  }
+
+  #help-modal .help2-card-wide,
+  #help-modal .help2-gemini {
+    grid-column: auto;
+  }
+
+  #help-modal .help2-card {
+    padding: 8px;
+
+    border-radius: 10px;
+  }
+
+  #help-modal .help2-card-title {
+    margin-bottom: 4px;
+  }
+
+  #help-modal .help2-card-title > span {
+    width: 24px;
+    height: 24px;
+
+    font-size: .75rem;
+  }
+
+  #help-modal .help2-card h4 {
+    font-size: .70rem;
+  }
+
+  #help-modal .help2-card p {
+    margin-bottom: 5px;
+
+    font-size: .64rem;
+
+    line-height: 1.42;
+  }
+
+  #help-modal .help2-tip {
+    margin: 6px 0;
+
+    padding: 6px 7px;
+
+    font-size: .61rem;
+  }
+
+  #help-modal .help2-science {
+    margin-top: 7px;
+
+    padding: 8px;
+  }
+
+  #help-modal .help2-science-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #help-modal .help2-warning {
+    margin-top: 7px;
+
+    padding: 8px;
+  }
+
+}
+
+
 /* =========================================================
    PULSANTE PROGRESSI NEL SOTTOTITOLO
 ========================================================= */
@@ -6854,7 +7391,7 @@ html[data-theme="light"]
 
 
 <!-- =====================================================
-     MODAL HELP
+     MODAL HELP 2.0
 ===================================================== -->
 
 <div
@@ -6862,17 +7399,18 @@ html[data-theme="light"]
   id="help-modal"
 >
 
-  <div class="modal-content">
+  <div class="modal-content help2-content">
 
-    <div class="modal-header">
+    <div class="modal-header help2-header">
 
       <h3>
-        📖 Diario FIT — Help
+        ❓ Help
       </h3>
 
       <button
         class="modal-close"
         onclick="toggleHelpModal()"
+        aria-label="Chiudi"
       >
         ✕
       </button>
@@ -6880,257 +7418,481 @@ html[data-theme="light"]
     </div>
 
 
-    <h4>🍽️ Pasto corrente</h4>
+    <section class="help2-hero">
 
-    <p>
-      Prima di registrare un alimento scegli il pasto
-      corrente: Colazione, Pranzo, Cena oppure
-      Snack / Integrazione. I nuovi inserimenti verranno
-      associati al pasto selezionato.
-    </p>
+      <div class="help2-hero-icon">
+        📖
+      </div>
 
+      <div>
 
-    <h4>⚡ Inserimenti rapidi</h4>
+        <div class="help2-kicker">
+          GUIDA RAPIDA
+        </div>
 
-    <p>
-      Tocca uno dei pulsanti rapidi per aggiungere
-      immediatamente l'alimento al registro della giornata.
-      Gli inserimenti rapidi possono essere personalizzati
-      tramite il pulsante ⚙️, così da avere sempre a
-      disposizione gli alimenti o le integrazioni che usi
-      più frequentemente.
-    </p>
+        <h2>
+          Come usare Diario <span>FIT</span>
+        </h2>
 
+        <p>
+          Tutte le funzioni principali, organizzate
+          per trovare rapidamente quello che ti serve.
+        </p>
 
-    <h4>🍴 Scegli alimento</h4>
+      </div>
 
-    <p>
-      Il catalogo permette di selezionare un alimento già
-      memorizzato, impostarne la quantità o il moltiplicatore
-      e aggiungerlo al pasto corrente.
-    </p>
+    </section>
 
 
-    <h4>✍️ Inserimento libero</h4>
-
-    <p>
-      Usa l'inserimento libero quando vuoi registrare
-      manualmente un alimento indicando descrizione,
-      calorie, proteine, grassi, carboidrati, zuccheri
-      e, quando necessario, acqua.
-    </p>
+    <div class="help2-grid">
 
 
-    <h4>🤖 Chiedi a Gemini</h4>
+      <section class="help2-card">
 
-    <p>
-      Puoi descrivere liberamente ciò che stai mangiando
-      oppure scattare/allegare una foto del pasto.
-      Gemini analizza le informazioni disponibili e propone
-      una stima dell'alimento, della porzione, delle calorie
-      e dei macronutrienti.
-    </p>
+        <div class="help2-card-title">
+          <span>🍽️</span>
+          <h4>Pasto corrente</h4>
+        </div>
 
-    <p>
-      Quando possibile vengono indicati anche il condimento
-      rilevato, un intervallo calorico plausibile, il livello
-      di affidabilità della stima ed eventuali avvertenze.
-      In particolare, olio, salse e altri condimenti possono
-      incidere sensibilmente sulle calorie senza poter essere
-      quantificati con precisione da una fotografia.
-    </p>
+        <p>
+          Prima di registrare un alimento scegli il pasto
+          corrente: Colazione, Pranzo, Cena oppure
+          Snack / Integrazione.
+        </p>
 
-    <p>
-      Il valore centrale proposto può essere utilizzato per
-      compilare l'inserimento, ma resta una stima: controlla
-      sempre il risultato e correggilo se conosci quantità
-      o ingredienti più precisi.
-    </p>
+        <p>
+          I nuovi inserimenti verranno associati
+          automaticamente al pasto selezionato.
+        </p>
+
+      </section>
 
 
-    <h4>🎯 Target giornalieri</h4>
+      <section class="help2-card">
 
-    <p>
-      I Target giornalieri rappresentano gli obiettivi di
-      calorie, proteine, grassi, carboidrati, zuccheri e acqua.
-      Possono essere modificati manualmente tramite ⚙️ oppure
-      calcolati con il pulsante 🎯 Calcola.
-    </p>
+        <div class="help2-card-title">
+          <span>⚡</span>
+          <h4>Inserimenti rapidi</h4>
+        </div>
 
-    <p>
-      I riquadri dei valori raggiunti mostrano quanto hai
-      assunto durante la giornata e permettono di confrontare
-      rapidamente la situazione corrente con i target
-      impostati, compresi eventuali superamenti.
-    </p>
+        <p>
+          Tocca uno dei pulsanti rapidi per aggiungere
+          immediatamente l'alimento al registro.
+        </p>
 
+        <p>
+          Tramite ⚙️ puoi personalizzare gli alimenti
+          o le integrazioni che usi più frequentemente.
+        </p>
 
-    <h4>🧮 Calcolo dei target</h4>
-
-    <p>
-      Il calcolatore utilizza i dati inseriti per stimare
-      il fabbisogno energetico e proporre dei target coerenti
-      con l'obiettivo selezionato. Il risultato è una stima
-      orientativa e può essere modificato manualmente.
-    </p>
+      </section>
 
 
-    <h4>📋 Registro della giornata</h4>
+      <section class="help2-card">
 
-    <p>
-      Ogni alimento aggiunto compare nel registro del pasto
-      corrispondente. I totali della giornata e i valori
-      raggiunti vengono aggiornati automaticamente.
-      Gli inserimenti errati possono essere eliminati
-      direttamente dal registro.
-    </p>
+        <div class="help2-card-title">
+          <span>🍴</span>
+          <h4>Scegli alimento</h4>
+        </div>
 
+        <p>
+          Il catalogo permette di selezionare un alimento
+          già memorizzato, impostarne la quantità o il
+          moltiplicatore e aggiungerlo al pasto corrente.
+        </p>
 
-    <h4>📚 Chiusura giornata e Storico</h4>
-
-    <p>
-      Le giornate concluse vengono conservate nello Storico.
-      È possibile chiudere manualmente la giornata; se invece
-      rimane aperta, Diario FIT la chiude e la archivia
-      automaticamente al successivo utilizzo dopo il cambio
-      di data.
-    </p>
+      </section>
 
 
-    <h4>⚖️ Progressi</h4>
+      <section class="help2-card">
 
-    <p>
-      Premi ⚖️ Progressi per inserire il peso attuale.
-      Le rilevazioni vengono conservate nello storico e,
-      con il passare dei giorni, il grafico permette di
-      osservare l'andamento del peso nel tempo.
-    </p>
+        <div class="help2-card-title">
+          <span>🍽️</span>
+          <h4>Pasti salvati</h4>
+        </div>
 
+        <p>
+          Puoi creare e salvare combinazioni di alimenti
+          che consumi spesso, per riutilizzarle rapidamente.
+        </p>
 
-    <h4>📄 Report e PDF</h4>
+        <p>
+          Un pasto salvato può essere modificato
+          temporaneamente oppure aggiornato in modo permanente.
+        </p>
 
-    <p>
-      Le funzioni di report permettono di consultare
-      i dati registrati e, dove previsto, ottenere una
-      rappresentazione riepilogativa della giornata o
-      dello storico.
-    </p>
-
-
-    <h4>🔒 Blocco</h4>
-
-    <p>
-      Il pulsante 🔒 blocca nuovamente l'accesso a Diario FIT.
-      Per rientrare sarà necessario effettuare nuovamente
-      l'accesso.
-    </p>
+      </section>
 
 
-    <h4>🌗 Tema</h4>
+      <section class="help2-card help2-card-wide">
 
-    <p>
-      Puoi scegliere l'aspetto di Diario FIT.
-      Scuro e Chiaro impostano direttamente il tema;
-      Automatico segue la preferenza del dispositivo.
-    </p>
+        <div class="help2-card-title">
+          <span>✍️</span>
+          <h4>Inserimento libero</h4>
+        </div>
 
-    <div class="theme-selector">
+        <p>
+          Usa l'inserimento libero per registrare manualmente
+          un alimento indicando descrizione, calorie,
+          proteine, grassi, carboidrati, zuccheri,
+          peso e, quando necessario, acqua.
+        </p>
 
-      <button
-        type="button"
-        class="theme-choice"
-        data-theme-choice="dark"
-        onclick="setThemePreference('dark')"
-      >
-        🌙 Scuro
-      </button>
+        <p>
+          Il campo <strong>Peso</strong> può essere utilizzato
+          anche dopo una stima Gemini. Se Gemini ha stimato
+          una porzione in grammi e conosci il peso reale,
+          modificando il peso Diario FIT ricalcola
+          proporzionalmente calorie e macronutrienti.
+        </p>
 
-      <button
-        type="button"
-        class="theme-choice"
-        data-theme-choice="light"
-        onclick="setThemePreference('light')"
-      >
-        ☀️ Chiaro
-      </button>
+      </section>
 
-      <button
-        type="button"
-        class="theme-choice"
-        data-theme-choice="auto"
-        onclick="setThemePreference('auto')"
-      >
-        🔄 Automatico
-      </button>
+
+      <section class="help2-card help2-gemini">
+
+        <div class="help2-card-title">
+          <span>🤖</span>
+          <h4>Chiedi a Gemini</h4>
+        </div>
+
+        <p>
+          Puoi descrivere liberamente ciò che stai mangiando
+          oppure scattare o allegare una foto del pasto.
+        </p>
+
+        <p>
+          Gemini propone una stima dell'alimento, della porzione,
+          delle calorie e dei macronutrienti.
+        </p>
+
+        <p>
+          Quando possibile vengono indicati anche il condimento
+          rilevato, un intervallo calorico plausibile,
+          il livello di affidabilità della stima
+          ed eventuali avvertenze.
+        </p>
+
+        <div class="help2-tip">
+          Olio, salse e altri condimenti possono incidere
+          sensibilmente sulle calorie senza poter essere
+          quantificati con precisione da una fotografia.
+        </div>
+
+        <p>
+          Il valore centrale proposto può essere utilizzato
+          per compilare l'inserimento, ma resta una stima:
+          controlla sempre il risultato e correggilo se conosci
+          quantità o ingredienti più precisi.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>🎯</span>
+          <h4>Target giornalieri</h4>
+        </div>
+
+        <p>
+          I Target giornalieri rappresentano gli obiettivi
+          di calorie, proteine, grassi, carboidrati,
+          zuccheri e acqua.
+        </p>
+
+        <p>
+          Possono essere modificati manualmente tramite ⚙️
+          oppure calcolati con il pulsante 🎯 Calcola.
+        </p>
+
+        <p>
+          I riquadri dei valori raggiunti permettono
+          di confrontare rapidamente quanto assunto
+          con i target impostati.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>🧮</span>
+          <h4>Calcolo dei target</h4>
+        </div>
+
+        <p>
+          Il calcolatore utilizza i dati inseriti per stimare
+          il fabbisogno energetico e proporre target coerenti
+          con l'obiettivo selezionato.
+        </p>
+
+        <p>
+          Il risultato è una stima orientativa
+          e può essere modificato manualmente.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>📋</span>
+          <h4>Registro della giornata</h4>
+        </div>
+
+        <p>
+          Ogni alimento aggiunto compare nel registro
+          del pasto corrispondente.
+        </p>
+
+        <p>
+          Totali e valori raggiunti vengono aggiornati
+          automaticamente. Gli inserimenti errati possono
+          essere eliminati direttamente dal registro.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>📚</span>
+          <h4>Chiusura e Storico</h4>
+        </div>
+
+        <p>
+          Le giornate concluse vengono conservate
+          nello Storico.
+        </p>
+
+        <p>
+          Se una giornata rimane aperta, Diario FIT
+          la chiude e la archivia automaticamente
+          al successivo utilizzo dopo il cambio di data.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>⚖️</span>
+          <h4>Progressi</h4>
+        </div>
+
+        <p>
+          Premi ⚖️ Progressi per inserire il peso attuale.
+        </p>
+
+        <p>
+          Le rilevazioni vengono conservate nello storico
+          e il grafico permette di osservare
+          l'andamento del peso nel tempo.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>📄</span>
+          <h4>Report e PDF</h4>
+        </div>
+
+        <p>
+          Le funzioni di report permettono di consultare
+          i dati registrati e ottenere una rappresentazione
+          riepilogativa della giornata o dello storico.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>🔒</span>
+          <h4>Blocco</h4>
+        </div>
+
+        <p>
+          Il pulsante 🔒 blocca nuovamente l'accesso
+          a Diario FIT.
+        </p>
+
+        <p>
+          Per rientrare sarà necessario effettuare
+          nuovamente l'accesso.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card help2-card-wide">
+
+        <div class="help2-card-title">
+          <span>🌗</span>
+          <h4>Tema</h4>
+        </div>
+
+        <p>
+          Puoi scegliere l'aspetto di Diario FIT.
+          Scuro e Chiaro impostano direttamente il tema;
+          Automatico segue la preferenza del dispositivo.
+        </p>
+
+        <div class="theme-selector">
+
+          <button
+            type="button"
+            class="theme-choice"
+            data-theme-choice="dark"
+            onclick="setThemePreference('dark')"
+          >
+            🌙 Scuro
+          </button>
+
+          <button
+            type="button"
+            class="theme-choice"
+            data-theme-choice="light"
+            onclick="setThemePreference('light')"
+          >
+            ☀️ Chiaro
+          </button>
+
+          <button
+            type="button"
+            class="theme-choice"
+            data-theme-choice="auto"
+            onclick="setThemePreference('auto')"
+          >
+            🔄 Automatico
+          </button>
+
+        </div>
+
+      </section>
+
 
     </div>
 
 
-    <h4>📚 Basi del calcolo dei fabbisogni</h4>
+    <section class="help2-science">
 
-    <p>
-      Il calcolo automatico dei fabbisogni e dei target
-      energetici utilizza equazioni predittive comunemente
-      impiegate in ambito nutrizionale. Si tratta comunque
-      di stime e non di misurazioni dirette del metabolismo
-      o del dispendio energetico individuale.
-    </p>
+      <div class="help2-science-header">
 
+        <span>📚</span>
 
-    <h4>Metabolismo Basale (BMR)</h4>
+        <div>
+          <div class="help2-kicker">
+            APPROFONDIMENTO
+          </div>
+          <h3>Basi del calcolo dei fabbisogni</h3>
+        </div>
 
-    <p>
-      Il metabolismo basale viene stimato mediante formule
-      predittive basate su dati quali sesso, età, peso e
-      altezza. Formule come Mifflin-St Jeor e le revisioni
-      dell'equazione di Harris-Benedict sono ampiamente
-      utilizzate per questo tipo di stima.
-    </p>
+      </div>
 
+      <p>
+        Il calcolo automatico dei fabbisogni e dei target
+        energetici utilizza equazioni predittive comunemente
+        impiegate in ambito nutrizionale.
+      </p>
 
-    <h4>Livello di attività fisica (PAL)</h4>
-
-    <p>
-      Al metabolismo basale viene applicato un fattore di
-      attività per ottenere una stima del dispendio
-      energetico complessivo. Il risultato dipende dalla
-      corretta valutazione del proprio livello di attività
-      quotidiana e sportiva.
-    </p>
+      <p>
+        Si tratta comunque di stime e non di misurazioni
+        dirette del metabolismo o del dispendio energetico
+        individuale.
+      </p>
 
 
-    <h4>Deficit, mantenimento e surplus</h4>
+      <div class="help2-science-grid">
 
-    <p>
-      In base all'obiettivo scelto, Diario FIT può applicare
-      una riduzione, mantenere il fabbisogno stimato oppure
-      applicare un incremento calorico. Questi valori sono
-      riferimenti orientativi e possono essere adattati alle
-      esigenze individuali.
-    </p>
+        <div class="help2-science-item">
 
+          <strong>Metabolismo Basale (BMR)</strong>
 
-    <h4>Ripartizione dei macronutrienti</h4>
+          <p>
+            Viene stimato mediante formule predittive basate
+            su sesso, età, peso e altezza. Formule come
+            Mifflin-St Jeor e le revisioni di Harris-Benedict
+            sono comunemente utilizzate per questo tipo di stima.
+          </p>
 
-    <p>
-      I target dei macronutrienti forniscono un riferimento
-      pratico per distribuire l'apporto nutrizionale della
-      giornata. In particolare, il fabbisogno proteico può
-      assumere maggiore rilevanza nelle persone fisicamente
-      attive e negli allenamenti con sovraccarichi.
-    </p>
+        </div>
 
 
-    <h4>ℹ️ Avvertenza</h4>
+        <div class="help2-science-item">
 
-    <p>
-      Diario FIT ha finalità di monitoraggio personale.
-      Calcoli, target e stime nutrizionali sono indicativi
-      e non costituiscono diagnosi, prescrizioni o indicazioni
-      terapeutiche. Per esigenze cliniche o nutrizionali
-      individuali è opportuno rivolgersi a un professionista
-      sanitario qualificato.
-    </p>
+          <strong>Livello di attività fisica (PAL)</strong>
+
+          <p>
+            Al metabolismo basale viene applicato un fattore
+            di attività per ottenere una stima del dispendio
+            energetico complessivo.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Deficit, mantenimento e surplus</strong>
+
+          <p>
+            In base all'obiettivo scelto, Diario FIT può
+            applicare una riduzione, mantenere il fabbisogno
+            stimato oppure applicare un incremento calorico.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Ripartizione dei macronutrienti</strong>
+
+          <p>
+            I target dei macronutrienti forniscono
+            un riferimento pratico per distribuire
+            l'apporto nutrizionale della giornata.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="help2-warning">
+
+      <div class="help2-warning-title">
+        <span>ℹ️</span>
+        <strong>Avvertenza</strong>
+      </div>
+
+      <p>
+        Diario FIT ha finalità di monitoraggio personale.
+        Calcoli, target e stime nutrizionali sono indicativi
+        e non costituiscono diagnosi, prescrizioni
+        o indicazioni terapeutiche.
+      </p>
+
+      <p>
+        Per esigenze cliniche o nutrizionali individuali
+        è opportuno rivolgersi a un professionista
+        sanitario qualificato.
+      </p>
+
+    </section>
 
   </div>
 
