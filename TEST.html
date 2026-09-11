@@ -13717,6 +13717,10 @@ function openMissingTodayModal() {
 
     let statusText = "";
     let statusSymbol = "";
+    let statusColor = "inherit";
+    let rowBackground = "transparent";
+    let rowBorder = "1px solid rgba(255,255,255,.08)";
+    let rowShadow = "none";
 
     if (diff > 0) {
       statusSymbol = "→";
@@ -13726,10 +13730,26 @@ function openMissingTodayModal() {
       statusSymbol = "✓";
       statusText =
         `superato di ${Math.abs(diff)}${unit}`;
+
+      statusColor = "#ff7b73";
+      rowBackground =
+        "linear-gradient(90deg, rgba(255,90,80,.08), rgba(255,90,80,.02))";
+      rowBorder =
+        "1px solid rgba(255,90,80,.20)";
+      rowShadow =
+        "0 0 10px rgba(255,80,70,.10)";
     } else {
       statusSymbol = "✓";
       statusText =
         "target raggiunto";
+
+      statusColor = "#6ee7a8";
+      rowBackground =
+        "linear-gradient(90deg, rgba(80,220,150,.08), rgba(80,220,150,.02))";
+      rowBorder =
+        "1px solid rgba(80,220,150,.18)";
+      rowShadow =
+        "0 0 10px rgba(80,220,150,.08)";
     }
 
     element.innerHTML = `
@@ -13737,8 +13757,12 @@ function openMissingTodayModal() {
         display:flex;
         align-items:center;
         gap:10px;
-        padding:10px 0;
-        border-bottom:1px solid rgba(255,255,255,.08);
+        padding:10px 8px;
+        border-radius:10px;
+        background:${rowBackground};
+        border:${rowBorder};
+        box-shadow:${rowShadow};
+        margin-bottom:5px;
       ">
         <span style="font-size:1.1rem;">
           ${icon}
@@ -13757,6 +13781,7 @@ function openMissingTodayModal() {
         <span style="
           text-align:right;
           font-weight:800;
+          color:${statusColor};
         ">
           ${statusSymbol}
           ${statusText}
