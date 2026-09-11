@@ -3254,6 +3254,99 @@ html[data-theme="light"] .free-metric input {
 
 
 /* =========================================================
+
+/* =========================================================
+   INSERIMENTO LIBERO 2.1 - COMPATTO MOBILE
+   Solo riduzione verticale, logica e layout invariati
+========================================================= */
+
+.free-entry-name {
+  margin-bottom: 5px;
+}
+
+.free-entry-name label > span,
+.free-entry-macros label > span,
+.free-entry-secondary label > span {
+  margin-bottom: 2px;
+}
+
+.free-entry-name input {
+  min-height: 32px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.free-entry-macros {
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.free-metric {
+  padding: 4px;
+  border-radius: 9px;
+}
+
+.free-metric input {
+  min-height: 26px;
+  padding: 2px 4px;
+  border-radius: 7px;
+}
+
+.free-entry-secondary {
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.free-secondary-field {
+  padding: 4px 5px;
+  border-radius: 9px;
+}
+
+.free-input-unit input {
+  min-height: 26px;
+  padding: 2px 5px;
+}
+
+.free-entry-save {
+  min-height: 32px;
+}
+
+
+/* Ulteriore ottimizzazione sui telefoni */
+
+@media (max-width: 560px) {
+
+  .free-entry-header {
+    margin-bottom: 6px;
+  }
+
+  .free-entry-name input {
+    min-height: 30px;
+  }
+
+  .free-metric {
+    padding: 3px 4px 4px;
+  }
+
+  .free-metric input {
+    min-height: 25px;
+  }
+
+  .free-secondary-field {
+    padding: 3px 5px 4px;
+  }
+
+  .free-input-unit input {
+    min-height: 25px;
+  }
+
+  .free-entry-save {
+    min-height: 31px;
+  }
+}
+
+
+/* =========================================================
 /* =========================================================
    TARGET GIORNALIERI 2.0 - STILE METRICHE
    Solo grafica: dimensioni e griglia restano invariate
