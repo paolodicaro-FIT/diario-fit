@@ -5290,6 +5290,34 @@ html[data-theme="light"]
 
 
 </style>
+
+<style>
+/* =========================================================
+   MASCOTTE GEMINI — DIARIO FIT
+========================================================= */
+
+.gemini-mascot {
+  width:24px;
+  height:24px;
+  object-fit:contain;
+  display:inline-block;
+  vertical-align:middle;
+  flex:0 0 auto;
+}
+
+.gemini-mascot-title {
+  width:28px;
+  height:28px;
+}
+
+.gemini-btn {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+</style>
+
 </head>
 
 
@@ -5975,7 +6003,13 @@ html[data-theme="light"]
         class="gemini-btn free-entry-gemini"
         onclick="toggleGeminiModal()"
       >
-        🤖 Gemini
+        <img
+          src="mascotte-gemini-128.png"
+          class="gemini-mascot"
+          alt=""
+          aria-hidden="true"
+        >
+        <span>Gemini</span>
       </button>
 
     </div>
@@ -6549,7 +6583,13 @@ html[data-theme="light"]
       style="width:100%; margin-top:14px;"
       onclick="askMissingTodayGemini()"
     >
-      🤖 Suggeriscimi cosa potrei mangiare
+      <img
+        src="mascotte-gemini-128.png"
+        class="gemini-mascot"
+        alt=""
+        aria-hidden="true"
+      >
+      <span>Suggeriscimi cosa potrei mangiare</span>
     </button>
 
 
@@ -6588,8 +6628,18 @@ html[data-theme="light"]
 
     <div class="modal-header">
 
-      <h3>
-        🤖 Chiedi a Gemini
+      <h3 style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+      ">
+        <img
+          src="mascotte-gemini-128.png"
+          class="gemini-mascot gemini-mascot-title"
+          alt=""
+          aria-hidden="true"
+        >
+        <span>Chiedi a Gemini</span>
       </h3>
 
       <button
@@ -11914,10 +11964,10 @@ async function askGemini() {
     );
 
   const originalLabel =
-    askBtn.innerText;
+    askBtn.innerHTML;
 
   askBtn.disabled = true;
-  askBtn.innerText = "⏳ Sto pensando...";
+  askBtn.innerHTML = "⏳ Sto pensando...";
 
   try {
 
@@ -12091,16 +12141,49 @@ async function askGemini() {
 
   } catch (err) {
 
-    showGeminiError(
-      err.message
-      ||
-      "Errore nella richiesta a Gemini."
-    );
+    const errorMessage =
+      err.message === "GEMINI_API_ERROR"
+        ? "Gemini non ha risposto. Puoi riprovare."
+        : (
+            err.message
+            ||
+            "Errore nella richiesta a Gemini."
+          );
+
+    const errorBox =
+      document.getElementById(
+        "gemini-error"
+      );
+
+    if (errorBox) {
+
+      errorBox.style.display = "block";
+
+      errorBox.innerHTML = `
+        <div>
+          ⚠️ ${escapeHTML(errorMessage)}
+        </div>
+
+        <button
+          type="button"
+          class="btn"
+          onclick="askGemini()"
+          style="
+            margin-top:9px;
+            padding:7px 12px;
+            width:auto;
+          "
+        >
+          🔄 Riprova
+        </button>
+      `;
+
+    }
 
   } finally {
 
     askBtn.disabled = false;
-    askBtn.innerText = originalLabel;
+    askBtn.innerHTML = originalLabel;
 
   }
 
@@ -13707,10 +13790,10 @@ async function askMissingTodayGemini() {
   }
 
   const originalLabel =
-    btn.innerText;
+    btn.innerHTML;
 
   btn.disabled = true;
-  btn.innerText = "⏳ Sto pensando...";
+  btn.innerHTML = "⏳ Sto pensando...";
 
   box.style.display = "block";
   box.innerHTML = `
@@ -13722,7 +13805,20 @@ async function askMissingTodayGemini() {
       color:var(--muted);
       text-align:center;
     ">
-      🤖 Gemini sta preparando alcune proposte...
+      <div style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+      ">
+        <img
+          src="mascotte-gemini-128.png"
+          class="gemini-mascot"
+          alt=""
+          aria-hidden="true"
+        >
+        <span>Gemini sta preparando alcune proposte...</span>
+      </div>
     </div>
   `;
 
@@ -13846,8 +13942,17 @@ async function askMissingTodayGemini() {
         <div style="
           font-weight:900;
           margin-bottom:5px;
+          display:flex;
+          align-items:center;
+          gap:7px;
         ">
-          🤖 Suggerimenti Gemini
+          <img
+            src="mascotte-gemini-128.png"
+            class="gemini-mascot"
+            alt=""
+            aria-hidden="true"
+          >
+          <span>Suggerimenti Gemini</span>
         </div>
 
         ${
@@ -13882,6 +13987,15 @@ async function askMissingTodayGemini() {
 
   } catch (err) {
 
+    const errorMessage =
+      err.message === "GEMINI_API_ERROR"
+        ? "Gemini non ha risposto. Puoi riprovare."
+        : (
+            err.message
+            ||
+            "Errore nella richiesta a Gemini."
+          );
+
     box.innerHTML = `
       <div style="
         padding:12px;
@@ -13890,17 +14004,31 @@ async function askMissingTodayGemini() {
         border:1px solid rgba(255,90,90,.18);
         line-height:1.45;
       ">
-        ⚠️ ${escapeHTML(
-          err.message ||
-          "Errore nella richiesta a Gemini."
-        )}
+
+        <div>
+          ⚠️ ${escapeHTML(errorMessage)}
+        </div>
+
+        <button
+          type="button"
+          class="btn"
+          onclick="askMissingTodayGemini()"
+          style="
+            margin-top:9px;
+            padding:7px 12px;
+            width:auto;
+          "
+        >
+          🔄 Riprova
+        </button>
+
       </div>
     `;
 
   } finally {
 
     btn.disabled = false;
-    btn.innerText = originalLabel;
+    btn.innerHTML = originalLabel;
 
   }
 
