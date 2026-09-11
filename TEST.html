@@ -12141,9 +12141,12 @@ async function askGemini() {
 
   } catch (err) {
 
+    const isGeminiApiError =
+      err.message === "GEMINI_API_ERROR";
+
     const errorMessage =
-      err.message === "GEMINI_API_ERROR"
-        ? "Gemini non ha risposto. Puoi riprovare."
+      isGeminiApiError
+        ? "Si è verificato un problema nella comunicazione con Gemini. Potrebbe essere un momento di sovraccarico del servizio o un problema di rete. Riprova tra qualche istante."
         : (
             err.message
             ||
@@ -12158,24 +12161,79 @@ async function askGemini() {
     if (errorBox) {
 
       errorBox.style.display = "block";
+      errorBox.style.background = "transparent";
+      errorBox.style.border = "none";
+      errorBox.style.padding = "0";
 
       errorBox.innerHTML = `
-        <div>
-          ⚠️ ${escapeHTML(errorMessage)}
-        </div>
+        <div style="
+          padding:18px;
+          border-radius:18px;
+          background:
+            linear-gradient(
+              135deg,
+              rgba(120,20,28,.34),
+              rgba(55,18,26,.46)
+            );
+          border:2px solid rgba(255,70,78,.95);
+          box-shadow:
+            0 0 12px rgba(255,50,60,.42),
+            0 0 28px rgba(255,40,55,.20),
+            inset 0 0 22px rgba(255,55,65,.08);
+        ">
 
-        <button
-          type="button"
-          class="btn"
-          onclick="askGemini()"
-          style="
-            margin-top:9px;
-            padding:7px 12px;
-            width:auto;
-          "
-        >
-          🔄 Riprova
-        </button>
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:14px;
+          ">
+            <span style="
+              font-size:2rem;
+              line-height:1;
+              filter:
+                drop-shadow(
+                  0 0 6px rgba(255,75,75,.65)
+                );
+            ">
+              ⚠️
+            </span>
+
+            <div style="
+              font-size:1.12rem;
+              font-weight:900;
+              color:#fff;
+            ">
+              Gemini non ha risposto
+            </div>
+          </div>
+
+          <div style="
+            font-size:.94rem;
+            line-height:1.65;
+            text-align:justify;
+            color:rgba(255,255,255,.88);
+          ">
+            ${escapeHTML(errorMessage)}
+          </div>
+
+          <button
+            type="button"
+            class="btn"
+            onclick="askGemini()"
+            style="
+              margin-top:16px;
+              padding:10px 16px;
+              width:auto;
+              border:1px solid rgba(255,75,75,.85);
+              box-shadow:
+                0 0 10px rgba(255,55,65,.28);
+            "
+          >
+            🔄 Riprova
+          </button>
+
+        </div>
       `;
 
     }
@@ -13987,9 +14045,12 @@ async function askMissingTodayGemini() {
 
   } catch (err) {
 
+    const isGeminiApiError =
+      err.message === "GEMINI_API_ERROR";
+
     const errorMessage =
-      err.message === "GEMINI_API_ERROR"
-        ? "Gemini non ha risposto. Puoi riprovare."
+      isGeminiApiError
+        ? "Si è verificato un problema nella comunicazione con Gemini. Potrebbe essere un momento di sovraccarico del servizio o un problema di rete. Riprova tra qualche istante."
         : (
             err.message
             ||
@@ -13998,15 +14059,54 @@ async function askMissingTodayGemini() {
 
     box.innerHTML = `
       <div style="
-        padding:12px;
-        border-radius:14px;
-        background:rgba(255,90,90,.08);
-        border:1px solid rgba(255,90,90,.18);
-        line-height:1.45;
+        padding:18px;
+        border-radius:18px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(120,20,28,.34),
+            rgba(55,18,26,.46)
+          );
+        border:2px solid rgba(255,70,78,.95);
+        box-shadow:
+          0 0 12px rgba(255,50,60,.42),
+          0 0 28px rgba(255,40,55,.20),
+          inset 0 0 22px rgba(255,55,65,.08);
       ">
 
-        <div>
-          ⚠️ ${escapeHTML(errorMessage)}
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:12px;
+          margin-bottom:14px;
+        ">
+          <span style="
+            font-size:2rem;
+            line-height:1;
+            filter:
+              drop-shadow(
+                0 0 6px rgba(255,75,75,.65)
+              );
+          ">
+            ⚠️
+          </span>
+
+          <div style="
+            font-size:1.12rem;
+            font-weight:900;
+            color:#fff;
+          ">
+            Gemini non ha risposto
+          </div>
+        </div>
+
+        <div style="
+          font-size:.94rem;
+          line-height:1.65;
+          text-align:justify;
+          color:rgba(255,255,255,.88);
+        ">
+          ${escapeHTML(errorMessage)}
         </div>
 
         <button
@@ -14014,9 +14114,12 @@ async function askMissingTodayGemini() {
           class="btn"
           onclick="askMissingTodayGemini()"
           style="
-            margin-top:9px;
-            padding:7px 12px;
+            margin-top:16px;
+            padding:10px 16px;
             width:auto;
+            border:1px solid rgba(255,75,75,.85);
+            box-shadow:
+              0 0 10px rgba(255,55,65,.28);
           "
         >
           🔄 Riprova
