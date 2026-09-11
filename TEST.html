@@ -3797,6 +3797,39 @@ html[data-theme="light"]
 }
 
 
+.weekly-day-target-line {
+  position:
+    absolute;
+
+  left:
+    0;
+
+  right:
+    0;
+
+  height:
+    1px;
+
+  border-top:
+    1px dashed rgba(255,159,28,.88);
+
+  box-shadow:
+    0 0 6px rgba(255,159,28,.28);
+
+  pointer-events:
+    none;
+
+  z-index:
+    2;
+}
+
+
+.weekly-day-track {
+  position:
+    relative;
+}
+
+
 .weekly-day-bar {
   width:
     100%;
@@ -15784,23 +15817,23 @@ function renderWeeklySummary() {
         if (difference > 0) {
 
           comparison =
-            `+${difference}${metric.unit}`;
+            `+${difference}`;
 
         } else if (difference < 0) {
 
           comparison =
-            `${difference}${metric.unit}`;
+            `−${Math.abs(difference)}`;
 
         } else {
 
           comparison =
-            "in target";
+            "✓";
 
         }
 
 
         targetElement.textContent =
-          `Target ${target}${metric.unit}`
+          `${target}${metric.unit}`
           + ` · ${percentage}%`
           + ` · ${comparison}`;
 
@@ -15839,6 +15872,18 @@ function renderWeeklySummary() {
       ),
       1
     );
+
+
+  const targetHeight =
+    kcalTarget > 0
+      ? Math.min(
+          100,
+          Math.max(
+            0,
+            (kcalTarget / maxKcal) * 100
+          )
+        )
+      : null;
 
 
   daysContainer.innerHTML =
@@ -15896,6 +15941,19 @@ function renderWeeklySummary() {
             </div>
 
             <div class="weekly-day-track">
+
+              ${
+                targetHeight !== null
+                  ? `
+                    <div
+                      class="weekly-day-target-line"
+                      style="bottom:${targetHeight}%;"
+                      title="Target ${kcalTarget} kcal"
+                    ></div>
+                  `
+                  : ""
+              }
+
               <div
                 class="weekly-day-bar"
                 style="height:${height}%;"
@@ -15905,6 +15963,7 @@ function renderWeeklySummary() {
                     : "Nessun dato"
                 }"
               ></div>
+
             </div>
 
             <div class="weekly-day-label">
