@@ -13665,6 +13665,13 @@ function openMissingTodayModal() {
     totWater += item.waterMl || 0;
   });
 
+  totKcal = Math.round(totKcal);
+  totPro = Math.round(totPro * 10) / 10;
+  totFat = Math.round(totFat * 10) / 10;
+  totCarb = Math.round(totCarb * 10) / 10;
+  totSugar = Math.round(totSugar * 10) / 10;
+  totWater = Math.round(totWater);
+
 
   missingTodaySnapshot = {
     current: {
@@ -14203,6 +14210,13 @@ function updateDashboard() {
 
     }
   );
+
+  totKcal = Math.round(totKcal);
+  totPro = Math.round(totPro * 10) / 10;
+  totFat = Math.round(totFat * 10) / 10;
+  totCarb = Math.round(totCarb * 10) / 10;
+  totSugar = Math.round(totSugar * 10) / 10;
+  totWater = Math.round(totWater);
 
 
   document.getElementById(
@@ -15126,6 +15140,13 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
     totSugar += Number(item.sugar) || 0;
     totWater += Number(item.waterMl) || 0;
   });
+
+  totKcal = Math.round(totKcal);
+  totPro = Math.round(totPro * 10) / 10;
+  totFat = Math.round(totFat * 10) / 10;
+  totCarb = Math.round(totCarb * 10) / 10;
+  totSugar = Math.round(totSugar * 10) / 10;
+  totWater = Math.round(totWater);
 
   let rowsHtml = "";
 
