@@ -3200,11 +3200,69 @@ html[data-theme="light"] .header-progress-btn {
 }
 
 .progress-summary-item {
+  position: relative;
+  overflow: hidden;
+
   padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(255,255,255,.035);
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 6px 18px rgba(0,0,0,.14);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
   text-align: center;
+}
+
+.progress-summary-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at top center,
+      rgba(255,159,28,.10),
+      transparent 68%
+    );
+}
+
+.progress-summary-item:nth-child(2)::before {
+  background:
+    radial-gradient(
+      circle at top center,
+      rgba(56,189,248,.11),
+      transparent 68%
+    );
+}
+
+.progress-summary-item:nth-child(3)::before {
+  background:
+    radial-gradient(
+      circle at top center,
+      rgba(96,165,250,.10),
+      transparent 68%
+    );
+}
+
+.progress-summary-item span,
+.progress-summary-item strong {
+  position: relative;
+  z-index: 1;
 }
 
 .progress-summary-item span {
@@ -3218,22 +3276,115 @@ html[data-theme="light"] .header-progress-btn {
 .progress-summary-item strong {
   color: var(--accent);
   font-size: 1rem;
+
+  text-shadow:
+    0 0 10px rgba(255,159,28,.28);
+}
+
+.progress-summary-item:nth-child(2) strong {
+  color: var(--cyan);
+
+  text-shadow:
+    0 0 10px rgba(56,189,248,.30);
+}
+
+.progress-summary-item:nth-child(3) strong {
+  color: var(--blue);
+
+  text-shadow:
+    0 0 10px rgba(96,165,250,.28);
 }
 
 .progress-chart-section {
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+
+  padding: 12px 10px 8px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.018)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 10px 26px rgba(0,0,0,.18),
+    0 0 22px rgba(56,189,248,.035);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.progress-chart-section::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: -100px;
+  right: -70px;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(56,189,248,.13),
+      transparent 68%
+    );
+
+  filter: blur(4px);
+}
+
+.progress-chart-section::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: -70px;
+  bottom: -100px;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,159,28,.11),
+      transparent 68%
+    );
+
+  filter: blur(5px);
 }
 
 .progress-chart-title {
-  margin-bottom: 8px;
-  color: var(--subtext);
-  font-size: .76rem;
-  font-weight: 800;
+  position: relative;
+  z-index: 1;
+
+  margin-bottom: 6px;
+
+  color: var(--text);
+
+  font-size: .78rem;
+  font-weight: 850;
+  letter-spacing: .01em;
+
+  text-shadow:
+    0 0 12px rgba(255,255,255,.08);
+}
+
+.progress-chart-title::before {
+  content: "📈";
+  margin-right: 5px;
 }
 
 .progress-chart-wrap {
   position: relative;
+  z-index: 1;
+
   width: 100%;
   height: 250px;
 }
@@ -3245,14 +3396,45 @@ html[data-theme="light"] .header-progress-btn {
 }
 
 .progress-empty {
+  position: relative;
+  z-index: 1;
+
   padding: 22px 8px;
+
   color: var(--muted);
   font-size: .74rem;
   text-align: center;
 }
 
 html[data-theme="light"] .progress-summary-item {
-  background: var(--card-2);
+  border-color: rgba(30,41,59,.10);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.92),
+      rgba(245,247,249,.72)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 6px 18px rgba(15,23,42,.07);
+}
+
+html[data-theme="light"] .progress-chart-section {
+  border-color: rgba(30,41,59,.10);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.94),
+      rgba(245,247,249,.72)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 10px 26px rgba(15,23,42,.08),
+    0 0 20px rgba(56,189,248,.04);
 }
 
 @media (max-width: 560px) {
