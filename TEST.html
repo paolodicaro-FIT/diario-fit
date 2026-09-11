@@ -1842,6 +1842,643 @@ html[data-theme="light"] .quick-btn-label {
 }
 
 
+
+/* =========================================================
+   INFO 2.0 - GLASS / GLOW
+========================================================= */
+
+#info-modal {
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(255,159,28,.09),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(56,189,248,.08),
+      transparent 34%
+    ),
+    rgba(3,7,12,.82);
+}
+
+#info-modal .info2-content {
+  position: relative;
+
+  max-width: 720px;
+
+  padding: 14px;
+
+  overflow-x: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20,27,36,.97),
+      rgba(10,16,24,.98)
+    );
+
+  border:
+    1px solid rgba(255,159,28,.24);
+
+  box-shadow:
+    0 28px 85px rgba(0,0,0,.62),
+    0 0 30px rgba(255,159,28,.055),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#info-modal .info2-header {
+  margin-bottom: 10px;
+}
+
+#info-modal .info2-header h3 {
+  color: var(--subtext);
+
+  font-size: .78rem;
+
+  letter-spacing: .03em;
+}
+
+
+#info-modal .info2-hero {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: minmax(125px, 190px) 1fr;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 12px;
+
+  padding: 12px;
+
+  overflow: hidden;
+
+  border:
+    1px solid rgba(255,159,28,.24);
+
+  border-radius: 17px;
+
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(255,159,28,.12),
+      transparent 37%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(56,189,248,.10),
+      transparent 38%
+    ),
+    rgba(255,255,255,.025);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 12px 30px rgba(0,0,0,.24);
+}
+
+#info-modal .info2-hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 150px;
+  height: 150px;
+
+  right: -65px;
+  bottom: -80px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(56,189,248,.08);
+
+  filter: blur(22px);
+
+  pointer-events: none;
+}
+
+
+#info-modal .info2-logo-wrap {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#info-modal .info2-logo-wrap::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 14%;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,159,28,.30),
+      rgba(56,189,248,.20)
+    );
+
+  filter: blur(18px);
+
+  opacity: .75;
+}
+
+#info-modal .info2-logo {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  max-width: 180px;
+
+  aspect-ratio: 1;
+
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.38),
+    0 0 18px rgba(255,159,28,.10);
+}
+
+
+#info-modal .info2-hero-copy {
+  position: relative;
+
+  z-index: 1;
+}
+
+#info-modal .info2-kicker {
+  margin-bottom: 4px;
+
+  color: #38bdf8;
+
+  font-size: .58rem;
+  font-weight: 900;
+
+  letter-spacing: .13em;
+}
+
+#info-modal .info2-hero h2 {
+  margin: 0 0 6px;
+
+  color: var(--text);
+
+  font-size: 1.55rem;
+
+  line-height: 1.05;
+}
+
+#info-modal .info2-hero h2 span {
+  color: var(--accent);
+
+  text-shadow:
+    0 0 13px rgba(255,159,28,.22);
+}
+
+#info-modal .info2-hero p {
+  margin: 0;
+
+  max-width: 420px;
+
+  color: var(--subtext);
+
+  font-size: .78rem;
+
+  line-height: 1.52;
+}
+
+
+#info-modal .info2-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+
+#info-modal .info2-card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 11px;
+
+  border:
+    1px solid rgba(255,255,255,.075);
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.038),
+      rgba(255,255,255,.015)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    transform .2s ease;
+}
+
+#info-modal .info2-card:hover {
+  border-color:
+    rgba(255,159,28,.23);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.055),
+      rgba(56,189,248,.025)
+    );
+}
+
+#info-modal .info2-card-wide {
+  grid-column: 1 / -1;
+
+  border-color:
+    rgba(255,159,28,.17);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.055),
+      rgba(255,255,255,.018)
+    );
+}
+
+#info-modal .info2-card-gemini {
+  border-color:
+    rgba(56,189,248,.18);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.06),
+      rgba(255,255,255,.018)
+    );
+}
+
+
+#info-modal .info2-card-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+}
+
+#info-modal .info2-card-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 27px;
+  height: 27px;
+
+  border:
+    1px solid rgba(255,159,28,.18);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255,159,28,.07);
+
+  font-size: .88rem;
+}
+
+#info-modal .info2-card h4 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: .78rem;
+
+  line-height: 1.2;
+}
+
+#info-modal .info2-card p {
+  margin: 0 0 7px;
+
+  color: var(--subtext);
+
+  font-size: .72rem;
+
+  line-height: 1.52;
+}
+
+#info-modal .info2-card p:last-child {
+  margin-bottom: 0;
+}
+
+#info-modal .info2-highlight {
+  margin-top: 8px !important;
+
+  padding: 8px 9px;
+
+  border-left:
+    2px solid var(--accent);
+
+  border-radius: 0 9px 9px 0;
+
+  background:
+    rgba(255,159,28,.055);
+}
+
+#info-modal .info2-highlight strong {
+  color: var(--text);
+}
+
+#info-modal .info2-small-note {
+  padding: 7px 8px;
+
+  border:
+    1px solid rgba(56,189,248,.14);
+
+  border-radius: 8px;
+
+  background:
+    rgba(56,189,248,.045);
+}
+
+
+#info-modal .info2-note {
+  margin-top: 9px;
+
+  padding: 10px 11px;
+
+  border:
+    1px solid rgba(251,191,36,.20);
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,191,36,.065),
+      rgba(255,255,255,.018)
+    );
+}
+
+#info-modal .info2-note-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 5px;
+
+  color: #fbbf24;
+
+  font-size: .74rem;
+}
+
+#info-modal .info2-note p {
+  margin: 0;
+
+  font-size: .68rem;
+
+  line-height: 1.5;
+}
+
+
+#info-modal .info2-footer {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: 10px;
+
+  color: var(--subtext);
+
+  opacity: .72;
+
+  font-size: .58rem;
+  font-weight: 800;
+
+  letter-spacing: .06em;
+
+  text-transform: uppercase;
+}
+
+#info-modal .info2-footer span {
+  color: var(--accent);
+}
+
+
+/* INFO 2.0 - TEMA CHIARO */
+
+html[data-theme="light"]
+#info-modal .info2-content {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.985),
+      rgba(244,247,251,.985)
+    );
+
+  box-shadow:
+    0 25px 65px rgba(15,23,42,.16),
+    0 0 24px rgba(255,159,28,.05);
+}
+
+html[data-theme="light"]
+#info-modal .info2-hero {
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(255,159,28,.11),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(56,189,248,.08),
+      transparent 38%
+    ),
+    rgba(255,255,255,.88);
+}
+
+html[data-theme="light"]
+#info-modal .info2-card {
+  border-color:
+    rgba(15,23,42,.09);
+
+  background:
+    rgba(255,255,255,.78);
+}
+
+html[data-theme="light"]
+#info-modal .info2-card-wide {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.075),
+      rgba(255,255,255,.88)
+    );
+}
+
+html[data-theme="light"]
+#info-modal .info2-card-gemini {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.075),
+      rgba(255,255,255,.88)
+    );
+}
+
+
+/* INFO 2.0 - MOBILE */
+
+@media (max-width: 560px) {
+
+  #info-modal {
+    padding: 7px;
+  }
+
+  #info-modal .info2-content {
+    max-height: 94vh;
+
+    padding: 9px;
+
+    border-radius: 15px;
+  }
+
+  #info-modal .info2-header {
+    margin-bottom: 7px;
+
+    padding-bottom: 6px;
+  }
+
+  #info-modal .info2-hero {
+    grid-template-columns: 105px 1fr;
+
+    gap: 10px;
+
+    padding: 8px;
+
+    margin-bottom: 8px;
+
+    border-radius: 13px;
+  }
+
+  #info-modal .info2-logo {
+    max-width: 105px;
+
+    border-radius: 13px;
+  }
+
+  #info-modal .info2-kicker {
+    font-size: .50rem;
+  }
+
+  #info-modal .info2-hero h2 {
+    margin-bottom: 4px;
+
+    font-size: 1.18rem;
+  }
+
+  #info-modal .info2-hero p {
+    font-size: .64rem;
+
+    line-height: 1.4;
+  }
+
+  #info-modal .info2-grid {
+    grid-template-columns: 1fr;
+
+    gap: 6px;
+  }
+
+  #info-modal .info2-card-wide {
+    grid-column: auto;
+  }
+
+  #info-modal .info2-card {
+    padding: 8px;
+
+    border-radius: 11px;
+  }
+
+  #info-modal .info2-card-title {
+    margin-bottom: 4px;
+  }
+
+  #info-modal .info2-card-icon {
+    width: 24px;
+    height: 24px;
+
+    border-radius: 8px;
+
+    font-size: .78rem;
+  }
+
+  #info-modal .info2-card h4 {
+    font-size: .72rem;
+  }
+
+  #info-modal .info2-card p {
+    margin-bottom: 5px;
+
+    font-size: .66rem;
+
+    line-height: 1.43;
+  }
+
+  #info-modal .info2-highlight {
+    margin-top: 6px !important;
+
+    padding: 6px 7px;
+  }
+
+  #info-modal .info2-note {
+    margin-top: 6px;
+
+    padding: 8px;
+
+    border-radius: 11px;
+  }
+
+  #info-modal .info2-note p {
+    font-size: .62rem;
+
+    line-height: 1.42;
+  }
+
+  #info-modal .info2-footer {
+    margin-top: 7px;
+
+    font-size: .50rem;
+  }
+
+}
+
+
 /* =========================================================
    PULSANTE PROGRESSI NEL SOTTOTITOLO
 ========================================================= */
@@ -5941,7 +6578,7 @@ html[data-theme="light"]
 
 
 <!-- =====================================================
-     MODAL INFO
+     MODAL INFO 2.0
 ===================================================== -->
 
 <div
@@ -5949,17 +6586,18 @@ html[data-theme="light"]
   id="info-modal"
 >
 
-  <div class="modal-content">
+  <div class="modal-content info2-content">
 
-    <div class="modal-header">
+    <div class="modal-header info2-header">
 
       <h3>
-        ℹ️ Diario FIT
+        ℹ️ Informazioni
       </h3>
 
       <button
         class="modal-close"
         onclick="toggleInfoModal()"
+        aria-label="Chiudi"
       >
         ✕
       </button>
@@ -5967,123 +6605,248 @@ html[data-theme="light"]
     </div>
 
 
-    <h4>🎯 Cos'è Diario FIT</h4>
+    <section class="info2-hero">
 
-    <p>
-      Diario FIT è un diario alimentare personale
-      pensato per registrare e monitorare in modo semplice
-      e immediato l'alimentazione quotidiana e l'andamento
-      rispetto ai propri obiettivi.
-    </p>
+      <div class="info2-logo-wrap">
+        <img
+          src="DiarioFITGLASS.png"
+          alt="Diario FIT"
+          class="info2-logo"
+        >
+      </div>
 
+      <div class="info2-hero-copy">
 
-    <h4>💡 Come nasce Diario FIT</h4>
+        <div class="info2-kicker">
+          IL TUO DIARIO ALIMENTARE
+        </div>
 
-    <p>
-      Diario FIT nasce da una mia idea e da un'esigenza
-      molto concreta: capire, durante la giornata, quanti
-      macronutrienti stavo assumendo e sapere in ogni momento
-      a che punto ero rispetto agli obiettivi che mi ero
-      prefissato — quanto mi mancava per raggiungerli oppure
-      se li avevo già raggiunti o superati.
-    </p>
+        <h2>
+          Diario <span>FIT</span>
+        </h2>
 
-    <p>
-      Da questa necessità è nata l'idea di uno strumento
-      semplice e immediato che mi permettesse, a ogni pasto
-      o snack, di registrare ciò che mangiavo e avere subito
-      una visione chiara del rapporto tra quanto assunto e
-      i miei target di calorie, proteine, grassi,
-      carboidrati, zuccheri e acqua.
-    </p>
+        <p>
+          Alimentazione, equilibrio e risultati:
+          tutto ciò che serve per sapere,
+          in ogni momento della giornata,
+          dove sei rispetto ai tuoi obiettivi.
+        </p>
 
-    <p>
-      Nel tempo Diario FIT si è evoluto, aggiungendo
-      strumenti per rendere la registrazione sempre più
-      rapida e utile, mantenendo però il principio da cui
-      tutto è partito: <strong>sapere in ogni momento della
-      giornata dove sono rispetto ai miei obiettivi.</strong>
-    </p>
+      </div>
+
+    </section>
 
 
-    <h4>📊 Cosa controlla</h4>
-
-    <p>
-      Diario FIT monitora calorie, proteine, grassi,
-      carboidrati, zuccheri e acqua e li confronta
-      continuamente con i target giornalieri impostati.
-    </p>
+    <div class="info2-grid">
 
 
-    <h4>🍽️ Registrazione degli alimenti</h4>
+      <section class="info2-card info2-card-wide">
 
-    <p>
-      Gli alimenti possono essere registrati tramite
-      gli inserimenti rapidi personalizzabili, il catalogo,
-      l'inserimento libero oppure con il supporto di Gemini.
-      Registro e valori raggiunti si aggiornano
-      automaticamente.
-    </p>
+        <div class="info2-card-title">
+          <span class="info2-card-icon">💡</span>
+          <h4>Come nasce Diario FIT</h4>
+        </div>
 
+        <p>
+          Diario FIT nasce da una mia idea e da un'esigenza
+          molto concreta: capire, durante la giornata, quanti
+          macronutrienti stavo assumendo e sapere in ogni momento
+          a che punto ero rispetto agli obiettivi che mi ero
+          prefissato — quanto mi mancava per raggiungerli oppure
+          se li avevo già raggiunti o superati.
+        </p>
 
-    <h4>🤖 Supporto Gemini</h4>
+        <p>
+          Da questa necessità è nata l'idea di uno strumento
+          semplice e immediato che mi permettesse, a ogni pasto
+          o snack, di registrare ciò che mangiavo e avere subito
+          una visione chiara del rapporto tra quanto assunto e
+          i miei target di calorie, proteine, grassi,
+          carboidrati, zuccheri e acqua.
+        </p>
 
-    <p>
-      È possibile descrivere un alimento oppure fotografare
-      un pasto per ottenere una stima di alimento, porzione,
-      calorie e macronutrienti. Quando disponibili, Diario FIT
-      mostra anche informazioni sui condimenti, un intervallo
-      calorico stimato, il livello di affidabilità della stima
-      ed eventuali avvertenze.
-    </p>
+        <p class="info2-highlight">
+          Nel tempo Diario FIT si è evoluto, mantenendo però
+          il principio da cui tutto è partito:
+          <strong>
+            sapere in ogni momento della giornata dove sono
+            rispetto ai miei obiettivi.
+          </strong>
+        </p>
 
-    <p>
-      Le valutazioni ottenute da una descrizione o da una foto
-      sono necessariamente indicative: quantità e condimenti
-      non sempre possono essere determinati con precisione
-      dalla sola immagine.
-    </p>
-
-
-    <h4>⚖️ Progressi</h4>
-
-    <p>
-      La sezione Progressi permette di registrare il peso
-      nel tempo e visualizzarne l'andamento attraverso
-      lo storico e il grafico dedicato.
-    </p>
+      </section>
 
 
-    <h4>📚 Giornate e storico</h4>
+      <section class="info2-card">
 
-    <p>
-      Diario FIT conserva le giornate precedenti nello
-      storico. Se una giornata rimane aperta, al successivo
-      utilizzo dopo il cambio di data viene chiusa e
-      archiviata automaticamente.
-    </p>
+        <div class="info2-card-title">
+          <span class="info2-card-icon">🎯</span>
+          <h4>Cos'è Diario FIT</h4>
+        </div>
 
+        <p>
+          Un diario alimentare personale pensato per registrare
+          e monitorare in modo semplice e immediato
+          l'alimentazione quotidiana e l'andamento rispetto
+          ai propri obiettivi.
+        </p>
 
-    <h4>🎨 Personalizzazione</h4>
-
-    <p>
-      Gli inserimenti rapidi possono essere personalizzati
-      per adattarsi alle proprie abitudini. L'interfaccia
-      può inoltre essere utilizzata con tema Scuro, Chiaro
-      oppure Automatico, che segue il dispositivo.
-    </p>
+      </section>
 
 
-    <h4>ℹ️ Nota importante</h4>
+      <section class="info2-card">
 
-    <p>
-      Diario FIT è uno strumento personale di monitoraggio.
-      I valori nutrizionali, i calcoli dei fabbisogni e le
-      stime ottenute con Gemini devono essere considerati
-      indicativi e non sostituiscono il parere di un medico,
-      dietista, biologo nutrizionista o altro professionista
-      sanitario qualificato.
-    </p>
+        <div class="info2-card-title">
+          <span class="info2-card-icon">📊</span>
+          <h4>Cosa controlla</h4>
+        </div>
+
+        <p>
+          Calorie, proteine, grassi, carboidrati, zuccheri
+          e acqua vengono confrontati continuamente
+          con i target giornalieri impostati.
+        </p>
+
+      </section>
+
+
+      <section class="info2-card">
+
+        <div class="info2-card-title">
+          <span class="info2-card-icon">🍽️</span>
+          <h4>Registrazione</h4>
+        </div>
+
+        <p>
+          Gli alimenti possono essere registrati tramite
+          inserimenti rapidi personalizzabili, catalogo,
+          pasti salvati, inserimento libero oppure
+          con il supporto di Gemini.
+        </p>
+
+        <p>
+          Registro e valori raggiunti si aggiornano
+          automaticamente.
+        </p>
+
+      </section>
+
+
+      <section class="info2-card info2-card-gemini">
+
+        <div class="info2-card-title">
+          <span class="info2-card-icon">🤖</span>
+          <h4>Supporto Gemini</h4>
+        </div>
+
+        <p>
+          È possibile descrivere un alimento oppure fotografare
+          un pasto per ottenere una stima di alimento, porzione,
+          calorie e macronutrienti.
+        </p>
+
+        <p>
+          Quando disponibili, Diario FIT mostra anche
+          informazioni sui condimenti, un intervallo calorico,
+          il livello di affidabilità della stima
+          ed eventuali avvertenze.
+        </p>
+
+        <p class="info2-small-note">
+          Le stime ottenute da una descrizione o da una foto
+          sono indicative: quantità e condimenti non sempre
+          possono essere determinati con precisione.
+        </p>
+
+      </section>
+
+
+      <section class="info2-card">
+
+        <div class="info2-card-title">
+          <span class="info2-card-icon">⚖️</span>
+          <h4>Progressi</h4>
+        </div>
+
+        <p>
+          La sezione Progressi permette di registrare
+          il peso nel tempo e visualizzarne l'andamento
+          attraverso lo storico e il grafico dedicato.
+        </p>
+
+      </section>
+
+
+      <section class="info2-card">
+
+        <div class="info2-card-title">
+          <span class="info2-card-icon">📚</span>
+          <h4>Giornate e storico</h4>
+        </div>
+
+        <p>
+          Diario FIT conserva le giornate precedenti nello
+          storico. Se una giornata rimane aperta,
+          al successivo utilizzo dopo il cambio di data
+          viene chiusa e archiviata automaticamente.
+        </p>
+
+      </section>
+
+
+      <section class="info2-card">
+
+        <div class="info2-card-title">
+          <span class="info2-card-icon">🎨</span>
+          <h4>Personalizzazione</h4>
+        </div>
+
+        <p>
+          Gli inserimenti rapidi possono essere personalizzati
+          secondo le proprie abitudini.
+        </p>
+
+        <p>
+          L'interfaccia può inoltre essere utilizzata
+          con tema Scuro, Chiaro oppure Automatico,
+          che segue il dispositivo.
+        </p>
+
+      </section>
+
+
+    </div>
+
+
+    <section class="info2-note">
+
+      <div class="info2-note-title">
+        <span>ℹ️</span>
+        <strong>Nota importante</strong>
+      </div>
+
+      <p>
+        Diario FIT è uno strumento personale di monitoraggio.
+        I valori nutrizionali, i calcoli dei fabbisogni
+        e le stime ottenute con Gemini devono essere
+        considerati indicativi e non sostituiscono
+        il parere di un medico, dietista,
+        biologo nutrizionista o altro professionista
+        sanitario qualificato.
+      </p>
+
+    </section>
+
+
+    <div class="info2-footer">
+      Diario FIT
+      <span>•</span>
+      Alimentazione
+      <span>•</span>
+      Equilibrio
+      <span>•</span>
+      Risultati
+    </div>
 
   </div>
 
