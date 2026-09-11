@@ -3347,6 +3347,92 @@ html[data-theme="light"] .free-metric input {
 
 
 /* =========================================================
+
+/* =========================================================
+   INSERIMENTO LIBERO 2.2 - PESO E ACQUA
+   Identità cromatica coerente con le metriche
+========================================================= */
+
+.free-entry-secondary .free-secondary-field:first-child {
+  border-color: rgba(251,113,133,.34);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,113,133,.10),
+      rgba(251,113,133,.025)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 10px rgba(251,113,133,.09);
+}
+
+.free-entry-secondary .free-secondary-field:first-child > span {
+  color: rgb(251,113,133);
+}
+
+.free-entry-secondary .free-secondary-field:first-child input {
+  border-color: rgba(251,113,133,.18);
+  background: rgba(0,0,0,.10);
+}
+
+
+.free-entry-secondary .free-secondary-field:last-child {
+  border-color: rgba(56,189,248,.34);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.10),
+      rgba(56,189,248,.025)
+    ),
+    var(--card-2);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 10px rgba(56,189,248,.09);
+}
+
+.free-entry-secondary .free-secondary-field:last-child > span {
+  color: rgb(56,189,248);
+}
+
+.free-entry-secondary .free-secondary-field:last-child input {
+  border-color: rgba(56,189,248,.18);
+  background: rgba(0,0,0,.10);
+}
+
+
+/* Tema chiaro */
+
+html[data-theme="light"]
+.free-entry-secondary .free-secondary-field:first-child {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251,113,133,.13),
+      rgba(255,255,255,.96)
+    );
+}
+
+html[data-theme="light"]
+.free-entry-secondary .free-secondary-field:last-child {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(56,189,248,.13),
+      rgba(255,255,255,.96)
+    );
+}
+
+html[data-theme="light"]
+.free-entry-secondary .free-secondary-field input {
+  background: rgba(255,255,255,.78);
+}
+
+
 /* =========================================================
    TARGET GIORNALIERI 2.0 - STILE METRICHE
    Solo grafica: dimensioni e griglia restano invariate
