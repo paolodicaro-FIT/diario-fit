@@ -3041,6 +3041,225 @@ html[data-theme="light"]
 
 
 /* =========================================================
+   STATISTICHE E PROGRESSI — HEADER + MODAL
+========================================================= */
+
+.header-stats-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:7px;
+
+  min-height:30px;
+  padding:5px 10px;
+
+  border:1px solid rgba(255,159,28,.34);
+  border-radius:10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,159,28,.12),
+      rgba(56,189,248,.035)
+    ),
+    var(--card-2);
+
+  color:var(--subtext);
+
+  font-size:.72rem;
+  font-weight:800;
+  line-height:1;
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 2px 8px rgba(0,0,0,.10),
+    0 0 10px rgba(255,159,28,.08);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    color .18s ease,
+    box-shadow .18s ease;
+}
+
+.header-stats-btn:hover {
+  color:var(--accent);
+
+  border-color:rgba(255,159,28,.58);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 3px 10px rgba(0,0,0,.12),
+    0 0 13px rgba(255,159,28,.14);
+}
+
+.header-stats-btn:active {
+  transform:translateY(1px) scale(.985);
+}
+
+.header-stats-icon {
+  font-size:.9rem;
+}
+
+.header-stats-arrow {
+  margin-left:2px;
+  color:var(--accent);
+  font-size:1rem;
+  line-height:.7;
+}
+
+.stats-progress-modal-content {
+  max-width:460px;
+}
+
+.stats-progress-menu {
+  display:grid;
+  gap:10px;
+}
+
+.stats-progress-choice {
+  width:100%;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:14px;
+
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.018)
+    ),
+    var(--card-2);
+
+  color:var(--text);
+  text-align:left;
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 4px 14px rgba(0,0,0,.10);
+
+  transition:
+    transform .14s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.stats-progress-choice:hover {
+  transform:translateY(-1px);
+}
+
+.stats-progress-weight {
+  border-color:rgba(255,159,28,.30);
+}
+
+.stats-progress-weight:hover {
+  border-color:rgba(255,159,28,.60);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 16px rgba(0,0,0,.12),
+    0 0 14px rgba(255,159,28,.12);
+}
+
+.stats-progress-weekly {
+  border-color:rgba(74,222,128,.30);
+}
+
+.stats-progress-weekly:hover {
+  border-color:rgba(74,222,128,.60);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 16px rgba(0,0,0,.12),
+    0 0 14px rgba(74,222,128,.12);
+}
+
+.stats-progress-choice-icon {
+  flex:0 0 auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:38px;
+  height:38px;
+
+  border-radius:11px;
+
+  background:rgba(255,255,255,.045);
+
+  font-size:1.25rem;
+}
+
+.stats-progress-choice-text {
+  min-width:0;
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.stats-progress-choice-text strong {
+  font-size:.94rem;
+  color:var(--text);
+}
+
+.stats-progress-choice-text small {
+  font-size:.72rem;
+  color:var(--subtext);
+  line-height:1.25;
+}
+
+.stats-progress-choice-arrow {
+  flex:0 0 auto;
+
+  color:var(--subtext);
+  font-size:1.45rem;
+  line-height:1;
+}
+
+html[data-theme="light"] .header-stats-btn,
+html[data-theme="light"] .stats-progress-choice {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(241,245,249,.95)
+    );
+}
+
+@media (max-width:560px) {
+
+  .header-stats-btn {
+    min-height:28px;
+    padding:4px 9px;
+    font-size:.68rem;
+  }
+
+  .stats-progress-choice {
+    padding:12px;
+  }
+
+  .stats-progress-choice-icon {
+    width:36px;
+    height:36px;
+  }
+
+}
+
+
+/* =========================================================
    PULSANTE PROGRESSI NEL SOTTOTITOLO
 ========================================================= */
 
@@ -6551,29 +6770,15 @@ html[data-theme="light"]
 
       <div class="header-subtitle-row">
 
-        <div
-          class="header-subtitle"
-          id="header-subtitle"
-        >
-          diario di PAOLO
-        </div>
-
         <button
           type="button"
-          class="header-progress-btn"
-          onclick="toggleProgressModal()"
-          title="Progressi peso"
+          class="header-stats-btn"
+          onclick="toggleStatsProgressModal()"
+          title="Statistiche e Progressi"
         >
-          ⚖️ <span>Progressi</span>
-        </button>
-
-        <button
-          type="button"
-          class="header-progress-btn header-weekly-btn"
-          onclick="toggleWeeklySummaryModal()"
-          title="Riepilogo settimanale"
-        >
-          📊 <span>Settimana</span>
+          <span class="header-stats-icon">📊</span>
+          <span>Statistiche e Progressi</span>
+          <span class="header-stats-arrow">›</span>
         </button>
 
       </div>
@@ -8375,6 +8580,70 @@ html[data-theme="light"]
 <!-- =====================================================
      MODAL PROGRESSI
 ===================================================== -->
+
+<!-- =====================================================
+     MODAL STATISTICHE E PROGRESSI
+========================================================= -->
+
+<div
+  class="modal-overlay"
+  id="stats-progress-modal"
+>
+  <div class="modal-content stats-progress-modal-content">
+
+    <div class="modal-header">
+
+      <h3 id="stats-progress-title">
+        📊 Statistiche e Progressi
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="toggleStatsProgressModal()"
+        title="Chiudi"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div class="stats-progress-menu">
+
+      <button
+        type="button"
+        class="stats-progress-choice stats-progress-weight"
+        onclick="openProgressFromStats()"
+      >
+        <span class="stats-progress-choice-icon">⚖️</span>
+
+        <span class="stats-progress-choice-text">
+          <strong>Progressi</strong>
+          <small>Peso e andamento nel tempo</small>
+        </span>
+
+        <span class="stats-progress-choice-arrow">›</span>
+      </button>
+
+      <button
+        type="button"
+        class="stats-progress-choice stats-progress-weekly"
+        onclick="openWeeklyFromStats()"
+      >
+        <span class="stats-progress-choice-icon">📊</span>
+
+        <span class="stats-progress-choice-text">
+          <strong>Medie settimanali</strong>
+          <small>Riepilogo degli ultimi 7 giorni</small>
+        </span>
+
+        <span class="stats-progress-choice-arrow">›</span>
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
 
 <div
   class="modal-overlay"
@@ -11432,6 +11701,43 @@ function changeMultiplier(amount) {
 /* =========================================================
    MODALS
 ========================================================= */
+
+function toggleStatsProgressModal() {
+
+  const modal =
+    document.getElementById(
+      "stats-progress-modal"
+    );
+
+  modal.style.display =
+    modal.style.display === "flex"
+      ? "none"
+      : "flex";
+
+}
+
+
+function openProgressFromStats() {
+
+  document.getElementById(
+    "stats-progress-modal"
+  ).style.display = "none";
+
+  toggleProgressModal();
+
+}
+
+
+function openWeeklyFromStats() {
+
+  document.getElementById(
+    "stats-progress-modal"
+  ).style.display = "none";
+
+  toggleWeeklySummaryModal();
+
+}
+
 
 function toggleWeeklySummaryModal() {
 
@@ -14953,10 +15259,15 @@ function applyUserDisplayName() {
 
   if (userName) {
 
-    document.getElementById(
-      "header-subtitle"
-    ).innerText =
-      `diario di ${userName}`;
+    const statsTitle =
+      document.getElementById(
+        "stats-progress-title"
+      );
+
+    if (statsTitle) {
+      statsTitle.innerText =
+        `📊 Statistiche e Progressi di ${userName}`;
+    }
 
   }
 
