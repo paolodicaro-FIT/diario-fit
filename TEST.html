@@ -3184,6 +3184,20 @@ html[data-theme="light"]
     0 0 14px rgba(74,222,128,.12);
 }
 
+
+.stats-progress-analysis {
+  border-color:rgba(56,189,248,.30);
+}
+
+.stats-progress-analysis:hover {
+  border-color:rgba(56,189,248,.62);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 16px rgba(0,0,0,.12),
+    0 0 16px rgba(56,189,248,.14);
+}
+
 .stats-progress-choice-icon {
   flex:0 0 auto;
 
@@ -8639,6 +8653,89 @@ html[data-theme="light"]
         <span class="stats-progress-choice-arrow">›</span>
       </button>
 
+
+      <button
+        type="button"
+        class="stats-progress-choice stats-progress-analysis"
+        onclick="openAnalysisFromStats()"
+      >
+        <span class="stats-progress-choice-icon">📈</span>
+
+        <span class="stats-progress-choice-text">
+          <strong>Analisi personale</strong>
+          <small>Trend, costanza e andamento nel tempo</small>
+        </span>
+
+        <span class="stats-progress-choice-arrow">›</span>
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- =====================================================
+     MODAL ANALISI PERSONALE
+========================================================= -->
+
+<div
+  class="modal-overlay"
+  id="personal-analysis-modal"
+>
+  <div class="modal-content stats-progress-modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        📈 Analisi personale
+      </h3>
+
+      <button
+        class="modal-close"
+        onclick="togglePersonalAnalysisModal()"
+        title="Chiudi"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div
+      id="personal-analysis-content"
+      style="
+        padding:14px;
+        border-radius:14px;
+        border:1px solid rgba(56,189,248,.18);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(56,189,248,.07),
+            rgba(255,255,255,.018)
+          ),
+          var(--card-2);
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.035),
+          0 0 16px rgba(56,189,248,.07);
+      "
+    >
+      <div style="
+        font-weight:900;
+        color:var(--text);
+        margin-bottom:5px;
+      ">
+        Analisi in preparazione
+      </div>
+
+      <div style="
+        font-size:.82rem;
+        line-height:1.45;
+        color:var(--subtext);
+      ">
+        Qui verranno analizzati andamento nutrizionale,
+        costanza e trend del peso utilizzando i dati
+        registrati in Diario FIT.
+      </div>
     </div>
 
   </div>
@@ -11735,6 +11832,37 @@ function openWeeklyFromStats() {
   ).style.display = "none";
 
   toggleWeeklySummaryModal();
+
+}
+
+
+
+function openAnalysisFromStats() {
+
+  document.getElementById(
+    "stats-progress-modal"
+  ).style.display = "none";
+
+  togglePersonalAnalysisModal();
+
+}
+
+
+function togglePersonalAnalysisModal() {
+
+  const modal =
+    document.getElementById(
+      "personal-analysis-modal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.style.display =
+    getComputedStyle(modal).display !== "none"
+      ? "none"
+      : "flex";
 
 }
 
