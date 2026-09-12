@@ -17407,7 +17407,29 @@ function generatePrintableAllHistoryReport() {
       </style>
     </head>
     <body>
-      <h1>💪 Diario FIT - Archivio completo</h1>
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          gap:12px;
+          margin-bottom:4px;
+        "
+      >
+        <img
+          src="${new URL('DiarioFITGLASS.png', window.location.href).href}"
+          alt="Diario FIT"
+          style="
+            width:58px;
+            height:58px;
+            object-fit:cover;
+            border-radius:14px;
+          "
+        >
+
+        <h1 style="margin:0;">
+          Diario FIT - Archivio completo
+        </h1>
+      </div>
       <div class="subtitle">
         Tutte le giornate archiviate · ${keys.length} giornate
       </div>
@@ -17545,7 +17567,28 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
   return `
     <section class="${addPageBreak ? "page-break" : ""}">
       <div class="archive-header">
-        <h2>📅 ${escapeHTML(dateLabel)}</h2>
+        <div
+          style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+          "
+        >
+          <img
+            src="${new URL('DiarioFITGLASS.png', window.location.href).href}"
+            alt="Diario FIT"
+            style="
+              width:58px;
+              height:58px;
+              object-fit:cover;
+              border-radius:14px;
+            "
+          >
+
+          <h2 style="margin:0;">
+            ${escapeHTML(dateLabel)}
+          </h2>
+        </div>
       </div>
 
       <div class="summary">
