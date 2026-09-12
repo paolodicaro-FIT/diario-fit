@@ -12339,7 +12339,7 @@ function classifyPersonalMetric(
 }
 
 
-function isPersonalMetricDayInTarget(
+function getPersonalMetricDayZone(
   key,
   value,
   target
@@ -12352,7 +12352,7 @@ function isPersonalMetricDayInTarget(
     ||
     target <= 0
   ) {
-    return false;
+    return null;
   }
 
   const ratio =
@@ -12361,43 +12361,73 @@ function isPersonalMetricDayInTarget(
 
   /*
    * Zuccheri:
-   * limite massimo, non obiettivo da raggiungere.
+   * il target è un limite massimo.
    */
   if (key === "sugar") {
-    return ratio <= 1;
+    return ratio <= 1
+      ? "in"
+      : "high";
   }
 
 
   /*
    * Acqua:
-   * consideriamo adeguato almeno il 90%
-   * dell'obiettivo giornaliero.
+   * almeno il 90% è considerato adeguato.
+   * Non esiste una zona "alta" penalizzante.
    */
   if (key === "water") {
-    return ratio >= .90;
+    return ratio >= .90
+      ? "in"
+      : "low";
   }
 
 
   /*
    * Proteine:
-   * stessa fascia usata nell'analisi media.
+   * fascia 90–115%.
    */
   if (key === "pro") {
-    return (
-      ratio >= .90 &&
-      ratio <= 1.15
-    );
+
+    if (ratio < .90) {
+      return "low";
+    }
+
+    if (ratio <= 1.15) {
+      return "in";
+    }
+
+    return "high";
   }
 
 
   /*
    * Calorie, grassi e carboidrati:
-   * fascia ±10% rispetto al target.
+   * fascia ±10%.
    */
-  return (
-    ratio >= .90 &&
-    ratio <= 1.10
-  );
+  if (ratio < .90) {
+    return "low";
+  }
+
+  if (ratio <= 1.10) {
+    return "in";
+  }
+
+  return "high";
+
+}
+
+
+function isPersonalMetricDayInTarget(
+  key,
+  value,
+  target
+) {
+
+  return getPersonalMetricDayZone(
+    key,
+    value,
+    target
+  ) === "in";
 
 }
 
@@ -12590,9 +12620,9 @@ function calculatePersonalAnalysis() {
         );
 
 
-      const daysInTarget =
+      const dayZones =
         target > 0
-          ? observedDays.filter(
+          ? observedDays.map(
               day => {
 
                 const value =
@@ -12602,15 +12632,33 @@ function calculatePersonalAnalysis() {
                     ]
                   );
 
-                return isPersonalMetricDayInTarget(
+                return getPersonalMetricDayZone(
                   metric.key,
                   value,
                   target
                 );
 
               }
-            ).length
-          : 0;
+            )
+          : [];
+
+
+      const daysBelow =
+        dayZones.filter(
+          zone => zone === "low"
+        ).length;
+
+
+      const daysInTarget =
+        dayZones.filter(
+          zone => zone === "in"
+        ).length;
+
+
+      const daysAbove =
+        dayZones.filter(
+          zone => zone === "high"
+        ).length;
 
 
       const observedDaysCount =
@@ -12631,19 +12679,23 @@ function calculatePersonalAnalysis() {
         if (metric.key === "sugar") {
 
           dayConsistencyText =
-            `${daysInTarget}/${observedDaysCount} giorni entro il limite`;
+            `${daysInTarget}/${observedDaysCount} giorni entro il limite`
+            + ` · ↑ ${daysAbove} sopra`;
 
         } else if (
           metric.key === "water"
         ) {
 
           dayConsistencyText =
-            `${daysInTarget}/${observedDaysCount} giorni con almeno il 90%`;
+            `${daysInTarget}/${observedDaysCount} giorni con almeno il 90%`
+            + ` · ↓ ${daysBelow} sotto`;
 
         } else {
 
           dayConsistencyText =
-            `${daysInTarget}/${observedDaysCount} giorni in fascia`;
+            `${daysInTarget}/${observedDaysCount} giorni in fascia`
+            + ` · ↓ ${daysBelow}`
+            + ` · ↑ ${daysAbove}`;
 
         }
 
@@ -12656,7 +12708,9 @@ function calculatePersonalAnalysis() {
         target,
         percentage,
         status,
+        daysBelow,
         daysInTarget,
+        daysAbove,
         observedDaysCount,
         dayTargetRatio,
         dayConsistencyText
