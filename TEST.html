@@ -3406,6 +3406,100 @@ html[data-theme="light"]
   background:rgba(255,90,80,.07);
 }
 
+.personal-analysis-comparison-list {
+  display:grid;
+  gap:6px;
+}
+
+.personal-analysis-comparison-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+
+  padding:8px 10px;
+
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.075);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.035),
+      rgba(255,255,255,.012)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.personal-analysis-comparison-text {
+  flex:1;
+  min-width:0;
+}
+
+.personal-analysis-comparison-text strong {
+  display:block;
+
+  font-size:.75rem;
+  line-height:1.25;
+  color:var(--text);
+}
+
+.personal-analysis-comparison-text small {
+  display:block;
+
+  margin-top:2px;
+
+  font-size:.66rem;
+  line-height:1.35;
+  color:var(--subtext);
+}
+
+.personal-analysis-comparison-status {
+  flex:0 0 auto;
+
+  padding:3px 7px;
+
+  border-radius:999px;
+
+  font-size:.61rem;
+  font-weight:900;
+  white-space:nowrap;
+
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.personal-analysis-comparison-status.improving {
+  color:#6ee7a8;
+  border-color:rgba(74,222,128,.30);
+  background:rgba(74,222,128,.08);
+
+  box-shadow:
+    0 0 10px rgba(74,222,128,.06);
+}
+
+.personal-analysis-comparison-status.worsening {
+  color:#ff8a82;
+  border-color:rgba(255,90,80,.30);
+  background:rgba(255,90,80,.08);
+
+  box-shadow:
+    0 0 10px rgba(255,90,80,.06);
+}
+
+.personal-analysis-comparison-status.stable {
+  color:#7dd3fc;
+  border-color:rgba(56,189,248,.28);
+  background:rgba(56,189,248,.07);
+}
+
+.personal-analysis-comparison-status.unavailable {
+  color:var(--subtext);
+  border-color:rgba(255,255,255,.10);
+  background:rgba(255,255,255,.035);
+}
+
+
 .personal-analysis-summary {
   margin-top:12px;
   padding:11px 12px;
@@ -3516,7 +3610,8 @@ html[data-theme="light"]
     font-size:.80rem;
   }
 
-  .personal-analysis-row {
+  .personal-analysis-row,
+  .personal-analysis-comparison-row {
     padding:8px;
     gap:7px;
   }
@@ -12881,12 +12976,21 @@ function calculatePersonalAnalysis() {
   const overview =
     calculateWeeklyNutritionOverview();
 
+  const previousOverview =
+    calculateWeeklyNutritionOverview(7);
+
   const {
     days,
     availableDays,
     availableDaysCount,
     averages
   } = overview;
+
+  const previousAverages =
+    previousOverview.averages;
+
+  const previousAvailableDaysCount =
+    previousOverview.availableDaysCount;
 
 
   const calorieValues =
@@ -13045,6 +13149,72 @@ function calculatePersonalAnalysis() {
           : null;
 
 
+      const previousAverage =
+        Number(
+          previousAverages?.[
+            metric.key
+          ]
+        ) || 0;
+
+
+      const hasPreviousData =
+        previousAvailableDaysCount > 0
+        &&
+        previousAverage > 0;
+
+
+      const changeAbsolute =
+        hasPreviousData
+          ? Math.round(
+              (
+                average -
+                previousAverage
+              ) * 10
+            ) / 10
+          : null;
+
+
+      const changePercent =
+        hasPreviousData
+          ? Math.round(
+              (
+                (
+                  average -
+                  previousAverage
+                ) /
+                previousAverage
+              ) * 100
+            )
+          : null;
+
+
+      let trendDirection = null;
+
+      if (
+        Number.isFinite(
+          changePercent
+        )
+      ) {
+
+        if (changePercent >= 5) {
+
+          trendDirection = "up";
+
+        } else if (
+          changePercent <= -5
+        ) {
+
+          trendDirection = "down";
+
+        } else {
+
+          trendDirection = "stable";
+
+        }
+
+      }
+
+
       const observedDays =
         availableDays.filter(
           day => {
@@ -13152,6 +13322,13 @@ function calculatePersonalAnalysis() {
         target,
         percentage,
         status,
+        previousAverage:
+          hasPreviousData
+            ? previousAverage
+            : null,
+        changeAbsolute,
+        changePercent,
+        trendDirection,
         daysBelow,
         daysInTarget,
         daysAbove,
@@ -13162,6 +13339,125 @@ function calculatePersonalAnalysis() {
 
     }
   );
+
+
+  const comparisonReady =
+    availableDaysCount >= 4
+    &&
+    previousAvailableDaysCount >= 4;
+
+
+  const periodComparison =
+    comparisonReady
+      ? metrics.map(
+          metric => {
+
+            const currentAverage =
+              Number(metric.average);
+
+            const previousAverage =
+              Number(metric.previousAverage);
+
+            if (
+              !Number.isFinite(currentAverage)
+              ||
+              !Number.isFinite(previousAverage)
+              ||
+              previousAverage <= 0
+              ||
+              !metric.target
+            ) {
+              return {
+                key: metric.key,
+                icon: metric.icon,
+                label: metric.label,
+                status: "unavailable",
+                text: "Confronto non disponibile"
+              };
+            }
+
+
+            const currentDistance =
+              metric.key === "sugar"
+                ? Math.max(
+                    0,
+                    currentAverage - metric.target
+                  )
+                : metric.key === "water"
+                  ? Math.max(
+                      0,
+                      metric.target - currentAverage
+                    )
+                  : Math.abs(
+                      currentAverage - metric.target
+                    );
+
+
+            const previousDistance =
+              metric.key === "sugar"
+                ? Math.max(
+                    0,
+                    previousAverage - metric.target
+                  )
+                : metric.key === "water"
+                  ? Math.max(
+                      0,
+                      metric.target - previousAverage
+                    )
+                  : Math.abs(
+                      previousAverage - metric.target
+                    );
+
+
+            const distanceDelta =
+              currentDistance -
+              previousDistance;
+
+
+            const tolerance =
+              metric.target * 0.05;
+
+
+            let status = "stable";
+            let text = "Sostanzialmente stabile";
+
+
+            if (
+              distanceDelta < -tolerance
+            ) {
+
+              status = "improving";
+              text = "In miglioramento";
+
+            } else if (
+              distanceDelta > tolerance
+            ) {
+
+              status = "worsening";
+              text = "In peggioramento";
+
+            }
+
+
+            return {
+              key: metric.key,
+              icon: metric.icon,
+              label: metric.label,
+              currentAverage,
+              previousAverage,
+              changeAbsolute:
+                metric.changeAbsolute,
+              changePercent:
+                metric.changePercent,
+              trendDirection:
+                metric.trendDirection,
+              status,
+              text
+            };
+
+          }
+        )
+      : [];
 
 
   let latestWeight = null;
@@ -13718,6 +14014,9 @@ function calculatePersonalAnalysis() {
     latestWeight,
     latestTrend,
     change7,
+    comparisonReady,
+    previousAvailableDaysCount,
+    periodComparison,
     priority,
     observations:
       observations.slice(0, 4)
@@ -13869,6 +14168,100 @@ function renderPersonalAnalysis() {
       .join("");
 
 
+  const comparisonRows =
+    analysis.comparisonReady
+      ? analysis.periodComparison
+          .filter(
+            item =>
+              item.status !== "unavailable"
+          )
+          .map(
+            item => {
+
+              const metric =
+                analysis.metrics.find(
+                  entry =>
+                    entry.key === item.key
+                );
+
+              const unit =
+                metric?.unit || "";
+
+              const changeText =
+                Number.isFinite(
+                  item.changePercent
+                )
+                  ? `${
+                      item.changePercent > 0
+                        ? "+"
+                        : ""
+                    }${item.changePercent}%`
+                  : "—";
+
+              const statusLabel =
+                item.status === "improving"
+                  ? "Migliora"
+                  : item.status === "worsening"
+                    ? "Peggiora"
+                    : "Stabile";
+
+              return `
+                <div class="personal-analysis-comparison-row">
+
+                  <span class="personal-analysis-row-icon">
+                    ${item.icon}
+                  </span>
+
+                  <span class="personal-analysis-comparison-text">
+                    <strong>
+                      ${item.label}
+                    </strong>
+
+                    <small>
+                      ${item.previousAverage}${unit}
+                      → ${item.currentAverage}${unit}
+                      · ${changeText}
+                    </small>
+                  </span>
+
+                  <span
+                    class="
+                      personal-analysis-comparison-status
+                      ${item.status}
+                    "
+                  >
+                    ${statusLabel}
+                  </span>
+
+                </div>
+              `;
+
+            }
+          )
+          .join("")
+      : "";
+
+
+  const comparisonHtml =
+    analysis.comparisonReady
+    &&
+    comparisonRows
+      ? `
+        <div class="personal-analysis-section">
+
+          <div class="personal-analysis-section-title">
+            ↔️ Confronto con i 7 giorni precedenti
+          </div>
+
+          <div class="personal-analysis-comparison-list">
+            ${comparisonRows}
+          </div>
+
+        </div>
+      `
+      : "";
+
+
   const summaryText =
     analysis.observations.length
       ? analysis.observations.join(" ")
@@ -13942,6 +14335,9 @@ function renderPersonalAnalysis() {
       </div>
 
     </div>
+
+
+    ${comparisonHtml}
 
 
     <div class="personal-analysis-summary">
@@ -18131,7 +18527,9 @@ function normalizeNutritionValue(
 }
 
 
-function getWeeklyNutritionData() {
+function getWeeklyNutritionData(
+  endOffsetDays = 0
+) {
 
   const todayKey =
     getLocalISODate();
@@ -18144,8 +18542,9 @@ function getWeeklyNutritionData() {
   const days = [];
 
   for (
-    let offset = 6;
-    offset >= 0;
+    let offset =
+      endOffsetDays + 6;
+    offset >= endOffsetDays;
     offset--
   ) {
 
@@ -18264,10 +18663,14 @@ function getWeeklyNutritionData() {
 }
 
 
-function calculateWeeklyNutritionOverview() {
+function calculateWeeklyNutritionOverview(
+  endOffsetDays = 0
+) {
 
   const days =
-    getWeeklyNutritionData();
+    getWeeklyNutritionData(
+      endOffsetDays
+    );
 
   const availableDays =
     days.filter(
