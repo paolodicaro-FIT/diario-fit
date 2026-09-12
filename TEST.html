@@ -1520,6 +1520,17 @@ html[data-theme="light"] .quick-btn-label {
   text-align: center;
 }
 
+.calc-activity-hint {
+  width: 100%;
+  margin-top: 5px;
+
+  color: var(--subtext);
+
+  font-size: .72rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
 .save-food-btn {
   width: 100%;
 
@@ -9381,7 +9392,10 @@ html[data-theme="light"]
           Attività
         </label>
 
-        <select id="calc-activity">
+        <select
+          id="calc-activity"
+          onchange="updateActivityDescription()"
+        >
 
           <option value="1.2">
             Sedentario
@@ -9404,6 +9418,13 @@ html[data-theme="light"]
           </option>
 
         </select>
+
+        <div
+          id="calc-activity-hint"
+          class="calc-activity-hint"
+        >
+          Attività moderata circa 3–5 giorni a settimana.
+        </div>
 
       </div>
 
@@ -17280,6 +17301,47 @@ function applyGeminiToForm() {
 /* =========================================================
    CALCOLATORE TARGET
 ========================================================= */
+
+function updateActivityDescription() {
+
+  const activity =
+    document.getElementById(
+      "calc-activity"
+    );
+
+  const hint =
+    document.getElementById(
+      "calc-activity-hint"
+    );
+
+  if (!activity || !hint) {
+    return;
+  }
+
+  const descriptions = {
+    "1.2":
+      "Quasi nessun esercizio; vita prevalentemente sedentaria.",
+
+    "1.375":
+      "Attività leggera circa 1–3 giorni a settimana.",
+
+    "1.55":
+      "Attività moderata circa 3–5 giorni a settimana.",
+
+    "1.725":
+      "Attività intensa circa 6–7 giorni a settimana.",
+
+    "1.9":
+      "Allenamenti molto intensi e/o lavoro fisico impegnativo."
+  };
+
+  hint.textContent =
+    descriptions[activity.value]
+    ||
+    "";
+
+}
+
 
 async function calculateAndApplyTargets() {
 
