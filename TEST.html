@@ -12589,6 +12589,12 @@ function calculatePersonalAnalysis() {
           item.key === "fat"
       );
 
+    const carbMetric =
+      metrics.find(
+        item =>
+          item.key === "carb"
+      );
+
     const sugarMetric =
       metrics.find(
         item =>
@@ -12602,93 +12608,180 @@ function calculatePersonalAnalysis() {
       );
 
 
+    const kcalPct =
+      kcalMetric?.percentage;
+
+    const proPct =
+      proMetric?.percentage;
+
+    const fatPct =
+      fatMetric?.percentage;
+
+    const carbPct =
+      carbMetric?.percentage;
+
+    const sugarPct =
+      sugarMetric?.percentage;
+
+    const waterPct =
+      waterMetric?.percentage;
+
+
+    /*
+     * Lettura combinata:
+     * prima osserviamo il quadro calorico
+     * insieme alla distribuzione dei macro.
+     */
+
     if (
-      kcalMetric?.percentage >= 90 &&
-      kcalMetric?.percentage <= 110
+      kcalPct < 90 &&
+      proPct < 90 &&
+      carbPct < 80 &&
+      fatPct > 115
     ) {
 
       observations.push(
-        "L’apporto calorico medio è vicino al target impostato."
+        "Le calorie medie sono inferiori al target; contemporaneamente proteine e carboidrati risultano sotto obiettivo, mentre i grassi sono sensibilmente sopra. La distribuzione dei macronutrienti è quindi sbilanciata verso i grassi."
+      );
+
+    } else {
+
+      if (
+        kcalPct >= 90 &&
+        kcalPct <= 110
+      ) {
+
+        observations.push(
+          "L’apporto calorico medio è vicino al target impostato."
+        );
+
+      } else if (
+        kcalPct < 90
+      ) {
+
+        observations.push(
+          "Le calorie medie risultano inferiori al target impostato."
+        );
+
+      } else if (
+        kcalPct > 110
+      ) {
+
+        observations.push(
+          "Le calorie medie risultano superiori al target impostato."
+        );
+
+      }
+
+
+      if (
+        proPct < 90 &&
+        carbPct < 80 &&
+        fatPct > 115
+      ) {
+
+        observations.push(
+          "Proteine e carboidrati risultano sotto obiettivo, mentre la media dei grassi è sopra il target: la distribuzione dei macronutrienti è sbilanciata verso i grassi."
+        );
+
+      } else if (
+        proPct < 90 &&
+        carbPct < 80
+      ) {
+
+        observations.push(
+          "Proteine e carboidrati risultano entrambi sotto i rispettivi target medi."
+        );
+
+      } else if (
+        fatPct > 115
+      ) {
+
+        observations.push(
+          "La media dei grassi è sensibilmente superiore al target impostato."
+        );
+
+      } else if (
+        proPct >= 90 &&
+        proPct <= 115 &&
+        carbPct >= 80 &&
+        carbPct <= 120 &&
+        fatPct >= 80 &&
+        fatPct <= 120
+      ) {
+
+        observations.push(
+          "La distribuzione media dei macronutrienti è complessivamente equilibrata rispetto ai target impostati."
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Zuccheri:
+     * il target è trattato come limite massimo.
+     */
+
+    if (
+      sugarPct > 100
+    ) {
+
+      observations.push(
+        "Gli zuccheri medi superano il limite impostato."
+      );
+
+    }
+
+
+    /*
+     * Idratazione.
+     */
+
+    if (
+      waterPct >= 90
+    ) {
+
+      observations.push(
+        "L’idratazione media è vicina all’obiettivo giornaliero."
       );
 
     } else if (
-      kcalMetric?.percentage < 90
+      waterPct >= 75
     ) {
 
       observations.push(
-        "Le calorie medie risultano inferiori al target impostato."
+        "L’idratazione media è abbastanza vicina all’obiettivo, ma può essere migliorata."
       );
 
-    } else if (
-      kcalMetric?.percentage > 110
-    ) {
+    } else {
 
       observations.push(
-        "Le calorie medie risultano superiori al target impostato."
-      );
-
-    }
-
-
-    if (
-      proMetric?.percentage < 90
-    ) {
-
-      observations.push(
-        "Le proteine sono mediamente sotto il target: è uno degli aspetti da tenere maggiormente sotto controllo."
-      );
-
-    } else if (
-      proMetric?.percentage >= 90 &&
-      proMetric?.percentage <= 115
-    ) {
-
-      observations.push(
-        "L’apporto proteico medio è ben allineato al target."
+        "L’idratazione media è sensibilmente inferiore all’obiettivo giornaliero."
       );
 
     }
 
 
-    if (
-      fatMetric?.percentage > 115
-    ) {
-
-      observations.push(
-        "I grassi risultano frequentemente elevati rispetto al target medio."
-      );
-
-    }
-
-
-    if (
-      sugarMetric?.percentage > 100
-    ) {
-
-      observations.push(
-        "Gli zuccheri medi superano il target impostato."
-      );
-
-    }
-
-
-    if (
-      waterMetric?.percentage < 90
-    ) {
-
-      observations.push(
-        "L’idratazione media è inferiore all’obiettivo giornaliero."
-      );
-
-    }
-
+    /*
+     * Regolarità dell’apporto calorico.
+     */
 
     if (
       consistency.className === "good"
     ) {
 
       observations.push(
-        "L’apporto calorico è abbastanza regolare da un giorno all’altro."
+        "L’apporto calorico è regolare da un giorno all’altro."
+      );
+
+    } else if (
+      consistency.className === "neutral"
+    ) {
+
+      observations.push(
+        "L’apporto calorico presenta variazioni moderate tra i diversi giorni."
       );
 
     } else if (
