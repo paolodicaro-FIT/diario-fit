@@ -7016,6 +7016,432 @@ html[data-theme="light"]
 }
 </style>
 
+
+<style>
+/* =========================================================
+   A CHE PUNTO SONO OGGI? 2.0
+   Glass / glow compatto
+========================================================= */
+
+#missing-today-modal {
+  background:
+    radial-gradient(
+      circle at 18% 8%,
+      rgba(56,189,248,.09),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 88% 90%,
+      rgba(255,159,28,.075),
+      transparent 34%
+    ),
+    rgba(3,7,12,.82);
+}
+
+
+#missing-today-modal .missing-today-content {
+  position:relative;
+
+  width:100%;
+  max-width:520px;
+
+  padding:14px;
+
+  overflow-x:hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20,27,36,.96),
+      rgba(9,15,23,.975)
+    );
+
+  border:
+    1px solid rgba(56,189,248,.22);
+
+  border-radius:18px;
+
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.58),
+    0 0 28px rgba(56,189,248,.055),
+    0 0 22px rgba(255,159,28,.035),
+    inset 0 1px 0 rgba(255,255,255,.04);
+
+  backdrop-filter:blur(16px);
+}
+
+
+#missing-today-modal .missing-today-header {
+  margin-bottom:9px;
+  padding-bottom:9px;
+
+  border-bottom:
+    1px solid rgba(56,189,248,.12);
+}
+
+
+#missing-today-modal .missing-today-header h3 {
+  color:var(--accent);
+
+  text-shadow:
+    0 0 14px rgba(255,159,28,.14);
+}
+
+
+.missing-today-summary {
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+
+.missing-today-row {
+  display:flex;
+  align-items:center;
+
+  gap:9px;
+
+  min-height:49px;
+
+  padding:7px 9px;
+
+  border-radius:12px;
+
+  background:
+    var(--missing-row-bg);
+
+  border:
+    var(--missing-row-border);
+
+  box-shadow:
+    var(--missing-row-shadow);
+
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+
+.missing-today-row-icon {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+
+  border-radius:9px;
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.015)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035);
+
+  font-size:.98rem;
+  line-height:1;
+}
+
+
+.missing-today-row-main {
+  display:flex;
+  flex-direction:column;
+
+  flex:1;
+  min-width:0;
+
+  gap:2px;
+}
+
+
+.missing-today-row-label {
+  color:var(--text);
+
+  font-size:.82rem;
+  font-weight:850;
+  line-height:1.15;
+}
+
+
+.missing-today-row-values {
+  color:var(--subtext);
+
+  font-size:.69rem;
+  font-weight:600;
+  line-height:1.2;
+}
+
+
+.missing-today-row-values > span {
+  opacity:.72;
+}
+
+
+.missing-today-row-values
+.missing-today-percentage {
+  color:var(--cyan);
+  opacity:.92;
+
+  font-weight:800;
+}
+
+
+.missing-today-row-status {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+
+  gap:4px;
+
+  flex:0 0 auto;
+
+  max-width:48%;
+
+  padding:4px 7px;
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  font-size:.69rem;
+  font-weight:850;
+  line-height:1.15;
+
+  text-align:right;
+}
+
+
+.missing-today-status-symbol {
+  flex:0 0 auto;
+
+  font-size:.78rem;
+  line-height:1;
+}
+
+
+#missing-today-modal
+.missing-today-gemini-btn {
+  width:100%;
+
+  min-height:40px;
+
+  margin-top:10px;
+
+  border-radius:12px;
+
+  font-size:.76rem;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 3px 12px rgba(0,0,0,.10),
+    0 0 14px rgba(96,165,250,.13);
+}
+
+
+#missing-today-modal
+.missing-today-gemini-result {
+  margin-top:10px;
+}
+
+
+#missing-today-modal
+.missing-today-close-btn {
+  width:100%;
+
+  min-height:38px;
+
+  margin-top:9px;
+
+  border-radius:12px;
+
+  font-size:.78rem;
+}
+
+
+/* ---------- TEMA CHIARO ---------- */
+
+html[data-theme="light"]
+#missing-today-modal {
+  background:
+    radial-gradient(
+      circle at 18% 8%,
+      rgba(56,189,248,.09),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 88% 90%,
+      rgba(255,159,28,.07),
+      transparent 34%
+    ),
+    rgba(226,232,240,.72);
+}
+
+
+html[data-theme="light"]
+#missing-today-modal
+.missing-today-content {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.97),
+      rgba(241,245,249,.97)
+    );
+
+  border-color:
+    rgba(14,165,233,.22);
+
+  box-shadow:
+    0 24px 65px rgba(15,23,42,.16),
+    0 0 24px rgba(56,189,248,.055),
+    inset 0 1px 0 rgba(255,255,255,.92);
+}
+
+
+html[data-theme="light"]
+.missing-today-row-icon {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.95),
+      rgba(241,245,249,.90)
+    );
+
+  border-color:
+    rgba(15,23,42,.08);
+}
+
+
+html[data-theme="light"]
+.missing-today-row-status {
+  background:
+    rgba(255,255,255,.62);
+
+  border-color:
+    rgba(15,23,42,.07);
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width:560px) {
+
+  #missing-today-modal {
+    padding:9px;
+  }
+
+  #missing-today-modal
+  .missing-today-content {
+    max-height:94vh;
+
+    padding:11px;
+
+    border-radius:16px;
+  }
+
+  #missing-today-modal
+  .missing-today-header {
+    margin-bottom:7px;
+    padding-bottom:7px;
+  }
+
+  #missing-today-modal
+  .missing-today-header h3 {
+    font-size:.98rem;
+  }
+
+  .missing-today-summary {
+    gap:4px;
+  }
+
+  .missing-today-row {
+    min-height:45px;
+
+    gap:7px;
+
+    padding:6px 7px;
+
+    border-radius:11px;
+  }
+
+  .missing-today-row-icon {
+    width:27px;
+    height:27px;
+    flex-basis:27px;
+
+    border-radius:8px;
+
+    font-size:.87rem;
+  }
+
+  .missing-today-row-label {
+    font-size:.76rem;
+  }
+
+  .missing-today-row-values {
+    font-size:.63rem;
+  }
+
+  .missing-today-row-status {
+    max-width:46%;
+
+    padding:3px 6px;
+
+    font-size:.62rem;
+  }
+
+  #missing-today-modal
+  .missing-today-gemini-btn {
+    min-height:38px;
+
+    margin-top:8px;
+
+    font-size:.70rem;
+  }
+
+  #missing-today-modal
+  .missing-today-close-btn {
+    min-height:36px;
+
+    margin-top:7px;
+
+    font-size:.72rem;
+  }
+
+}
+
+
+@media (max-width:370px) {
+
+  .missing-today-row {
+    gap:6px;
+  }
+
+  .missing-today-row-status {
+    max-width:43%;
+
+    font-size:.58rem;
+  }
+
+  .missing-today-row-values {
+    font-size:.59rem;
+  }
+
+}
+</style>
+
 </head>
 
 
@@ -8371,9 +8797,9 @@ html[data-theme="light"]
   id="missing-today-modal"
 >
 
-  <div class="modal-content">
+  <div class="modal-content missing-today-content">
 
-    <div class="modal-header">
+    <div class="modal-header missing-today-header">
 
       <h3>
         💡 A che punto sono oggi?
@@ -8389,7 +8815,10 @@ html[data-theme="light"]
     </div>
 
 
-    <div id="missing-today-summary">
+    <div
+      id="missing-today-summary"
+      class="missing-today-summary"
+    >
 
       <div id="missing-kcal"></div>
       <div id="missing-pro"></div>
@@ -8404,8 +8833,7 @@ html[data-theme="light"]
     <button
       type="button"
       id="missing-today-gemini-btn"
-      class="gemini-btn"
-      style="width:100%; margin-top:14px;"
+      class="gemini-btn missing-today-gemini-btn"
       onclick="askMissingTodayGemini()"
     >
       <img
@@ -8420,7 +8848,8 @@ html[data-theme="light"]
 
     <div
       id="missing-today-gemini"
-      style="display:none; margin-top:14px;"
+      class="missing-today-gemini-result"
+      style="display:none;"
     >
       <!-- Suggerimenti Gemini -->
     </div>
@@ -8428,8 +8857,7 @@ html[data-theme="light"]
 
     <button
       type="button"
-      class="save-food-btn"
-      style="width:100%; margin-top:14px;"
+      class="save-food-btn missing-today-close-btn"
       onclick="closeMissingTodayModal()"
     >
       Chiudi
@@ -18356,7 +18784,8 @@ function openMissingTodayModal() {
     label,
     current,
     target,
-    unit
+    unit,
+    key
   ) {
 
     const element =
@@ -18367,6 +18796,11 @@ function openMissingTodayModal() {
     const diff =
       Math.round((target - current) * 10) / 10;
 
+    const ratio =
+      target > 0
+        ? current / target
+        : 0;
+
     let statusText = "";
     let statusSymbol = "";
     let statusColor = "inherit";
@@ -18374,70 +18808,136 @@ function openMissingTodayModal() {
     let rowBorder = "1px solid rgba(255,255,255,.08)";
     let rowShadow = "none";
 
-    if (diff > 0) {
-      statusSymbol = "→";
-      statusText =
-        `mancano ${diff}${unit}`;
-    } else if (diff < 0) {
-      statusSymbol = "✓";
-      statusText =
-        `superato di ${Math.abs(diff)}${unit}`;
+    const setGoodStatus =
+      text => {
+        statusSymbol = "✓";
+        statusText = text;
+        statusColor = "#6ee7a8";
+        rowBackground =
+          "linear-gradient(90deg, rgba(80,220,150,.08), rgba(80,220,150,.02))";
+        rowBorder =
+          "1px solid rgba(80,220,150,.18)";
+        rowShadow =
+          "0 0 10px rgba(80,220,150,.08)";
+      };
 
-      statusColor = "#ff7b73";
-      rowBackground =
-        "linear-gradient(90deg, rgba(255,90,80,.08), rgba(255,90,80,.02))";
-      rowBorder =
-        "1px solid rgba(255,90,80,.20)";
-      rowShadow =
-        "0 0 10px rgba(255,80,70,.10)";
+    const setHighStatus =
+      text => {
+        statusSymbol = "✓";
+        statusText = text;
+        statusColor = "#ff7b73";
+        rowBackground =
+          "linear-gradient(90deg, rgba(255,90,80,.08), rgba(255,90,80,.02))";
+        rowBorder =
+          "1px solid rgba(255,90,80,.20)";
+        rowShadow =
+          "0 0 10px rgba(255,80,70,.10)";
+      };
+
+    if (key === "sugar") {
+
+      if (current <= target) {
+        setGoodStatus("nel limite");
+      } else {
+        setHighStatus(
+          `oltre il limite di ${Math.abs(diff)}${unit}`
+        );
+      }
+
+    } else if (key === "water") {
+
+      if (ratio >= .90) {
+        setGoodStatus("buona");
+      } else {
+        statusSymbol = "→";
+        statusText =
+          `mancano ${diff}${unit}`;
+      }
+
+    } else if (key === "pro") {
+
+      if (
+        ratio >= .90 &&
+        ratio <= 1.15
+      ) {
+        setGoodStatus("in fascia");
+      } else if (ratio < .90) {
+        statusSymbol = "→";
+        statusText =
+          `mancano ${diff}${unit}`;
+      } else {
+        statusSymbol = "•";
+        statusText =
+          `sopra fascia di ${Math.abs(diff)}${unit}`;
+      }
+
     } else {
-      statusSymbol = "✓";
-      statusText =
-        "target raggiunto";
 
-      statusColor = "#6ee7a8";
-      rowBackground =
-        "linear-gradient(90deg, rgba(80,220,150,.08), rgba(80,220,150,.02))";
-      rowBorder =
-        "1px solid rgba(80,220,150,.18)";
-      rowShadow =
-        "0 0 10px rgba(80,220,150,.08)";
+      if (
+        ratio >= .90 &&
+        ratio <= 1.10
+      ) {
+        setGoodStatus("in fascia");
+      } else if (ratio < .90) {
+        statusSymbol = "→";
+        statusText =
+          `mancano ${diff}${unit}`;
+      } else {
+        setHighStatus(
+          `sopra fascia di ${Math.abs(diff)}${unit}`
+        );
+      }
+
     }
 
+    const percentage =
+      target > 0
+        ? Math.round(ratio * 100)
+        : 0;
+
     element.innerHTML = `
-      <div style="
-        display:flex;
-        align-items:center;
-        gap:10px;
-        padding:10px 8px;
-        border-radius:10px;
-        background:${rowBackground};
-        border:${rowBorder};
-        box-shadow:${rowShadow};
-        margin-bottom:5px;
-      ">
-        <span style="font-size:1.1rem;">
+      <div
+        class="missing-today-row"
+        style="
+          --missing-row-bg:${rowBackground};
+          --missing-row-border:${rowBorder};
+          --missing-row-shadow:${rowShadow};
+        "
+      >
+
+        <span class="missing-today-row-icon">
           ${icon}
         </span>
 
-        <span style="
-          flex:1;
-          min-width:0;
-        ">
-          <strong>${label}</strong><br>
-          <small style="color:var(--muted);">
-            ${current}${unit} / ${target}${unit}
+        <span class="missing-today-row-main">
+
+          <strong class="missing-today-row-label">
+            ${label}
+          </strong>
+
+          <small class="missing-today-row-values">
+            ${current}${unit}
+            <span>/</span>
+            ${target}${unit}
+            <span class="missing-today-percentage">
+              · ${percentage}%
+            </span>
           </small>
+
         </span>
 
-        <span style="
-          text-align:right;
-          font-weight:800;
-          color:${statusColor};
-        ">
-          ${statusSymbol}
-          ${statusText}
+        <span
+          class="missing-today-row-status"
+          style="color:${statusColor};"
+        >
+          <span class="missing-today-status-symbol">
+            ${statusSymbol}
+          </span>
+          <span>
+            ${statusText}
+          </span>
         </span>
+
       </div>
     `;
   }
@@ -18449,7 +18949,8 @@ function openMissingTodayModal() {
     "Calorie",
     totKcal,
     TARGETS.kcal,
-    " kcal"
+    " kcal",
+    "kcal"
   );
 
   renderMissingValue(
@@ -18458,7 +18959,8 @@ function openMissingTodayModal() {
     "Proteine",
     totPro,
     TARGETS.pro,
-    " g"
+    " g",
+    "pro"
   );
 
   renderMissingValue(
@@ -18467,7 +18969,8 @@ function openMissingTodayModal() {
     "Grassi",
     totFat,
     TARGETS.fat,
-    " g"
+    " g",
+    "fat"
   );
 
   renderMissingValue(
@@ -18476,7 +18979,8 @@ function openMissingTodayModal() {
     "Carboidrati",
     totCarb,
     TARGETS.carb,
-    " g"
+    " g",
+    "carb"
   );
 
   renderMissingValue(
@@ -18485,7 +18989,8 @@ function openMissingTodayModal() {
     "Zuccheri",
     totSugar,
     TARGETS.sugar,
-    " g"
+    " g",
+    "sugar"
   );
 
   renderMissingValue(
@@ -18494,7 +18999,8 @@ function openMissingTodayModal() {
     "Acqua",
     totWater,
     TARGETS.water,
-    " ml"
+    " ml",
+    "water"
   );
 
 
