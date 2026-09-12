@@ -3198,6 +3198,320 @@ html[data-theme="light"]
     0 0 16px rgba(56,189,248,.14);
 }
 
+
+/* =========================================================
+   ANALISI PERSONALE — GLASS / GLOW
+========================================================= */
+
+.personal-analysis-modal-content {
+  max-width:620px;
+
+  border:
+    1px solid rgba(56,189,248,.58);
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(56,189,248,.08),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(139,92,246,.06),
+      transparent 38%
+    ),
+    var(--card);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 0 0 1px rgba(56,189,248,.05),
+    0 0 18px rgba(56,189,248,.16),
+    0 0 34px rgba(139,92,246,.07),
+    0 24px 70px rgba(0,0,0,.42);
+
+  backdrop-filter:blur(14px);
+}
+
+.personal-analysis-intro {
+  margin:-2px 0 12px;
+
+  font-size:.76rem;
+  line-height:1.45;
+  color:var(--subtext);
+}
+
+.personal-analysis-overview {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.personal-analysis-overview-card {
+  min-width:0;
+  padding:10px 8px;
+
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.08);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.05),
+      rgba(255,255,255,.018)
+    ),
+    var(--card-2);
+
+  text-align:center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 5px 15px rgba(0,0,0,.10);
+}
+
+.personal-analysis-overview-card span {
+  display:block;
+
+  font-size:.64rem;
+  line-height:1.25;
+  color:var(--subtext);
+
+  margin-bottom:4px;
+}
+
+.personal-analysis-overview-card strong {
+  display:block;
+
+  font-size:.92rem;
+  color:var(--text);
+}
+
+.personal-analysis-section {
+  margin-top:10px;
+}
+
+.personal-analysis-section-title {
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  margin-bottom:7px;
+
+  font-size:.78rem;
+  font-weight:900;
+  color:var(--text);
+}
+
+.personal-analysis-list {
+  display:grid;
+  gap:6px;
+}
+
+.personal-analysis-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+
+  padding:9px 10px;
+
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.075);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.038),
+      rgba(255,255,255,.012)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.personal-analysis-row-icon {
+  flex:0 0 auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:30px;
+  height:30px;
+
+  border-radius:9px;
+
+  background:rgba(255,255,255,.04);
+
+  font-size:1rem;
+}
+
+.personal-analysis-row-text {
+  flex:1;
+  min-width:0;
+}
+
+.personal-analysis-row-text strong {
+  display:block;
+
+  font-size:.76rem;
+  line-height:1.25;
+  color:var(--text);
+}
+
+.personal-analysis-row-text small {
+  display:block;
+
+  margin-top:2px;
+
+  font-size:.66rem;
+  line-height:1.35;
+  color:var(--subtext);
+}
+
+.personal-analysis-status {
+  flex:0 0 auto;
+
+  padding:3px 7px;
+
+  border-radius:999px;
+
+  font-size:.61rem;
+  font-weight:900;
+  white-space:nowrap;
+
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.personal-analysis-status.good {
+  color:#6ee7a8;
+  border-color:rgba(74,222,128,.28);
+  background:rgba(74,222,128,.07);
+}
+
+.personal-analysis-status.neutral {
+  color:#7dd3fc;
+  border-color:rgba(56,189,248,.28);
+  background:rgba(56,189,248,.07);
+}
+
+.personal-analysis-status.warn {
+  color:#fbbf24;
+  border-color:rgba(251,191,36,.28);
+  background:rgba(251,191,36,.07);
+}
+
+.personal-analysis-status.high {
+  color:#ff8a82;
+  border-color:rgba(255,90,80,.28);
+  background:rgba(255,90,80,.07);
+}
+
+.personal-analysis-summary {
+  margin-top:12px;
+  padding:11px 12px;
+
+  border-radius:14px;
+
+  border:1px solid rgba(56,189,248,.20);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(56,189,248,.08),
+      rgba(139,92,246,.045)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 16px rgba(56,189,248,.06);
+}
+
+.personal-analysis-summary-title {
+  margin-bottom:5px;
+
+  font-size:.76rem;
+  font-weight:900;
+  color:var(--text);
+}
+
+.personal-analysis-summary-text {
+  font-size:.70rem;
+  line-height:1.5;
+  color:var(--subtext);
+}
+
+.personal-analysis-empty {
+  padding:18px 12px;
+
+  border-radius:14px;
+  border:1px dashed rgba(56,189,248,.24);
+
+  text-align:center;
+
+  font-size:.75rem;
+  line-height:1.45;
+  color:var(--subtext);
+
+  background:rgba(56,189,248,.035);
+}
+
+html[data-theme="light"]
+.personal-analysis-modal-content {
+  border-color:rgba(14,165,233,.42);
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(14,165,233,.08),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(124,58,237,.05),
+      transparent 38%
+    ),
+    var(--card);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 0 13px rgba(14,165,233,.11),
+    0 18px 44px rgba(15,23,42,.12);
+}
+
+@media (max-width:560px) {
+
+  .personal-analysis-modal-content {
+    padding:13px;
+  }
+
+  .personal-analysis-overview {
+    gap:6px;
+  }
+
+  .personal-analysis-overview-card {
+    padding:8px 5px;
+  }
+
+  .personal-analysis-overview-card span {
+    font-size:.58rem;
+  }
+
+  .personal-analysis-overview-card strong {
+    font-size:.80rem;
+  }
+
+  .personal-analysis-row {
+    padding:8px;
+    gap:7px;
+  }
+
+  .personal-analysis-row-icon {
+    width:28px;
+    height:28px;
+  }
+
+}
+
 .stats-progress-choice-icon {
   flex:0 0 auto;
 
@@ -8683,7 +8997,7 @@ html[data-theme="light"]
   class="modal-overlay"
   id="personal-analysis-modal"
 >
-  <div class="modal-content stats-progress-modal-content">
+  <div class="modal-content personal-analysis-modal-content">
 
     <div class="modal-header">
 
@@ -8701,42 +9015,14 @@ html[data-theme="light"]
 
     </div>
 
+    <div class="personal-analysis-intro">
+      Lettura automatica degli ultimi 7 giorni,
+      confrontata con i tuoi target e con il trend del peso.
+    </div>
+
     <div
       id="personal-analysis-content"
-      style="
-        padding:14px;
-        border-radius:14px;
-        border:1px solid rgba(56,189,248,.18);
-        background:
-          linear-gradient(
-            145deg,
-            rgba(56,189,248,.07),
-            rgba(255,255,255,.018)
-          ),
-          var(--card-2);
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.035),
-          0 0 16px rgba(56,189,248,.07);
-      "
-    >
-      <div style="
-        font-weight:900;
-        color:var(--text);
-        margin-bottom:5px;
-      ">
-        Analisi in preparazione
-      </div>
-
-      <div style="
-        font-size:.82rem;
-        line-height:1.45;
-        color:var(--subtext);
-      ">
-        Qui verranno analizzati andamento nutrizionale,
-        costanza e trend del peso utilizzando i dati
-        registrati in Diario FIT.
-      </div>
-    </div>
+    ></div>
 
   </div>
 </div>
@@ -11901,6 +12187,741 @@ function openAnalysisFromStats() {
 }
 
 
+function classifyPersonalMetric(
+  key,
+  average,
+  target
+) {
+
+  if (
+    !Number.isFinite(average)
+    ||
+    !Number.isFinite(target)
+    ||
+    target <= 0
+  ) {
+    return {
+      label: "Dato non disponibile",
+      className: "neutral"
+    };
+  }
+
+  const ratio =
+    average / target;
+
+
+  if (key === "sugar") {
+
+    if (ratio <= 1) {
+      return {
+        label: "Nel target",
+        className: "good"
+      };
+    }
+
+    if (ratio <= 1.15) {
+      return {
+        label: "Poco sopra",
+        className: "warn"
+      };
+    }
+
+    return {
+      label: "Sopra target",
+      className: "high"
+    };
+
+  }
+
+
+  if (key === "water") {
+
+    if (ratio >= .90) {
+      return {
+        label: "Buona",
+        className: "good"
+      };
+    }
+
+    if (ratio >= .75) {
+      return {
+        label: "Da migliorare",
+        className: "warn"
+      };
+    }
+
+    return {
+      label: "Bassa",
+      className: "high"
+    };
+
+  }
+
+
+  if (key === "pro") {
+
+    if (
+      ratio >= .90 &&
+      ratio <= 1.15
+    ) {
+      return {
+        label: "In fascia",
+        className: "good"
+      };
+    }
+
+    if (ratio < .75) {
+      return {
+        label: "Molto sotto",
+        className: "high"
+      };
+    }
+
+    if (ratio < .90) {
+      return {
+        label: "Sotto target",
+        className: "warn"
+      };
+    }
+
+    return {
+      label: "Sopra target",
+      className: "neutral"
+    };
+
+  }
+
+
+  if (
+    ratio >= .90 &&
+    ratio <= 1.10
+  ) {
+    return {
+      label: "In fascia",
+      className: "good"
+    };
+  }
+
+  if (
+    ratio >= .80 &&
+    ratio < .90
+  ) {
+    return {
+      label: "Poco sotto",
+      className: "warn"
+    };
+  }
+
+  if (
+    ratio > 1.10 &&
+    ratio <= 1.20
+  ) {
+    return {
+      label: "Poco sopra",
+      className: "warn"
+    };
+  }
+
+  if (ratio < .80) {
+    return {
+      label: "Molto sotto",
+      className: "high"
+    };
+  }
+
+  return {
+    label: "Molto sopra",
+    className: "high"
+  };
+
+}
+
+
+function calculatePersonalAnalysis() {
+
+  const overview =
+    calculateWeeklyNutritionOverview();
+
+  const {
+    days,
+    availableDays,
+    availableDaysCount,
+    averages
+  } = overview;
+
+
+  const calorieValues =
+    availableDays
+      .map(
+        day =>
+          Number(
+            day.summary.kcal
+          ) || 0
+      )
+      .filter(
+        value => value > 0
+      );
+
+
+  let calorieVariability = null;
+
+  if (calorieValues.length >= 2) {
+
+    const mean =
+      calorieValues.reduce(
+        (sum, value) =>
+          sum + value,
+        0
+      ) / calorieValues.length;
+
+    const variance =
+      calorieValues.reduce(
+        (sum, value) =>
+          sum +
+          Math.pow(
+            value - mean,
+            2
+          ),
+        0
+      ) / calorieValues.length;
+
+    const standardDeviation =
+      Math.sqrt(variance);
+
+    calorieVariability =
+      mean > 0
+        ? standardDeviation / mean
+        : null;
+
+  }
+
+
+  let consistency = {
+    label: "Dati insufficienti",
+    className: "neutral"
+  };
+
+  if (
+    Number.isFinite(
+      calorieVariability
+    )
+  ) {
+
+    if (calorieVariability <= .12) {
+
+      consistency = {
+        label: "Molto stabile",
+        className: "good"
+      };
+
+    } else if (
+      calorieVariability <= .22
+    ) {
+
+      consistency = {
+        label: "Abbastanza stabile",
+        className: "neutral"
+      };
+
+    } else {
+
+      consistency = {
+        label: "Variabile",
+        className: "warn"
+      };
+
+    }
+
+  }
+
+
+  const metrics = [
+    {
+      key: "kcal",
+      icon: "🔥",
+      label: "Calorie",
+      unit: " kcal"
+    },
+    {
+      key: "pro",
+      icon: "🥩",
+      label: "Proteine",
+      unit: " g"
+    },
+    {
+      key: "fat",
+      icon: "🥑",
+      label: "Grassi",
+      unit: " g"
+    },
+    {
+      key: "carb",
+      icon: "🍞",
+      label: "Carboidrati",
+      unit: " g"
+    },
+    {
+      key: "sugar",
+      icon: "🍬",
+      label: "Zuccheri",
+      unit: " g"
+    },
+    {
+      key: "water",
+      icon: "💧",
+      label: "Acqua",
+      unit: " ml"
+    }
+  ].map(
+    metric => {
+
+      const average =
+        Number(
+          averages[
+            metric.key
+          ]
+        ) || 0;
+
+      const target =
+        Number(
+          TARGETS?.[
+            metric.key
+          ]
+        ) || 0;
+
+      const status =
+        classifyPersonalMetric(
+          metric.key,
+          average,
+          target
+        );
+
+      const percentage =
+        target > 0
+          ? Math.round(
+              average /
+              target *
+              100
+            )
+          : null;
+
+      return {
+        ...metric,
+        average,
+        target,
+        percentage,
+        status
+      };
+
+    }
+  );
+
+
+  let latestWeight = null;
+  let latestTrend = null;
+  let change7 = null;
+
+  if (
+    Array.isArray(weightHistory)
+    &&
+    weightHistory.length
+  ) {
+
+    latestWeight =
+      Number(
+        weightHistory[
+          weightHistory.length - 1
+        ].weight
+      );
+
+    const weightTrend =
+      calculateWeightTrend(
+        weightHistory
+      );
+
+    if (weightTrend.length) {
+
+      latestTrend =
+        Number(
+          weightTrend[
+            weightTrend.length - 1
+          ]
+        );
+
+    }
+
+    change7 =
+      getWeightChangeOverDays(
+        weightHistory,
+        7
+      );
+
+  }
+
+
+  const observations = [];
+
+  if (availableDaysCount < 4) {
+
+    observations.push(
+      "Sono presenti pochi giorni con dati: l’analisi è ancora indicativa."
+    );
+
+  } else {
+
+    const kcalMetric =
+      metrics.find(
+        item =>
+          item.key === "kcal"
+      );
+
+    const proMetric =
+      metrics.find(
+        item =>
+          item.key === "pro"
+      );
+
+    const fatMetric =
+      metrics.find(
+        item =>
+          item.key === "fat"
+      );
+
+    const sugarMetric =
+      metrics.find(
+        item =>
+          item.key === "sugar"
+      );
+
+    const waterMetric =
+      metrics.find(
+        item =>
+          item.key === "water"
+      );
+
+
+    if (
+      kcalMetric?.percentage >= 90 &&
+      kcalMetric?.percentage <= 110
+    ) {
+
+      observations.push(
+        "L’apporto calorico medio è vicino al target impostato."
+      );
+
+    } else if (
+      kcalMetric?.percentage < 90
+    ) {
+
+      observations.push(
+        "Le calorie medie risultano inferiori al target impostato."
+      );
+
+    } else if (
+      kcalMetric?.percentage > 110
+    ) {
+
+      observations.push(
+        "Le calorie medie risultano superiori al target impostato."
+      );
+
+    }
+
+
+    if (
+      proMetric?.percentage < 90
+    ) {
+
+      observations.push(
+        "Le proteine sono mediamente sotto il target: è uno degli aspetti da tenere maggiormente sotto controllo."
+      );
+
+    } else if (
+      proMetric?.percentage >= 90 &&
+      proMetric?.percentage <= 115
+    ) {
+
+      observations.push(
+        "L’apporto proteico medio è ben allineato al target."
+      );
+
+    }
+
+
+    if (
+      fatMetric?.percentage > 115
+    ) {
+
+      observations.push(
+        "I grassi risultano frequentemente elevati rispetto al target medio."
+      );
+
+    }
+
+
+    if (
+      sugarMetric?.percentage > 100
+    ) {
+
+      observations.push(
+        "Gli zuccheri medi superano il target impostato."
+      );
+
+    }
+
+
+    if (
+      waterMetric?.percentage < 90
+    ) {
+
+      observations.push(
+        "L’idratazione media è inferiore all’obiettivo giornaliero."
+      );
+
+    }
+
+
+    if (
+      consistency.className === "good"
+    ) {
+
+      observations.push(
+        "L’apporto calorico è abbastanza regolare da un giorno all’altro."
+      );
+
+    } else if (
+      consistency.className === "warn"
+    ) {
+
+      observations.push(
+        "Le calorie mostrano oscillazioni marcate tra i diversi giorni."
+      );
+
+    }
+
+  }
+
+
+  if (
+    Number.isFinite(change7)
+  ) {
+
+    const absChange =
+      Math.abs(change7);
+
+    if (absChange < .2) {
+
+      observations.push(
+        "Negli ultimi 7 giorni il peso è sostanzialmente stabile."
+      );
+
+    } else if (change7 < 0) {
+
+      observations.push(
+        `Negli ultimi 7 giorni il peso è diminuito di ${absChange.toFixed(1)} kg.`
+      );
+
+    } else {
+
+      observations.push(
+        `Negli ultimi 7 giorni il peso è aumentato di ${absChange.toFixed(1)} kg.`
+      );
+
+    }
+
+  }
+
+
+  return {
+    days,
+    availableDaysCount,
+    averages,
+    metrics,
+    consistency,
+    calorieVariability,
+    latestWeight,
+    latestTrend,
+    change7,
+    observations:
+      observations.slice(0, 4)
+  };
+
+}
+
+
+function renderPersonalAnalysis() {
+
+  const container =
+    document.getElementById(
+      "personal-analysis-content"
+    );
+
+  if (!container) {
+    return;
+  }
+
+
+  const analysis =
+    calculatePersonalAnalysis();
+
+
+  if (
+    analysis.availableDaysCount === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="personal-analysis-empty">
+        📭 Non ci sono ancora dati sufficienti
+        per costruire l’analisi personale.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const weightText =
+    Number.isFinite(
+      analysis.latestTrend
+    )
+      ? `${analysis.latestTrend.toFixed(1)} kg`
+      : "—";
+
+
+  const changeText =
+    Number.isFinite(
+      analysis.change7
+    )
+      ? `${
+          analysis.change7 > 0
+            ? "+"
+            : ""
+        }${analysis.change7.toFixed(1)} kg`
+      : "—";
+
+
+  const metricRows =
+    analysis.metrics
+      .map(
+        metric => {
+
+          const targetText =
+            metric.target > 0
+              ? `${metric.target}${metric.unit}`
+              : "non impostato";
+
+          const percentageText =
+            Number.isFinite(
+              metric.percentage
+            )
+              ? ` · ${metric.percentage}%`
+              : "";
+
+          return `
+            <div class="personal-analysis-row">
+
+              <span class="personal-analysis-row-icon">
+                ${metric.icon}
+              </span>
+
+              <span class="personal-analysis-row-text">
+                <strong>
+                  ${metric.label}
+                </strong>
+
+                <small>
+                  Media ${metric.average}${metric.unit}
+                  · target ${targetText}
+                  ${percentageText}
+                </small>
+              </span>
+
+              <span
+                class="
+                  personal-analysis-status
+                  ${metric.status.className}
+                "
+              >
+                ${metric.status.label}
+              </span>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  const summaryText =
+    analysis.observations.length
+      ? analysis.observations.join(" ")
+      : "Continua a registrare i dati: l’analisi diventerà più precisa con il passare dei giorni.";
+
+
+  container.innerHTML = `
+
+    <div class="personal-analysis-overview">
+
+      <div class="personal-analysis-overview-card">
+        <span>Giorni analizzati</span>
+        <strong>
+          ${analysis.availableDaysCount}/7
+        </strong>
+      </div>
+
+      <div class="personal-analysis-overview-card">
+        <span>Costanza calorie</span>
+        <strong>
+          ${analysis.consistency.label}
+        </strong>
+      </div>
+
+      <div class="personal-analysis-overview-card">
+        <span>Peso trend · 7 gg</span>
+        <strong>
+          ${weightText}
+          ${
+            changeText !== "—"
+              ? ` · ${changeText}`
+              : ""
+          }
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="personal-analysis-section">
+
+      <div class="personal-analysis-section-title">
+        📊 Nutrizione media
+      </div>
+
+      <div class="personal-analysis-list">
+        ${metricRows}
+      </div>
+
+    </div>
+
+
+    <div class="personal-analysis-summary">
+
+      <div class="personal-analysis-summary-title">
+        💡 Lettura dei dati
+      </div>
+
+      <div class="personal-analysis-summary-text">
+        ${escapeHTML(summaryText)}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
 function togglePersonalAnalysisModal() {
 
   const modal =
@@ -11918,6 +12939,8 @@ function togglePersonalAnalysisModal() {
     closeModalWithNavigation(modal);
     return;
   }
+
+  renderPersonalAnalysis();
 
   modal.style.display = "flex";
 
