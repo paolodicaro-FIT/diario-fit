@@ -9015,9 +9015,11 @@ html[data-theme="light"]
 
     </div>
 
-    <div class="personal-analysis-intro">
-      Lettura automatica degli ultimi 7 giorni,
-      confrontata con i tuoi target e con il trend del peso.
+    <div
+      class="personal-analysis-intro"
+      id="personal-analysis-intro"
+    >
+      Analisi dei dati disponibili negli ultimi 7 giorni.
     </div>
 
     <div
@@ -12763,6 +12765,26 @@ function renderPersonalAnalysis() {
 
   const analysis =
     calculatePersonalAnalysis();
+
+
+  const intro =
+    document.getElementById(
+      "personal-analysis-intro"
+    );
+
+  if (intro) {
+
+    const days =
+      analysis.availableDaysCount;
+
+    intro.textContent =
+      `Analisi basata su ${days} ${
+        days === 1
+          ? "giorno registrato"
+          : "giorni registrati"
+      } negli ultimi 7, confrontati con i tuoi target e con il trend del peso.`;
+
+  }
 
 
   if (
