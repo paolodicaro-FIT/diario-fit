@@ -12339,6 +12339,69 @@ function classifyPersonalMetric(
 }
 
 
+function isPersonalMetricDayInTarget(
+  key,
+  value,
+  target
+) {
+
+  if (
+    !Number.isFinite(value)
+    ||
+    !Number.isFinite(target)
+    ||
+    target <= 0
+  ) {
+    return false;
+  }
+
+  const ratio =
+    value / target;
+
+
+  /*
+   * Zuccheri:
+   * limite massimo, non obiettivo da raggiungere.
+   */
+  if (key === "sugar") {
+    return ratio <= 1;
+  }
+
+
+  /*
+   * Acqua:
+   * consideriamo adeguato almeno il 90%
+   * dell'obiettivo giornaliero.
+   */
+  if (key === "water") {
+    return ratio >= .90;
+  }
+
+
+  /*
+   * Proteine:
+   * stessa fascia usata nell'analisi media.
+   */
+  if (key === "pro") {
+    return (
+      ratio >= .90 &&
+      ratio <= 1.15
+    );
+  }
+
+
+  /*
+   * Calorie, grassi e carboidrati:
+   * fascia ±10% rispetto al target.
+   */
+  return (
+    ratio >= .90 &&
+    ratio <= 1.10
+  );
+
+}
+
+
 function calculatePersonalAnalysis() {
 
   const overview =
@@ -12507,12 +12570,96 @@ function calculatePersonalAnalysis() {
             )
           : null;
 
+
+      const observedDays =
+        availableDays.filter(
+          day => {
+
+            const value =
+              Number(
+                day.summary?.[
+                  metric.key
+                ]
+              );
+
+            return Number.isFinite(
+              value
+            );
+
+          }
+        );
+
+
+      const daysInTarget =
+        target > 0
+          ? observedDays.filter(
+              day => {
+
+                const value =
+                  Number(
+                    day.summary?.[
+                      metric.key
+                    ]
+                  );
+
+                return isPersonalMetricDayInTarget(
+                  metric.key,
+                  value,
+                  target
+                );
+
+              }
+            ).length
+          : 0;
+
+
+      const observedDaysCount =
+        observedDays.length;
+
+
+      const dayTargetRatio =
+        observedDaysCount > 0
+          ? daysInTarget /
+            observedDaysCount
+          : null;
+
+
+      let dayConsistencyText = "";
+
+      if (observedDaysCount > 0) {
+
+        if (metric.key === "sugar") {
+
+          dayConsistencyText =
+            `${daysInTarget}/${observedDaysCount} giorni entro il limite`;
+
+        } else if (
+          metric.key === "water"
+        ) {
+
+          dayConsistencyText =
+            `${daysInTarget}/${observedDaysCount} giorni con almeno il 90%`;
+
+        } else {
+
+          dayConsistencyText =
+            `${daysInTarget}/${observedDaysCount} giorni in fascia`;
+
+        }
+
+      }
+
+
       return {
         ...metric,
         average,
         target,
         percentage,
-        status
+        status,
+        daysInTarget,
+        observedDaysCount,
+        dayTargetRatio,
+        dayConsistencyText
       };
 
     }
@@ -12958,6 +13105,16 @@ function renderPersonalAnalysis() {
                   · ${targetLabel} ${targetText}
                   ${percentageText}
                 </small>
+
+                ${
+                  metric.dayConsistencyText
+                    ? `
+                      <small>
+                        📅 ${metric.dayConsistencyText}
+                      </small>
+                    `
+                    : ""
+                }
               </span>
 
               <span
