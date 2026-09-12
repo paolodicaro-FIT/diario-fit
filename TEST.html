@@ -3426,6 +3426,22 @@ html[data-theme="light"]
     0 0 16px rgba(56,189,248,.06);
 }
 
+.personal-analysis-priority {
+  border-color:rgba(255,159,28,.30);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,159,28,.09),
+      rgba(251,191,36,.035)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 18px rgba(255,159,28,.08);
+}
+
+
 .personal-analysis-summary-title {
   margin-bottom:5px;
 
@@ -13035,6 +13051,187 @@ function calculatePersonalAnalysis() {
   }
 
 
+  /*
+   * PRIORITÀ EMERSA
+   *
+   * Combina:
+   * - persistenza dello scostamento;
+   * - distanza media dal target.
+   *
+   * Non è una prescrizione:
+   * identifica semplicemente il segnale
+   * più forte presente nei dati.
+   */
+
+  let priority = null;
+
+  if (availableDaysCount >= 4) {
+
+    const priorityCandidates =
+      metrics
+        .map(
+          metric => {
+
+            if (
+              !metric.target
+              ||
+              !metric.observedDaysCount
+            ) {
+              return null;
+            }
+
+
+            let direction = null;
+            let problemDays = 0;
+            let deviation = 0;
+
+
+            if (metric.key === "sugar") {
+
+              if (metric.daysAbove <= 0) {
+                return null;
+              }
+
+              direction = "sopra il limite";
+              problemDays =
+                metric.daysAbove;
+
+              deviation =
+                Math.max(
+                  0,
+                  metric.average /
+                    metric.target -
+                    1
+                );
+
+            } else if (
+              metric.key === "water"
+            ) {
+
+              if (metric.daysBelow <= 0) {
+                return null;
+              }
+
+              direction =
+                "sotto il livello desiderato";
+
+              problemDays =
+                metric.daysBelow;
+
+              deviation =
+                Math.max(
+                  0,
+                  1 -
+                    metric.average /
+                    metric.target
+                );
+
+            } else {
+
+              const below =
+                metric.daysBelow || 0;
+
+              const above =
+                metric.daysAbove || 0;
+
+              if (
+                below === 0 &&
+                above === 0
+              ) {
+                return null;
+              }
+
+              if (below >= above) {
+
+                direction =
+                  "sotto fascia";
+
+                problemDays =
+                  below;
+
+                deviation =
+                  Math.max(
+                    0,
+                    1 -
+                      metric.average /
+                      metric.target
+                  );
+
+              } else {
+
+                direction =
+                  "sopra fascia";
+
+                problemDays =
+                  above;
+
+                deviation =
+                  Math.max(
+                    0,
+                    metric.average /
+                      metric.target -
+                      1
+                  );
+
+              }
+
+            }
+
+
+            const persistence =
+              problemDays /
+              metric.observedDaysCount;
+
+
+            /*
+             * La persistenza pesa più
+             * dell'entità dello scostamento.
+             */
+            const score =
+              persistence * 2 +
+              deviation;
+
+
+            return {
+              key: metric.key,
+              icon: metric.icon,
+              label: metric.label,
+              direction,
+              problemDays,
+              observedDaysCount:
+                metric.observedDaysCount,
+              persistence,
+              deviation,
+              score
+            };
+
+          }
+        )
+        .filter(Boolean)
+        .sort(
+          (a, b) =>
+            b.score - a.score
+        );
+
+
+    if (priorityCandidates.length) {
+
+      const best =
+        priorityCandidates[0];
+
+      priority = {
+        ...best,
+        text:
+          `${best.label}: ${best.direction} in `
+          + `${best.problemDays}/${best.observedDaysCount} giorni. `
+          + `È il segnale più persistente e rilevante nei dati analizzati.`
+      };
+
+    }
+
+  }
+
+
   if (
     Number.isFinite(change7)
   ) {
@@ -13075,6 +13272,7 @@ function calculatePersonalAnalysis() {
     latestWeight,
     latestTrend,
     change7,
+    priority,
     observations:
       observations.slice(0, 4)
   };
@@ -13231,6 +13429,29 @@ function renderPersonalAnalysis() {
       : "Continua a registrare i dati: l’analisi diventerà più precisa con il passare dei giorni.";
 
 
+  const priorityHtml =
+    analysis.priority
+      ? `
+        <div class="
+          personal-analysis-summary
+          personal-analysis-priority
+        ">
+
+          <div class="personal-analysis-summary-title">
+            🎯 Priorità emersa
+          </div>
+
+          <div class="personal-analysis-summary-text">
+            ${escapeHTML(
+              analysis.priority.text
+            )}
+          </div>
+
+        </div>
+      `
+      : "";
+
+
   container.innerHTML = `
 
     <div class="personal-analysis-overview">
@@ -13288,6 +13509,9 @@ function renderPersonalAnalysis() {
       </div>
 
     </div>
+
+
+    ${priorityHtml}
 
   `;
 
