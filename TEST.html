@@ -12925,12 +12925,21 @@ function renderPersonalAnalysis() {
               ? `${metric.target}${metric.unit}`
               : "non impostato";
 
+          const isSugar =
+            metric.key === "sugar";
+
           const percentageText =
+            !isSugar &&
             Number.isFinite(
               metric.percentage
             )
               ? ` · ${metric.percentage}%`
               : "";
+
+          const targetLabel =
+            isSugar
+              ? "limite"
+              : "target";
 
           return `
             <div class="personal-analysis-row">
@@ -12946,7 +12955,7 @@ function renderPersonalAnalysis() {
 
                 <small>
                   Media ${metric.average}${metric.unit}
-                  · target ${targetText}
+                  · ${targetLabel} ${targetText}
                   ${percentageText}
                 </small>
               </span>
