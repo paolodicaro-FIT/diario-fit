@@ -13192,6 +13192,16 @@ function calculatePersonalAnalysis() {
               deviation;
 
 
+            const averagePercentage =
+              metric.target > 0
+                ? Math.round(
+                    metric.average /
+                    metric.target *
+                    100
+                  )
+                : null;
+
+
             return {
               key: metric.key,
               icon: metric.icon,
@@ -13202,6 +13212,7 @@ function calculatePersonalAnalysis() {
                 metric.observedDaysCount,
               persistence,
               deviation,
+              averagePercentage,
               score
             };
 
@@ -13223,8 +13234,15 @@ function calculatePersonalAnalysis() {
         ...best,
         text:
           `${best.label}: ${best.direction} in `
-          + `${best.problemDays}/${best.observedDaysCount} giorni. `
-          + `È il segnale più persistente e rilevante nei dati analizzati.`
+          + `${best.problemDays}/${best.observedDaysCount} giorni`
+          + (
+              Number.isFinite(
+                best.averagePercentage
+              )
+                ? `, con una media pari al ${best.averagePercentage}% del target. `
+                : ". "
+            )
+          + `È il segnale più persistente nei dati analizzati.`
       };
 
     }
