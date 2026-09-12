@@ -12764,6 +12764,7 @@ function calculatePersonalAnalysis() {
 
   const observations = [];
 
+
   if (availableDaysCount < 4) {
 
     observations.push(
@@ -12809,110 +12810,100 @@ function calculatePersonalAnalysis() {
       );
 
 
-    const kcalPct =
-      kcalMetric?.percentage;
+    const isMajority =
+      (count, metric) =>
+        metric?.observedDaysCount > 0
+        &&
+        count >
+          metric.observedDaysCount / 2;
 
-    const proPct =
-      proMetric?.percentage;
 
-    const fatPct =
-      fatMetric?.percentage;
-
-    const carbPct =
-      carbMetric?.percentage;
-
-    const sugarPct =
-      sugarMetric?.percentage;
-
-    const waterPct =
-      waterMetric?.percentage;
+    const isAll =
+      (count, metric) =>
+        metric?.observedDaysCount > 0
+        &&
+        count ===
+          metric.observedDaysCount;
 
 
     /*
-     * Lettura combinata:
-     * prima osserviamo il quadro calorico
-     * insieme alla distribuzione dei macro.
+     * MACRONUTRIENTI
+     *
+     * Qui non usiamo soltanto la media:
+     * verifichiamo se lo stesso comportamento
+     * si ripete nella maggior parte dei giorni.
      */
 
     if (
-      kcalPct < 90 &&
-      proPct < 90 &&
-      carbPct < 80 &&
-      fatPct > 115
+      isMajority(
+        proMetric?.daysBelow,
+        proMetric
+      )
+      &&
+      isMajority(
+        carbMetric?.daysBelow,
+        carbMetric
+      )
+      &&
+      isMajority(
+        fatMetric?.daysAbove,
+        fatMetric
+      )
     ) {
 
       observations.push(
-        "Le calorie medie sono inferiori al target; contemporaneamente proteine e carboidrati risultano sotto obiettivo, mentre i grassi sono sensibilmente sopra. La distribuzione dei macronutrienti è quindi sbilanciata verso i grassi."
+        `Lo schema dei macronutrienti è ricorrente: proteine sotto fascia in ${proMetric.daysBelow}/${proMetric.observedDaysCount} giorni, carboidrati sotto in ${carbMetric.daysBelow}/${carbMetric.observedDaysCount} e grassi sopra in ${fatMetric.daysAbove}/${fatMetric.observedDaysCount}.`
       );
 
     } else {
 
+      const macroNotes = [];
+
       if (
-        kcalPct >= 90 &&
-        kcalPct <= 110
+        isMajority(
+          proMetric?.daysBelow,
+          proMetric
+        )
       ) {
-
-        observations.push(
-          "L’apporto calorico medio è vicino al target impostato."
+        macroNotes.push(
+          `proteine sotto fascia in ${proMetric.daysBelow}/${proMetric.observedDaysCount} giorni`
         );
-
-      } else if (
-        kcalPct < 90
-      ) {
-
-        observations.push(
-          "Le calorie medie risultano inferiori al target impostato."
-        );
-
-      } else if (
-        kcalPct > 110
-      ) {
-
-        observations.push(
-          "Le calorie medie risultano superiori al target impostato."
-        );
-
       }
 
+      if (
+        isMajority(
+          carbMetric?.daysBelow,
+          carbMetric
+        )
+      ) {
+        macroNotes.push(
+          `carboidrati sotto fascia in ${carbMetric.daysBelow}/${carbMetric.observedDaysCount} giorni`
+        );
+      }
 
       if (
-        proPct < 90 &&
-        carbPct < 80 &&
-        fatPct > 115
+        isMajority(
+          fatMetric?.daysAbove,
+          fatMetric
+        )
+      ) {
+        macroNotes.push(
+          `grassi sopra fascia in ${fatMetric.daysAbove}/${fatMetric.observedDaysCount} giorni`
+        );
+      }
+
+      if (
+        macroNotes.length
       ) {
 
         observations.push(
-          "Proteine e carboidrati risultano sotto obiettivo, mentre la media dei grassi è sopra il target: la distribuzione dei macronutrienti è sbilanciata verso i grassi."
+          `Nei macronutrienti emerge una tendenza ricorrente: ${macroNotes.join("; ")}.`
         );
 
-      } else if (
-        proPct < 90 &&
-        carbPct < 80
-      ) {
+      } else {
 
         observations.push(
-          "Proteine e carboidrati risultano entrambi sotto i rispettivi target medi."
-        );
-
-      } else if (
-        fatPct > 115
-      ) {
-
-        observations.push(
-          "La media dei grassi è sensibilmente superiore al target impostato."
-        );
-
-      } else if (
-        proPct >= 90 &&
-        proPct <= 115 &&
-        carbPct >= 80 &&
-        carbPct <= 120 &&
-        fatPct >= 80 &&
-        fatPct <= 120
-      ) {
-
-        observations.push(
-          "La distribuzione media dei macronutrienti è complessivamente equilibrata rispetto ai target impostati."
+          "La distribuzione dei macronutrienti varia tra i diversi giorni senza mostrare un unico schema dominante."
         );
 
       }
@@ -12921,76 +12912,122 @@ function calculatePersonalAnalysis() {
 
 
     /*
-     * Zuccheri:
-     * il target è trattato come limite massimo.
+     * CALORIE
+     *
+     * Combiniamo direzione degli scostamenti
+     * e variabilità giornaliera.
      */
 
     if (
-      sugarPct > 100
+      consistency.className === "warn"
     ) {
 
-      observations.push(
-        "Gli zuccheri medi superano il limite impostato."
-      );
+      if (
+        isMajority(
+          kcalMetric?.daysBelow,
+          kcalMetric
+        )
+      ) {
 
-    }
+        observations.push(
+          `Le calorie sono sotto fascia in ${kcalMetric.daysBelow}/${kcalMetric.observedDaysCount} giorni, ma l’apporto è variabile e presenta anche giornate sopra target.`
+        );
 
+      } else if (
+        isMajority(
+          kcalMetric?.daysAbove,
+          kcalMetric
+        )
+      ) {
 
-    /*
-     * Idratazione.
-     */
+        observations.push(
+          `Le calorie sono sopra fascia in ${kcalMetric.daysAbove}/${kcalMetric.observedDaysCount} giorni e mostrano oscillazioni marcate tra le diverse giornate.`
+        );
 
-    if (
-      waterPct >= 90
-    ) {
+      } else {
 
-      observations.push(
-        "L’idratazione media è vicina all’obiettivo giornaliero."
-      );
+        observations.push(
+          `L’apporto calorico è variabile: ${kcalMetric.daysBelow} giorni sotto fascia, ${kcalMetric.daysInTarget} in fascia e ${kcalMetric.daysAbove} sopra.`
+        );
+
+      }
 
     } else if (
-      waterPct >= 75
-    ) {
-
-      observations.push(
-        "L’idratazione media è abbastanza vicina all’obiettivo, ma può essere migliorata."
-      );
-
-    } else {
-
-      observations.push(
-        "L’idratazione media è sensibilmente inferiore all’obiettivo giornaliero."
-      );
-
-    }
-
-
-    /*
-     * Regolarità dell’apporto calorico.
-     */
-
-    if (
       consistency.className === "good"
     ) {
 
       observations.push(
-        "L’apporto calorico è regolare da un giorno all’altro."
+        "L’apporto calorico è relativamente regolare da un giorno all’altro."
       );
 
-    } else if (
-      consistency.className === "neutral"
+    } else {
+
+      observations.push(
+        `Le calorie mostrano variazioni moderate: ${kcalMetric.daysBelow} giorni sotto fascia, ${kcalMetric.daysInTarget} in fascia e ${kcalMetric.daysAbove} sopra.`
+      );
+
+    }
+
+
+    /*
+     * IDRATAZIONE
+     */
+
+    if (
+      isMajority(
+        waterMetric?.daysBelow,
+        waterMetric
+      )
     ) {
 
       observations.push(
-        "L’apporto calorico presenta variazioni moderate tra i diversi giorni."
+        `L’idratazione è rimasta sotto il 90% dell’obiettivo in ${waterMetric.daysBelow}/${waterMetric.observedDaysCount} giorni: è una tendenza abbastanza ricorrente.`
       );
 
     } else if (
-      consistency.className === "warn"
+      isMajority(
+        waterMetric?.daysInTarget,
+        waterMetric
+      )
     ) {
 
       observations.push(
-        "Le calorie mostrano oscillazioni marcate tra i diversi giorni."
+        `L’idratazione ha raggiunto almeno il 90% dell’obiettivo in ${waterMetric.daysInTarget}/${waterMetric.observedDaysCount} giorni.`
+      );
+
+    } else {
+
+      observations.push(
+        `L’idratazione è alterna: ${waterMetric.daysInTarget}/${waterMetric.observedDaysCount} giorni hanno raggiunto almeno il 90% dell’obiettivo.`
+      );
+
+    }
+
+
+    /*
+     * ZUCCHERI
+     *
+     * Sono trattati come limite massimo,
+     * non come target da raggiungere.
+     */
+
+    if (
+      isAll(
+        sugarMetric?.daysInTarget,
+        sugarMetric
+      )
+    ) {
+
+      observations.push(
+        `Gli zuccheri sono rimasti entro il limite in tutti i ${sugarMetric.observedDaysCount} giorni analizzati.`
+      );
+
+    } else if (
+      sugarMetric?.daysAbove > 0
+    ) {
+
+      observations.push(
+        `Il limite degli zuccheri è stato superato in ${sugarMetric.daysAbove}/${sugarMetric.observedDaysCount} giorni.`
       );
 
     }
