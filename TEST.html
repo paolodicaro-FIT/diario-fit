@@ -11799,6 +11799,53 @@ function changeMultiplier(amount) {
    MODALS
 ========================================================= */
 
+let returnToStatsProgress = false;
+
+
+function restoreStatsProgressIfNeeded() {
+
+  if (!returnToStatsProgress) {
+    return;
+  }
+
+  returnToStatsProgress = false;
+
+  const statsModal =
+    document.getElementById(
+      "stats-progress-modal"
+    );
+
+  if (statsModal) {
+    statsModal.style.display = "flex";
+  }
+
+}
+
+
+function closeModalWithNavigation(
+  modal
+) {
+
+  if (!modal) {
+    return;
+  }
+
+  const isStatsChild =
+    modal.id === "progress-modal"
+    ||
+    modal.id === "weekly-summary-modal"
+    ||
+    modal.id === "personal-analysis-modal";
+
+  modal.style.display = "none";
+
+  if (isStatsChild) {
+    restoreStatsProgressIfNeeded();
+  }
+
+}
+
+
 function toggleStatsProgressModal() {
 
   const modal =
@@ -11816,6 +11863,8 @@ function toggleStatsProgressModal() {
 
 function openProgressFromStats() {
 
+  returnToStatsProgress = true;
+
   document.getElementById(
     "stats-progress-modal"
   ).style.display = "none";
@@ -11826,6 +11875,8 @@ function openProgressFromStats() {
 
 
 function openWeeklyFromStats() {
+
+  returnToStatsProgress = true;
 
   document.getElementById(
     "stats-progress-modal"
@@ -11838,6 +11889,8 @@ function openWeeklyFromStats() {
 
 
 function openAnalysisFromStats() {
+
+  returnToStatsProgress = true;
 
   document.getElementById(
     "stats-progress-modal"
@@ -11859,10 +11912,14 @@ function togglePersonalAnalysisModal() {
     return;
   }
 
-  modal.style.display =
+  if (
     getComputedStyle(modal).display !== "none"
-      ? "none"
-      : "flex";
+  ) {
+    closeModalWithNavigation(modal);
+    return;
+  }
+
+  modal.style.display = "flex";
 
 }
 
@@ -11881,7 +11938,7 @@ function toggleWeeklySummaryModal() {
   if (
     getComputedStyle(modal).display !== "none"
   ) {
-    modal.style.display = "none";
+    closeModalWithNavigation(modal);
     return;
   }
 
@@ -11924,7 +11981,7 @@ async function toggleProgressModal() {
   if (
     getComputedStyle(modal).display !== "none"
   ) {
-    modal.style.display = "none";
+    closeModalWithNavigation(modal);
     return;
   }
 
@@ -12812,7 +12869,9 @@ function closeAnyOpenModal() {
     if (
       getComputedStyle(modal).display !== "none"
     ) {
-      modal.style.display = "none";
+      closeModalWithNavigation(
+        modal
+      );
     }
 
   });
@@ -12834,7 +12893,9 @@ document.addEventListener(
       &&
       event.target === overlay
     ) {
-      overlay.style.display = "none";
+      closeModalWithNavigation(
+        overlay
+      );
     }
 
   }
