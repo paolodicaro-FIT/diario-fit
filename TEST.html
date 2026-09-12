@@ -13046,7 +13046,7 @@ function renderPersonalAnalysis() {
 }
 
 
-function togglePersonalAnalysisModal() {
+async function togglePersonalAnalysisModal() {
 
   const modal =
     document.getElementById(
@@ -13062,6 +13062,19 @@ function togglePersonalAnalysisModal() {
   ) {
     closeModalWithNavigation(modal);
     return;
+  }
+
+  try {
+
+    await loadWeightHistory();
+
+  } catch (error) {
+
+    console.error(
+      "Impossibile caricare lo storico peso per Analisi personale:",
+      error
+    );
+
   }
 
   renderPersonalAnalysis();
