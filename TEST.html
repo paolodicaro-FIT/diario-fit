@@ -7463,61 +7463,193 @@ html[data-theme="light"]
 
     <div class="free-grid">
 
-      <input
+      <label
         class="full"
-        type="text"
-        id="edit-food-name"
-        placeholder="Nome alimento e dose"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Nome alimento
+        </span>
 
-      <input
-        type="number"
-        id="edit-food-kcal"
-        placeholder="Kcal"
-        step="0.1"
-        min="0"
+        <input
+          type="text"
+          id="edit-food-name"
+          placeholder="Nome alimento e dose"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Calorie
+        </span>
 
-      <input
-        type="number"
-        id="edit-food-pro"
-        placeholder="Proteine g"
-        step="0.1"
-        min="0"
+        <input
+          type="number"
+          id="edit-food-kcal"
+          placeholder="Kcal"
+          step="0.1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Proteine (g)
+        </span>
 
-      <input
-        type="number"
-        id="edit-food-fat"
-        placeholder="Grassi g"
-        step="0.1"
-        min="0"
+        <input
+          type="number"
+          id="edit-food-pro"
+          placeholder="Proteine g"
+          step="0.1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Grassi (g)
+        </span>
 
-      <input
-        type="number"
-        id="edit-food-carb"
-        placeholder="Carboidrati g"
-        step="0.1"
-        min="0"
+        <input
+          type="number"
+          id="edit-food-fat"
+          placeholder="Grassi g"
+          step="0.1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Carboidrati (g)
+        </span>
 
-      <input
-        type="number"
-        id="edit-food-sugar"
-        placeholder="Zuccheri g"
-        step="0.1"
-        min="0"
+        <input
+          type="number"
+          id="edit-food-carb"
+          placeholder="Carboidrati g"
+          step="0.1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Zuccheri (g)
+        </span>
 
-      <input
+        <input
+          type="number"
+          id="edit-food-sugar"
+          placeholder="Zuccheri g"
+          step="0.1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
         class="full"
-        type="number"
-        id="edit-food-water"
-        placeholder="Acqua opzionale ml"
-        step="1"
-        min="0"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
       >
+        <span style="
+          color:var(--muted);
+          font-size:.62rem;
+          font-weight:800;
+        ">
+          Acqua (ml)
+        </span>
+
+        <input
+          type="number"
+          id="edit-food-water"
+          placeholder="Acqua opzionale ml"
+          step="1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
 
     </div>
 
