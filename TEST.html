@@ -11087,6 +11087,34 @@ const DEFAULT_QUICK_ITEMS = [
 ];
 
 /* =========================================================
+   PESO STRUTTURATO DEI PRESET
+========================================================= */
+
+function getPresetFoodWeight(food) {
+
+  const label =
+    food && food.label
+      ? String(food.label)
+      : "";
+
+  const match =
+    label.match(
+      /—\s*([0-9]+(?:[.,][0-9]+)?)\s*g\b/i
+    );
+
+  if (!match) {
+    return 0;
+  }
+
+  return (
+    parseFloat(
+      String(match[1]).replace(",", ".")
+    ) || 0
+  );
+}
+
+
+/* =========================================================
    VARIABILI
 ========================================================= */
 
@@ -11315,7 +11343,9 @@ async function loadUserDataFromBackend() {
     ? data.savedFoods.map(food => ({
         ...food,
         sugar:
-          food.sugar ?? 0
+          food.sugar ?? 0,
+        weight:
+          Number(food.weight) || 0
       }))
     : [];
 
@@ -11323,9 +11353,15 @@ async function loadUserDataFromBackend() {
     ? data.quickItems.map(item => ({
         ...item,
         sugar:
-          item.sugar ?? 0
+          item.sugar ?? 0,
+        weight:
+          Number(item.weight) || 0
       }))
-    : DEFAULT_QUICK_ITEMS;
+    : DEFAULT_QUICK_ITEMS.map(item => ({
+        ...item,
+        weight:
+          Number(item.weight) || 0
+      }));
 
   let preWoUpdated = false;
 
@@ -15817,8 +15853,8 @@ function renderFoodPickerModal(filterText = "") {
 
     foods.forEach(food => {
       const val = isCustom
-        ? `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.sugar || 0}|${food.water || 0}`
-        : food.value;
+        ? `${food.name}|${food.kcal}|${food.pro}|${food.fat}|${food.carb}|${food.sugar || 0}|${food.water || 0}|${Number(food.weight) || 0}`
+        : `${food.value}|${getPresetFoodWeight(food)}`;
 
       const label = isCustom
         ? `⭐ ${food.name}`
@@ -16056,6 +16092,10 @@ function selectFoodOption(value, label) {
       carb: parseFloat(parts[4] || 0) || 0,
       sugar,
       waterMl: parseFloat(parts[waterIndex] || 0) || 0,
+      weight:
+        parts.length >= 8
+          ? parseFloat(parts[7] || 0) || 0
+          : 0,
       multiplier: 1
     });
 
@@ -16095,6 +16135,7 @@ function useSavedMeal(index) {
           carb: Number(item.carb) || 0,
           sugar: Number(item.sugar) || 0,
           waterMl: Number(item.waterMl) || 0,
+          weight: Number(item.weight) || 0,
           multiplier:
             Number(item.multiplier) > 0
               ? Number(item.multiplier)
@@ -16206,6 +16247,9 @@ async function addSavedMealToDiary() {
       ),
       waterMl: Math.round(
         (Number(item.waterMl) || 0) * mult
+      ),
+      weight: Math.round(
+        (Number(item.weight) || 0) * mult
       )
     });
   });
@@ -16234,6 +16278,7 @@ async function addSavedMealToDiary() {
           carb: Number(item.carb) || 0,
           sugar: Number(item.sugar) || 0,
           waterMl: Number(item.waterMl) || 0,
+          weight: Number(item.weight) || 0,
           multiplier:
             Number(item.multiplier) > 0
               ? Number(item.multiplier)
@@ -16306,6 +16351,7 @@ function editSavedMeal(index) {
           carb: Number(item.carb) || 0,
           sugar: Number(item.sugar) || 0,
           waterMl: Number(item.waterMl) || 0,
+          weight: Number(item.weight) || 0,
           multiplier:
             Number(item.multiplier) > 0
               ? Number(item.multiplier)
@@ -16373,6 +16419,7 @@ async function saveSavedMeal() {
         carb: Number(item.carb) || 0,
         sugar: Number(item.sugar) || 0,
         waterMl: Number(item.waterMl) || 0,
+        weight: Number(item.weight) || 0,
         multiplier:
           Number(item.multiplier) > 0
             ? Number(item.multiplier)
@@ -17903,7 +17950,8 @@ async function saveQuickCustomization() {
         fat: 0,
         carb: 0,
         sugar: 0,
-        water: 0
+        water: 0,
+        weight: 0
       });
 
       continue;
@@ -17930,7 +17978,8 @@ async function saveQuickCustomization() {
           fat: Number(food.fat) || 0,
           carb: Number(food.carb) || 0,
           sugar: Number(food.sugar) || 0,
-          water: Number(food.water) || 0
+          water: Number(food.water) || 0,
+          weight: Number(food.weight) || 0
         });
 
       } else {
@@ -17966,7 +18015,8 @@ async function saveQuickCustomization() {
           fat: Number(parts[3]) || 0,
           carb: Number(parts[4]) || 0,
           sugar: Number(parts[5]) || 0,
-          water: Number(parts[6]) || 0
+          water: Number(parts[6]) || 0,
+          weight: getPresetFoodWeight(food)
         });
 
       } else {
@@ -18051,7 +18101,8 @@ function renderQuickGrid() {
         item.fat,
         item.carb,
         item.sugar || 0,
-        item.water || 0
+        item.water || 0,
+        item.weight || 0
       );
 
     container.appendChild(btn);
@@ -18092,7 +18143,8 @@ async function addQuick(
   fat,
   carb,
   sugar = 0,
-  waterMl = 0
+  waterMl = 0,
+  weight = 0
 ) {
 
   const meal =
@@ -18127,7 +18179,10 @@ async function addQuick(
 
     sugar,
 
-    waterMl
+    waterMl,
+
+    weight:
+      Number(weight) || 0
 
   });
 
@@ -18288,6 +18343,14 @@ async function addFromSelect() {
     );
 
 
+  const weight =
+    parts.length >= 8
+      ? Math.round(
+          (parseFloat(parts[7] || 0) || 0) * mult
+        )
+      : 0;
+
+
   log.push({
 
     id: Date.now(),
@@ -18309,7 +18372,9 @@ async function addFromSelect() {
 
     sugar,
 
-    waterMl
+    waterMl,
+
+    weight
 
   });
 
@@ -18471,7 +18536,8 @@ async function addCustom() {
       fat,
       carb,
       sugar,
-      water: waterMl
+      water: waterMl,
+      weight
 
     });
 
@@ -20711,33 +20777,88 @@ function generatePrintableAllHistoryReport() {
         }
         .subtitle { color:#666; margin-bottom:18px; }
         .summary {
-          background:#f3f4f6;
-          padding:15px;
-          border-radius:10px;
+          background:#f8fafc;
+          padding:10px;
+          border-radius:12px;
           margin-bottom:20px;
         }
         .metrics {
           display:grid;
-          grid-template-columns:repeat(5,1fr);
-          gap:8px;
+          grid-template-columns:repeat(6,minmax(0,1fr));
+          gap:6px;
         }
         .metric {
-          background:white;
-          border:1px solid #ddd;
-          padding:10px;
+          background:#ffffff;
+          padding:7px 5px;
           text-align:center;
-          border-radius:7px;
+          border-radius:9px;
+          border:1.5px solid #d1d5db;
+          box-shadow:0 2px 5px rgba(15,23,42,.05);
+          min-width:0;
         }
-        .value { font-size:18px; font-weight:bold; }
-        .label { font-size:11px; color:#777; }
-        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        .metric-kcal {
+          border-color:#f59e0b;
+          box-shadow:0 0 0 1px rgba(245,158,11,.08);
+        }
+        .metric-pro {
+          border-color:#22c55e;
+          box-shadow:0 0 0 1px rgba(34,197,94,.08);
+        }
+        .metric-fat {
+          border-color:#eab308;
+          box-shadow:0 0 0 1px rgba(234,179,8,.08);
+        }
+        .metric-carb {
+          border-color:#3b82f6;
+          box-shadow:0 0 0 1px rgba(59,130,246,.08);
+        }
+        .metric-sugar {
+          border-color:#a855f7;
+          box-shadow:0 0 0 1px rgba(168,85,247,.08);
+        }
+        .metric-water {
+          border-color:#06b6d4;
+          box-shadow:0 0 0 1px rgba(6,182,212,.08);
+        }
+        .value {
+          font-size:15px;
+          line-height:1.1;
+          font-weight:800;
+          color:#111827;
+          white-space:nowrap;
+        }
+        .label {
+          margin-top:2px;
+          font-size:9px;
+          line-height:1.15;
+          color:#64748b;
+          white-space:nowrap;
+        }
+        table {
+          width:100%;
+          border-collapse:collapse;
+          margin-top:10px;
+        }
         th, td {
-          border:1px solid #ddd;
-          padding:7px;
+          border:1px solid #d7dde5;
+          padding:6px;
           text-align:left;
-          font-size:12px;
+          font-size:11px;
         }
-        th { background:#f3f4f6; }
+        th {
+          background:#1f2937;
+          color:#ffffff;
+          font-weight:700;
+        }
+        tr:nth-child(even) td {
+          background:#f8fafc;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust:exact;
+            print-color-adjust:exact;
+          }
+        }
         .page-break { page-break-before:always; break-before:page; }
         .empty { color:#777; font-style:italic; }
         @media print {
@@ -20808,33 +20929,88 @@ function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
         h1 { color:#d97706; margin-bottom:4px; }
         .subtitle { color:#666; margin-bottom:25px; }
         .summary {
-          background:#f3f4f6;
-          padding:15px;
-          border-radius:10px;
+          background:#f8fafc;
+          padding:10px;
+          border-radius:12px;
           margin-bottom:20px;
         }
         .metrics {
           display:grid;
-          grid-template-columns:repeat(5,1fr);
-          gap:8px;
+          grid-template-columns:repeat(6,minmax(0,1fr));
+          gap:6px;
         }
         .metric {
-          background:white;
-          border:1px solid #ddd;
-          padding:10px;
+          background:#ffffff;
+          padding:7px 5px;
           text-align:center;
-          border-radius:7px;
+          border-radius:9px;
+          border:1.5px solid #d1d5db;
+          box-shadow:0 2px 5px rgba(15,23,42,.05);
+          min-width:0;
         }
-        .value { font-size:18px; font-weight:bold; }
-        .label { font-size:11px; color:#777; }
-        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        .metric-kcal {
+          border-color:#f59e0b;
+          box-shadow:0 0 0 1px rgba(245,158,11,.08);
+        }
+        .metric-pro {
+          border-color:#22c55e;
+          box-shadow:0 0 0 1px rgba(34,197,94,.08);
+        }
+        .metric-fat {
+          border-color:#eab308;
+          box-shadow:0 0 0 1px rgba(234,179,8,.08);
+        }
+        .metric-carb {
+          border-color:#3b82f6;
+          box-shadow:0 0 0 1px rgba(59,130,246,.08);
+        }
+        .metric-sugar {
+          border-color:#a855f7;
+          box-shadow:0 0 0 1px rgba(168,85,247,.08);
+        }
+        .metric-water {
+          border-color:#06b6d4;
+          box-shadow:0 0 0 1px rgba(6,182,212,.08);
+        }
+        .value {
+          font-size:15px;
+          line-height:1.1;
+          font-weight:800;
+          color:#111827;
+          white-space:nowrap;
+        }
+        .label {
+          margin-top:2px;
+          font-size:9px;
+          line-height:1.15;
+          color:#64748b;
+          white-space:nowrap;
+        }
+        table {
+          width:100%;
+          border-collapse:collapse;
+          margin-top:10px;
+        }
         th, td {
-          border:1px solid #ddd;
-          padding:7px;
+          border:1px solid #d7dde5;
+          padding:6px;
           text-align:left;
-          font-size:12px;
+          font-size:11px;
         }
-        th { background:#f3f4f6; }
+        th {
+          background:#1f2937;
+          color:#ffffff;
+          font-weight:700;
+        }
+        tr:nth-child(even) td {
+          background:#f8fafc;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust:exact;
+            print-color-adjust:exact;
+          }
+        }
         @media print { body { padding:0; } }
       </style>
     </head>
@@ -20932,27 +21108,27 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
 
       <div class="summary">
         <div class="metrics">
-          <div class="metric">
+          <div class="metric metric-kcal">
             <div class="value">${totKcal}</div>
             <div class="label">Kcal / ${TARGETS.kcal}</div>
           </div>
-          <div class="metric">
+          <div class="metric metric-pro">
             <div class="value">${totPro}g</div>
             <div class="label">Proteine / ${TARGETS.pro}g</div>
           </div>
-          <div class="metric">
+          <div class="metric metric-fat">
             <div class="value">${totFat}g</div>
             <div class="label">Grassi / ${TARGETS.fat}g</div>
           </div>
-          <div class="metric">
+          <div class="metric metric-carb">
             <div class="value">${totCarb}g</div>
             <div class="label">Carbo / ${TARGETS.carb}g</div>
           </div>
-          <div class="metric">
+          <div class="metric metric-sugar">
             <div class="value">${totSugar}g</div>
             <div class="label">Zuccheri / ${TARGETS.sugar}g</div>
           </div>
-          <div class="metric">
+          <div class="metric metric-water">
             <div class="value">${totWater}ml</div>
             <div class="label">Acqua / ${TARGETS.water}ml</div>
           </div>
