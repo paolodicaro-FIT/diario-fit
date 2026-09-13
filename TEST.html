@@ -20722,6 +20722,23 @@ function generatePrintableReport(dateKey = null) {
 }
 
 
+function getPrintableUserName() {
+
+  const userName =
+    currentUser &&
+    currentUser.name
+      ? currentUser.name
+      : localStorage.getItem(
+          "diario_user_name"
+        );
+
+  return String(
+    userName || ""
+  ).trim();
+
+}
+
+
 function generatePrintableAllHistoryReport() {
 
   const keys = Object.keys(historyLogs)
@@ -20732,6 +20749,14 @@ function generatePrintableAllHistoryReport() {
     alert("Non ci sono giornate archiviate da stampare.");
     return;
   }
+
+  const archiveUserName =
+    getPrintableUserName();
+
+  const archiveTitle =
+    archiveUserName
+      ? `Archivio completo di ${archiveUserName}`
+      : "Archivio completo";
 
   const printWindow = window.open("", "_blank");
 
@@ -20763,135 +20788,512 @@ function generatePrintableAllHistoryReport() {
       <meta charset="UTF-8">
       <title>Diario FIT - Archivio completo</title>
       <style>
+        * {
+          box-sizing:border-box;
+        }
+
         body {
-          font-family: Arial, sans-serif;
-          padding: 30px;
-          color: #111;
-        }
-        h1 { color:#d97706; margin-bottom:4px; }
-        h2 { margin-top:25px; }
-        .archive-header {
-          border-bottom:2px solid #d97706;
-          padding-bottom:8px;
-          margin-bottom:18px;
-        }
-        .subtitle { color:#666; margin-bottom:18px; }
-        .summary {
-          background:#f8fafc;
-          padding:10px;
-          border-radius:12px;
-          margin-bottom:20px;
-        }
-        .metrics {
-          display:grid;
-          grid-template-columns:repeat(6,minmax(0,1fr));
-          gap:6px;
-        }
-        .metric {
+          font-family:
+            Inter,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+          padding:26px;
+          margin:0;
+
+          color:#0f172a;
           background:#ffffff;
-          padding:7px 5px;
-          text-align:center;
-          border-radius:9px;
-          border:1.5px solid #d1d5db;
-          box-shadow:0 2px 5px rgba(15,23,42,.05);
+        }
+
+        section {
+          width:100%;
+        }
+
+        .archive-header {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+
+          gap:14px;
+
+          padding:13px 15px;
+          margin-bottom:12px;
+
+          border:1px solid #e2e8f0;
+          border-radius:16px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff7ed 0%,
+              #ffffff 48%,
+              #ecfeff 100%
+            );
+
+          box-shadow:
+            0 5px 16px rgba(15,23,42,.07);
+        }
+
+        .report-brand {
+          display:flex;
+          align-items:center;
+          gap:12px;
           min-width:0;
         }
-        .metric-kcal {
-          border-color:#f59e0b;
-          box-shadow:0 0 0 1px rgba(245,158,11,.08);
+
+        .report-logo {
+          width:54px;
+          height:54px;
+
+          flex:0 0 54px;
+
+          object-fit:cover;
+          border-radius:14px;
+
+          box-shadow:
+            0 4px 12px rgba(15,23,42,.10);
         }
-        .metric-pro {
-          border-color:#22c55e;
-          box-shadow:0 0 0 1px rgba(34,197,94,.08);
+
+        .report-heading {
+          min-width:0;
         }
-        .metric-fat {
-          border-color:#eab308;
-          box-shadow:0 0 0 1px rgba(234,179,8,.08);
-        }
-        .metric-carb {
-          border-color:#3b82f6;
-          box-shadow:0 0 0 1px rgba(59,130,246,.08);
-        }
-        .metric-sugar {
-          border-color:#a855f7;
-          box-shadow:0 0 0 1px rgba(168,85,247,.08);
-        }
-        .metric-water {
-          border-color:#06b6d4;
-          box-shadow:0 0 0 1px rgba(6,182,212,.08);
-        }
-        .value {
-          font-size:15px;
-          line-height:1.1;
+
+        .report-kicker {
+          margin-bottom:3px;
+
+          color:#d97706;
+
+          font-size:8.5px;
+          line-height:1;
+
           font-weight:800;
+
+          letter-spacing:.11em;
+          text-transform:uppercase;
+        }
+
+        .report-title {
+          margin:0;
+
           color:#111827;
-          white-space:nowrap;
+
+          font-size:19px;
+          line-height:1.1;
+
+          font-weight:850;
         }
-        .label {
-          margin-top:2px;
-          font-size:9px;
-          line-height:1.15;
+
+        .report-date {
+          margin-top:4px;
+
           color:#64748b;
+
+          font-size:10px;
+          line-height:1.2;
+
+          font-weight:600;
+        }
+
+        .report-mark {
+          flex:0 0 auto;
+
+          padding:5px 8px;
+
+          border:
+            1px solid rgba(217,119,6,.22);
+
+          border-radius:999px;
+
+          background:
+            rgba(255,247,237,.82);
+
+          color:#b45309;
+
+          font-size:8px;
+          font-weight:800;
+
+          letter-spacing:.08em;
+          text-transform:uppercase;
+        }
+
+        .summary {
+          padding:7px;
+          margin-bottom:14px;
+
+          border:1px solid #e2e8f0;
+          border-radius:14px;
+
+          background:
+            linear-gradient(
+              180deg,
+              #f8fafc,
+              #ffffff
+            );
+
+          box-shadow:
+            0 3px 10px rgba(15,23,42,.045);
+        }
+
+        .metrics {
+          display:grid;
+
+          grid-template-columns:
+            repeat(6,minmax(0,1fr));
+
+          gap:6px;
+        }
+
+        .metric {
+          position:relative;
+          overflow:hidden;
+
+          min-width:0;
+
+          padding:7px 4px 6px;
+
+          border:1px solid #e5e7eb;
+          border-top-width:4px;
+
+          border-radius:10px;
+
+          text-align:center;
+
+          background:#ffffff;
+        }
+
+        .metric-kcal {
+          border-top-color:#f59e0b;
+
+          background:
+            linear-gradient(
+              180deg,
+              #fff7ed,
+              #ffffff 72%
+            );
+        }
+
+        .metric-pro {
+          border-top-color:#22c55e;
+
+          background:
+            linear-gradient(
+              180deg,
+              #f0fdf4,
+              #ffffff 72%
+            );
+        }
+
+        .metric-fat {
+          border-top-color:#eab308;
+
+          background:
+            linear-gradient(
+              180deg,
+              #fefce8,
+              #ffffff 72%
+            );
+        }
+
+        .metric-carb {
+          border-top-color:#3b82f6;
+
+          background:
+            linear-gradient(
+              180deg,
+              #eff6ff,
+              #ffffff 72%
+            );
+        }
+
+        .metric-sugar {
+          border-top-color:#a855f7;
+
+          background:
+            linear-gradient(
+              180deg,
+              #faf5ff,
+              #ffffff 72%
+            );
+        }
+
+        .metric-water {
+          border-top-color:#06b6d4;
+
+          background:
+            linear-gradient(
+              180deg,
+              #ecfeff,
+              #ffffff 72%
+            );
+        }
+
+        .value {
+          color:#111827;
+
+          font-size:15px;
+          line-height:1.05;
+
+          font-weight:850;
+
           white-space:nowrap;
         }
+
+        .label {
+          margin-top:3px;
+
+          color:#64748b;
+
+          font-size:8.5px;
+          line-height:1.1;
+
+          font-weight:600;
+
+          white-space:nowrap;
+        }
+
+        .detail-title {
+          display:flex;
+          align-items:center;
+          gap:8px;
+
+          margin:0 0 7px;
+
+          color:#1e293b;
+
+          font-size:13px;
+          line-height:1.2;
+
+          font-weight:800;
+        }
+
+        .detail-title::after {
+          content:"";
+
+          height:1px;
+          flex:1;
+
+          background:
+            linear-gradient(
+              90deg,
+              #cbd5e1,
+              transparent
+            );
+        }
+
         table {
           width:100%;
-          border-collapse:collapse;
-          margin-top:10px;
+
+          border-collapse:separate;
+          border-spacing:0;
+
+          margin-top:0;
+
+          border:1px solid #dbe2ea;
+          border-radius:10px;
+
+          overflow:hidden;
         }
-        th, td {
-          border:1px solid #d7dde5;
-          padding:6px;
+
+        th,
+        td {
+          padding:6px 5px;
+
+          border-right:1px solid #e2e8f0;
+          border-bottom:1px solid #e2e8f0;
+
           text-align:left;
-          font-size:11px;
+
+          font-size:10px;
+          line-height:1.2;
         }
+
+        th:last-child,
+        td:last-child {
+          border-right:0;
+        }
+
+        tr:last-child td {
+          border-bottom:0;
+        }
+
         th {
-          background:#1f2937;
+          background:
+            linear-gradient(
+              180deg,
+              #263449,
+              #1e293b
+            );
+
           color:#ffffff;
-          font-weight:700;
+
+          font-size:9px;
+          font-weight:800;
+
+          letter-spacing:.02em;
         }
+
         tr:nth-child(even) td {
           background:#f8fafc;
         }
+
+        td:nth-child(1),
+        td:nth-child(4),
+        td:nth-child(n+5) {
+          white-space:nowrap;
+        }
+
+        td:nth-child(5) {
+          color:#b45309;
+          font-weight:700;
+        }
+
+        td:nth-child(6) {
+          color:#15803d;
+          font-weight:700;
+        }
+
+        td:nth-child(7) {
+          color:#a16207;
+          font-weight:700;
+        }
+
+        td:nth-child(8) {
+          color:#2563eb;
+          font-weight:700;
+        }
+
+        td:nth-child(9) {
+          color:#9333ea;
+          font-weight:700;
+        }
+
+        td:nth-child(10) {
+          color:#0891b2;
+          font-weight:700;
+        }
+
+        .empty {
+          color:#64748b;
+          font-style:italic;
+          text-align:center;
+        }
+
+        .archive-cover {
+          display:flex;
+          align-items:center;
+
+          gap:12px;
+
+          margin-bottom:14px;
+          padding:12px 14px;
+
+          border:1px solid #e2e8f0;
+          border-radius:16px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff7ed,
+              #ffffff 52%,
+              #ecfeff
+            );
+        }
+
+        .archive-cover-logo {
+          width:58px;
+          height:58px;
+
+          object-fit:cover;
+          border-radius:15px;
+        }
+
+        .archive-cover-kicker {
+          color:#d97706;
+
+          font-size:9px;
+          font-weight:800;
+
+          letter-spacing:.1em;
+          text-transform:uppercase;
+        }
+
+        .archive-cover-title {
+          margin-top:2px;
+
+          color:#111827;
+
+          font-size:21px;
+          font-weight:850;
+        }
+
+        .archive-cover-subtitle {
+          margin-top:3px;
+
+          color:#64748b;
+
+          font-size:10px;
+          font-weight:600;
+        }
+
+        .page-break {
+          page-break-before:always;
+          break-before:page;
+        }
+
         @media print {
+
           body {
+            padding:0;
+
             -webkit-print-color-adjust:exact;
             print-color-adjust:exact;
           }
-        }
-        .page-break { page-break-before:always; break-before:page; }
-        .empty { color:#777; font-style:italic; }
-        @media print {
-          body { padding:0; }
+
+          .archive-header,
+          .summary,
+          .archive-cover {
+            break-inside:avoid;
+          }
+
+          table {
+            break-inside:auto;
+          }
+
+          tr {
+            break-inside:avoid;
+            break-after:auto;
+          }
         }
       </style>
     </head>
     <body>
-      <div
-        style="
-          display:flex;
-          align-items:center;
-          gap:12px;
-          margin-bottom:4px;
-        "
-      >
+      <div class="archive-cover">
+
         <img
+          class="archive-cover-logo"
           src="${new URL('DiarioFITGLASS.png', window.location.href).href}"
           alt="Diario FIT"
-          style="
-            width:58px;
-            height:58px;
-            object-fit:cover;
-            border-radius:14px;
-          "
         >
 
-        <h1 style="margin:0;">
-          Diario FIT - Archivio completo
-        </h1>
-      </div>
-      <div class="subtitle">
-        Tutte le giornate archiviate · ${keys.length} giornate
+        <div>
+
+          <div class="archive-cover-kicker">
+            Diario FIT · Report
+          </div>
+
+          <div class="archive-cover-title">
+            ${escapeHTML(archiveTitle)}
+          </div>
+
+          <div class="archive-cover-subtitle">
+            Tutte le giornate archiviate · ${keys.length} giornate
+          </div>
+
+        </div>
+
       </div>
       ${pagesHtml}
       <script>
@@ -20921,97 +21323,485 @@ function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
       <meta charset="UTF-8">
       <title>Diario FIT - ${escapeHTML(dateLabel)}</title>
       <style>
+        * {
+          box-sizing:border-box;
+        }
+
         body {
-          font-family: Arial, sans-serif;
-          padding: 30px;
-          color:#111;
-        }
-        h1 { color:#d97706; margin-bottom:4px; }
-        .subtitle { color:#666; margin-bottom:25px; }
-        .summary {
-          background:#f8fafc;
-          padding:10px;
-          border-radius:12px;
-          margin-bottom:20px;
-        }
-        .metrics {
-          display:grid;
-          grid-template-columns:repeat(6,minmax(0,1fr));
-          gap:6px;
-        }
-        .metric {
+          font-family:
+            Inter,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+          padding:26px;
+          margin:0;
+
+          color:#0f172a;
           background:#ffffff;
-          padding:7px 5px;
-          text-align:center;
-          border-radius:9px;
-          border:1.5px solid #d1d5db;
-          box-shadow:0 2px 5px rgba(15,23,42,.05);
+        }
+
+        section {
+          width:100%;
+        }
+
+        .archive-header {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+
+          gap:14px;
+
+          padding:13px 15px;
+          margin-bottom:12px;
+
+          border:1px solid #e2e8f0;
+          border-radius:16px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff7ed 0%,
+              #ffffff 48%,
+              #ecfeff 100%
+            );
+
+          box-shadow:
+            0 5px 16px rgba(15,23,42,.07);
+        }
+
+        .report-brand {
+          display:flex;
+          align-items:center;
+          gap:12px;
           min-width:0;
         }
-        .metric-kcal {
-          border-color:#f59e0b;
-          box-shadow:0 0 0 1px rgba(245,158,11,.08);
+
+        .report-logo {
+          width:54px;
+          height:54px;
+
+          flex:0 0 54px;
+
+          object-fit:cover;
+          border-radius:14px;
+
+          box-shadow:
+            0 4px 12px rgba(15,23,42,.10);
         }
-        .metric-pro {
-          border-color:#22c55e;
-          box-shadow:0 0 0 1px rgba(34,197,94,.08);
+
+        .report-heading {
+          min-width:0;
         }
-        .metric-fat {
-          border-color:#eab308;
-          box-shadow:0 0 0 1px rgba(234,179,8,.08);
-        }
-        .metric-carb {
-          border-color:#3b82f6;
-          box-shadow:0 0 0 1px rgba(59,130,246,.08);
-        }
-        .metric-sugar {
-          border-color:#a855f7;
-          box-shadow:0 0 0 1px rgba(168,85,247,.08);
-        }
-        .metric-water {
-          border-color:#06b6d4;
-          box-shadow:0 0 0 1px rgba(6,182,212,.08);
-        }
-        .value {
-          font-size:15px;
-          line-height:1.1;
+
+        .report-kicker {
+          margin-bottom:3px;
+
+          color:#d97706;
+
+          font-size:8.5px;
+          line-height:1;
+
           font-weight:800;
+
+          letter-spacing:.11em;
+          text-transform:uppercase;
+        }
+
+        .report-title {
+          margin:0;
+
           color:#111827;
-          white-space:nowrap;
+
+          font-size:19px;
+          line-height:1.1;
+
+          font-weight:850;
         }
-        .label {
-          margin-top:2px;
-          font-size:9px;
-          line-height:1.15;
+
+        .report-date {
+          margin-top:4px;
+
           color:#64748b;
+
+          font-size:10px;
+          line-height:1.2;
+
+          font-weight:600;
+        }
+
+        .report-mark {
+          flex:0 0 auto;
+
+          padding:5px 8px;
+
+          border:
+            1px solid rgba(217,119,6,.22);
+
+          border-radius:999px;
+
+          background:
+            rgba(255,247,237,.82);
+
+          color:#b45309;
+
+          font-size:8px;
+          font-weight:800;
+
+          letter-spacing:.08em;
+          text-transform:uppercase;
+        }
+
+        .summary {
+          padding:7px;
+          margin-bottom:14px;
+
+          border:1px solid #e2e8f0;
+          border-radius:14px;
+
+          background:
+            linear-gradient(
+              180deg,
+              #f8fafc,
+              #ffffff
+            );
+
+          box-shadow:
+            0 3px 10px rgba(15,23,42,.045);
+        }
+
+        .metrics {
+          display:grid;
+
+          grid-template-columns:
+            repeat(6,minmax(0,1fr));
+
+          gap:6px;
+        }
+
+        .metric {
+          position:relative;
+          overflow:hidden;
+
+          min-width:0;
+
+          padding:7px 4px 6px;
+
+          border:1px solid #e5e7eb;
+          border-top-width:4px;
+
+          border-radius:10px;
+
+          text-align:center;
+
+          background:#ffffff;
+        }
+
+        .metric-kcal {
+          border-top-color:#f59e0b;
+
+          background:
+            linear-gradient(
+              180deg,
+              #fff7ed,
+              #ffffff 72%
+            );
+        }
+
+        .metric-pro {
+          border-top-color:#22c55e;
+
+          background:
+            linear-gradient(
+              180deg,
+              #f0fdf4,
+              #ffffff 72%
+            );
+        }
+
+        .metric-fat {
+          border-top-color:#eab308;
+
+          background:
+            linear-gradient(
+              180deg,
+              #fefce8,
+              #ffffff 72%
+            );
+        }
+
+        .metric-carb {
+          border-top-color:#3b82f6;
+
+          background:
+            linear-gradient(
+              180deg,
+              #eff6ff,
+              #ffffff 72%
+            );
+        }
+
+        .metric-sugar {
+          border-top-color:#a855f7;
+
+          background:
+            linear-gradient(
+              180deg,
+              #faf5ff,
+              #ffffff 72%
+            );
+        }
+
+        .metric-water {
+          border-top-color:#06b6d4;
+
+          background:
+            linear-gradient(
+              180deg,
+              #ecfeff,
+              #ffffff 72%
+            );
+        }
+
+        .value {
+          color:#111827;
+
+          font-size:15px;
+          line-height:1.05;
+
+          font-weight:850;
+
           white-space:nowrap;
         }
+
+        .label {
+          margin-top:3px;
+
+          color:#64748b;
+
+          font-size:8.5px;
+          line-height:1.1;
+
+          font-weight:600;
+
+          white-space:nowrap;
+        }
+
+        .detail-title {
+          display:flex;
+          align-items:center;
+          gap:8px;
+
+          margin:0 0 7px;
+
+          color:#1e293b;
+
+          font-size:13px;
+          line-height:1.2;
+
+          font-weight:800;
+        }
+
+        .detail-title::after {
+          content:"";
+
+          height:1px;
+          flex:1;
+
+          background:
+            linear-gradient(
+              90deg,
+              #cbd5e1,
+              transparent
+            );
+        }
+
         table {
           width:100%;
-          border-collapse:collapse;
-          margin-top:10px;
+
+          border-collapse:separate;
+          border-spacing:0;
+
+          margin-top:0;
+
+          border:1px solid #dbe2ea;
+          border-radius:10px;
+
+          overflow:hidden;
         }
-        th, td {
-          border:1px solid #d7dde5;
-          padding:6px;
+
+        th,
+        td {
+          padding:6px 5px;
+
+          border-right:1px solid #e2e8f0;
+          border-bottom:1px solid #e2e8f0;
+
           text-align:left;
-          font-size:11px;
+
+          font-size:10px;
+          line-height:1.2;
         }
+
+        th:last-child,
+        td:last-child {
+          border-right:0;
+        }
+
+        tr:last-child td {
+          border-bottom:0;
+        }
+
         th {
-          background:#1f2937;
+          background:
+            linear-gradient(
+              180deg,
+              #263449,
+              #1e293b
+            );
+
           color:#ffffff;
-          font-weight:700;
+
+          font-size:9px;
+          font-weight:800;
+
+          letter-spacing:.02em;
         }
+
         tr:nth-child(even) td {
           background:#f8fafc;
         }
+
+        td:nth-child(1),
+        td:nth-child(4),
+        td:nth-child(n+5) {
+          white-space:nowrap;
+        }
+
+        td:nth-child(5) {
+          color:#b45309;
+          font-weight:700;
+        }
+
+        td:nth-child(6) {
+          color:#15803d;
+          font-weight:700;
+        }
+
+        td:nth-child(7) {
+          color:#a16207;
+          font-weight:700;
+        }
+
+        td:nth-child(8) {
+          color:#2563eb;
+          font-weight:700;
+        }
+
+        td:nth-child(9) {
+          color:#9333ea;
+          font-weight:700;
+        }
+
+        td:nth-child(10) {
+          color:#0891b2;
+          font-weight:700;
+        }
+
+        .empty {
+          color:#64748b;
+          font-style:italic;
+          text-align:center;
+        }
+
+        .archive-cover {
+          display:flex;
+          align-items:center;
+
+          gap:12px;
+
+          margin-bottom:14px;
+          padding:12px 14px;
+
+          border:1px solid #e2e8f0;
+          border-radius:16px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff7ed,
+              #ffffff 52%,
+              #ecfeff
+            );
+        }
+
+        .archive-cover-logo {
+          width:58px;
+          height:58px;
+
+          object-fit:cover;
+          border-radius:15px;
+        }
+
+        .archive-cover-kicker {
+          color:#d97706;
+
+          font-size:9px;
+          font-weight:800;
+
+          letter-spacing:.1em;
+          text-transform:uppercase;
+        }
+
+        .archive-cover-title {
+          margin-top:2px;
+
+          color:#111827;
+
+          font-size:21px;
+          font-weight:850;
+        }
+
+        .archive-cover-subtitle {
+          margin-top:3px;
+
+          color:#64748b;
+
+          font-size:10px;
+          font-weight:600;
+        }
+
+        .page-break {
+          page-break-before:always;
+          break-before:page;
+        }
+
         @media print {
+
           body {
+            padding:0;
+
             -webkit-print-color-adjust:exact;
             print-color-adjust:exact;
           }
+
+          .archive-header,
+          .summary,
+          .archive-cover {
+            break-inside:avoid;
+          }
+
+          table {
+            break-inside:auto;
+          }
+
+          tr {
+            break-inside:avoid;
+            break-after:auto;
+          }
         }
-        @media print { body { padding:0; } }
       </style>
     </head>
     <body>
@@ -21079,31 +21869,48 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
     `;
   }
 
+  const printableUserName =
+    getPrintableUserName();
+
+  const reportUserTitle =
+    printableUserName
+      ? "Report giornaliero di " + printableUserName
+      : "Report giornaliero";
+
   return `
     <section class="${addPageBreak ? "page-break" : ""}">
       <div class="archive-header">
-        <div
-          style="
-            display:flex;
-            align-items:center;
-            gap:12px;
-          "
-        >
+
+        <div class="report-brand">
+
           <img
+            class="report-logo"
             src="${new URL('DiarioFITGLASS.png', window.location.href).href}"
             alt="Diario FIT"
-            style="
-              width:58px;
-              height:58px;
-              object-fit:cover;
-              border-radius:14px;
-            "
           >
 
-          <h2 style="margin:0;">
-            ${escapeHTML(dateLabel)}
-          </h2>
+          <div class="report-heading">
+
+            <div class="report-kicker">
+              Diario FIT · Report giornaliero
+            </div>
+
+            <h1 class="report-title">
+              ${escapeHTML(reportUserTitle)}
+            </h1>
+
+            <div class="report-date">
+              ${escapeHTML(dateLabel)}
+            </div>
+
+          </div>
+
         </div>
+
+        <div class="report-mark">
+          Diario FIT
+        </div>
+
       </div>
 
       <div class="summary">
@@ -21135,7 +21942,10 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
         </div>
       </div>
 
-      <h2>Dettaglio alimenti</h2>
+      <h2 class="detail-title">
+        Dettaglio alimenti
+      </h2>
+
       <table>
         <tr>
           <th>Ora</th>
