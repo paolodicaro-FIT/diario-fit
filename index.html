@@ -21121,6 +21121,71 @@ function generatePrintableAllHistoryReport() {
             );
         }
 
+        .weight-note {
+          display:flex;
+          align-items:flex-start;
+          gap:9px;
+
+          margin-top:14px;
+          padding:10px 12px;
+
+          color:#7c4a03;
+          background:
+            linear-gradient(
+              135deg,
+              #fffaf0 0%,
+              #fff4d8 100%
+            );
+
+          border:1.5px solid #f59e0b;
+          border-radius:11px;
+
+          box-shadow:
+            0 0 0 1px rgba(245,158,11,.12),
+            0 0 16px rgba(245,158,11,.42),
+            inset 0 0 12px rgba(245,158,11,.08);
+
+          font-size:11px;
+          line-height:1.4;
+
+          break-inside:avoid;
+          page-break-inside:avoid;
+        }
+
+        .weight-note-icon {
+          flex:0 0 24px;
+
+          width:24px;
+          height:24px;
+
+          display:flex;
+          align-items:center;
+          justify-content:center;
+
+          color:#ffffff;
+          background:#f59e0b;
+
+          border-radius:50%;
+
+          font-size:15px;
+          line-height:1;
+          font-weight:800;
+          font-family:Arial, sans-serif;
+
+          box-shadow:0 0 8px rgba(245,158,11,.45);
+        }
+
+        .weight-note-text {
+          flex:1;
+          font-size:10px;
+        }
+
+        .weight-note strong {
+          color:#92400e;
+          font-size:11px;
+          font-weight:800;
+        }
+
         table {
           width:100%;
 
@@ -21694,6 +21759,71 @@ function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
             );
         }
 
+        .weight-note {
+          display:flex;
+          align-items:flex-start;
+          gap:9px;
+
+          margin-top:14px;
+          padding:10px 12px;
+
+          color:#7c4a03;
+          background:
+            linear-gradient(
+              135deg,
+              #fffaf0 0%,
+              #fff4d8 100%
+            );
+
+          border:1.5px solid #f59e0b;
+          border-radius:11px;
+
+          box-shadow:
+            0 0 0 1px rgba(245,158,11,.12),
+            0 0 16px rgba(245,158,11,.42),
+            inset 0 0 12px rgba(245,158,11,.08);
+
+          font-size:11px;
+          line-height:1.4;
+
+          break-inside:avoid;
+          page-break-inside:avoid;
+        }
+
+        .weight-note-icon {
+          flex:0 0 24px;
+
+          width:24px;
+          height:24px;
+
+          display:flex;
+          align-items:center;
+          justify-content:center;
+
+          color:#ffffff;
+          background:#f59e0b;
+
+          border-radius:50%;
+
+          font-size:15px;
+          line-height:1;
+          font-weight:800;
+          font-family:Arial, sans-serif;
+
+          box-shadow:0 0 8px rgba(245,158,11,.45);
+        }
+
+        .weight-note-text {
+          flex:1;
+          font-size:10px;
+        }
+
+        .weight-note strong {
+          color:#92400e;
+          font-size:11px;
+          font-weight:800;
+        }
+
         table {
           width:100%;
 
@@ -22038,6 +22168,15 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
         </tr>
         ${rowsHtml}
       </table>
+
+      <div class="weight-note">
+        <div class="weight-note-icon">i</div>
+        <div class="weight-note-text">
+          <strong>Il campo “Peso” è vuoto quando non è stata indicata una quantità (es. pezzi, porzioni o stime).</strong><br>
+          Puoi inserire il peso degli alimenti per un tracciamento più preciso.
+        </div>
+      </div>
+
     </section>
   `;
 }
