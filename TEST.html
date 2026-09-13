@@ -21950,8 +21950,8 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
 
   const reportUserTitle =
     printableUserName
-      ? "Report giornaliero di " + printableUserName
-      : "Report giornaliero";
+      ? printableUserName
+      : "Diario FIT";
 
   return `
     <section class="${addPageBreak ? "page-break" : ""}">
