@@ -21145,7 +21145,7 @@ function generatePrintableAllHistoryReport() {
             0 0 16px rgba(245,158,11,.42),
             inset 0 0 12px rgba(245,158,11,.08);
 
-          font-size:9px;
+          font-size:11px;
           line-height:1.4;
 
           break-inside:avoid;
@@ -21153,18 +21153,36 @@ function generatePrintableAllHistoryReport() {
         }
 
         .weight-note-icon {
-          flex:0 0 auto;
+          flex:0 0 24px;
+
+          width:24px;
+          height:24px;
+
+          display:flex;
+          align-items:center;
+          justify-content:center;
+
+          color:#ffffff;
+          background:#f59e0b;
+
+          border-radius:50%;
 
           font-size:15px;
           line-height:1;
+          font-weight:800;
+          font-family:Arial, sans-serif;
+
+          box-shadow:0 0 8px rgba(245,158,11,.45);
         }
 
         .weight-note-text {
           flex:1;
+          font-size:10px;
         }
 
         .weight-note strong {
           color:#92400e;
+          font-size:11px;
           font-weight:800;
         }
 
@@ -21765,7 +21783,7 @@ function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
             0 0 16px rgba(245,158,11,.42),
             inset 0 0 12px rgba(245,158,11,.08);
 
-          font-size:9px;
+          font-size:11px;
           line-height:1.4;
 
           break-inside:avoid;
@@ -21773,18 +21791,36 @@ function openPrintableReportWindow(dayLog, dateKey, dateLabel) {
         }
 
         .weight-note-icon {
-          flex:0 0 auto;
+          flex:0 0 24px;
+
+          width:24px;
+          height:24px;
+
+          display:flex;
+          align-items:center;
+          justify-content:center;
+
+          color:#ffffff;
+          background:#f59e0b;
+
+          border-radius:50%;
 
           font-size:15px;
           line-height:1;
+          font-weight:800;
+          font-family:Arial, sans-serif;
+
+          box-shadow:0 0 8px rgba(245,158,11,.45);
         }
 
         .weight-note-text {
           flex:1;
+          font-size:10px;
         }
 
         .weight-note strong {
           color:#92400e;
+          font-size:11px;
           font-weight:800;
         }
 
@@ -22134,7 +22170,7 @@ function buildPrintableDayHtml(dayLog, dateKey, dateLabel, addPageBreak) {
       </table>
 
       <div class="weight-note">
-        <div class="weight-note-icon">ℹ️</div>
+        <div class="weight-note-icon">i</div>
         <div class="weight-note-text">
           <strong>Il campo “Peso” è vuoto quando non è stata indicata una quantità (es. pezzi, porzioni o stime).</strong><br>
           Puoi inserire il peso degli alimenti per un tracciamento più preciso.
