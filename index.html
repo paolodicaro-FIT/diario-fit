@@ -16959,25 +16959,23 @@ async function prepareGeminiPhoto(file) {
     throw new Error("Formato foto non supportato. Usa JPG, PNG o WebP.");
   }
 
-  const maxInputBytes = 10 * 1024 * 1024;
+  const maxInputBytes = 25 * 1024 * 1024;
 
   if (file.size > maxInputBytes) {
-    throw new Error("La foto è troppo grande. Scegli un'immagine più leggera.");
+    throw new Error(
+      "La foto supera 25 MB e non può essere elaborata."
+    );
   }
 
   const image = await createImageBitmap(file);
 
-  const maxDimension = 1280;
-  const scale = Math.min(
-    1,
-    maxDimension / Math.max(image.width, image.height)
-  );
+  const maxOutputBytes = 120000;
+  const initialMaxDimension = 1280;
+
+  let maxDimension = initialMaxDimension;
+  let blob = null;
 
   const canvas = document.createElement("canvas");
-
-  canvas.width = Math.max(1, Math.round(image.width * scale));
-  canvas.height = Math.max(1, Math.round(image.height * scale));
-
   const ctx = canvas.getContext("2d");
 
   if (!ctx) {
@@ -16985,41 +16983,83 @@ async function prepareGeminiPhoto(file) {
     throw new Error("Impossibile preparare la foto.");
   }
 
-  ctx.drawImage(
-    image,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  const qualities = [
+    0.82,
+    0.74,
+    0.66,
+    0.58,
+    0.50
+  ];
 
-  image.close();
+  /*
+   * Prima riduciamo la qualità JPEG.
+   * Se non basta, riduciamo progressivamente anche
+   * la risoluzione e riproviamo.
+   */
+  while (maxDimension >= 480 && !blob) {
 
-  let quality = 0.82;
-  let blob = null;
-
-  for (let i = 0; i < 6; i++) {
-    blob = await new Promise(resolve =>
-      canvas.toBlob(
-        resolve,
-        "image/jpeg",
-        quality
+    const scale = Math.min(
+      1,
+      maxDimension / Math.max(
+        image.width,
+        image.height
       )
     );
 
+    canvas.width = Math.max(
+      1,
+      Math.round(image.width * scale)
+    );
+
+    canvas.height = Math.max(
+      1,
+      Math.round(image.height * scale)
+    );
+
+    ctx.drawImage(
+      image,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    for (const quality of qualities) {
+
+      const candidate = await new Promise(resolve =>
+        canvas.toBlob(
+          resolve,
+          "image/jpeg",
+          quality
+        )
+      );
+
+      if (!candidate) {
+        image.close();
+        throw new Error(
+          "Impossibile comprimere la foto."
+        );
+      }
+
+      if (candidate.size <= maxOutputBytes) {
+        blob = candidate;
+        break;
+      }
+    }
+
     if (!blob) {
-      throw new Error("Impossibile comprimere la foto.");
+      maxDimension = Math.floor(
+        maxDimension * 0.80
+      );
     }
-
-    if (blob.size <= 120000) {
-      break;
-    }
-
-    quality -= 0.08;
   }
 
-  if (!blob || blob.size > 120000) {
-    throw new Error("La foto non può essere ridotta abbastanza per Gemini.");
+  image.close();
+
+  if (!blob) {
+    throw new Error(
+      "La foto non può essere ridotta abbastanza per Gemini."
+    );
   }
 
   const base64 = await new Promise((resolve, reject) => {
@@ -17037,7 +17077,9 @@ async function prepareGeminiPhoto(file) {
     };
 
     reader.onerror = () =>
-      reject(new Error("Impossibile leggere la foto."));
+      reject(
+        new Error("Impossibile leggere la foto.")
+      );
 
     reader.readAsDataURL(blob);
   });
