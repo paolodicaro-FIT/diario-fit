@@ -11400,7 +11400,7 @@ async function loadUserDataFromBackend() {
       Number(item.pro) === 40 &&
       Number(item.fat) === 2 &&
       Number(item.carb) === 3 &&
-      Number(item.sugar) === 2
+      [0, 2].includes(Number(item.sugar))
     ) {
       quickItemsUpdated = true;
 
@@ -11424,7 +11424,7 @@ async function loadUserDataFromBackend() {
       Number(item.pro) === 23 &&
       Number(item.fat) === 0 &&
       Number(item.carb) === 8 &&
-      Number(item.sugar) === 5
+      [0, 5].includes(Number(item.sugar))
     ) {
       quickItemsUpdated = true;
 
@@ -11448,7 +11448,7 @@ async function loadUserDataFromBackend() {
       Number(item.pro) === 20 &&
       Number(item.fat) === 1 &&
       Number(item.carb) === 1.5 &&
-      Number(item.sugar) === 1
+      [0, 1].includes(Number(item.sugar))
     ) {
       quickItemsUpdated = true;
 
@@ -11472,7 +11472,7 @@ async function loadUserDataFromBackend() {
       Number(item.pro) === 2 &&
       Number(item.fat) === 19 &&
       Number(item.carb) === 3 &&
-      Number(item.sugar) === 1
+      [0, 1].includes(Number(item.sugar))
     ) {
       quickItemsUpdated = true;
 
@@ -11514,7 +11514,7 @@ async function loadUserDataFromBackend() {
       Number(item.pro) === 2 &&
       Number(item.fat) === 1 &&
       Number(item.carb) === 35 &&
-      Number(item.sugar) === 24
+      [0, 24].includes(Number(item.sugar))
     ) {
       quickItemsUpdated = true;
 
