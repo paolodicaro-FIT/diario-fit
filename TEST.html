@@ -1320,6 +1320,24 @@ html[data-theme="light"] .quick-btn-label {
   grid-column: 1 / -1;
 }
 
+/* Label esplicite per modifica Target giornalieri */
+.target-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.target-input-field > span {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.target-input-field > input {
+  width: 100%;
+}
+
 
 
 .section-actions {
@@ -7918,44 +7936,61 @@ html[data-theme="light"]
       style="display:none;margin-top:8px;"
     >
 
-      <div class="free-grid">
+      <div class="free-grid target-input-grid">
 
-        <input
-          type="number"
-          id="target-kcal-input"
-          placeholder="Kcal"
-        >
+        <label class="target-input-field">
+          <span>🔥 Calorie (kcal)</span>
+          <input
+            type="number"
+            id="target-kcal-input"
+            placeholder="Kcal"
+          >
+        </label>
 
-        <input
-          type="number"
-          id="target-pro-input"
-          placeholder="Proteine"
-        >
+        <label class="target-input-field">
+          <span>🥩 Proteine (g)</span>
+          <input
+            type="number"
+            id="target-pro-input"
+            placeholder="Proteine"
+          >
+        </label>
 
-        <input
-          type="number"
-          id="target-fat-input"
-          placeholder="Grassi"
-        >
+        <label class="target-input-field">
+          <span>🥑 Grassi (g)</span>
+          <input
+            type="number"
+            id="target-fat-input"
+            placeholder="Grassi"
+          >
+        </label>
 
-        <input
-          type="number"
-          id="target-carb-input"
-          placeholder="Carboidrati"
-        >
+        <label class="target-input-field">
+          <span>🍞 Carboidrati (g)</span>
+          <input
+            type="number"
+            id="target-carb-input"
+            placeholder="Carboidrati"
+          >
+        </label>
 
-        <input
-          type="number"
-          id="target-sugar-input"
-          placeholder="Zuccheri"
-        >
+        <label class="target-input-field">
+          <span>🍬 Zuccheri (g)</span>
+          <input
+            type="number"
+            id="target-sugar-input"
+            placeholder="Zuccheri"
+          >
+        </label>
 
-        <input
-          class="full"
-          type="number"
-          id="target-water-input"
-          placeholder="Acqua ml"
-        >
+        <label class="target-input-field full">
+          <span>💧 Acqua (ml)</span>
+          <input
+            type="number"
+            id="target-water-input"
+            placeholder="Acqua ml"
+          >
+        </label>
 
       </div>
 
@@ -11263,7 +11298,7 @@ const DEFAULT_PRESET_FOODS = [
   { category:"Colazione e bevande", emoji:"🥛", label:"Latte parzialmente scremato — 250 ml", value:"🥛 Latte parzialmente scremato — 250 ml|115|8|4|12|12|250" },
   { category:"Colazione e bevande", emoji:"🥛", label:"Latte scremato — 250 ml", value:"🥛 Latte scremato — 250 ml|85|8.5|0.3|12|12|250" },
   { category:"Colazione e bevande", emoji:"🥛", label:"Bevanda vegetale s/z — 250 ml (valori medi)", value:"🥛 Bevanda vegetale s/z — 250 ml (valori medi)|50|2|2|3|0.5|250" },
-  { category:"Colazione e bevande", emoji:"🥤", label:"Whey — 1 scoop (~30 g, valori medi)", value:"🥤 Whey — 1 scoop (~30 g, valori medi)|120|24|2|3|1.5|0", weight:30 },
+  { category:"Colazione e bevande", emoji:"🥤", label:"Whey — 35 g", value:"🥤 Whey — 35 g|125|28|0.9|1.2|0.8|0", weight:35 },
   { category:"Colazione e bevande", emoji:"☕", label:"Caffè espresso — 1 tazzina (~30 ml)", value:"☕ Caffè espresso — 1 tazzina (~30 ml)|2|0.2|0|0|0|30" },
   { category:"Colazione e bevande", emoji:"☕", label:"Caffè macchiato — 1 tazzina (valori medi)", value:"☕ Caffè macchiato — 1 tazzina (valori medi)|15|1|0.5|1|1|30" },
   { category:"Colazione e bevande", emoji:"☕", label:"Cappuccino — ~150 ml (valori medi)", value:"☕ Cappuccino — ~150 ml (valori medi)|90|5|4|8|8|150" },
@@ -11285,10 +11320,10 @@ const DEFAULT_PRESET_FOODS = [
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (2 scoop Whey + Creatina + 500ml H2O)", kcal: 240, pro: 48, fat: 4, carb: 6, sugar: 3, water: 500, weight:60 },
-  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (1 scoop)", kcal: 210, pro: 39, fat: 2, carb: 8, sugar: 7, water: 0, weight:180 },
+  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (35g Whey + Creatina + 500ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 500, weight:35 },
+  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 215, pro: 43, fat: 0.9, carb: 6.2, sugar: 6.3, water: 0, weight:185 },
   { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
-  { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (1 scoop Whey + 300ml H2O)", kcal: 120, pro: 24, fat: 2, carb: 3, sugar: 1.5, water: 300, weight:30 },
+  { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (35g Whey + 300ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 300, weight:35 },
   { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 188, pro: 2, fat: 19, carb: 1.3, sugar: 1, water: 0, weight:25 },
   { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di Latte (200g)", kcal: 196, pro: 26, fat: 9, carb: 3, sugar: 3, water: 0, weight:200 },
   { emoji: "🫐", label: "Mirtilli 250g", name: "Mirtilli freschi (250g)", kcal: 123, pro: 2.3, fat: 0.5, carb: 25.3, sugar: 25.3, water: 0, weight:250 },
@@ -11611,75 +11646,111 @@ async function loadUserDataFromBackend() {
       };
     }
 
-    // Vecchio default: Colazione Whey
+    // Default precedenti: Colazione Whey -> riferimento reale 35 g
     if (
       item.label === "Colaz. Whey" &&
-      Number(item.kcal) === 200 &&
-      Number(item.pro) === 40 &&
-      Number(item.fat) === 2 &&
-      Number(item.carb) === 3 &&
-      [0, 2].includes(Number(item.sugar))
+      (
+        (
+          Number(item.kcal) === 200 &&
+          Number(item.pro) === 40 &&
+          Number(item.fat) === 2 &&
+          Number(item.carb) === 3 &&
+          [0, 2].includes(Number(item.sugar))
+        ) ||
+        (
+          Number(item.kcal) === 240 &&
+          Number(item.pro) === 48 &&
+          Number(item.fat) === 4 &&
+          Number(item.carb) === 6 &&
+          Number(item.sugar) === 3 &&
+          Number(item.weight || 0) === 60
+        )
+      )
     ) {
       quickItemsUpdated = true;
 
       return {
         ...item,
-        name: "Shaker Whey (2 scoop Whey + Creatina + 500ml H2O)",
-        kcal: 240,
-        pro: 48,
-        fat: 4,
-        carb: 6,
-        sugar: 3,
+        name: "Shaker Whey (35g Whey + Creatina + 500ml H2O)",
+        kcal: 125,
+        pro: 28,
+        fat: 0.9,
+        carb: 1.2,
+        sugar: 0.8,
         water: 500,
-        weight: 60
+        weight: 35
       };
     }
 
-    // Vecchio default: Yogurt + Whey
+    // Default precedenti: Yogurt + Whey -> riferimento reale 35 g
     if (
       item.label === "Yogurt & Whey" &&
-      Number(item.kcal) === 160 &&
-      Number(item.pro) === 23 &&
-      Number(item.fat) === 0 &&
-      Number(item.carb) === 8 &&
-      [0, 5].includes(Number(item.sugar))
+      (
+        (
+          Number(item.kcal) === 160 &&
+          Number(item.pro) === 23 &&
+          Number(item.fat) === 0 &&
+          Number(item.carb) === 8 &&
+          [0, 5].includes(Number(item.sugar))
+        ) ||
+        (
+          Number(item.kcal) === 210 &&
+          Number(item.pro) === 39 &&
+          Number(item.fat) === 2 &&
+          Number(item.carb) === 8 &&
+          Number(item.sugar) === 7 &&
+          Number(item.weight || 0) === 180
+        )
+      )
     ) {
       quickItemsUpdated = true;
 
       return {
         ...item,
-        name: "Yogurt Greco 0% (150g) + Whey (1 scoop)",
-        kcal: 210,
-        pro: 39,
-        fat: 2,
-        carb: 8,
-        sugar: 7,
+        name: "Yogurt Greco 0% (150g) + Whey (35g)",
+        kcal: 215,
+        pro: 43,
+        fat: 0.9,
+        carb: 6.2,
+        sugar: 6.3,
         water: 0,
-        weight: 180
+        weight: 185
       };
     }
 
-    // Vecchio default: Post W.O.
+    // Default precedenti: Post W.O. -> riferimento reale 35 g
     if (
       item.label === "Post W.O." &&
-      Number(item.kcal) === 100 &&
-      Number(item.pro) === 20 &&
-      Number(item.fat) === 1 &&
-      Number(item.carb) === 1.5 &&
-      [0, 1].includes(Number(item.sugar))
+      (
+        (
+          Number(item.kcal) === 100 &&
+          Number(item.pro) === 20 &&
+          Number(item.fat) === 1 &&
+          Number(item.carb) === 1.5 &&
+          [0, 1].includes(Number(item.sugar))
+        ) ||
+        (
+          Number(item.kcal) === 120 &&
+          Number(item.pro) === 24 &&
+          Number(item.fat) === 2 &&
+          Number(item.carb) === 3 &&
+          Number(item.sugar) === 1.5 &&
+          Number(item.weight || 0) === 30
+        )
+      )
     ) {
       quickItemsUpdated = true;
 
       return {
         ...item,
-        name: "Shaker Post-Workout (1 scoop Whey + 300ml H2O)",
-        kcal: 120,
-        pro: 24,
-        fat: 2,
-        carb: 3,
-        sugar: 1.5,
+        name: "Shaker Post-Workout (35g Whey + 300ml H2O)",
+        kcal: 125,
+        pro: 28,
+        fat: 0.9,
+        carb: 1.2,
+        sugar: 0.8,
         water: 300,
-        weight: 30
+        weight: 35
       };
     }
 
