@@ -3710,6 +3710,61 @@ html[data-theme="light"] .stats-progress-choice {
 
 
 /* =========================================================
+   BADGE DURATA ACCOUNT
+========================================================= */
+
+.account-access-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  margin-top: 3px;
+  padding: 2px 7px;
+
+  border:
+    1px solid rgba(255,159,28,.25);
+
+  border-radius: 8px;
+
+  background:
+    rgba(255,159,28,.07);
+
+  color: var(--subtext);
+
+  font-size: .64rem;
+  font-weight: 800;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.account-access-badge.is-lifetime {
+  color: var(--accent);
+}
+
+.account-access-badge.is-trial {
+  color: var(--text);
+}
+
+.account-access-badge.is-expired {
+  border-color: rgba(239,68,68,.35);
+  background: rgba(239,68,68,.08);
+  color: var(--red);
+}
+
+@media (max-width: 560px) {
+
+  .account-access-badge {
+    margin-top: 2px;
+    padding: 1px 5px;
+    border-radius: 7px;
+    font-size: .58rem;
+  }
+
+}
+
+
+/* =========================================================
    PULSANTE PROGRESSI NEL SOTTOTITOLO
 ========================================================= */
 
@@ -7644,6 +7699,13 @@ html[data-theme="light"]
         </span>
       </button>
 
+      <div
+        id="account-access-badge"
+        class="account-access-badge"
+        style="display:none;"
+        title=""
+      ></div>
+
       <div class="header-subtitle-row">
 
         <button
@@ -9226,6 +9288,89 @@ html[data-theme="light"]
             <option value="disabled">Disabilitato</option>
           </select>
         </div>
+
+      </div>
+
+
+      <div class="admin-subheading">
+        ⏳ Durata account
+      </div>
+
+      <div id="admin-access-new">
+
+        <label>
+          Tipo di accesso
+        </label>
+
+        <select id="admin-user-access-plan">
+          <option value="lifetime">♾️ Vitalizio</option>
+          <option value="weekly">⏳ 1 settimana</option>
+        </select>
+
+      </div>
+
+
+      <div
+        id="admin-access-existing"
+        style="display:none;"
+      >
+
+        <div
+          id="admin-access-status"
+          style="
+            margin-bottom:8px;
+            font-size:.8rem;
+            font-weight:700;
+          "
+        ></div>
+
+        <div
+          id="admin-access-expiry"
+          style="
+            margin-bottom:10px;
+            font-size:.76rem;
+            color:var(--subtext);
+          "
+        ></div>
+
+        <button
+          type="button"
+          class="btn"
+          id="admin-access-renew-week-btn"
+          onclick="renewAdminUserWeek()"
+          style="width:100%;margin-bottom:7px;"
+        >
+          ＋ 1 settimana
+        </button>
+
+        <label>
+          Imposta scadenza
+        </label>
+
+        <input
+          type="datetime-local"
+          id="admin-access-expiry-input"
+        >
+
+        <button
+          type="button"
+          class="btn"
+          id="admin-access-set-expiry-btn"
+          onclick="setAdminUserExpiry()"
+          style="width:100%;margin-top:7px;"
+        >
+          📅 Imposta scadenza
+        </button>
+
+        <button
+          type="button"
+          class="btn"
+          id="admin-access-lifetime-btn"
+          onclick="setAdminUserLifetime()"
+          style="width:100%;margin-top:7px;"
+        >
+          ♾️ Converti in Vitalizio
+        </button>
 
       </div>
 
@@ -11221,6 +11366,9 @@ let savedMealEditorMode = "create";
 const BACKEND_API_URL = "https://diario-fit-api.paolodicaro-3d.workers.dev";
 let currentUser = null;
 
+let accountServerOffsetMs = 0;
+let accountAccessTimer = null;
+
 
 async function apiFetch(path, options = {}) {
 
@@ -11293,6 +11441,11 @@ async function saveUserDiaryToBackend(
   dateKey = getLocalISODate(),
   summary = {}
 ) {
+
+  if (isCurrentAccountAccessExpired()) {
+    renderAccountAccessBadge();
+    throw new Error("ACCOUNT_ACCESS_EXPIRED");
+  }
 
   await apiFetch(
     "/api/user/diary",
@@ -11607,6 +11760,241 @@ async function loadUserDataFromBackend() {
 }
 
 
+function syncAccountServerTime(user) {
+
+  if (!user || !user.server_time) {
+    accountServerOffsetMs = 0;
+    return;
+  }
+
+  const serverTimeMs =
+    Date.parse(user.server_time);
+
+  if (!Number.isFinite(serverTimeMs)) {
+    accountServerOffsetMs = 0;
+    return;
+  }
+
+  accountServerOffsetMs =
+    serverTimeMs - Date.now();
+}
+
+
+function getAccountNowMs() {
+  return Date.now() + accountServerOffsetMs;
+}
+
+
+function isCurrentAccountAccessExpired() {
+
+  if (
+    !currentUser ||
+    currentUser.access_plan !== "weekly"
+  ) {
+    return false;
+  }
+
+  const expiryMs =
+    currentUser.access_expires_at
+      ? Date.parse(
+          currentUser.access_expires_at
+        )
+      : NaN;
+
+  return (
+    !Number.isFinite(expiryMs) ||
+    expiryMs <= getAccountNowMs()
+  );
+}
+
+
+function ensureDiaryWriteAccess() {
+
+  if (!isCurrentAccountAccessExpired()) {
+    return true;
+  }
+
+  renderAccountAccessBadge();
+
+  alert(
+    "🔒 ACCESSO SCADUTO\n\n" +
+    "Puoi continuare a consultare il tuo Diario FIT, " +
+    "ma non puoi modificare il diario o aggiungere alimenti " +
+    "finché l'accesso non viene rinnovato."
+  );
+
+  return false;
+}
+
+
+function stopAccountAccessTimer() {
+
+  if (accountAccessTimer) {
+    clearInterval(accountAccessTimer);
+    accountAccessTimer = null;
+  }
+
+  const badge =
+    document.getElementById(
+      "account-access-badge"
+    );
+
+  if (badge) {
+    badge.style.display = "none";
+  }
+}
+
+
+function startAccountAccessTimer() {
+
+  if (accountAccessTimer) {
+    clearInterval(accountAccessTimer);
+    accountAccessTimer = null;
+  }
+
+  renderAccountAccessBadge();
+
+  if (
+    !currentUser ||
+    currentUser.access_plan !== "weekly"
+  ) {
+    return;
+  }
+
+  accountAccessTimer =
+    setInterval(
+      () => {
+        renderAccountAccessBadge();
+      },
+      30000
+    );
+}
+
+
+function renderAccountAccessBadge() {
+
+  const badge =
+    document.getElementById(
+      "account-access-badge"
+    );
+
+  if (!badge || !currentUser) {
+    return;
+  }
+
+  badge.classList.remove(
+    "is-lifetime",
+    "is-trial",
+    "is-expired"
+  );
+
+  const isWeekly =
+    currentUser.access_plan === "weekly";
+
+  if (!isWeekly) {
+
+    badge.textContent =
+      "♾️ VITALIZIO";
+
+    badge.classList.add(
+      "is-lifetime"
+    );
+
+    badge.title =
+      "Accesso senza scadenza";
+
+    badge.style.display =
+      "inline-flex";
+
+    return;
+  }
+
+  const expiryMs =
+    currentUser.access_expires_at
+      ? Date.parse(
+          currentUser.access_expires_at
+        )
+      : NaN;
+
+  if (
+    !Number.isFinite(expiryMs) ||
+    expiryMs <= getAccountNowMs()
+  ) {
+
+    badge.textContent =
+      "🔒 ACCESSO SCADUTO";
+
+    badge.classList.add(
+      "is-expired"
+    );
+
+    badge.title =
+      Number.isFinite(expiryMs)
+        ? "Scaduto il " +
+          new Date(expiryMs).toLocaleString(
+            "it-IT",
+            {
+              dateStyle: "short",
+              timeStyle: "short"
+            }
+          )
+        : "Scadenza account non valida";
+
+    badge.style.display =
+      "inline-flex";
+
+    return;
+  }
+
+  const remainingMs =
+    expiryMs - getAccountNowMs();
+
+  const totalMinutes =
+    Math.max(
+      0,
+      Math.floor(
+        remainingMs / 60000
+      )
+    );
+
+  const days =
+    Math.floor(
+      totalMinutes / 1440
+    );
+
+  const hours =
+    Math.floor(
+      (totalMinutes % 1440) / 60
+    );
+
+  const minutes =
+    totalMinutes % 60;
+
+  badge.textContent =
+    "⏳ PROVA · " +
+    days + "g " +
+    hours + "h " +
+    minutes + "m";
+
+  badge.classList.add(
+    "is-trial"
+  );
+
+  badge.title =
+    "Scadenza: " +
+    new Date(expiryMs).toLocaleString(
+      "it-IT",
+      {
+        dateStyle: "short",
+        timeStyle: "short"
+      }
+    );
+
+  badge.style.display =
+    "inline-flex";
+}
+
+
 async function validateStoredSession() {
 
   const token =
@@ -11636,6 +12024,8 @@ async function validateStoredSession() {
     }
 
     currentUser = data.user;
+    syncAccountServerTime(currentUser);
+    startAccountAccessTimer();
 
     hideLoginOverlay();
     showAppLoading();
@@ -11647,6 +12037,7 @@ async function validateStoredSession() {
 
     localStorage.removeItem("diario_backend_token");
     currentUser = null;
+    stopAccountAccessTimer();
     showLoginOverlay();
 
     return false;
@@ -11786,6 +12177,8 @@ async function loginToApp() {
     );
 
     currentUser = data.user;
+    syncAccountServerTime(currentUser);
+    startAccountAccessTimer();
 
     passwordInput.value = "";
 
@@ -11862,6 +12255,7 @@ async function lockApp() {
   );
 
   currentUser = null;
+  stopAccountAccessTimer();
 
   showLoginOverlay();
 }
@@ -12146,6 +12540,28 @@ function renderAdminUsers(users) {
           ? "🟢 Attivo"
           : "🔴 Disabilitato";
 
+      const isWeekly =
+        user.access_plan === "weekly";
+
+      const accessExpiryMs =
+        user.access_expires_at
+          ? Date.parse(user.access_expires_at)
+          : NaN;
+
+      const accessExpired =
+        isWeekly &&
+        (
+          !Number.isFinite(accessExpiryMs) ||
+          accessExpiryMs <= Date.now()
+        );
+
+      const accessLabel =
+        !isWeekly
+          ? "♾️ VITALIZIO"
+          : accessExpired
+            ? "🔒 ACCESSO SCADUTO"
+            : "⏳ ACCESSO TEMPORANEO";
+
       return `
         <div
           class="admin-user-row"
@@ -12189,6 +12605,16 @@ function renderAdminUsers(users) {
               "
             >
               ${roleLabel} · ${statusLabel}
+            </div>
+
+            <div
+              style="
+                font-size:.8em;
+                margin-top:3px;
+                font-weight:700;
+              "
+            >
+              ${accessLabel}
             </div>
 
           </div>
@@ -12238,6 +12664,50 @@ async function openUserEditor(userId) {
   document.getElementById("admin-user-status").value = "active";
   document.getElementById("admin-user-password").value = "";
   document.getElementById("admin-user-password-confirm").value = "";
+
+  const accessPlanSelect =
+    document.getElementById("admin-user-access-plan");
+
+  const accessNew =
+    document.getElementById("admin-access-new");
+
+  const accessExisting =
+    document.getElementById("admin-access-existing");
+
+  const accessStatus =
+    document.getElementById("admin-access-status");
+
+  const accessExpiry =
+    document.getElementById("admin-access-expiry");
+
+  const accessExpiryInput =
+    document.getElementById("admin-access-expiry-input");
+
+  if (accessPlanSelect) {
+    accessPlanSelect.value = "lifetime";
+  }
+
+  if (accessNew) {
+    accessNew.style.display =
+      userId ? "none" : "block";
+  }
+
+  if (accessExisting) {
+    accessExisting.style.display =
+      userId ? "block" : "none";
+  }
+
+  if (accessStatus) {
+    accessStatus.textContent = "";
+  }
+
+  if (accessExpiry) {
+    accessExpiry.textContent = "";
+  }
+
+  if (accessExpiryInput) {
+    accessExpiryInput.value = "";
+  }
 
   editorView.dataset.userId =
     userId || "";
@@ -12314,6 +12784,64 @@ async function openUserEditor(userId) {
           ? "disabled"
           : "active";
 
+      const isWeekly =
+        user.access_plan === "weekly";
+
+      const expiryMs =
+        user.access_expires_at
+          ? Date.parse(user.access_expires_at)
+          : NaN;
+
+      const isExpired =
+        isWeekly &&
+        (
+          !Number.isFinite(expiryMs) ||
+          expiryMs <= Date.now()
+        );
+
+      if (accessStatus) {
+        accessStatus.textContent =
+          !isWeekly
+            ? "♾️ VITALIZIO"
+            : isExpired
+              ? "🔒 ACCESSO SCADUTO"
+              : "⏳ ACCESSO TEMPORANEO";
+      }
+
+      if (accessExpiry) {
+        accessExpiry.textContent =
+          isWeekly && Number.isFinite(expiryMs)
+            ? "Scadenza: " +
+              new Date(expiryMs).toLocaleString(
+                "it-IT",
+                {
+                  dateStyle:"short",
+                  timeStyle:"short"
+                }
+              )
+            : "Nessuna scadenza.";
+      }
+
+      if (
+        accessExpiryInput &&
+        isWeekly &&
+        Number.isFinite(expiryMs)
+      ) {
+        const expiryDate =
+          new Date(expiryMs);
+
+        const localDate =
+          new Date(
+            expiryDate.getTime() -
+            expiryDate.getTimezoneOffset() * 60000
+          );
+
+        accessExpiryInput.value =
+          localDate
+            .toISOString()
+            .slice(0, 16);
+      }
+
     } catch (error) {
 
       alert(
@@ -12353,6 +12881,182 @@ function closeUserEditor() {
 
   editorView.dataset.userId = "";
 
+}
+
+
+async function updateAdminUserAccess(
+  accessAction,
+  accessExpiresAt = null
+) {
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  const userId =
+    editorView &&
+    editorView.dataset.userId
+      ? editorView.dataset.userId
+      : "";
+
+  if (!userId) {
+    throw new Error("USER_NOT_SELECTED");
+  }
+
+  const body = {
+    access_action: accessAction
+  };
+
+  if (
+    accessAction === "set_expiry" &&
+    accessExpiresAt
+  ) {
+    body.access_expires_at =
+      accessExpiresAt;
+  }
+
+  const data =
+    await apiFetch(
+      "/api/admin/users/" +
+      encodeURIComponent(userId),
+      {
+        method: "PATCH",
+        body: JSON.stringify(body)
+      }
+    );
+
+  return data.user || null;
+}
+
+
+async function renewAdminUserWeek() {
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  const userId =
+    editorView &&
+    editorView.dataset.userId
+      ? editorView.dataset.userId
+      : "";
+
+  if (!userId) {
+    return;
+  }
+
+  try {
+
+    await updateAdminUserAccess("renew_week");
+
+    await loadAdminUsers();
+    await openUserEditor(userId);
+
+  } catch (error) {
+
+    console.error(
+      "Errore rinnovo accesso:",
+      error
+    );
+
+    alert(
+      "Impossibile aggiungere una settimana all'accesso."
+    );
+  }
+}
+
+
+async function setAdminUserExpiry() {
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  const expiryInput =
+    document.getElementById("admin-access-expiry-input");
+
+  const userId =
+    editorView &&
+    editorView.dataset.userId
+      ? editorView.dataset.userId
+      : "";
+
+  if (!userId || !expiryInput) {
+    return;
+  }
+
+  const localValue =
+    String(expiryInput.value || "").trim();
+
+  if (!localValue) {
+    alert("Seleziona una data e un'ora di scadenza.");
+    return;
+  }
+
+  const expiryDate =
+    new Date(localValue);
+
+  if (!Number.isFinite(expiryDate.getTime())) {
+    alert("La data di scadenza non è valida.");
+    return;
+  }
+
+  try {
+
+    await updateAdminUserAccess(
+      "set_expiry",
+      expiryDate.toISOString()
+    );
+
+    await loadAdminUsers();
+    await openUserEditor(userId);
+
+  } catch (error) {
+
+    console.error(
+      "Errore impostazione scadenza:",
+      error
+    );
+
+    alert(
+      error.message === "INVALID_ACCESS_EXPIRY"
+        ? "La data di scadenza non è valida."
+        : "Impossibile impostare la scadenza dell'accesso."
+    );
+  }
+}
+
+
+async function setAdminUserLifetime() {
+
+  const editorView =
+    document.getElementById("admin-user-editor-view");
+
+  const userId =
+    editorView &&
+    editorView.dataset.userId
+      ? editorView.dataset.userId
+      : "";
+
+  if (!userId) {
+    return;
+  }
+
+  try {
+
+    await updateAdminUserAccess("set_lifetime");
+
+    await loadAdminUsers();
+    await openUserEditor(userId);
+
+  } catch (error) {
+
+    console.error(
+      "Errore conversione Vitalizio:",
+      error
+    );
+
+    alert(
+      "Impossibile convertire l'accesso in Vitalizio."
+    );
+  }
 }
 
 
@@ -12482,6 +13186,15 @@ async function saveUser() {
    */
   if (!userId) {
 
+    const accessPlanField =
+      document.getElementById("admin-user-access-plan");
+
+    const accessPlan =
+      accessPlanField &&
+      accessPlanField.value === "weekly"
+        ? "weekly"
+        : "lifetime";
+
     const token =
       localStorage.getItem("diario_backend_token");
 
@@ -12513,7 +13226,8 @@ async function saveUser() {
               name: name,
               username: username,
               password: password,
-              role: role
+              role: role,
+              access_plan: accessPlan
             })
           }
         );
@@ -16379,6 +17093,11 @@ function useSavedMeal(index) {
 
 
 async function addSavedMealToDiary() {
+
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
+
   const mealCategory =
     document.getElementById("meal-category").value;
 
@@ -18402,6 +19121,10 @@ async function addQuick(
   weight = 0
 ) {
 
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
+
   const meal =
     document.getElementById(
       "meal-category"
@@ -18516,6 +19239,10 @@ document.getElementById("meal-category").addEventListener("change", () => {
 ========================================================= */
 
 async function addFromSelect() {
+
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
 
   if (!selectedFoodValue) {
     alert("Seleziona prima un alimento.");
@@ -18656,6 +19383,10 @@ async function addFromSelect() {
 ========================================================= */
 
 async function addCustom() {
+
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
 
   const name =
     document
@@ -18861,6 +19592,10 @@ async function addCustom() {
 ========================================================= */
 
 async function deleteItem(id) {
+
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
 
   log =
     log.filter(
@@ -20530,6 +21265,10 @@ function escapeHTML(str) {
 
 async function archiveCurrentLog(dateKey) {
 
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
+
   const acquaTotOld =
     log.reduce(
       (sum, item) =>
@@ -20777,6 +21516,11 @@ function renderHistory() {
 ========================================================= */
 
 async function finalizePendingClosedDay() {
+
+  if (isCurrentAccountAccessExpired()) {
+    renderAccountAccessBadge();
+    return;
+  }
 
   const todayStr =
     getLocalISODate();
