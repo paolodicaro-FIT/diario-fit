@@ -19525,6 +19525,26 @@ async function addQuick(
    RESET DEL TIPO DI PASTO
 ========================================================= */
 
+function updateMealFocusState() {
+
+  const mealCategory =
+    document.getElementById("meal-category");
+
+  const mealFocusCard =
+    document.getElementById("meal-focus-card");
+
+  if (!mealCategory || !mealFocusCard) {
+    return;
+  }
+
+  mealFocusCard.classList.toggle(
+    "meal-focus-pending",
+    !mealCategory.value
+  );
+
+}
+
+
 function resetMealCategory() {
 
   const mealCategory =
@@ -19532,6 +19552,7 @@ function resetMealCategory() {
 
   if (mealCategory) {
     mealCategory.value = "";
+    updateMealFocusState();
   }
 
 }
@@ -19542,6 +19563,8 @@ function resetMealCategory() {
 ========================================================= */
 
 document.getElementById("meal-category").addEventListener("change", () => {
+
+  updateMealFocusState();
 
   selectedFoodValue = "";
   selectedFoodDisplayText = "";
