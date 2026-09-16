@@ -3762,7 +3762,22 @@ html[data-theme="light"] .stats-progress-choice {
 }
 
 .account-access-badge.is-lifetime {
-  color: var(--accent);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.account-lifetime-image {
+  display: block;
+  width: 88px;
+  height: auto;
+  max-width: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .account-access-badge.is-trial {
@@ -12322,8 +12337,8 @@ function renderAccountAccessBadge() {
 
   if (!isWeekly) {
 
-    badge.textContent =
-      "♾️ VITALIZIO";
+    badge.innerHTML =
+      '<img src="badge-vitalizio-ui-transparent.png" alt="VITALIZIO" class="account-lifetime-image">';
 
     badge.classList.add(
       "is-lifetime"
