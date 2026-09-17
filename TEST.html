@@ -10090,12 +10090,13 @@ html[data-theme="light"]
         <label>Attività quotidiana</label>
         <select id="calc-activity" onchange="updateActivityDescription()">
           <option value="1.4">Bassa</option>
+          <option value="1.5">Leggera</option>
           <option value="1.6" selected>Moderata</option>
           <option value="1.8">Elevata</option>
           <option value="2.0">Molto elevata</option>
         </select>
         <div id="calc-activity-hint" class="calc-activity-hint">
-          Giornata con una discreta quantità di movimento complessivo, considerando lavoro, spostamenti e vita quotidiana.
+          Giornata complessivamente attiva: considera lavoro, spostamenti, movimento quotidiano e allenamento abituale.
         </div>
       </div>
     </div>
@@ -10118,7 +10119,7 @@ html[data-theme="light"]
 
     <div class="target-engine-note">
       Il calcolo è una <strong>stima iniziale</strong>, non una misurazione diretta del metabolismo.
-      Attività quotidiana e allenamento sono valutati separatamente.
+      Il livello di attività descrive il movimento complessivo abituale; il tipo di allenamento serve anche a personalizzare i macronutrienti.
       <br>
       <button type="button" class="target-engine-link" onclick="toggleMethodologyModal()">
         ⓘ Come vengono calcolati questi target?
@@ -10956,7 +10957,7 @@ html[data-theme="light"]
 
     <details class="methodology-section" open>
       <summary>🔥 Energia e attività</summary>
-      <p>Il metabolismo basale viene stimato con l'equazione di Mifflin-St Jeor. Diario FIT applica poi un livello di attività quotidiana (PAL) per stimare il mantenimento energetico. Il PAL considera la giornata complessiva; il tipo di allenamento viene richiesto separatamente.</p>
+      <p>Il metabolismo basale viene stimato con l'equazione di Mifflin-St Jeor. Diario FIT applica poi un livello di attività (PAL) per stimare il mantenimento energetico. Il PAL rappresenta il movimento complessivo abituale, quindi comprende lavoro, spostamenti, vita quotidiana e allenamento. Il tipo di allenamento viene chiesto separatamente per personalizzare soprattutto i macronutrienti e non viene sommato una seconda volta alle calorie.</p>
     </details>
 
     <details class="methodology-section">
@@ -18940,10 +18941,11 @@ function updateActivityDescription() {
   }
 
   const descriptions = {
-    "1.4": "Giornata prevalentemente sedentaria o con poco movimento complessivo, indipendentemente dal singolo allenamento.",
-    "1.6": "Giornata con una discreta quantità di movimento complessivo, considerando lavoro, spostamenti e vita quotidiana.",
-    "1.8": "Giornata abitualmente attiva, con molto movimento, lavoro attivo o spostamenti frequenti.",
-    "2.0": "Giornata con impegno motorio complessivo molto elevato, tipico di attività fisica o lavorativa particolarmente intensa."
+    "1.4": "Giornata per lo più sedentaria: molte ore seduto, pochi spostamenti a piedi e movimento complessivo limitato.",
+    "1.5": "Giornata leggermente attiva: attività prevalentemente sedentaria ma con camminate, commissioni, scale o allenamento regolare che aumentano moderatamente il movimento complessivo.",
+    "1.6": "Giornata moderatamente attiva: movimento frequente durante la giornata e/o allenamento abituale, con meno ore complessivamente sedentarie.",
+    "1.8": "Giornata molto attiva: molto tempo in movimento, lavoro fisicamente attivo e/o volume di allenamento elevato.",
+    "2.0": "Giornata eccezionalmente attiva: impegno fisico complessivo molto elevato e abituale. Da usare solo quando descrive davvero la maggior parte delle giornate."
   };
 
   hint.textContent = descriptions[activity.value] || "";
@@ -19006,7 +19008,7 @@ async function calculateAndApplyTargets() {
     return;
   }
 
-  if (![1.4, 1.6, 1.8, 2.0].includes(activity)) {
+  if (![1.4, 1.5, 1.6, 1.8, 2.0].includes(activity)) {
     showTargetCalculatorMessage("⚠️ Seleziona un livello di attività quotidiana valido.");
     return;
   }
