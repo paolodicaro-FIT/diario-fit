@@ -19129,7 +19129,7 @@ async function calculateAndApplyTargets() {
   userSettings = {
     ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
     targetCalculationMeta: {
-      version: 4,
+      version: 5,
       mode: "calculator",
       calculatedAt: new Date().toISOString(),
       method: "mifflin-st-jeor",
@@ -19162,8 +19162,11 @@ async function calculateAndApplyTargets() {
         ? `Incremento applicato: ${Math.round(energyAdjustmentKcal)} kcal`
         : "Obiettivo: mantenimento";
 
-  const coherenceNote = carbEnergyPct < 0.45
-    ? "<br><small>ⓘ I carboidrati risultano sotto il 45% dell'energia dopo l'aggiustamento moderato dei grassi: il risultato viene mantenuto senza forzare artificialmente la distribuzione.</small>"
+  // Mostra l'avviso solo quando lo scostamento dal 45% è reale anche a video.
+  // Tra 44,5% e 45% l'interfaccia arrotonda infatti a 45%: avvisare in quel caso
+  // produrrebbe una contraddizione apparente (es. "45% En" ma "sotto il 45%").
+  const coherenceNote = carbEnergyPct < 0.445
+    ? `<br><small>ⓘ I carboidrati rappresentano circa ${carbEnergyPct.toLocaleString("it-IT", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 })} dell'energia: leggermente sotto l'intervallo di riferimento dopo l'aggiustamento moderato dei grassi. Il risultato viene mantenuto senza forzare artificialmente la distribuzione.</small>`
     : "";
 
   showTargetCalculatorMessage(`
