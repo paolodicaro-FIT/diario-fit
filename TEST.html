@@ -5244,18 +5244,24 @@ html[data-theme="light"]
   }
 
   .top-toolbar {
-    gap: 4px;
+    display: grid;
+    grid-template-columns:
+      repeat(3, 44px);
+
+    gap: 5px;
+
+    align-self: center;
   }
 
   .toolbar-btn {
-    width: 34px;
-    min-width: 34px;
+    width: 44px;
+    min-width: 44px;
 
-    height: 32px;
+    height: 40px;
 
     padding: 0;
 
-    font-size: .85rem;
+    font-size: 1rem;
   }
 
   .toolbar-btn .label {
