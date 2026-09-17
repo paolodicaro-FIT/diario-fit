@@ -10110,7 +10110,8 @@ html[data-theme="light"]
 
     <label>Obiettivo</label>
     <select id="calc-goal">
-      <option value="cut">Dimagrimento / Definizione</option>
+      <option value="cut">Dimagrimento</option>
+      <option value="recomp">Definizione / Ricomposizione</option>
       <option value="maintain" selected>Mantenimento</option>
       <option value="bulk">Massa / Crescita</option>
     </select>
@@ -10960,12 +10961,12 @@ html[data-theme="light"]
 
     <details class="methodology-section">
       <summary>🎯 Obiettivo energetico</summary>
-      <p>Mantenimento lascia invariata la stima. Per Dimagrimento/Definizione Diario FIT usa come criterio operativo iniziale una riduzione moderata del 15%, limitata a circa 500 kcal/die. Per Massa/Crescita usa un incremento iniziale del 5%. Queste percentuali sono scelte operative di Diario FIT e non valori LARN.</p>
+      <p><strong>Dimagrimento</strong> usa come criterio operativo iniziale una riduzione moderata del 15%, limitata a circa 500 kcal/die. <strong>Definizione / Ricomposizione</strong> è distinta dal dimagrimento: Diario FIT parte dalla stima di mantenimento senza imporre un deficit percentuale universale e dà maggiore rilievo ad allenamento, proteine e andamento reale nel tempo. <strong>Mantenimento</strong> lascia invariata la stima; <strong>Massa / Crescita</strong> usa un incremento iniziale del 5%. Le percentuali applicate sono criteri operativi di Diario FIT e non valori LARN.</p>
     </details>
 
     <details class="methodology-section">
       <summary>🥩 Proteine</summary>
-      <p>Il riferimento di base varia con età, allenamento e obiettivo. Per chi pratica attività sportiva Diario FIT integra i riferimenti LARN con letteratura specifica sull'esercizio. Il valore calcolato è un punto di partenza e non un limite massimo individuale.</p>
+      <p>Il riferimento di base varia con età, allenamento e obiettivo. Per chi pratica attività sportiva Diario FIT integra i riferimenti LARN con letteratura specifica sull'esercizio. In Dimagrimento o Definizione/Ricomposizione, quando è presente allenamento abituale, il motore privilegia una quota proteica più conservativa per la massa magra. Il valore calcolato è un punto di partenza e non un limite massimo individuale.</p>
     </details>
 
     <details class="methodology-section">
@@ -10992,7 +10993,8 @@ html[data-theme="light"]
         <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Mifflin et al. – equazione del metabolismo basale</a><br>
         <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">ISSN – proteine e attività fisica</a><br>
         <a href="https://pubmed.ncbi.nlm.nih.gov/28698222/" target="_blank" rel="noopener noreferrer">Morton et al. – proteine e resistance training</a><br>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/34623696/" target="_blank" rel="noopener noreferrer">Murphy & Koehler – deficit energetico e massa magra</a>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/34623696/" target="_blank" rel="noopener noreferrer">Murphy & Koehler – deficit energetico e massa magra</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/41940947/" target="_blank" rel="noopener noreferrer">Vargas-Molina et al. – protocolli isocalorici e ricomposizione corporea</a>
       </p>
     </details>
   </div>
@@ -18951,18 +18953,18 @@ function updateActivityDescription() {
 function getTargetProteinFactor(age, training, goal) {
 
   if (training === "none") {
-    if (goal === "cut") {
+    if (goal === "cut" || goal === "recomp") {
       return 1.2;
     }
     return age >= 65 ? 1.1 : 0.9;
   }
 
   if (training === "endurance") {
-    return goal === "cut" ? 1.6 : 1.4;
+    return (goal === "cut" || goal === "recomp") ? 1.6 : 1.4;
   }
 
   if (training === "strength" || training === "mixed") {
-    return goal === "cut" ? 1.8 : 1.6;
+    return (goal === "cut" || goal === "recomp") ? 1.8 : 1.6;
   }
 
   return age >= 65 ? 1.1 : 0.9;
@@ -19020,6 +19022,12 @@ async function calculateAndApplyTargets() {
     const plannedDeficit = maintenanceKcal * 0.15;
     energyAdjustmentKcal = -Math.min(plannedDeficit, 500);
     targetKcal = maintenanceKcal + energyAdjustmentKcal;
+  } else if (goal === "recomp") {
+    // Ricomposizione: nessun deficit percentuale universale viene imposto.
+    // Si parte dalla stima di mantenimento e si privilegiano allenamento,
+    // proteine adeguate e rivalutazione dell'andamento reale nel tempo.
+    energyAdjustmentKcal = 0;
+    targetKcal = maintenanceKcal;
   } else if (goal === "bulk") {
     energyAdjustmentKcal = maintenanceKcal * 0.05;
     targetKcal = maintenanceKcal + energyAdjustmentKcal;
@@ -19095,9 +19103,11 @@ async function calculateAndApplyTargets() {
 
   const goalText = goal === "cut"
     ? `Riduzione applicata: ${Math.abs(Math.round(energyAdjustmentKcal))} kcal`
-    : goal === "bulk"
-      ? `Incremento applicato: ${Math.round(energyAdjustmentKcal)} kcal`
-      : "Obiettivo: mantenimento";
+    : goal === "recomp"
+      ? "Ricomposizione: partenza dal mantenimento stimato, senza deficit automatico"
+      : goal === "bulk"
+        ? `Incremento applicato: ${Math.round(energyAdjustmentKcal)} kcal`
+        : "Obiettivo: mantenimento";
 
   const coherenceNote = carbEnergyPct < 0.45
     ? "<br><small>ⓘ I carboidrati risultano sotto il 45% dell'energia dopo l'aggiustamento moderato dei grassi: il risultato viene mantenuto senza forzare artificialmente la distribuzione.</small>"
@@ -19112,7 +19122,7 @@ async function calculateAndApplyTargets() {
       <span>🥩 ${targetPro} g</span>
       <span>🥑 ${targetFat} g (${roundedFatPct}% En)</span>
       <span>🍞 ${targetCarb} g (${roundedCarbPct}% En)</span>
-      <span>🍬 &lt; ${targetSugar} g</span>
+      <span>🍬 Limite zuccheri: &lt; ${targetSugar} g</span>
       <span>💧 ${targetWater} ml</span>
     </div>
     <small>Proteine: ${proteinGKg.toFixed(1)} g/kg. Zuccheri: limite indicativo, non target da raggiungere.</small>
