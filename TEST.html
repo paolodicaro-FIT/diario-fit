@@ -22055,10 +22055,10 @@ function renderHistory() {
           <div class="history-summary">
 
             🔥 ${summary.kcal} kcal ·
-            P ${summary.pro} ·
-            G ${summary.fat} ·
-            C ${summary.carb} ·
-            Z ${summary.sugar} ·
+            P ${Number(Number(summary.pro).toFixed(1))} ·
+            G ${Number(Number(summary.fat).toFixed(1))} ·
+            C ${Number(Number(summary.carb).toFixed(1))} ·
+            Z ${Number(Number(summary.sugar).toFixed(1))} ·
             💧 ${summary.water}
 
           </div>
