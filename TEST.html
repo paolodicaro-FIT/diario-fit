@@ -10982,12 +10982,12 @@ html[data-theme="light"]
 
     <details class="methodology-section">
       <summary>🎯 Obiettivo energetico</summary>
-      <p><strong>Dimagrimento</strong> usa come criterio operativo iniziale una riduzione moderata del 15%, limitata a circa 500 kcal/die. <strong>Definizione / Ricomposizione</strong> è distinta dal dimagrimento: Diario FIT parte dalla stima di mantenimento senza imporre un deficit percentuale universale e dà maggiore rilievo ad allenamento, proteine e andamento reale nel tempo. <strong>Mantenimento</strong> lascia invariata la stima; <strong>Massa / Crescita</strong> usa un incremento iniziale del 5%. Le percentuali applicate sono criteri operativi di Diario FIT e non valori LARN.</p>
+      <p><strong>Dimagrimento</strong> usa come criterio operativo iniziale una riduzione moderata del 15%, limitata a circa 500 kcal/die. <strong>Definizione / Ricomposizione</strong> è distinta dal dimagrimento: Diario FIT usa un deficit iniziale più lieve del 10%, limitato a 300 kcal/die, mantenendo maggiore attenzione a proteine e allenamento. È una scelta operativa prudente dell'app, non una percentuale prescritta dai LARN: la letteratura mostra che la ricomposizione può avvenire sia vicino al mantenimento sia con deficit moderati e che deficit più marcati possono ostacolare i guadagni di massa magra. <strong>Mantenimento</strong> lascia invariata la stima; <strong>Massa / Crescita</strong> usa un incremento iniziale del 5%. Tutte le percentuali applicate sono criteri operativi di Diario FIT da rivalutare con l'andamento reale.</p>
     </details>
 
     <details class="methodology-section">
       <summary>🥩 Proteine</summary>
-      <p>Il riferimento di base varia con età, allenamento e obiettivo. Per chi pratica attività sportiva Diario FIT integra i riferimenti LARN con letteratura specifica sull'esercizio. In Dimagrimento o Definizione/Ricomposizione, quando è presente allenamento abituale, il motore privilegia una quota proteica più conservativa per la massa magra. Il valore calcolato è un punto di partenza e non un limite massimo individuale.</p>
+      <p>Il riferimento di base varia con età, allenamento e obiettivo. Per chi pratica attività sportiva Diario FIT integra i riferimenti LARN con letteratura specifica sull'esercizio. In Definizione/Ricomposizione con allenamento di forza o misto, il motore usa 2,0 g/kg/die: è il margine superiore dell'intervallo 1,4–2,0 g/kg/die comunemente indicato per adulti sani che si allenano, scelto dall'app come punto di partenza prudente quando l'obiettivo include preservare o sviluppare massa magra. In Dimagrimento il motore mantiene una quota elevata ma meno spinta. Il valore calcolato resta un punto di partenza, non una prescrizione individuale.</p>
     </details>
 
     <details class="methodology-section">
@@ -19009,11 +19009,13 @@ function getTargetProteinFactor(age, training, goal) {
   }
 
   if (training === "endurance") {
-    return (goal === "cut" || goal === "recomp") ? 1.6 : 1.4;
+    if (goal === "recomp") return 1.8;
+    return goal === "cut" ? 1.6 : 1.4;
   }
 
   if (training === "strength" || training === "mixed") {
-    return (goal === "cut" || goal === "recomp") ? 1.8 : 1.6;
+    if (goal === "recomp") return 2.0;
+    return goal === "cut" ? 1.8 : 1.6;
   }
 
   return age >= 65 ? 1.1 : 0.9;
@@ -19072,11 +19074,13 @@ async function calculateAndApplyTargets() {
     energyAdjustmentKcal = -Math.min(plannedDeficit, 500);
     targetKcal = maintenanceKcal + energyAdjustmentKcal;
   } else if (goal === "recomp") {
-    // Ricomposizione: nessun deficit percentuale universale viene imposto.
-    // Si parte dalla stima di mantenimento e si privilegiano allenamento,
-    // proteine adeguate e rivalutazione dell'andamento reale nel tempo.
-    energyAdjustmentKcal = 0;
-    targetKcal = maintenanceKcal;
+    // Scelta operativa Diario FIT: deficit iniziale lieve per ricomposizione.
+    // Non è una percentuale LARN né una prescrizione universale: il 10%
+    // (con tetto di 300 kcal/die) mantiene il deficit nettamente più prudente
+    // del profilo Dimagrimento e va rivalutato sui dati reali nel tempo.
+    const plannedRecompDeficit = maintenanceKcal * 0.10;
+    energyAdjustmentKcal = -Math.min(plannedRecompDeficit, 300);
+    targetKcal = maintenanceKcal + energyAdjustmentKcal;
   } else if (goal === "bulk") {
     energyAdjustmentKcal = maintenanceKcal * 0.05;
     targetKcal = maintenanceKcal + energyAdjustmentKcal;
@@ -19125,7 +19129,7 @@ async function calculateAndApplyTargets() {
   userSettings = {
     ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
     targetCalculationMeta: {
-      version: 3,
+      version: 4,
       mode: "calculator",
       calculatedAt: new Date().toISOString(),
       method: "mifflin-st-jeor",
@@ -19153,7 +19157,7 @@ async function calculateAndApplyTargets() {
   const goalText = goal === "cut"
     ? `Riduzione applicata: ${Math.abs(Math.round(energyAdjustmentKcal))} kcal`
     : goal === "recomp"
-      ? "Ricomposizione: partenza dal mantenimento stimato, senza deficit automatico"
+      ? `Ricomposizione: deficit iniziale lieve di ${Math.abs(Math.round(energyAdjustmentKcal))} kcal (10%, max 300 kcal)`
       : goal === "bulk"
         ? `Incremento applicato: ${Math.round(energyAdjustmentKcal)} kcal`
         : "Obiettivo: mantenimento";
