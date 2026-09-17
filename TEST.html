@@ -19104,11 +19104,24 @@ async function calculateAndApplyTargets() {
     carbEnergyPct = (targetCarb * 4) / targetKcal;
   }
 
+  // Se i carboidrati superano il 60% En, prova a riportarli nell'intervallo
+  // LARN aumentando moderatamente i grassi, senza superare il 35% En.
+  if (carbEnergyPct > 0.60) {
+    const fatKcalFor60PctCarb = (targetKcal * 0.40) - proteinKcal;
+    const adjustedFatPct = fatKcalFor60PctCarb / targetKcal;
+    fatEnergyPct = Math.max(0.30, Math.min(0.35, adjustedFatPct));
+    targetFat = Math.round((targetKcal * fatEnergyPct) / 9);
+    targetCarb = Math.round((targetKcal - proteinKcal - (targetFat * 9)) / 4);
+    carbEnergyPct = (targetCarb * 4) / targetKcal;
+  }
+
   if (targetCarb < 0) {
     showTargetCalculatorMessage("⚠️ Con i dati inseriti la distribuzione dei macronutrienti non risulta coerente. Verifica i parametri o utilizza i target manuali.");
     return;
   }
 
+  // LARN V Revisione: zuccheri totali <15% dell'energia. È un limite,
+  // non una quota da raggiungere; l'app mostra quindi esplicitamente '<'.
   const targetSugar = Math.round((targetKcal * 0.15) / 4);
   const targetWater = gender === "male" ? 2500 : 2000;
 
@@ -19129,7 +19142,7 @@ async function calculateAndApplyTargets() {
   userSettings = {
     ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
     targetCalculationMeta: {
-      version: 5,
+      version: 6,
       mode: "calculator",
       calculatedAt: new Date().toISOString(),
       method: "mifflin-st-jeor",
@@ -19178,10 +19191,10 @@ async function calculateAndApplyTargets() {
       <span>🥩 ${targetPro} g</span>
       <span>🥑 ${targetFat} g (${roundedFatPct}% En)</span>
       <span>🍞 ${targetCarb} g (${roundedCarbPct}% En)</span>
-      <span>🍬 Limite zuccheri: &lt; ${targetSugar} g</span>
+      <span>🍬 Zuccheri totali — limite: &lt; ${targetSugar} g</span>
       <span>💧 ${targetWater} ml</span>
     </div>
-    <small>Proteine: ${proteinGKg.toFixed(1)} g/kg. Zuccheri: limite indicativo, non target da raggiungere.</small>
+    <small>Proteine: ${proteinGKg.toFixed(1)} g/kg. Zuccheri totali: limite LARN &lt;15% En, non target da raggiungere.</small>
     ${coherenceNote}
   `);
 }
