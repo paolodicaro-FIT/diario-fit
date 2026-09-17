@@ -10096,8 +10096,28 @@ html[data-theme="light"]
           <option value="2.0">Molto elevata</option>
         </select>
         <div id="calc-activity-hint" class="calc-activity-hint">
-          Giornata complessivamente attiva: considera lavoro, spostamenti, movimento quotidiano e allenamento abituale.
+          Giornata moderatamente attiva: movimento frequente durante la giornata e/o allenamento abituale, con meno ore complessivamente sedentarie.
         </div>
+        <details class="activity-guide" style="margin-top:8px;">
+          <summary style="cursor:pointer; font-weight:700;">🧭 Aiutami a scegliere</summary>
+          <div style="margin-top:8px;">
+            <label for="calc-day-profile">Durante lavoro / attività principale</label>
+            <select id="calc-day-profile" onchange="updateActivityGuide()">
+              <option value="sedentary">Prevalentemente seduto</option>
+              <option value="mixed">Alterno seduto, in piedi e movimento</option>
+              <option value="active">Molto tempo in piedi / in movimento</option>
+              <option value="physical">Lavoro fisico con movimentazione o carichi</option>
+            </select>
+            <label for="calc-training-frequency" style="margin-top:8px;">Allenamenti abituali a settimana</label>
+            <select id="calc-training-frequency" onchange="updateActivityGuide()">
+              <option value="0">Nessuno</option>
+              <option value="1">1–2</option>
+              <option value="3" selected>3–4</option>
+              <option value="5">5 o più</option>
+            </select>
+            <div id="calc-activity-guide-result" class="calc-activity-hint" style="margin-top:8px;"></div>
+          </div>
+        </details>
       </div>
     </div>
 
@@ -10957,7 +10977,7 @@ html[data-theme="light"]
 
     <details class="methodology-section" open>
       <summary>🔥 Energia e attività</summary>
-      <p>Il metabolismo basale viene stimato con l'equazione di Mifflin-St Jeor. Diario FIT applica poi un livello di attività (PAL) per stimare il mantenimento energetico. Il PAL rappresenta il movimento complessivo abituale, quindi comprende lavoro, spostamenti, vita quotidiana e allenamento. Il tipo di allenamento viene chiesto separatamente per personalizzare soprattutto i macronutrienti e non viene sommato una seconda volta alle calorie.</p>
+      <p>Il metabolismo basale viene stimato con l'equazione di Mifflin-St Jeor. Diario FIT applica poi un livello di attività (PAL) per stimare il mantenimento energetico. Il PAL rappresenta il movimento complessivo abituale, quindi comprende lavoro, spostamenti, vita quotidiana e allenamento. La guida “Aiutami a scegliere” combina in modo orientativo il tipo di giornata e la frequenza di allenamento per suggerire una categoria: è una scelta operativa di Diario FIT, non una misurazione diretta del dispendio. Il tipo di allenamento viene chiesto separatamente per personalizzare soprattutto i macronutrienti e non viene sommato una seconda volta alle calorie.</p>
     </details>
 
     <details class="methodology-section">
@@ -18952,6 +18972,33 @@ function updateActivityDescription() {
 }
 
 
+function updateActivityGuide() {
+
+  const profile = document.getElementById("calc-day-profile");
+  const frequency = document.getElementById("calc-training-frequency");
+  const result = document.getElementById("calc-activity-guide-result");
+  const activity = document.getElementById("calc-activity");
+
+  if (!profile || !frequency || !result || !activity) return;
+
+  const f = Number(frequency.value);
+  let pal = 1.4;
+
+  // Guida operativa Diario FIT: serve a orientare la scelta del PAL,
+  // non misura direttamente il dispendio energetico individuale.
+  if (profile.value === "sedentary") pal = f >= 5 ? 1.6 : (f >= 1 ? 1.5 : 1.4);
+  if (profile.value === "mixed") pal = f >= 5 ? 1.8 : (f >= 3 ? 1.6 : 1.5);
+  if (profile.value === "active") pal = f >= 5 ? 1.8 : 1.6;
+  if (profile.value === "physical") pal = f >= 5 ? 1.8 : 1.6;
+
+  const labels = {"1.4":"Bassa", "1.5":"Leggera", "1.6":"Moderata", "1.8":"Elevata", "2":"Molto elevata"};
+  result.innerHTML = `Indicazione orientativa: <strong>${labels[String(pal)] || "Moderata"} — PAL ${pal.toFixed(1).replace(".", ",")}</strong>. La guida non misura il metabolismo: usa questo livello come punto di partenza e rivalutalo con l'andamento reale.`;
+
+  activity.value = pal.toFixed(1);
+  updateActivityDescription();
+}
+
+
 function getTargetProteinFactor(age, training, goal) {
 
   if (training === "none") {
@@ -19078,7 +19125,7 @@ async function calculateAndApplyTargets() {
   userSettings = {
     ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
     targetCalculationMeta: {
-      version: 2,
+      version: 3,
       mode: "calculator",
       calculatedAt: new Date().toISOString(),
       method: "mifflin-st-jeor",
