@@ -10073,18 +10073,18 @@ html[data-theme="light"]
     <div class="inline-group">
       <div>
         <label>Età</label>
-        <input type="number" id="calc-age" value="59" min="18" max="100">
+        <input type="number" id="calc-age" placeholder="es. 40" min="18" max="100">
       </div>
       <div>
         <label>Peso kg</label>
-        <input type="number" id="calc-weight" placeholder="75" min="35" max="300" step="0.1">
+        <input type="number" id="calc-weight" placeholder="ultimo peso registrato" min="35" max="300" step="0.1">
       </div>
     </div>
 
     <div class="inline-group">
       <div>
         <label>Altezza cm</label>
-        <input type="number" id="calc-height" value="180" min="130" max="220">
+        <input type="number" id="calc-height" placeholder="es. 175" min="130" max="220">
       </div>
       <div>
         <label>Attività quotidiana</label>
@@ -10103,7 +10103,7 @@ html[data-theme="light"]
     <label>Allenamento abituale</label>
     <select id="calc-training">
       <option value="none">Nessuno</option>
-      <option value="strength">Forza / muscolazione</option>
+      <option value="strength">Forza / pesi</option>
       <option value="endurance">Endurance</option>
       <option value="mixed">Misto</option>
     </select>
@@ -10985,8 +10985,15 @@ html[data-theme="light"]
 
     <details class="methodology-section">
       <summary>🔬 Fonti e limiti</summary>
-      <p>Riferimento principale: LARN – V Revisione, Società Italiana di Nutrizione Umana (SINU). Per le scelte operative legate all'allenamento vengono considerate anche pubblicazioni scientifiche peer-reviewed. Per gli alimenti predefiniti, la fonte primaria resta il CREA. Le equazioni predittive e i coefficienti di attività hanno inevitabilmente un margine di errore individuale: l'andamento reale nel tempo resta essenziale per rivalutare i target.</p>
-      <p><a href="https://sinu.it/larn/" target="_blank" rel="noopener noreferrer">SINU – LARN V Revisione</a></p>
+      <p>Riferimento principale: LARN – V Revisione, Società Italiana di Nutrizione Umana (SINU). Per gli alimenti predefiniti, la fonte primaria resta il CREA. Per le scelte operative legate ad allenamento, proteine e gestione del deficit energetico Diario FIT considera anche letteratura scientifica peer-reviewed. Le equazioni predittive e i coefficienti di attività hanno inevitabilmente un margine di errore individuale: l'andamento reale nel tempo resta essenziale per rivalutare i target.</p>
+      <p class="methodology-sources">
+        <a href="https://sinu.it/larn/" target="_blank" rel="noopener noreferrer">SINU – LARN V Revisione</a><br>
+        <a href="https://www.crea.gov.it/alimenti-e-nutrizione" target="_blank" rel="noopener noreferrer">CREA – Alimenti e Nutrizione</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Mifflin et al. – equazione del metabolismo basale</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">ISSN – proteine e attività fisica</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/28698222/" target="_blank" rel="noopener noreferrer">Morton et al. – proteine e resistance training</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/34623696/" target="_blank" rel="noopener noreferrer">Murphy & Koehler – deficit energetico e massa magra</a>
+      </p>
     </details>
   </div>
 </div>
@@ -17009,17 +17016,68 @@ document.addEventListener(
 );
 
 
-function toggleCalculatorModal() {
+async function prepareTargetCalculatorInputs() {
+
+  const meta =
+    userSettings &&
+    typeof userSettings === "object" &&
+    userSettings.targetCalculationMeta &&
+    typeof userSettings.targetCalculationMeta === "object"
+      ? userSettings.targetCalculationMeta
+      : null;
+
+  const setValue = (id, value) => {
+    const el = document.getElementById(id);
+    if (el && value !== undefined && value !== null && value !== "") {
+      el.value = String(value);
+    }
+  };
+
+  if (meta && meta.mode !== "manual") {
+    setValue("calc-gender", meta.gender);
+    setValue("calc-age", meta.age);
+    setValue("calc-weight", meta.weight);
+    setValue("calc-height", meta.height);
+    setValue("calc-activity", meta.pal);
+    setValue("calc-training", meta.training);
+    setValue("calc-goal", meta.goal);
+  }
+
+  try {
+    await loadWeightHistory();
+
+    if (Array.isArray(weightHistory) && weightHistory.length) {
+      const latest = Number(weightHistory[weightHistory.length - 1].weight);
+      if (Number.isFinite(latest)) {
+        setValue("calc-weight", latest);
+      }
+    }
+  } catch (error) {
+    console.warn("Peso recente non disponibile nel calcolatore target:", error);
+  }
+
+  updateActivityDescription();
+}
+
+
+async function toggleCalculatorModal() {
 
   const modal =
     document.getElementById(
       "calculator-modal"
     );
 
-  modal.style.display =
-    modal.style.display === "flex"
-      ? "none"
-      : "flex";
+  if (!modal) {
+    return;
+  }
+
+  if (modal.style.display === "flex") {
+    modal.style.display = "none";
+    return;
+  }
+
+  modal.style.display = "flex";
+  await prepareTargetCalculatorInputs();
 
 }
 
@@ -19011,6 +19069,7 @@ async function calculateAndApplyTargets() {
     ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
     targetCalculationMeta: {
       version: 2,
+      mode: "calculator",
       calculatedAt: new Date().toISOString(),
       method: "mifflin-st-jeor",
       gender,
@@ -19192,7 +19251,14 @@ async function saveCustomTargets() {
 
 
 
-
+  userSettings = {
+    ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
+    targetCalculationMeta: {
+      version: 2,
+      mode: "manual",
+      updatedAt: new Date().toISOString()
+    }
+  };
 
   updateTargetDisplays();
 
