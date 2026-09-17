@@ -22024,23 +22024,35 @@ function renderHistory() {
 
       const summary = {
         kcal:
-          storedSummary.kcal ??
-          calculatedSummary.kcal,
+          normalizeNutritionValue(
+            storedSummary.kcal,
+            calculatedSummary.kcal
+          ),
         pro:
-          storedSummary.pro ??
-          calculatedSummary.pro,
+          normalizeNutritionValue(
+            storedSummary.pro,
+            calculatedSummary.pro
+          ),
         fat:
-          storedSummary.fat ??
-          calculatedSummary.fat,
+          normalizeNutritionValue(
+            storedSummary.fat,
+            calculatedSummary.fat
+          ),
         carb:
-          storedSummary.carb ??
-          calculatedSummary.carb,
+          normalizeNutritionValue(
+            storedSummary.carb,
+            calculatedSummary.carb
+          ),
         sugar:
-          storedSummary.sugar ??
-          calculatedSummary.sugar,
+          normalizeNutritionValue(
+            storedSummary.sugar,
+            calculatedSummary.sugar
+          ),
         water:
-          storedSummary.water ??
-          calculatedSummary.water
+          normalizeNutritionValue(
+            storedSummary.water,
+            calculatedSummary.water
+          )
       };
 
 
@@ -22055,10 +22067,10 @@ function renderHistory() {
           <div class="history-summary">
 
             🔥 ${summary.kcal} kcal ·
-            P ${summary.pro} ·
-            G ${summary.fat} ·
-            C ${summary.carb} ·
-            Z ${summary.sugar} ·
+            P ${Number(Number(summary.pro).toFixed(1))} ·
+            G ${Number(Number(summary.fat).toFixed(1))} ·
+            C ${Number(Number(summary.carb).toFixed(1))} ·
+            Z ${Number(Number(summary.sugar).toFixed(1))} ·
             💧 ${summary.water}
 
           </div>
