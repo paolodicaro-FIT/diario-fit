@@ -1569,6 +1569,69 @@ html[data-theme="light"] .quick-btn-label {
   font-weight: 600;
 }
 
+.target-engine-note,
+.target-engine-result {
+  margin-top: 10px;
+  padding: 10px 11px;
+  border: 1px solid rgba(255,159,28,.22);
+  border-radius: 12px;
+  background: rgba(255,159,28,.055);
+  color: var(--subtext);
+  font-size: .75rem;
+  line-height: 1.45;
+}
+
+.target-engine-result strong {
+  color: var(--text);
+}
+
+.target-engine-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 10px;
+  margin-top: 8px;
+}
+
+.target-engine-link {
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.methodology-content {
+  max-width: 760px;
+}
+
+.methodology-section {
+  margin-top: 10px;
+  padding: 11px 12px;
+  border: 1px solid rgba(255,159,28,.16);
+  border-radius: 13px;
+  background: rgba(255,255,255,.025);
+}
+
+.methodology-section summary {
+  cursor: pointer;
+  font-weight: 850;
+  color: var(--text);
+}
+
+.methodology-section p {
+  margin: 8px 0 0;
+  color: var(--subtext);
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.methodology-section a {
+  color: var(--accent);
+}
+
 .save-food-btn {
   width: 100%;
 
@@ -9997,142 +10060,93 @@ html[data-theme="light"]
 
 
     <p>
-      Inserisci i tuoi parametri per stimare
-      il fabbisogno calorico e i macronutrienti.
+      Inserisci i tuoi parametri per ottenere una stima
+      orientativa del mantenimento e dei target giornalieri.
     </p>
 
-
-    <label>
-      Sesso
-    </label>
-
+    <label>Sesso</label>
     <select id="calc-gender">
-
-      <option value="male" selected>
-        Uomo
-      </option>
-
-      <option value="female">
-        Donna
-      </option>
-
+      <option value="male" selected>Uomo</option>
+      <option value="female">Donna</option>
     </select>
 
-
     <div class="inline-group">
-
       <div>
-
-        <label>
-          Età
-        </label>
-
-        <input
-          type="number"
-          id="calc-age"
-          value="59"
-        >
-
+        <label>Età</label>
+        <input type="number" id="calc-age" placeholder="es. 40" min="18" max="100">
       </div>
-
       <div>
-
-        <label>
-          Peso kg
-        </label>
-
-        <input
-          type="number"
-          id="calc-weight"
-          placeholder="75"
-        >
-
+        <label>Peso kg</label>
+        <input type="number" id="calc-weight" placeholder="ultimo peso registrato" min="35" max="300" step="0.1">
       </div>
-
     </div>
 
-
     <div class="inline-group">
-
       <div>
-
-        <label>
-          Altezza cm
-        </label>
-
-        <input
-          type="number"
-          id="calc-height"
-          value="180"
-        >
-
+        <label>Altezza cm</label>
+        <input type="number" id="calc-height" placeholder="es. 175" min="130" max="220">
       </div>
-
       <div>
-
-        <label>
-          Attività
-        </label>
-
-        <select
-          id="calc-activity"
-          onchange="updateActivityDescription()"
-        >
-
-          <option value="1.2">
-            Sedentario
-          </option>
-
-          <option value="1.375">
-            Leggero
-          </option>
-
-          <option value="1.55" selected>
-            Moderato
-          </option>
-
-          <option value="1.725">
-            Intenso
-          </option>
-
-          <option value="1.9">
-            Molto intenso
-          </option>
-
+        <label>Attività quotidiana</label>
+        <select id="calc-activity" onchange="updateActivityDescription()">
+          <option value="1.4">Bassa</option>
+          <option value="1.5">Leggera</option>
+          <option value="1.6" selected>Moderata</option>
+          <option value="1.8">Elevata</option>
+          <option value="2.0">Molto elevata</option>
         </select>
-
-        <div
-          id="calc-activity-hint"
-          class="calc-activity-hint"
-        >
-          Attività moderata circa 3–5 giorni a settimana.
+        <div id="calc-activity-hint" class="calc-activity-hint">
+          Giornata moderatamente attiva: movimento frequente durante la giornata e/o allenamento abituale, con meno ore complessivamente sedentarie.
         </div>
-
+        <details class="activity-guide" style="margin-top:8px;">
+          <summary style="cursor:pointer; font-weight:700;">🧭 Aiutami a scegliere</summary>
+          <div style="margin-top:8px;">
+            <label for="calc-day-profile">Durante lavoro / attività principale</label>
+            <select id="calc-day-profile" onchange="updateActivityGuide()">
+              <option value="sedentary">Prevalentemente seduto</option>
+              <option value="mixed">Alterno seduto, in piedi e movimento</option>
+              <option value="active">Molto tempo in piedi / in movimento</option>
+              <option value="physical">Lavoro fisico con movimentazione o carichi</option>
+            </select>
+            <label for="calc-training-frequency" style="margin-top:8px;">Allenamenti abituali a settimana</label>
+            <select id="calc-training-frequency" onchange="updateActivityGuide()">
+              <option value="0">Nessuno</option>
+              <option value="1">1–2</option>
+              <option value="3" selected>3–4</option>
+              <option value="5">5 o più</option>
+            </select>
+            <div id="calc-activity-guide-result" class="calc-activity-hint" style="margin-top:8px;"></div>
+          </div>
+        </details>
       </div>
-
     </div>
 
-
-    <label>
-      Obiettivo
-    </label>
-
-    <select id="calc-goal">
-
-      <option value="cut">
-        Dimagrimento / Definizione (-20%)
-      </option>
-
-      <option value="maintain" selected>
-        Mantenimento
-      </option>
-
-      <option value="bulk">
-        Massa / Crescita (+10%)
-      </option>
-
+    <label>Allenamento abituale</label>
+    <select id="calc-training">
+      <option value="none">Nessuno</option>
+      <option value="strength">Forza / pesi</option>
+      <option value="endurance">Endurance</option>
+      <option value="mixed">Misto</option>
     </select>
 
+    <label>Obiettivo</label>
+    <select id="calc-goal">
+      <option value="cut">Dimagrimento</option>
+      <option value="recomp">Definizione / Ricomposizione</option>
+      <option value="maintain" selected>Mantenimento</option>
+      <option value="bulk">Massa / Crescita</option>
+    </select>
+
+    <div class="target-engine-note">
+      Il calcolo è una <strong>stima iniziale</strong>, non una misurazione diretta del metabolismo.
+      Il livello di attività descrive il movimento complessivo abituale; il tipo di allenamento serve anche a personalizzare i macronutrienti.
+      <br>
+      <button type="button" class="target-engine-link" onclick="toggleMethodologyModal()">
+        ⓘ Come vengono calcolati questi target?
+      </button>
+    </div>
+
+    <div id="target-engine-result" class="target-engine-result" style="display:none;"></div>
 
     <button
       class="btn primary full"
@@ -10849,6 +10863,31 @@ html[data-theme="light"]
       <section class="info2-card info2-card-wide">
 
         <div class="info2-card-title">
+          <span class="info2-card-icon">📚</span>
+          <h4>Metodo di calcolo dei target</h4>
+        </div>
+
+        <p>
+          Il calcolatore dei target distingue i riferimenti LARN,
+          le equazioni predittive e i criteri operativi utilizzati
+          da Diario FIT. Fonti, significato e limiti delle stime
+          sono descritti nell'Informativa dedicata.
+        </p>
+
+        <button
+          type="button"
+          class="mini-btn primary"
+          onclick="toggleInfoModal(); toggleMethodologyModal();"
+        >
+          📚 Apri Informativa
+        </button>
+
+      </section>
+
+
+      <section class="info2-card info2-card-wide">
+
+        <div class="info2-card-title">
           <span class="info2-card-icon">🔬</span>
           <h4>Fonti nutrizionali</h4>
         </div>
@@ -10917,6 +10956,69 @@ html[data-theme="light"]
 
   </div>
 
+</div>
+
+
+<!-- =====================================================
+     MODAL INFORMATIVA TARGET
+===================================================== -->
+
+<div class="modal-overlay" id="methodology-modal">
+  <div class="modal-content methodology-content">
+    <div class="modal-header">
+      <h3>📚 Informativa</h3>
+      <button class="modal-close" onclick="toggleMethodologyModal()" aria-label="Chiudi">✕</button>
+    </div>
+
+    <p>
+      Diario FIT è uno strumento di supporto e monitoraggio. I valori calcolati sono stime orientative
+      basate sui dati inseriti e su riferimenti scientifici documentati; non costituiscono una prescrizione dietetica o medica.
+    </p>
+
+    <details class="methodology-section" open>
+      <summary>🔥 Energia e attività</summary>
+      <p>Il metabolismo basale viene stimato con l'equazione di Mifflin-St Jeor. Diario FIT applica poi un livello di attività (PAL) per stimare il mantenimento energetico. Il PAL rappresenta il movimento complessivo abituale, quindi comprende lavoro, spostamenti, vita quotidiana e allenamento. La guida “Aiutami a scegliere” combina in modo orientativo il tipo di giornata e la frequenza di allenamento per suggerire una categoria: è una scelta operativa di Diario FIT, non una misurazione diretta del dispendio. Il tipo di allenamento viene chiesto separatamente per personalizzare soprattutto i macronutrienti e non viene sommato una seconda volta alle calorie.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>🎯 Obiettivo energetico</summary>
+      <p><strong>Dimagrimento</strong> usa come criterio operativo iniziale una riduzione moderata del 15%, limitata a circa 500 kcal/die. <strong>Definizione / Ricomposizione</strong> è distinta dal dimagrimento: Diario FIT usa un deficit iniziale più lieve del 10%, limitato a 300 kcal/die, mantenendo maggiore attenzione a proteine e allenamento. È una scelta operativa prudente dell'app, non una percentuale prescritta dai LARN: la letteratura mostra che la ricomposizione può avvenire sia vicino al mantenimento sia con deficit moderati e che deficit più marcati possono ostacolare i guadagni di massa magra. <strong>Mantenimento</strong> lascia invariata la stima; <strong>Massa / Crescita</strong> usa un incremento iniziale del 5%. Tutte le percentuali applicate sono criteri operativi di Diario FIT da rivalutare con l'andamento reale.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>🥩 Proteine</summary>
+      <p>Il riferimento di base varia con età, allenamento e obiettivo. Per chi pratica attività sportiva Diario FIT integra i riferimenti LARN con letteratura specifica sull'esercizio. In Definizione/Ricomposizione con allenamento di forza o misto, il motore usa 2,0 g/kg/die: è il margine superiore dell'intervallo 1,4–2,0 g/kg/die comunemente indicato per adulti sani che si allenano, scelto dall'app come punto di partenza prudente quando l'obiettivo include preservare o sviluppare massa magra. In Dimagrimento il motore mantiene una quota elevata ma meno spinta. Il valore calcolato resta un punto di partenza, non una prescrizione individuale.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>🥑 Grassi e 🍞 carboidrati</summary>
+      <p>I grassi partono operativamente da circa il 30% dell'energia e possono essere ridotti moderatamente per mantenere una distribuzione più coerente dei carboidrati. I risultati vengono confrontati con gli intervalli LARN: grassi 20–35% dell'energia e carboidrati 45–60% dell'energia. Diario FIT non forza artificialmente tutti i parametri dentro una fascia quando i vincoli individuali non sono simultaneamente compatibili.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>🍬 Zuccheri</summary>
+      <p>Gli zuccheri sono trattati come limite, non come quantità da raggiungere. Il riferimento utilizzato è inferiore al 15% dell'energia giornaliera secondo i LARN.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>💧 Acqua</summary>
+      <p>Come riferimento di base per gli adulti Diario FIT usa l'Assunzione Adeguata (AI) LARN: 2500 ml/die per gli uomini e 2000 ml/die per le donne. Fabbisogni individuali possono aumentare, per esempio, con caldo, esercizio e maggiori perdite di liquidi.</p>
+    </details>
+
+    <details class="methodology-section">
+      <summary>🔬 Fonti e limiti</summary>
+      <p>Riferimento principale: LARN – V Revisione, Società Italiana di Nutrizione Umana (SINU). Per gli alimenti predefiniti, la fonte primaria resta il CREA. Per le scelte operative legate ad allenamento, proteine e gestione del deficit energetico Diario FIT considera anche letteratura scientifica peer-reviewed. Le equazioni predittive e i coefficienti di attività hanno inevitabilmente un margine di errore individuale: l'andamento reale nel tempo resta essenziale per rivalutare i target.</p>
+      <p class="methodology-sources">
+        <a href="https://sinu.it/larn/" target="_blank" rel="noopener noreferrer">SINU – LARN V Revisione</a><br>
+        <a href="https://www.crea.gov.it/alimenti-e-nutrizione" target="_blank" rel="noopener noreferrer">CREA – Alimenti e Nutrizione</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Mifflin et al. – equazione del metabolismo basale</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">ISSN – proteine e attività fisica</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/28698222/" target="_blank" rel="noopener noreferrer">Morton et al. – proteine e resistance training</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/34623696/" target="_blank" rel="noopener noreferrer">Murphy & Koehler – deficit energetico e massa magra</a><br>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/41940947/" target="_blank" rel="noopener noreferrer">Vargas-Molina et al. – protocolli isocalorici e ricomposizione corporea</a>
+      </p>
+    </details>
+  </div>
 </div>
 
 
@@ -16084,6 +16186,24 @@ function toggleInfoModal() {
 
 }
 
+function toggleMethodologyModal() {
+
+  const modal =
+    document.getElementById(
+      "methodology-modal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.style.display =
+    modal.style.display === "flex"
+      ? "none"
+      : "flex";
+
+}
+
 
 let weightHistory = [];
 
@@ -17035,17 +17155,68 @@ document.addEventListener(
 );
 
 
-function toggleCalculatorModal() {
+async function prepareTargetCalculatorInputs() {
+
+  const meta =
+    userSettings &&
+    typeof userSettings === "object" &&
+    userSettings.targetCalculationMeta &&
+    typeof userSettings.targetCalculationMeta === "object"
+      ? userSettings.targetCalculationMeta
+      : null;
+
+  const setValue = (id, value) => {
+    const el = document.getElementById(id);
+    if (el && value !== undefined && value !== null && value !== "") {
+      el.value = String(value);
+    }
+  };
+
+  if (meta && meta.mode !== "manual") {
+    setValue("calc-gender", meta.gender);
+    setValue("calc-age", meta.age);
+    setValue("calc-weight", meta.weight);
+    setValue("calc-height", meta.height);
+    setValue("calc-activity", meta.pal);
+    setValue("calc-training", meta.training);
+    setValue("calc-goal", meta.goal);
+  }
+
+  try {
+    await loadWeightHistory();
+
+    if (Array.isArray(weightHistory) && weightHistory.length) {
+      const latest = Number(weightHistory[weightHistory.length - 1].weight);
+      if (Number.isFinite(latest)) {
+        setValue("calc-weight", latest);
+      }
+    }
+  } catch (error) {
+    console.warn("Peso recente non disponibile nel calcolatore target:", error);
+  }
+
+  updateActivityDescription();
+}
+
+
+async function toggleCalculatorModal() {
 
   const modal =
     document.getElementById(
       "calculator-modal"
     );
 
-  modal.style.display =
-    modal.style.display === "flex"
-      ? "none"
-      : "flex";
+  if (!modal) {
+    return;
+  }
+
+  if (modal.style.display === "flex") {
+    modal.style.display = "none";
+    return;
+  }
+
+  modal.style.display = "flex";
+  await prepareTargetCalculatorInputs();
 
 }
 
@@ -18898,194 +19069,250 @@ function applyGeminiToForm() {
 
 function updateActivityDescription() {
 
-  const activity =
-    document.getElementById(
-      "calc-activity"
-    );
-
-  const hint =
-    document.getElementById(
-      "calc-activity-hint"
-    );
+  const activity = document.getElementById("calc-activity");
+  const hint = document.getElementById("calc-activity-hint");
 
   if (!activity || !hint) {
     return;
   }
 
   const descriptions = {
-    "1.2":
-      "Quasi nessun esercizio; vita prevalentemente sedentaria.",
-
-    "1.375":
-      "Attività leggera circa 1–3 giorni a settimana.",
-
-    "1.55":
-      "Attività moderata circa 3–5 giorni a settimana.",
-
-    "1.725":
-      "Attività intensa circa 6–7 giorni a settimana.",
-
-    "1.9":
-      "Allenamenti molto intensi e/o lavoro fisico impegnativo."
+    "1.4": "Giornata per lo più sedentaria: molte ore seduto, pochi spostamenti a piedi e movimento complessivo limitato.",
+    "1.5": "Giornata leggermente attiva: attività prevalentemente sedentaria ma con camminate, commissioni, scale o allenamento regolare che aumentano moderatamente il movimento complessivo.",
+    "1.6": "Giornata moderatamente attiva: movimento frequente durante la giornata e/o allenamento abituale, con meno ore complessivamente sedentarie.",
+    "1.8": "Giornata molto attiva: molto tempo in movimento, lavoro fisicamente attivo e/o volume di allenamento elevato.",
+    "2.0": "Giornata eccezionalmente attiva: impegno fisico complessivo molto elevato e abituale. Da usare solo quando descrive davvero la maggior parte delle giornate."
   };
 
-  hint.textContent =
-    descriptions[activity.value]
-    ||
-    "";
+  hint.textContent = descriptions[activity.value] || "";
+}
 
+
+function updateActivityGuide() {
+
+  const profile = document.getElementById("calc-day-profile");
+  const frequency = document.getElementById("calc-training-frequency");
+  const result = document.getElementById("calc-activity-guide-result");
+  const activity = document.getElementById("calc-activity");
+
+  if (!profile || !frequency || !result || !activity) return;
+
+  const f = Number(frequency.value);
+  let pal = 1.4;
+
+  // Guida operativa Diario FIT: serve a orientare la scelta del PAL,
+  // non misura direttamente il dispendio energetico individuale.
+  if (profile.value === "sedentary") pal = f >= 5 ? 1.6 : (f >= 1 ? 1.5 : 1.4);
+  if (profile.value === "mixed") pal = f >= 5 ? 1.8 : (f >= 3 ? 1.6 : 1.5);
+  if (profile.value === "active") pal = f >= 5 ? 1.8 : 1.6;
+  if (profile.value === "physical") pal = f >= 5 ? 1.8 : 1.6;
+
+  const labels = {"1.4":"Bassa", "1.5":"Leggera", "1.6":"Moderata", "1.8":"Elevata", "2":"Molto elevata"};
+  result.innerHTML = `Indicazione orientativa: <strong>${labels[String(pal)] || "Moderata"} — PAL ${pal.toFixed(1).replace(".", ",")}</strong>. La guida non misura il metabolismo: usa questo livello come punto di partenza e rivalutalo con l'andamento reale.`;
+
+  activity.value = pal.toFixed(1);
+  updateActivityDescription();
+}
+
+
+function getTargetProteinFactor(age, training, goal) {
+
+  if (training === "none") {
+    if (goal === "cut" || goal === "recomp") {
+      return 1.2;
+    }
+    return age >= 65 ? 1.1 : 0.9;
+  }
+
+  if (training === "endurance") {
+    if (goal === "recomp") return 1.8;
+    return goal === "cut" ? 1.6 : 1.4;
+  }
+
+  if (training === "strength" || training === "mixed") {
+    if (goal === "recomp") return 2.0;
+    return goal === "cut" ? 1.8 : 1.6;
+  }
+
+  return age >= 65 ? 1.1 : 0.9;
+}
+
+
+function showTargetCalculatorMessage(message) {
+  const result = document.getElementById("target-engine-result");
+  if (!result) {
+    return;
+  }
+  result.style.display = "block";
+  result.innerHTML = message;
 }
 
 
 async function calculateAndApplyTargets() {
 
-  const gender =
-    document.getElementById(
-      "calc-gender"
-    ).value;
+  const gender = document.getElementById("calc-gender").value;
+  const age = Number(document.getElementById("calc-age").value);
+  const weight = Number(document.getElementById("calc-weight").value);
+  const height = Number(document.getElementById("calc-height").value);
+  const activity = Number(document.getElementById("calc-activity").value);
+  const training = document.getElementById("calc-training").value;
+  const goal = document.getElementById("calc-goal").value;
 
-
-  const age =
-    parseInt(
-      document.getElementById(
-        "calc-age"
-      ).value
-    ) || 30;
-
-
-  const weight =
-    parseFloat(
-      document.getElementById(
-        "calc-weight"
-      ).value
-    ) || 70;
-
-
-  const height =
-    parseFloat(
-      document.getElementById(
-        "calc-height"
-      ).value
-    ) || 170;
-
-
-  const activity =
-    parseFloat(
-      document.getElementById(
-        "calc-activity"
-      ).value
-    ) || 1.55;
-
-
-  const goal =
-    document.getElementById(
-      "calc-goal"
-    ).value;
-
-
-  let bmr =
-    (10 * weight)
-    +
-    (6.25 * height)
-    -
-    (5 * age);
-
-
-  if (gender === "male") {
-
-    bmr += 5;
-
-  } else {
-
-    bmr -= 161;
-
+  if (!Number.isFinite(age) || age < 18 || age > 100) {
+    showTargetCalculatorMessage("⚠️ Inserisci un'età valida tra 18 e 100 anni. Il calcolatore standard di Diario FIT è destinato agli adulti.");
+    return;
   }
 
+  if (!Number.isFinite(weight) || weight < 35 || weight > 300) {
+    showTargetCalculatorMessage("⚠️ Inserisci un peso valido. Il controllo serve a evitare errori di digitazione nel calcolo.");
+    return;
+  }
 
-  let tdee =
-    bmr * activity;
+  if (!Number.isFinite(height) || height < 130 || height > 220) {
+    showTargetCalculatorMessage("⚠️ Inserisci un'altezza valida. Il controllo serve a evitare errori di digitazione nel calcolo.");
+    return;
+  }
 
+  if (![1.4, 1.5, 1.6, 1.8, 2.0].includes(activity)) {
+    showTargetCalculatorMessage("⚠️ Seleziona un livello di attività quotidiana valido.");
+    return;
+  }
 
-  let targetKcal =
-    tdee;
+  let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+  bmr += gender === "male" ? 5 : -161;
 
+  const maintenanceKcal = bmr * activity;
+  let targetKcal = maintenanceKcal;
+  let energyAdjustmentKcal = 0;
 
   if (goal === "cut") {
-
-    targetKcal *= .8;
-
+    const plannedDeficit = maintenanceKcal * 0.15;
+    energyAdjustmentKcal = -Math.min(plannedDeficit, 500);
+    targetKcal = maintenanceKcal + energyAdjustmentKcal;
+  } else if (goal === "recomp") {
+    // Scelta operativa Diario FIT: deficit iniziale lieve per ricomposizione.
+    // Non è una percentuale LARN né una prescrizione universale: il 10%
+    // (con tetto di 300 kcal/die) mantiene il deficit nettamente più prudente
+    // del profilo Dimagrimento e va rivalutato sui dati reali nel tempo.
+    const plannedRecompDeficit = maintenanceKcal * 0.10;
+    energyAdjustmentKcal = -Math.min(plannedRecompDeficit, 300);
+    targetKcal = maintenanceKcal + energyAdjustmentKcal;
+  } else if (goal === "bulk") {
+    energyAdjustmentKcal = maintenanceKcal * 0.05;
+    targetKcal = maintenanceKcal + energyAdjustmentKcal;
   }
 
-  else if (goal === "bulk") {
+  const proteinGKg = getTargetProteinFactor(age, training, goal);
+  const targetPro = Math.round(weight * proteinGKg);
+  const proteinKcal = targetPro * 4;
 
-    targetKcal *= 1.1;
+  let fatEnergyPct = 0.30;
+  let targetFat = Math.round((targetKcal * fatEnergyPct) / 9);
+  let targetCarb = Math.round((targetKcal - proteinKcal - (targetFat * 9)) / 4);
+  let carbEnergyPct = (targetCarb * 4) / targetKcal;
 
+  if (carbEnergyPct < 0.45) {
+    const fatKcalFor45PctCarb = (targetKcal * 0.55) - proteinKcal;
+    const adjustedFatPct = fatKcalFor45PctCarb / targetKcal;
+    fatEnergyPct = Math.max(0.25, Math.min(0.30, adjustedFatPct));
+    targetFat = Math.round((targetKcal * fatEnergyPct) / 9);
+    targetCarb = Math.round((targetKcal - proteinKcal - (targetFat * 9)) / 4);
+    carbEnergyPct = (targetCarb * 4) / targetKcal;
   }
 
+  // Se i carboidrati superano il 60% En, prova a riportarli nell'intervallo
+  // LARN aumentando moderatamente i grassi, senza superare il 35% En.
+  if (carbEnergyPct > 0.60) {
+    const fatKcalFor60PctCarb = (targetKcal * 0.40) - proteinKcal;
+    const adjustedFatPct = fatKcalFor60PctCarb / targetKcal;
+    fatEnergyPct = Math.max(0.30, Math.min(0.35, adjustedFatPct));
+    targetFat = Math.round((targetKcal * fatEnergyPct) / 9);
+    targetCarb = Math.round((targetKcal - proteinKcal - (targetFat * 9)) / 4);
+    carbEnergyPct = (targetCarb * 4) / targetKcal;
+  }
 
-  const targetPro =
-    Math.round(
-      weight * 2.2
-    );
+  if (targetCarb < 0) {
+    showTargetCalculatorMessage("⚠️ Con i dati inseriti la distribuzione dei macronutrienti non risulta coerente. Verifica i parametri o utilizza i target manuali.");
+    return;
+  }
 
+  // LARN V Revisione: zuccheri totali <15% dell'energia. È un limite,
+  // non una quota da raggiungere; l'app mostra quindi esplicitamente '<'.
+  const targetSugar = Math.round((targetKcal * 0.15) / 4);
+  const targetWater = gender === "male" ? 2500 : 2000;
 
-  const targetFat =
-    Math.round(
-      (targetKcal * .25) / 9
-    );
-
-
-  const remainingKcalForCarb =
-    targetKcal
-    -
-    (
-      (targetPro * 4)
-      +
-      (targetFat * 9)
-    );
-
-
-  const targetCarb =
-    Math.max(
-      50,
-      Math.round(
-        remainingKcalForCarb / 4
-      )
-    );
-
+  const roundedTargetKcal = Math.round(targetKcal / 10) * 10;
+  const roundedMaintenance = Math.round(maintenanceKcal / 10) * 10;
+  const roundedFatPct = Math.round(fatEnergyPct * 100);
+  const roundedCarbPct = Math.round(carbEnergyPct * 100);
 
   TARGETS = {
-
-    kcal:
-      Math.round(targetKcal),
-
-    pro:
-      targetPro,
-
-    fat:
-      targetFat,
-
-    carb:
-      targetCarb,
-
-    sugar:
-      50,
-
-    water:
-      2500
-
+    kcal: roundedTargetKcal,
+    pro: targetPro,
+    fat: targetFat,
+    carb: targetCarb,
+    sugar: targetSugar,
+    water: targetWater
   };
 
-
-
-
+  userSettings = {
+    ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
+    targetCalculationMeta: {
+      version: 6,
+      mode: "calculator",
+      calculatedAt: new Date().toISOString(),
+      method: "mifflin-st-jeor",
+      gender,
+      age,
+      weight,
+      height,
+      pal: activity,
+      training,
+      goal,
+      bmr: Math.round(bmr),
+      maintenanceKcal: roundedMaintenance,
+      energyAdjustmentKcal: Math.round(energyAdjustmentKcal),
+      proteinGKg,
+      fatEnergyPct: Number((fatEnergyPct * 100).toFixed(1)),
+      carbEnergyPct: Number((carbEnergyPct * 100).toFixed(1)),
+      sugarLimitEnergyPct: 15,
+      waterReference: "LARN-AI"
+    }
+  };
 
   updateTargetDisplays();
-
-  toggleCalculatorModal();
-
   await saveUserSettingsToBackend();
 
+  const goalText = goal === "cut"
+    ? `Riduzione applicata: ${Math.abs(Math.round(energyAdjustmentKcal))} kcal`
+    : goal === "recomp"
+      ? `Ricomposizione: deficit iniziale lieve di ${Math.abs(Math.round(energyAdjustmentKcal))} kcal (10%, max 300 kcal)`
+      : goal === "bulk"
+        ? `Incremento applicato: ${Math.round(energyAdjustmentKcal)} kcal`
+        : "Obiettivo: mantenimento";
+
+  // Mostra l'avviso solo quando lo scostamento dal 45% è reale anche a video.
+  // Tra 44,5% e 45% l'interfaccia arrotonda infatti a 45%: avvisare in quel caso
+  // produrrebbe una contraddizione apparente (es. "45% En" ma "sotto il 45%").
+  const coherenceNote = carbEnergyPct < 0.445
+    ? `<br><small>ⓘ I carboidrati rappresentano circa ${carbEnergyPct.toLocaleString("it-IT", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 })} dell'energia: leggermente sotto l'intervallo di riferimento dopo l'aggiustamento moderato dei grassi. Il risultato viene mantenuto senza forzare artificialmente la distribuzione.</small>`
+    : "";
+
+  showTargetCalculatorMessage(`
+    <strong>Target impostati.</strong><br>
+    Mantenimento stimato: circa <strong>${roundedMaintenance} kcal</strong><br>
+    ${goalText}
+    <div class="target-engine-result-grid">
+      <span>🔥 ${roundedTargetKcal} kcal</span>
+      <span>🥩 ${targetPro} g</span>
+      <span>🥑 ${targetFat} g (${roundedFatPct}% En)</span>
+      <span>🍞 ${targetCarb} g (${roundedCarbPct}% En)</span>
+      <span>🍬 Zuccheri totali — limite: &lt; ${targetSugar} g</span>
+      <span>💧 ${targetWater} ml</span>
+    </div>
+    <small>Proteine: ${proteinGKg.toFixed(1)} g/kg. Zuccheri totali: limite LARN &lt;15% En, non target da raggiungere.</small>
+    ${coherenceNote}
+  `);
 }
 
 
@@ -19219,7 +19446,14 @@ async function saveCustomTargets() {
 
 
 
-
+  userSettings = {
+    ...(userSettings && typeof userSettings === "object" ? userSettings : {}),
+    targetCalculationMeta: {
+      version: 2,
+      mode: "manual",
+      updatedAt: new Date().toISOString()
+    }
+  };
 
   updateTargetDisplays();
 
