@@ -9368,7 +9368,33 @@ html[data-theme="light"]
 
 
       <label
-        class="full"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
+      >
+        <span style="
+          color:var(--subtext);
+          font-size:1rem;
+          font-weight:800;
+        ">
+          Peso (g)
+        </span>
+
+        <input
+          type="number"
+          id="edit-food-weight"
+          placeholder="Peso opzionale g"
+          step="1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
         style="
           display:flex;
           flex-direction:column;
@@ -11510,6 +11536,122 @@ html[data-theme="light"]
 
 
     </div>
+
+
+    <section class="help2-science">
+
+      <div class="help2-science-header">
+
+        <span>📚</span>
+
+        <div>
+          <div class="help2-kicker">
+            APPROFONDIMENTO
+          </div>
+          <h3>Basi del calcolo dei fabbisogni</h3>
+        </div>
+
+      </div>
+
+      <p>
+        Il calcolo automatico dei fabbisogni e dei target
+        energetici utilizza equazioni predittive comunemente
+        impiegate in ambito nutrizionale.
+      </p>
+
+      <p>
+        Si tratta comunque di stime e non di misurazioni
+        dirette del metabolismo o del dispendio energetico
+        individuale.
+      </p>
+
+
+      <div class="help2-science-grid">
+
+        <div class="help2-science-item">
+
+          <strong>Metabolismo Basale (BMR)</strong>
+
+          <p>
+            Viene stimato mediante formule predittive basate
+            su sesso, età, peso e altezza. Formule come
+            Mifflin-St Jeor e le revisioni di Harris-Benedict
+            sono comunemente utilizzate per questo tipo di stima.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Livello di attività fisica (PAL)</strong>
+
+          <p>
+            Al metabolismo basale viene applicato un fattore
+            di attività per ottenere una stima del dispendio
+            energetico complessivo.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Deficit, mantenimento e surplus</strong>
+
+          <p>
+            In base all'obiettivo scelto, Diario FIT può
+            applicare una riduzione, mantenere il fabbisogno
+            stimato oppure applicare un incremento calorico.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Ripartizione dei macronutrienti</strong>
+
+          <p>
+            I target dei macronutrienti forniscono
+            un riferimento pratico per distribuire
+            l'apporto nutrizionale della giornata.
+          </p>
+
+        </div>
+
+
+        <div class="help2-science-item">
+
+          <strong>Valori nutrizionali e porzioni</strong>
+
+          <p>
+            Per gli alimenti predefiniti, Diario FIT utilizza
+            come riferimento primario le Tabelle di Composizione
+            degli Alimenti del CREA – Centro di ricerca
+            Alimenti e Nutrizione.
+          </p>
+
+          <p>
+            Quando un alimento o una preparazione non possiede
+            una composizione univoca vengono utilizzati valori
+            medi indicativi. Quantità reali, marche, ricette,
+            condimenti e cottura possono modificare il risultato.
+          </p>
+
+          <p>
+            <a
+              href="https://www.crea.gov.it/en/-/tabella-di-composizione-degli-alimenti"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Consulta la fonte ufficiale CREA</a>
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
 
 
     <section class="help2-warning">
@@ -17514,6 +17656,8 @@ function editSavedFood(index) {
   document.getElementById("edit-food-fat").value = food.fat ?? 0;
   document.getElementById("edit-food-carb").value = food.carb ?? 0;
   document.getElementById("edit-food-sugar").value = food.sugar ?? 0;
+  document.getElementById("edit-food-weight").value =
+    Number(food.weight) > 0 ? Number(food.weight) : "";
   document.getElementById("edit-food-water").value = food.water ?? 0;
 
   document.getElementById("edit-food-modal").style.display = "flex";
@@ -17562,12 +17706,18 @@ async function saveEditedFood() {
     document.getElementById("edit-food-sugar").value
   );
 
+  const weightRaw =
+    document.getElementById("edit-food-weight").value.trim();
+
+  const weight =
+    weightRaw === "" ? 0 : parseFloat(weightRaw);
+
   const water = parseFloat(
     document.getElementById("edit-food-water").value
   );
 
   if (
-    [kcal, pro, fat, carb, sugar, water].some(
+    [kcal, pro, fat, carb, sugar, weight, water].some(
       value => Number.isNaN(value)
     )
   ) {
@@ -17583,6 +17733,7 @@ async function saveEditedFood() {
     fat,
     carb,
     sugar,
+    weight,
     water
   };
 
