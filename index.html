@@ -9368,7 +9368,33 @@ html[data-theme="light"]
 
 
       <label
-        class="full"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:5px;
+          min-width:0;
+        "
+      >
+        <span style="
+          color:var(--subtext);
+          font-size:1rem;
+          font-weight:800;
+        ">
+          Peso (g)
+        </span>
+
+        <input
+          type="number"
+          id="edit-food-weight"
+          placeholder="Peso opzionale g"
+          step="1"
+          min="0"
+          style="width:100%;"
+        >
+      </label>
+
+
+      <label
         style="
           display:flex;
           flex-direction:column;
@@ -17630,6 +17656,8 @@ function editSavedFood(index) {
   document.getElementById("edit-food-fat").value = food.fat ?? 0;
   document.getElementById("edit-food-carb").value = food.carb ?? 0;
   document.getElementById("edit-food-sugar").value = food.sugar ?? 0;
+  document.getElementById("edit-food-weight").value =
+    Number(food.weight) > 0 ? Number(food.weight) : "";
   document.getElementById("edit-food-water").value = food.water ?? 0;
 
   document.getElementById("edit-food-modal").style.display = "flex";
@@ -17678,12 +17706,18 @@ async function saveEditedFood() {
     document.getElementById("edit-food-sugar").value
   );
 
+  const weightRaw =
+    document.getElementById("edit-food-weight").value.trim();
+
+  const weight =
+    weightRaw === "" ? 0 : parseFloat(weightRaw);
+
   const water = parseFloat(
     document.getElementById("edit-food-water").value
   );
 
   if (
-    [kcal, pro, fat, carb, sugar, water].some(
+    [kcal, pro, fat, carb, sugar, weight, water].some(
       value => Number.isNaN(value)
     )
   ) {
@@ -17699,6 +17733,7 @@ async function saveEditedFood() {
     fat,
     carb,
     sugar,
+    weight,
     water
   };
 
