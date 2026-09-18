@@ -1407,7 +1407,7 @@ html[data-theme="light"] .quick-btn-label {
   gap: 6px;
 }
 
-.gemini-btn {
+.ai-disabled-btn {
   padding: 6px 9px;
 
   border:
@@ -1423,11 +1423,11 @@ html[data-theme="light"] .quick-btn-label {
   font-weight: 800;
 }
 
-.gemini-btn:disabled {
+.ai-disabled-btn:disabled {
   opacity: .6;
 }
 
-.gemini-hint {
+.ai-disabled-hint {
   color: var(--muted);
 
   font-size: .66rem;
@@ -1435,11 +1435,11 @@ html[data-theme="light"] .quick-btn-label {
   margin-top: 4px;
 }
 
-.gemini-hint a {
+.ai-disabled-hint a {
   color: var(--blue);
 }
 
-.gemini-error {
+.ai-disabled-error {
   display: none;
 
   margin-top: 8px;
@@ -2271,7 +2271,7 @@ html[data-theme="light"] .quick-btn-label {
     );
 }
 
-#info-modal .info2-card-gemini {
+#info-modal .info2-card-ai-disabled {
   border-color:
     rgba(56,189,248,.18);
 
@@ -2493,7 +2493,7 @@ html[data-theme="light"]
 }
 
 html[data-theme="light"]
-#info-modal .info2-card-gemini {
+#info-modal .info2-card-ai-disabled {
   background:
     linear-gradient(
       145deg,
@@ -2817,7 +2817,7 @@ html[data-theme="light"]
   grid-column: 1 / -1;
 }
 
-#help-modal .help2-gemini {
+#help-modal .help2-ai-disabled {
   grid-column: 1 / -1;
 
   border-color:
@@ -3064,7 +3064,7 @@ html[data-theme="light"]
 }
 
 html[data-theme="light"]
-#help-modal .help2-gemini {
+#help-modal .help2-ai-disabled {
   background:
     linear-gradient(
       145deg,
@@ -3130,7 +3130,7 @@ html[data-theme="light"]
   }
 
   #help-modal .help2-card-wide,
-  #help-modal .help2-gemini {
+  #help-modal .help2-ai-disabled {
     grid-column: auto;
   }
 
@@ -5745,9 +5745,9 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 }
 
 
-/* ---------- GEMINI / BLU ---------- */
+/* ---------- AI DISATTIVATA / BLU ---------- */
 
-.gemini-btn {
+.ai-disabled-btn {
   position: relative;
   overflow: hidden;
 
@@ -5775,7 +5775,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
     background .18s ease;
 }
 
-.gemini-btn:hover {
+.ai-disabled-btn:hover {
   border-color: rgba(96,165,250,.70);
 
   background:
@@ -5934,7 +5934,7 @@ input, select, .food-picker-trigger { font-size: .94rem; }
 .food-picker-trigger:active,
 .add-selected:active,
 .save-food-btn:active,
-.gemini-btn:active,
+.ai-disabled-btn:active,
 .delete-btn:active,
 .header-progress-btn:active {
   transform: translateY(1px) scale(.985);
@@ -5980,7 +5980,7 @@ html[data-theme="light"] .save-food-btn {
   text-shadow: none;
 }
 
-html[data-theme="light"] .gemini-btn {
+html[data-theme="light"] .ai-disabled-btn {
   background:
     linear-gradient(
       145deg,
@@ -6023,7 +6023,7 @@ html[data-theme="light"] .header-progress-btn {
 .btn:disabled,
 .mini-btn:disabled,
 .toolbar-btn:disabled,
-.gemini-btn:disabled,
+.ai-disabled-btn:disabled,
 .add-selected:disabled,
 .save-food-btn:disabled {
   opacity: .55;
@@ -6578,7 +6578,7 @@ html[data-theme="light"] .meal-focus-card #meal-category {
   line-height: 1.15;
 }
 
-.free-entry-gemini {
+.free-entry-ai-disabled {
   flex: 0 0 auto;
   min-height: 30px;
 
@@ -6847,7 +6847,7 @@ html[data-theme="light"] .free-metric input {
     font-size: .57rem;
   }
 
-  .free-entry-gemini {
+  .free-entry-ai-disabled {
     padding: 5px 8px;
     font-size: .64rem;
   }
@@ -6897,7 +6897,7 @@ html[data-theme="light"] .free-metric input {
     flex-basis: 26px;
   }
 
-  .free-entry-gemini {
+  .free-entry-ai-disabled {
     padding: 4px 7px;
   }
 
@@ -7753,10 +7753,10 @@ html[data-theme="light"]
 
 <style>
 /* =========================================================
-   MASCOTTE GEMINI — DIARIO FIT
+   STILI AI DISATTIVATI — DIARIO FIT
 ========================================================= */
 
-.gemini-mascot {
+.ai-disabled-mascot {
   width:24px;
   height:24px;
   object-fit:contain;
@@ -7765,12 +7765,12 @@ html[data-theme="light"]
   flex:0 0 auto;
 }
 
-.gemini-mascot-title {
+.ai-disabled-mascot-title {
   width:28px;
   height:28px;
 }
 
-.gemini-btn {
+.ai-disabled-btn {
   display:flex;
   align-items:center;
   justify-content:center;
@@ -7995,7 +7995,7 @@ html[data-theme="light"]
 
 
 #missing-today-modal
-.missing-today-gemini-btn {
+.missing-today-ai-disabled-btn {
   width:100%;
 
   min-height:40px;
@@ -8014,7 +8014,7 @@ html[data-theme="light"]
 
 
 #missing-today-modal
-.missing-today-gemini-result {
+.missing-today-ai-disabled-result {
   margin-top:10px;
 }
 
@@ -8165,7 +8165,7 @@ html[data-theme="light"]
   }
 
   #missing-today-modal
-  .missing-today-gemini-btn {
+  .missing-today-ai-disabled-btn {
     min-height:38px;
 
     margin-top:8px;
@@ -9032,24 +9032,9 @@ html[data-theme="light"] .missing-today-legend {
         <span class="free-entry-title-icon">✍️</span>
         <div>
           <h2>Inserimento libero</h2>
-          <small>Compila manualmente o usa Gemini</small>
+          <small>Compila manualmente calorie, macro e quantità</small>
         </div>
       </div>
-
-      <button
-        type="button"
-        class="gemini-btn free-entry-gemini"
-        onclick="toggleGeminiModal()"
-      >
-        <img
-          src="mascotte-gemini-128.png"
-          class="gemini-mascot"
-          alt=""
-          aria-hidden="true"
-        >
-        <span>Gemini</span>
-      </button>
-
     </div>
 
 
@@ -9782,33 +9767,6 @@ html[data-theme="light"] .missing-today-legend {
         Gli zuccheri sono un limite da non superare. Per l’acqua il target è un riferimento da raggiungere, non un tetto massimo.
       </p>
     </details>
-
-
-    <button
-      type="button"
-      id="missing-today-gemini-btn"
-      class="gemini-btn missing-today-gemini-btn"
-      onclick="askMissingTodayGemini()"
-    >
-      <img
-        src="mascotte-gemini-128.png"
-        class="gemini-mascot"
-        alt=""
-        aria-hidden="true"
-      >
-      <span>Suggeriscimi cosa potrei mangiare</span>
-    </button>
-
-
-    <div
-      id="missing-today-gemini"
-      class="missing-today-gemini-result"
-      style="display:none;"
-    >
-      <!-- Suggerimenti Gemini -->
-    </div>
-
-
     <button
       type="button"
       class="save-food-btn missing-today-close-btn"
@@ -9821,143 +9779,6 @@ html[data-theme="light"] .missing-today-legend {
 
 </div>
 
-
-<!-- =====================================================
-     MODAL CHIEDI A GEMINI
-===================================================== -->
-
-<div
-  class="modal-overlay"
-  id="gemini-modal"
->
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h3 style="
-        display:flex;
-        align-items:center;
-        gap:8px;
-      ">
-        <img
-          src="mascotte-gemini-128.png"
-          class="gemini-mascot gemini-mascot-title"
-          alt=""
-          aria-hidden="true"
-        >
-        <span>Chiedi a Gemini</span>
-      </h3>
-
-      <button
-        class="modal-close"
-        onclick="toggleGeminiModal()"
-      >
-        ✕
-      </button>
-
-    </div>
-
-
-    <p>
-      Descrivi cosa stai mangiando (anche al ristorante,
-      in modo libero). Gemini stimerà kcal e macro e
-      compilerà i campi dell'Inserimento libero.
-    </p>
-
-
-    <label>
-      Descrizione del pasto
-    </label>
-
-    <textarea
-      id="gemini-description"
-      placeholder="es. Trancio di tagliata di manzo circa 200g con patate al forno e un bicchiere di vino rosso"
-    ></textarea>
-
-    <div style="margin-top:10px;">
-      <label style="display:block; margin-bottom:6px;">
-        📷 Foto del pasto
-      </label>
-
-      <input
-        type="file"
-        id="gemini-photo-input"
-        accept="image/jpeg,image/png,image/webp"
-        capture="environment"
-        style="display:none;"
-      >
-
-      <label
-        for="gemini-photo-input"
-        style="
-          display:inline-flex;
-          align-items:center;
-          justify-content:center;
-          gap:6px;
-          padding:8px 12px;
-          border-radius:10px;
-          background:var(--blue);
-          color:#0b0f14;
-          font-size:.82rem;
-          font-weight:800;
-          cursor:pointer;
-        "
-      >
-        📷 Scatta foto
-      </label>
-
-      <div
-        id="gemini-photo-preview"
-        style="display:none; margin-top:8px;"
-      ></div>
-    </div>
-
-
-    <div class="gemini-hint">
-      🔐 Gemini utilizza il server sicuro di Diario FIT.
-    </div>
-
-
-    <div
-      class="result-preview"
-      id="gemini-result-preview"
-      style="display:none;"
-    >
-      <b>Risultato:</b>
-      <div id="gemini-result-content"></div>
-    </div>
-
-    <div
-      class="gemini-error"
-      id="gemini-error"
-    ></div>
-
-
-    <div class="inline-group" style="margin-top:10px;">
-
-      <button
-        class="btn"
-        id="gemini-ask-btn"
-        onclick="askGemini()"
-      >
-        Chiedi a Gemini
-      </button>
-
-      <button
-        class="btn primary"
-        id="gemini-use-btn"
-        onclick="applyGeminiToForm()"
-        style="display:none;"
-      >
-        Usa valori
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
 
 
 <!-- =====================================================
@@ -10922,8 +10743,7 @@ html[data-theme="light"] .missing-today-legend {
         <p>
           Gli alimenti possono essere registrati tramite
           inserimenti rapidi personalizzabili, catalogo,
-          pasti salvati, inserimento libero oppure
-          con il supporto di Gemini.
+          pasti salvati oppure inserimento libero.
         </p>
 
         <p>
@@ -10932,37 +10752,6 @@ html[data-theme="light"] .missing-today-legend {
         </p>
 
       </section>
-
-
-      <section class="info2-card info2-card-gemini">
-
-        <div class="info2-card-title">
-          <span class="info2-card-icon">🤖</span>
-          <h4>Supporto Gemini</h4>
-        </div>
-
-        <p>
-          È possibile descrivere un alimento oppure fotografare
-          un pasto per ottenere una stima di alimento, porzione,
-          calorie e macronutrienti.
-        </p>
-
-        <p>
-          Quando disponibili, Diario FIT mostra anche
-          informazioni sui condimenti, un intervallo calorico,
-          il livello di affidabilità della stima
-          ed eventuali avvertenze.
-        </p>
-
-        <p class="info2-small-note">
-          Le stime ottenute da una descrizione o da una foto
-          sono indicative: quantità e condimenti non sempre
-          possono essere determinati con precisione.
-        </p>
-
-      </section>
-
-
       <section class="info2-card">
 
         <div class="info2-card-title">
@@ -11119,9 +10908,8 @@ html[data-theme="light"] .missing-today-legend {
 
       <p>
         Diario FIT è uno strumento personale di monitoraggio.
-        I valori nutrizionali, i calcoli dei fabbisogni
-        e le stime ottenute con Gemini devono essere
-        considerati indicativi e non sostituiscono
+        I valori nutrizionali e i calcoli dei fabbisogni
+        devono essere considerati indicativi e non sostituiscono
         il parere di un medico, dietista,
         biologo nutrizionista o altro professionista
         sanitario qualificato.
@@ -11361,56 +11149,12 @@ html[data-theme="light"] .missing-today-legend {
         </p>
 
         <p>
-          Il campo <strong>Peso</strong> può essere utilizzato
-          anche dopo una stima Gemini. Se Gemini ha stimato
-          una porzione in grammi e conosci il peso reale,
-          modificando il peso Diario FIT ricalcola
-          proporzionalmente calorie e macronutrienti.
+          Se conosci il peso reale dell'alimento, puoi indicarlo
+          nel campo <strong>Peso</strong> e modificare manualmente
+          calorie e macronutrienti quando necessario.
         </p>
 
       </section>
-
-
-      <section class="help2-card help2-gemini">
-
-        <div class="help2-card-title">
-          <span>🤖</span>
-          <h4>Chiedi a Gemini</h4>
-        </div>
-
-        <p>
-          Puoi descrivere liberamente ciò che stai mangiando
-          oppure scattare o allegare una foto del pasto.
-        </p>
-
-        <p>
-          Gemini propone una stima dell'alimento, della porzione,
-          delle calorie e dei macronutrienti.
-        </p>
-
-        <p>
-          Quando possibile vengono indicati anche il condimento
-          rilevato, un intervallo calorico plausibile,
-          il livello di affidabilità della stima
-          ed eventuali avvertenze.
-        </p>
-
-        <div class="help2-tip">
-          Olio, salse e altri condimenti possono incidere
-          sensibilmente sulle calorie senza poter essere
-          quantificati con precisione da una fotografia.
-        </div>
-
-        <p>
-          Il valore centrale proposto può essere utilizzato
-          per compilare l'inserimento, ma resta una stima:
-          controlla sempre il risultato e correggilo se conosci
-          quantità o ingredienti più precisi.
-        </p>
-
-      </section>
-
-
       <section class="help2-card">
 
         <div class="help2-card-title">
@@ -12172,11 +11916,8 @@ let profiles;
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
 let foodPickerMode = "normal";
-let lastGeminiData = null;
 
-let missingTodaySnapshot = null;
 
-let geminiWeightBase = null;
 let editingProfileId = null;
 
 let editingSavedMealIndex = -1;
@@ -18513,777 +18254,6 @@ function removeSavedMealDraftItem(index) {
 
 
 /* =========================================================
-   CHIEDI A GEMINI
-========================================================= */
-
-function toggleGeminiModal() {
-
-  const modal =
-    document.getElementById(
-      "gemini-modal"
-    );
-
-  const opening =
-    modal.style.display !== "flex";
-
-  modal.style.display =
-    opening ? "flex" : "none";
-
-  if (opening) {
-
-    showGeminiError("");
-
-    document.getElementById(
-      "gemini-result-preview"
-    ).style.display = "none";
-
-    document.getElementById(
-      "gemini-use-btn"
-    ).style.display = "none";
-
-  }
-
-}
-
-
-function showGeminiError(msg) {
-
-  const el =
-    document.getElementById(
-      "gemini-error"
-    );
-
-  if (!msg) {
-    el.style.display = "none";
-    el.innerText = "";
-  } else {
-    el.style.display = "block";
-    el.innerText = msg;
-  }
-
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const photoInput = document.getElementById("gemini-photo-input");
-
-  if (photoInput) {
-    photoInput.addEventListener("change", async () => {
-      const file = photoInput.files && photoInput.files[0];
-
-      try {
-        await prepareGeminiPhoto(file);
-        showGeminiError("");
-      } catch (err) {
-        geminiImageBase64 = "";
-        geminiImageMimeType = "";
-        photoInput.value = "";
-
-        const preview = document.getElementById(
-          "gemini-photo-preview"
-        );
-
-        if (preview) {
-          preview.innerHTML = "";
-          preview.style.display = "none";
-        }
-
-        showGeminiError(
-          err.message || "Errore nella preparazione della foto."
-        );
-      }
-    });
-  }
-});
-
-
-let geminiImageBase64 = "";
-let geminiImageMimeType = "";
-
-async function prepareGeminiPhoto(file) {
-  if (!file) {
-    geminiImageBase64 = "";
-    geminiImageMimeType = "";
-    return;
-  }
-
-  const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    throw new Error("Formato foto non supportato. Usa JPG, PNG o WebP.");
-  }
-
-  const maxInputBytes = 25 * 1024 * 1024;
-
-  if (file.size > maxInputBytes) {
-    throw new Error(
-      "La foto supera 25 MB e non può essere elaborata."
-    );
-  }
-
-  const image = await createImageBitmap(file);
-
-  const maxOutputBytes = 120000;
-  const initialMaxDimension = 1280;
-
-  let maxDimension = initialMaxDimension;
-  let blob = null;
-
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    image.close();
-    throw new Error("Impossibile preparare la foto.");
-  }
-
-  const qualities = [
-    0.82,
-    0.74,
-    0.66,
-    0.58,
-    0.50
-  ];
-
-  /*
-   * Prima riduciamo la qualità JPEG.
-   * Se non basta, riduciamo progressivamente anche
-   * la risoluzione e riproviamo.
-   */
-  while (maxDimension >= 480 && !blob) {
-
-    const scale = Math.min(
-      1,
-      maxDimension / Math.max(
-        image.width,
-        image.height
-      )
-    );
-
-    canvas.width = Math.max(
-      1,
-      Math.round(image.width * scale)
-    );
-
-    canvas.height = Math.max(
-      1,
-      Math.round(image.height * scale)
-    );
-
-    ctx.drawImage(
-      image,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    for (const quality of qualities) {
-
-      const candidate = await new Promise(resolve =>
-        canvas.toBlob(
-          resolve,
-          "image/jpeg",
-          quality
-        )
-      );
-
-      if (!candidate) {
-        image.close();
-        throw new Error(
-          "Impossibile comprimere la foto."
-        );
-      }
-
-      if (candidate.size <= maxOutputBytes) {
-        blob = candidate;
-        break;
-      }
-    }
-
-    if (!blob) {
-      maxDimension = Math.floor(
-        maxDimension * 0.80
-      );
-    }
-  }
-
-  image.close();
-
-  if (!blob) {
-    throw new Error(
-      "La foto non può essere ridotta abbastanza per Gemini."
-    );
-  }
-
-  const base64 = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const result = String(reader.result || "");
-      const comma = result.indexOf(",");
-
-      resolve(
-        comma >= 0
-          ? result.slice(comma + 1)
-          : result
-      );
-    };
-
-    reader.onerror = () =>
-      reject(
-        new Error("Impossibile leggere la foto.")
-      );
-
-    reader.readAsDataURL(blob);
-  });
-
-  geminiImageBase64 = base64;
-  geminiImageMimeType = "image/jpeg";
-
-  const preview = document.getElementById(
-    "gemini-photo-preview"
-  );
-
-  if (preview) {
-    preview.innerHTML =
-      `<div style="font-size:.82rem; color:var(--accent); font-weight:700;">` +
-      `📷 Foto pronta per l'analisi` +
-      `</div>`;
-
-    preview.style.display = "block";
-  }
-}
-
-
-async function askGemini() {
-
-  const description =
-    document.getElementById(
-      "gemini-description"
-    ).value.trim();
-
-  showGeminiError("");
-
-  document.getElementById(
-    "gemini-result-preview"
-  ).style.display = "none";
-
-  document.getElementById(
-    "gemini-use-btn"
-  ).style.display = "none";
-
-  if (!description && !geminiImageBase64) {
-
-    showGeminiError(
-      "Descrivi cosa stai mangiando oppure scegli una foto."
-    );
-
-    return;
-
-  }
-
-  let token =
-    localStorage.getItem(
-      "diario_backend_token"
-    ) || "";
-
-  if (!token) {
-
-    showGeminiError(
-      "Effettua prima l'accesso a Diario FIT."
-    );
-
-    return;
-
-  }
-
-  const askBtn =
-    document.getElementById(
-      "gemini-ask-btn"
-    );
-
-  const originalLabel =
-    askBtn.innerHTML;
-
-  askBtn.disabled = true;
-  askBtn.innerHTML = "⏳ Sto pensando...";
-
-  try {
-
-    let response =
-      await fetch(
-        "https://diario-fit-api.paolodicaro-3d.workers.dev/api/gemini/estimate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            description,
-            imageBase64: geminiImageBase64 || "",
-            imageMimeType: geminiImageMimeType || ""
-          })
-        }
-      );
-
-    let data =
-      await response.json();
-
-    // Sessione scaduta/non valida:
-    // eliminiamo solo il token e chiediamo un nuovo accesso.
-    if (
-      response.status === 401
-      ||
-      data.error === "AUTH_REQUIRED"
-    ) {
-
-      localStorage.removeItem(
-        "diario_backend_token"
-      );
-
-      throw new Error(
-        "La sessione è scaduta. Accedi nuovamente per utilizzare Gemini."
-      );
-
-    }
-
-    if (!response.ok || !data.ok || !data.result) {
-
-      throw new Error(
-        data.error
-        ||
-        `Errore Gemini HTTP ${response.status}.`
-      );
-
-    }
-
-    const result = data.result;
-
-    const kcal =
-      Math.round(Number(result.kcal)) || 0;
-
-    const pro =
-      Math.round(Number(result.pro) * 10) / 10;
-
-    const fat =
-      Math.round(Number(result.fat) * 10) / 10;
-
-    const carb =
-      Math.round(Number(result.carb) * 10) / 10;
-
-    const sugar =
-      Math.round(Number(result.sugar || 0) * 10) / 10;
-
-    const name =
-      (result.name && String(result.name).trim())
-      ||
-      description
-      ||
-      "Stima da foto";
-
-    const portion =
-      (result.portion && String(result.portion).trim())
-      ||
-      "";
-
-    const condiment =
-      (result.condiment && String(result.condiment).trim())
-      ||
-      "";
-
-    const confidence =
-      (result.confidence && String(result.confidence).trim().toLowerCase())
-      ||
-      "media";
-
-    const kcalMin =
-      Number.isFinite(Number(result.kcal_min))
-        ? Math.round(Number(result.kcal_min))
-        : kcal;
-
-    const kcalMax =
-      Number.isFinite(Number(result.kcal_max))
-        ? Math.round(Number(result.kcal_max))
-        : kcal;
-
-    const warning =
-      (result.warning && String(result.warning).trim())
-      ||
-      "";
-
-    const nutritionSource =
-      ["label", "web", "estimate"].includes(String(result.nutrition_source || "").toLowerCase())
-        ? String(result.nutrition_source).toLowerCase()
-        : "estimate";
-
-    const sourceLabel =
-      (result.source_label && String(result.source_label).trim())
-      ||
-      "";
-
-    lastGeminiData = {
-      name,
-      portion,
-      kcal,
-      pro,
-      fat,
-      carb,
-      sugar,
-      condiment,
-      confidence,
-      kcalMin,
-      kcalMax,
-      warning,
-      nutritionSource,
-      sourceLabel
-    };
-
-    const confidenceLabel =
-      lastGeminiData.confidence === "alta"
-        ? "🟢 Alta"
-        : lastGeminiData.confidence === "bassa"
-          ? "🔴 Bassa"
-          : "🟡 Media";
-
-    const sourceDisplay =
-      lastGeminiData.nutritionSource === "label"
-        ? "🏷️ Etichetta nutrizionale"
-        : lastGeminiData.nutritionSource === "web"
-          ? "🌐 Dati web verificati"
-          : "🤖 Stima AI";
-
-    const portionLabel =
-      lastGeminiData.nutritionSource === "estimate"
-        ? "Porzione stimata"
-        : "Porzione";
-
-    const showKcalRange =
-      lastGeminiData.kcalMin !== lastGeminiData.kcal
-      ||
-      lastGeminiData.kcalMax !== lastGeminiData.kcal;
-
-    document.getElementById(
-      "gemini-result-content"
-    ).innerHTML =
-      `<b>${escapeHTML(lastGeminiData.name)}</b><br>` +
-      (
-        lastGeminiData.portion
-          ? `<span style="font-size:.84rem; opacity:.9;">🍽️ ${portionLabel}: ${escapeHTML(lastGeminiData.portion)}</span><br>`
-          : ""
-      ) +
-      `🔥 ${kcal} kcal · ` +
-      `🥩 ${pro}g P · ` +
-      `🥑 ${fat}g G · ` +
-      `🍞 ${carb}g C · ` +
-      `🍬 ${sugar}g Z` +
-      (
-        showKcalRange
-          ? `<br><span style="font-size:.82rem; opacity:.9;">📊 Intervallo stimato: ${lastGeminiData.kcalMin}–${lastGeminiData.kcalMax} kcal</span>`
-          : ""
-      ) +
-      (
-        lastGeminiData.condiment
-          ? `<br><span style="font-size:.82rem; opacity:.9;">🫒 Condimento: ${escapeHTML(lastGeminiData.condiment)}</span>`
-          : ""
-      ) +
-      `<br><span style="font-size:.82rem; opacity:.9;">🔎 Fonte nutrizionale: ${sourceDisplay}${lastGeminiData.sourceLabel ? ` · ${escapeHTML(lastGeminiData.sourceLabel)}` : ""}</span>` +
-      `<br><span style="font-size:.82rem; opacity:.9;">🎯 Affidabilità: ${confidenceLabel}</span>` +
-      (
-        lastGeminiData.warning
-          ? `<br><span style="font-size:.80rem; opacity:.88;">⚠️ ${escapeHTML(lastGeminiData.warning)}</span>`
-          : ""
-      );
-
-    document.getElementById(
-      "gemini-result-preview"
-    ).style.display = "block";
-
-    document.getElementById(
-      "gemini-use-btn"
-    ).style.display = "inline-block";
-
-  } catch (err) {
-
-    const isGeminiApiError =
-      err.message === "GEMINI_API_ERROR";
-
-    const errorMessage =
-      isGeminiApiError
-        ? "Si è verificato un problema nella comunicazione con Gemini. Potrebbe essere un momento di sovraccarico del servizio o un problema di rete. Riprova tra qualche istante."
-        : (
-            err.message
-            ||
-            "Errore nella richiesta a Gemini."
-          );
-
-    const errorBox =
-      document.getElementById(
-        "gemini-error"
-      );
-
-    if (errorBox) {
-
-      errorBox.style.display = "block";
-      errorBox.style.background = "transparent";
-      errorBox.style.border = "none";
-      errorBox.style.padding = "0";
-
-      errorBox.innerHTML = `
-        <div style="
-          padding:18px;
-          border-radius:18px;
-          background:
-            linear-gradient(
-              135deg,
-              rgba(120,20,28,.34),
-              rgba(55,18,26,.46)
-            );
-          border:2px solid rgba(255,70,78,.95);
-          box-shadow:
-            0 0 12px rgba(255,50,60,.42),
-            0 0 28px rgba(255,40,55,.20),
-            inset 0 0 22px rgba(255,55,65,.08);
-        ">
-
-          <div style="
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:14px;
-          ">
-            <span style="
-              font-size:2rem;
-              line-height:1;
-              filter:
-                drop-shadow(
-                  0 0 6px rgba(255,75,75,.65)
-                );
-            ">
-              ⚠️
-            </span>
-
-            <div style="
-              font-size:1.12rem;
-              font-weight:900;
-              color:#fff;
-            ">
-              Gemini non ha risposto
-            </div>
-          </div>
-
-          <div style="
-            font-size:.94rem;
-            line-height:1.65;
-            text-align:justify;
-            color:rgba(255,255,255,.88);
-          ">
-            ${escapeHTML(errorMessage)}
-          </div>
-
-          <button
-            type="button"
-            class="btn"
-            onclick="askGemini()"
-            style="
-              margin-top:16px;
-              padding:10px 16px;
-              width:auto;
-              border:1px solid rgba(255,75,75,.85);
-              box-shadow:
-                0 0 10px rgba(255,55,65,.28);
-            "
-          >
-            🔄 Riprova
-          </button>
-
-        </div>
-      `;
-
-    }
-
-  } finally {
-
-    askBtn.disabled = false;
-    askBtn.innerHTML = originalLabel;
-
-  }
-
-}
-
-
-
-function recalculateCustomFromWeight() {
-
-  if (
-    !geminiWeightBase ||
-    !geminiWeightBase.weight ||
-    geminiWeightBase.weight <= 0
-  ) {
-    return;
-  }
-
-  const newWeight =
-    parseFloat(
-      document.getElementById(
-        "custom-weight"
-      ).value
-    );
-
-  if (
-    !Number.isFinite(newWeight) ||
-    newWeight <= 0
-  ) {
-
-    document.getElementById("custom-kcal").value = 0;
-    document.getElementById("custom-pro").value = 0;
-    document.getElementById("custom-fat").value = 0;
-    document.getElementById("custom-carb").value = 0;
-    document.getElementById("custom-sugar").value = 0;
-
-    return;
-  }
-
-  const ratio =
-    newWeight / geminiWeightBase.weight;
-
-
-  function setScaledValue(
-    elementId,
-    baseValue,
-    decimals = 1
-  ) {
-
-    const value =
-      (Number(baseValue) || 0) * ratio;
-
-    document.getElementById(
-      elementId
-    ).value =
-      Number(
-        value.toFixed(decimals)
-      );
-  }
-
-
-  setScaledValue(
-    "custom-kcal",
-    geminiWeightBase.kcal,
-    0
-  );
-
-  setScaledValue(
-    "custom-pro",
-    geminiWeightBase.pro,
-    1
-  );
-
-  setScaledValue(
-    "custom-fat",
-    geminiWeightBase.fat,
-    1
-  );
-
-  setScaledValue(
-    "custom-carb",
-    geminiWeightBase.carb,
-    1
-  );
-
-  setScaledValue(
-    "custom-sugar",
-    geminiWeightBase.sugar,
-    1
-  );
-
-}
-
-
-function applyGeminiToForm() {
-
-  if (!lastGeminiData) {
-    return;
-  }
-
-  document.getElementById(
-    "custom-name"
-  ).value =
-    lastGeminiData.name;
-
-  document.getElementById(
-    "custom-kcal"
-  ).value =
-    lastGeminiData.kcal;
-
-  document.getElementById(
-    "custom-pro"
-  ).value =
-    lastGeminiData.pro;
-
-  document.getElementById(
-    "custom-fat"
-  ).value =
-    lastGeminiData.fat;
-
-  document.getElementById(
-    "custom-carb"
-  ).value =
-    lastGeminiData.carb;
-
-  document.getElementById(
-    "custom-sugar"
-  ).value =
-    lastGeminiData.sugar;
-
-  document.getElementById(
-    "custom-water"
-  ).value = "";
-
-
-  const portionText =
-    String(lastGeminiData.portion || "");
-
-  const weightMatch =
-    portionText.match(/(\d+(?:[.,]\d+)?)\s*g\b/i);
-
-  const estimatedWeight =
-    weightMatch
-      ? parseFloat(
-          weightMatch[1].replace(",", ".")
-        )
-      : null;
-
-
-  document.getElementById(
-    "custom-weight"
-  ).value =
-    estimatedWeight || "";
-
-
-  geminiWeightBase =
-    estimatedWeight && estimatedWeight > 0
-      ? {
-          weight: estimatedWeight,
-          kcal: Number(lastGeminiData.kcal) || 0,
-          pro: Number(lastGeminiData.pro) || 0,
-          fat: Number(lastGeminiData.fat) || 0,
-          carb: Number(lastGeminiData.carb) || 0,
-          sugar: Number(lastGeminiData.sugar) || 0
-        }
-      : null;
-
-
-  toggleGeminiModal();
-
-}
-
-
-/* =========================================================
    CALCOLATORE TARGET
 ========================================================= */
 
@@ -20246,8 +19216,6 @@ document.getElementById("meal-category").addEventListener("change", () => {
 
   selectedFoodValue = "";
   selectedFoodDisplayText = "";
-  lastGeminiData = null;
-  geminiWeightBase = null;
 
   const selectedLabel =
     document.getElementById("selected-food-label");
@@ -20629,8 +19597,6 @@ async function addCustom() {
   await saveUserSettingsToBackend();
 
   await saveAndRender();
-
-  geminiWeightBase = null;
 
   resetMealCategory();
 
@@ -21406,39 +20372,6 @@ function openMissingTodayModal() {
   totSugar = Math.round(totSugar * 10) / 10;
   totWater = Math.round(totWater);
 
-
-  missingTodaySnapshot = {
-    current: {
-      kcal: totKcal,
-      pro: totPro,
-      fat: totFat,
-      carb: totCarb,
-      sugar: totSugar,
-      water: totWater
-    },
-
-    targets: {
-      kcal: TARGETS.kcal,
-      pro: TARGETS.pro,
-      fat: TARGETS.fat,
-      carb: TARGETS.carb,
-      sugar: TARGETS.sugar,
-      water: TARGETS.water
-    }
-  };
-
-
-  const geminiBox =
-    document.getElementById(
-      "missing-today-gemini"
-    );
-
-  if (geminiBox) {
-    geminiBox.style.display = "none";
-    geminiBox.innerHTML = "";
-  }
-
-
   function renderMissingValue(
     elementId,
     icon,
@@ -21664,317 +20597,6 @@ function openMissingTodayModal() {
   document.getElementById(
     "missing-today-modal"
   ).style.display = "flex";
-}
-
-
-async function askMissingTodayGemini() {
-
-  const box =
-    document.getElementById(
-      "missing-today-gemini"
-    );
-
-  const btn =
-    document.getElementById(
-      "missing-today-gemini-btn"
-    );
-
-  if (
-    !box ||
-    !btn ||
-    !missingTodaySnapshot
-  ) {
-    return;
-  }
-
-  const originalLabel =
-    btn.innerHTML;
-
-  btn.disabled = true;
-  btn.innerHTML = "⏳ Sto pensando...";
-
-  box.style.display = "block";
-  box.innerHTML = `
-    <div style="
-      padding:12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--muted);
-      text-align:center;
-    ">
-      <div style="
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:8px;
-      ">
-        <img
-          src="mascotte-gemini-128.png"
-          class="gemini-mascot"
-          alt=""
-          aria-hidden="true"
-        >
-        <span>Gemini sta preparando alcune proposte...</span>
-      </div>
-    </div>
-  `;
-
-  try {
-
-    const data =
-      await apiFetch(
-        "/api/gemini/suggestions",
-        {
-          method: "POST",
-          body: JSON.stringify(
-            missingTodaySnapshot
-          )
-        }
-      );
-
-    const result =
-      data.result || {};
-
-    const suggestions =
-      Array.isArray(result.suggestions)
-        ? result.suggestions
-        : [];
-
-    if (suggestions.length < 1) {
-      throw new Error(
-        "Nessun suggerimento disponibile."
-      );
-    }
-
-    const cards =
-      suggestions
-        .map((item, index) => {
-
-          return `
-            <div style="
-              margin-top:10px;
-              padding:12px;
-              border-radius:14px;
-              background:rgba(255,255,255,.045);
-              border:1px solid rgba(255,255,255,.08);
-            ">
-
-              <div style="
-                display:flex;
-                align-items:flex-start;
-                gap:8px;
-              ">
-                <span style="
-                  font-size:1.05rem;
-                  font-weight:900;
-                  color:var(--accent);
-                ">
-                  ${index + 1}.
-                </span>
-
-                <div style="flex:1; min-width:0;">
-
-                  <div style="
-                    font-weight:900;
-                    margin-bottom:3px;
-                  ">
-                    ${escapeHTML(item.name || "Proposta")}
-                  </div>
-
-                  ${
-                    item.portion
-                      ? `
-                        <div style="
-                          font-size:.82rem;
-                          color:var(--muted);
-                          margin-bottom:6px;
-                        ">
-                          🍽️ ${escapeHTML(item.portion)}
-                        </div>
-                      `
-                      : ""
-                  }
-
-                  <div style="
-                    font-size:.84rem;
-                    line-height:1.45;
-                    margin-bottom:7px;
-                  ">
-                    ${escapeHTML(item.reason || "")}
-                  </div>
-
-                  <div style="
-                    font-size:.80rem;
-                    line-height:1.5;
-                    color:var(--muted);
-                  ">
-                    🔥 ${Number(item.kcal) || 0} kcal ·
-                    🥩 ${Number(item.pro) || 0}g P ·
-                    🥑 ${Number(item.fat) || 0}g G ·
-                    🍞 ${Number(item.carb) || 0}g C ·
-                    🍬 ${Number(item.sugar) || 0}g Z
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-          `;
-        })
-        .join("");
-
-    box.innerHTML = `
-      <div style="
-        padding:12px;
-        border-radius:16px;
-        background:
-          linear-gradient(
-            135deg,
-            rgba(255,159,28,.10),
-            rgba(80,190,255,.06)
-          );
-        border:1px solid rgba(255,159,28,.18);
-      ">
-
-        <div style="
-          font-weight:900;
-          margin-bottom:5px;
-          display:flex;
-          align-items:center;
-          gap:7px;
-        ">
-          <img
-            src="mascotte-gemini-128.png"
-            class="gemini-mascot"
-            alt=""
-            aria-hidden="true"
-          >
-          <span>Suggerimenti Gemini</span>
-        </div>
-
-        ${
-          result.summary
-            ? `
-              <div style="
-                font-size:.86rem;
-                line-height:1.45;
-                color:var(--muted);
-              ">
-                ${escapeHTML(result.summary)}
-              </div>
-            `
-            : ""
-        }
-
-        ${cards}
-
-        <div style="
-          margin-top:10px;
-          font-size:.74rem;
-          line-height:1.4;
-          color:var(--muted);
-          opacity:.9;
-        ">
-          ℹ️ Le proposte sono indicative: puoi scegliere liberamente
-          cosa mangiare e modificarne quantità o composizione.
-        </div>
-
-      </div>
-    `;
-
-  } catch (err) {
-
-    const isGeminiApiError =
-      err.message === "GEMINI_API_ERROR";
-
-    const errorMessage =
-      isGeminiApiError
-        ? "Si è verificato un problema nella comunicazione con Gemini. Potrebbe essere un momento di sovraccarico del servizio o un problema di rete. Riprova tra qualche istante."
-        : (
-            err.message
-            ||
-            "Errore nella richiesta a Gemini."
-          );
-
-    box.innerHTML = `
-      <div style="
-        padding:18px;
-        border-radius:18px;
-        background:
-          linear-gradient(
-            135deg,
-            rgba(120,20,28,.34),
-            rgba(55,18,26,.46)
-          );
-        border:2px solid rgba(255,70,78,.95);
-        box-shadow:
-          0 0 12px rgba(255,50,60,.42),
-          0 0 28px rgba(255,40,55,.20),
-          inset 0 0 22px rgba(255,55,65,.08);
-      ">
-
-        <div style="
-          display:flex;
-          align-items:center;
-          gap:12px;
-          margin-bottom:14px;
-        ">
-          <span style="
-            font-size:2rem;
-            line-height:1;
-            filter:
-              drop-shadow(
-                0 0 6px rgba(255,75,75,.65)
-              );
-          ">
-            ⚠️
-          </span>
-
-          <div style="
-            font-size:1.12rem;
-            font-weight:900;
-            color:#fff;
-          ">
-            Gemini non ha risposto
-          </div>
-        </div>
-
-        <div style="
-          font-size:.94rem;
-          line-height:1.65;
-          text-align:justify;
-          color:rgba(255,255,255,.88);
-        ">
-          ${escapeHTML(errorMessage)}
-        </div>
-
-        <button
-          type="button"
-          class="btn"
-          onclick="askMissingTodayGemini()"
-          style="
-            margin-top:16px;
-            padding:10px 16px;
-            width:auto;
-            border:1px solid rgba(255,75,75,.85);
-            box-shadow:
-              0 0 10px rgba(255,55,65,.28);
-          "
-        >
-          🔄 Riprova
-        </button>
-
-      </div>
-    `;
-
-  } finally {
-
-    btn.disabled = false;
-    btn.innerHTML = originalLabel;
-
-  }
-
 }
 
 
