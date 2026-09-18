@@ -18917,6 +18917,16 @@ async function askGemini() {
       ||
       "";
 
+    const nutritionSource =
+      ["label", "web", "estimate"].includes(String(result.nutrition_source || "").toLowerCase())
+        ? String(result.nutrition_source).toLowerCase()
+        : "estimate";
+
+    const sourceLabel =
+      (result.source_label && String(result.source_label).trim())
+      ||
+      "";
+
     lastGeminiData = {
       name,
       portion,
@@ -18929,7 +18939,9 @@ async function askGemini() {
       confidence,
       kcalMin,
       kcalMax,
-      warning
+      warning,
+      nutritionSource,
+      sourceLabel
     };
 
     const confidenceLabel =
@@ -18938,6 +18950,18 @@ async function askGemini() {
         : lastGeminiData.confidence === "bassa"
           ? "🔴 Bassa"
           : "🟡 Media";
+
+    const sourceDisplay =
+      lastGeminiData.nutritionSource === "label"
+        ? "🏷️ Etichetta nutrizionale"
+        : lastGeminiData.nutritionSource === "web"
+          ? "🌐 Dati web verificati"
+          : "🤖 Stima AI";
+
+    const portionLabel =
+      lastGeminiData.nutritionSource === "estimate"
+        ? "Porzione stimata"
+        : "Porzione";
 
     const showKcalRange =
       lastGeminiData.kcalMin !== lastGeminiData.kcal
@@ -18950,7 +18974,7 @@ async function askGemini() {
       `<b>${escapeHTML(lastGeminiData.name)}</b><br>` +
       (
         lastGeminiData.portion
-          ? `<span style="font-size:.84rem; opacity:.9;">🍽️ Porzione stimata: ${escapeHTML(lastGeminiData.portion)}</span><br>`
+          ? `<span style="font-size:.84rem; opacity:.9;">🍽️ ${portionLabel}: ${escapeHTML(lastGeminiData.portion)}</span><br>`
           : ""
       ) +
       `🔥 ${kcal} kcal · ` +
@@ -18968,6 +18992,7 @@ async function askGemini() {
           ? `<br><span style="font-size:.82rem; opacity:.9;">🫒 Condimento: ${escapeHTML(lastGeminiData.condiment)}</span>`
           : ""
       ) +
+      `<br><span style="font-size:.82rem; opacity:.9;">🔎 Fonte nutrizionale: ${sourceDisplay}${lastGeminiData.sourceLabel ? ` · ${escapeHTML(lastGeminiData.sourceLabel)}` : ""}</span>` +
       `<br><span style="font-size:.82rem; opacity:.9;">🎯 Affidabilità: ${confidenceLabel}</span>` +
       (
         lastGeminiData.warning
