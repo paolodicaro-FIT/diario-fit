@@ -8164,6 +8164,119 @@ html[data-theme="light"]
   }
 
 }
+
+/* ---------- BARRE INTELLIGENTI 2.0 ---------- */
+
+.missing-today-row {
+  flex-wrap:wrap;
+}
+
+.missing-today-smartbar {
+  position:relative;
+  flex:0 0 100%;
+  height:7px;
+  margin-top:2px;
+  overflow:visible;
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.35);
+}
+
+.missing-today-smartbar-track {
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-radius:inherit;
+  background:var(--smart-gradient);
+  opacity:.34;
+}
+
+.missing-today-smartbar-fill {
+  position:absolute;
+  inset:0 auto 0 0;
+  width:var(--smart-width);
+  max-width:100%;
+  overflow:hidden;
+  border-radius:inherit;
+  background:var(--smart-gradient);
+  opacity:.98;
+  transition:width .35s ease;
+}
+
+.missing-today-smartbar-marker {
+  position:absolute;
+  top:-3px;
+  bottom:-3px;
+  left:var(--smart-marker);
+  width:2px;
+  transform:translateX(-1px);
+  border-radius:2px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 0 5px rgba(255,255,255,.55);
+}
+
+.missing-today-smartbar-dot {
+  position:absolute;
+  top:50%;
+  left:var(--smart-width);
+  width:11px;
+  height:11px;
+  transform:translate(-50%,-50%);
+  border:2px solid rgba(255,255,255,.94);
+  border-radius:50%;
+  background:var(--smart-dot);
+  box-shadow:0 0 8px var(--smart-dot);
+}
+
+.missing-today-smartbar-caption {
+  flex:0 0 100%;
+  display:flex;
+  justify-content:space-between;
+  margin-top:-1px;
+  color:var(--subtext);
+  font-size:.56rem;
+  line-height:1;
+  opacity:.78;
+}
+
+.missing-today-legend {
+  margin-top:8px;
+  padding:7px 9px;
+  border:1px solid rgba(56,189,248,.13);
+  border-radius:11px;
+  background:rgba(255,255,255,.025);
+}
+
+.missing-today-legend summary {
+  cursor:pointer;
+  color:var(--cyan);
+  font-size:.69rem;
+  font-weight:800;
+  user-select:none;
+}
+
+.missing-today-legend p {
+  margin:7px 0 0;
+  color:var(--subtext);
+  font-size:.62rem;
+  line-height:1.35;
+}
+
+html[data-theme="light"] .missing-today-smartbar {
+  background:rgba(15,23,42,.07);
+}
+
+html[data-theme="light"] .missing-today-legend {
+  background:rgba(255,255,255,.55);
+  border-color:rgba(14,165,233,.16);
+}
+
+@media (max-width:560px) {
+  .missing-today-smartbar { height:6px; }
+  .missing-today-smartbar-caption { font-size:.52rem; }
+  .missing-today-legend { margin-top:6px; padding:6px 8px; }
+  .missing-today-legend p { font-size:.58rem; }
+}
 </style>
 
 </head>
@@ -9622,6 +9735,15 @@ html[data-theme="light"]
       <div id="missing-water"></div>
 
     </div>
+
+    <details class="missing-today-legend" id="missing-today-legend">
+      <summary>ⓘ Come leggere le barre</summary>
+      <p>
+        La linea bianca indica il target o limite del giorno. Il pallino mostra dove sei ora.
+        Calorie e macronutrienti usano una fascia operativa intorno al target; non è un nuovo valore LARN.
+        Gli zuccheri sono un limite da non superare. Per l’acqua il target è un riferimento da raggiungere, non un tetto massimo.
+      </p>
+    </details>
 
 
     <button
@@ -21269,107 +21391,108 @@ function openMissingTodayModal() {
 
     if (!element) return;
 
+    const safeTarget = Number(target) || 0;
+    const safeCurrent = Math.max(0, Number(current) || 0);
     const diff =
-      Math.round((target - current) * 10) / 10;
-
+      Math.round((safeTarget - safeCurrent) * 10) / 10;
     const ratio =
-      target > 0
-        ? current / target
-        : 0;
+      safeTarget > 0 ? safeCurrent / safeTarget : 0;
+    const percentage =
+      safeTarget > 0 ? Math.round(ratio * 100) : 0;
 
     let statusText = "";
     let statusSymbol = "";
-    let statusColor = "inherit";
+    let statusColor = "#94a3b8";
     let rowBackground = "transparent";
     let rowBorder = "1px solid rgba(255,255,255,.08)";
     let rowShadow = "none";
 
-    const setGoodStatus =
-      text => {
-        statusSymbol = "✓";
-        statusText = text;
-        statusColor = "#6ee7a8";
-        rowBackground =
-          "linear-gradient(90deg, rgba(80,220,150,.08), rgba(80,220,150,.02))";
-        rowBorder =
-          "1px solid rgba(80,220,150,.18)";
-        rowShadow =
-          "0 0 10px rgba(80,220,150,.08)";
-      };
+    const setGoodStatus = text => {
+      statusSymbol = "✓";
+      statusText = text;
+      statusColor = "#6ee7a8";
+      rowBackground =
+        "linear-gradient(90deg, rgba(80,220,150,.08), rgba(80,220,150,.02))";
+      rowBorder = "1px solid rgba(80,220,150,.18)";
+      rowShadow = "0 0 10px rgba(80,220,150,.08)";
+    };
 
-    const setHighStatus =
-      text => {
-        statusSymbol = "↑";
-        statusText = text;
-        statusColor = "#ff7b73";
-        rowBackground =
-          "linear-gradient(90deg, rgba(255,90,80,.08), rgba(255,90,80,.02))";
-        rowBorder =
-          "1px solid rgba(255,90,80,.20)";
-        rowShadow =
-          "0 0 10px rgba(255,80,70,.10)";
-      };
+    const setNeutralStatus = (symbol, text, color = "#7dd3fc") => {
+      statusSymbol = symbol;
+      statusText = text;
+      statusColor = color;
+    };
 
+    const setHighStatus = text => {
+      statusSymbol = "↑";
+      statusText = text;
+      statusColor = "#ff7b73";
+      rowBackground =
+        "linear-gradient(90deg, rgba(255,90,80,.08), rgba(255,90,80,.02))";
+      rowBorder = "1px solid rgba(255,90,80,.20)";
+      rowShadow = "0 0 10px rgba(255,80,70,.10)";
+    };
+
+    /*
+      Le soglie 90/110% qui sotto sono una FASCIA OPERATIVA UI
+      attorno al target personalizzato, non soglie LARN.
+      LARN entra nella costruzione del target; questa barra serve
+      solo a rendere leggibile la distanza dal target durante la giornata.
+    */
     if (key === "sugar") {
-
-      if (current <= target) {
-        setGoodStatus("nel limite");
+      if (ratio < .80) {
+        setGoodStatus("entro il limite");
+      } else if (ratio <= 1) {
+        setNeutralStatus("!", "vicino al limite", "#fbbf24");
       } else {
-        setHighStatus(
-          `oltre il limite di ${Math.abs(diff)}${unit}`
-        );
+        setHighStatus(`oltre il limite di ${Math.abs(diff)}${unit}`);
       }
-
     } else if (key === "water") {
-
-      if (ratio >= .90) {
-        setGoodStatus("buona");
+      if (ratio >= 1) {
+        setGoodStatus("target raggiunto");
+      } else if (ratio >= .90) {
+        setNeutralStatus("→", "quasi raggiunto", "#6ee7a8");
       } else {
-        statusSymbol = "→";
-        statusText =
-          `mancano ${diff}${unit}`;
+        setNeutralStatus("→", `mancano ${diff}${unit}`);
       }
-
-    } else if (key === "pro") {
-
-      if (
-        ratio >= .90 &&
-        ratio <= 1.15
-      ) {
-        setGoodStatus("in fascia");
-      } else if (ratio < .90) {
-        statusSymbol = "→";
-        statusText =
-          `mancano ${diff}${unit}`;
-      } else {
-        statusSymbol = "•";
-        statusText =
-          `sopra fascia di ${Math.abs(diff)}${unit}`;
-      }
-
     } else {
-
-      if (
-        ratio >= .90 &&
-        ratio <= 1.10
-      ) {
+      if (ratio < .90) {
+        setNeutralStatus("→", `mancano ${diff}${unit}`);
+      } else if (ratio < 1) {
+        setNeutralStatus("→", "quasi in fascia", "#a7f3d0");
+      } else if (ratio <= 1.10) {
         setGoodStatus("in fascia");
-      } else if (ratio < .90) {
-        statusSymbol = "→";
-        statusText =
-          `mancano ${diff}${unit}`;
+      } else if (key === "pro") {
+        setNeutralStatus("•", `sopra fascia di ${Math.abs(diff)}${unit}`, "#fbbf24");
       } else {
-        setHighStatus(
-          `sopra fascia di ${Math.abs(diff)}${unit}`
-        );
+        setHighStatus(`sopra fascia di ${Math.abs(diff)}${unit}`);
       }
-
     }
 
-    const percentage =
-      target > 0
-        ? Math.round(ratio * 100)
-        : 0;
+    const scaleMax = key === "sugar" ? 1.20 : 1.30;
+    const markerPct = (1 / scaleMax) * 100;
+    const positionPct = Math.min(100, Math.max(0, (ratio / scaleMax) * 100));
+
+    let gradient =
+      "linear-gradient(90deg,#38bdf8 0%,#22c55e 69%,#86efac 77%,#f59e0b 88%,#ef4444 100%)";
+    let dotColor = "#38bdf8";
+    let leftCaption = "0%";
+    let rightCaption = "130%";
+
+    if (key === "sugar") {
+      gradient =
+        "linear-gradient(90deg,#22c55e 0%,#22c55e 66%,#f59e0b 83%,#ef4444 100%)";
+      dotColor = ratio <= 1 ? (ratio < .80 ? "#22c55e" : "#f59e0b") : "#ef4444";
+      rightCaption = "120%";
+    } else if (key === "water") {
+      gradient =
+        "linear-gradient(90deg,#38bdf8 0%,#38bdf8 55%,#22c55e 77%,#22c55e 100%)";
+      dotColor = ratio >= 1 ? "#22c55e" : "#38bdf8";
+    } else {
+      dotColor = ratio < .90 ? "#38bdf8" : ratio <= 1.10 ? "#22c55e" : (key === "pro" ? "#f59e0b" : "#ef4444");
+    }
+
+    const markerLabel = key === "sugar" ? "limite" : "target";
 
     element.innerHTML = `
       <div
@@ -21380,44 +21503,39 @@ function openMissingTodayModal() {
           --missing-row-shadow:${rowShadow};
         "
       >
-
-        <span class="missing-today-row-icon">
-          ${icon}
-        </span>
-
+        <span class="missing-today-row-icon">${icon}</span>
         <span class="missing-today-row-main">
-
-          <strong class="missing-today-row-label">
-            ${label}
-          </strong>
-
+          <strong class="missing-today-row-label">${label}</strong>
           <small class="missing-today-row-values">
-            ${current}${unit}
+            ${safeCurrent}${unit}
             <span>/</span>
-            ${target}${unit}
-            <span class="missing-today-percentage">
-              · ${percentage}%
-            </span>
+            ${safeTarget}${unit}
+            <span class="missing-today-percentage">· ${percentage}%</span>
           </small>
-
         </span>
-
-        <span
-          class="missing-today-row-status"
-          style="color:${statusColor};"
+        <span class="missing-today-row-status" style="color:${statusColor};">
+          <span class="missing-today-status-symbol">${statusSymbol}</span>
+          <span>${statusText}</span>
+        </span>
+        <div
+          class="missing-today-smartbar"
+          style="--smart-gradient:${gradient};--smart-width:${positionPct}%;--smart-marker:${markerPct}%;--smart-dot:${dotColor};"
+          role="img"
+          aria-label="${label}: ${percentage}% del ${markerLabel}"
         >
-          <span class="missing-today-status-symbol">
-            ${statusSymbol}
-          </span>
-          <span>
-            ${statusText}
-          </span>
-        </span>
-
+          <span class="missing-today-smartbar-track"></span>
+          <span class="missing-today-smartbar-fill"></span>
+          <span class="missing-today-smartbar-marker" title="${markerLabel}"></span>
+          <span class="missing-today-smartbar-dot"></span>
+        </div>
+        <div class="missing-today-smartbar-caption" aria-hidden="true">
+          <span>${leftCaption}</span>
+          <span>${markerLabel} 100%</span>
+          <span>${rightCaption}</span>
+        </div>
       </div>
     `;
   }
-
 
   renderMissingValue(
     "missing-kcal",
