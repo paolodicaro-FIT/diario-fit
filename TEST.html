@@ -824,6 +824,44 @@ button:active {
   overflow: hidden;
 }
 
+.progress.smart-progress {
+  position: relative;
+  overflow: visible;
+  background: #27313d;
+}
+
+.progress.smart-progress .progress-fill {
+  width: 100% !important;
+  background: var(--home-progress-gradient) !important;
+  transition: background .35s ease;
+}
+
+.progress.smart-progress::after {
+  content: "";
+  position: absolute;
+  left: var(--home-progress-position, 0%);
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border: 2px solid rgba(255,255,255,.96);
+  border-radius: 50%;
+  background: #19bdf2;
+  box-shadow: 0 0 8px rgba(25,189,242,.75);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left .35s ease;
+}
+
+.progress.smart-progress.smart-sugar::after {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34,197,94,.70);
+}
+
+.progress.smart-progress.smart-water::after {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56,189,248,.75);
+}
+
 .progress-fill {
   height: 100%;
 
@@ -22059,48 +22097,68 @@ function updateProgressBar(
       elementId
     );
 
+  if (!bar) return;
+
+  const track = bar.parentElement;
 
   if (!target || target <= 0) {
     bar.style.width = "0%";
+    if (track) {
+      track.classList.remove(
+        "smart-progress",
+        "smart-sugar",
+        "smart-water"
+      );
+    }
     return;
   }
 
+  const ratio =
+    Math.max(0, Number(current) / Number(target));
 
-  const pct =
-    Math.min(
-      100,
-      Math.round(
-        (current / target) * 100
-      )
+  const isSugar =
+    elementId === "bar-sugar";
+
+  const isWater =
+    elementId === "bar-water";
+
+  const scaleMax =
+    isSugar ? 1.20 : 1.30;
+
+  const position =
+    Math.min(100, (ratio / scaleMax) * 100);
+
+  const standardGradient =
+    "linear-gradient(90deg, #35d5f3 0%, #19e68c 34%, #19c978 45%, #ffd34d 58%, #f59e0b 72%, #ef4444 100%)";
+
+  const sugarGradient =
+    "linear-gradient(90deg, #22c55e 0%, #22c55e 62%, #84cc16 75%, #f59e0b 88%, #ef4444 100%)";
+
+  const waterGradient =
+    "linear-gradient(90deg, #38bdf8 0%, #22d3ee 28%, #34d399 58%, #22c55e 77%, #166534 100%)";
+
+  if (track) {
+    track.classList.add("smart-progress");
+    track.classList.toggle("smart-sugar", isSugar);
+    track.classList.toggle("smart-water", isWater);
+    track.style.setProperty(
+      "--home-progress-position",
+      position + "%"
     );
-
-
-  bar.style.width =
-    pct + "%";
-
-
-  if (pct < 75) {
-
-    bar.style.background =
-      "var(--accent)";
-
+    track.style.setProperty(
+      "--home-progress-gradient",
+      isSugar
+        ? sugarGradient
+        : isWater
+          ? waterGradient
+          : standardGradient
+    );
   }
 
-  else if (pct <= 100) {
-
-    bar.style.background =
-      "var(--green)";
-
-  }
-
-  else {
-
-    bar.style.background =
-      "var(--red)";
-
-  }
-
+  bar.style.width = "100%";
+  bar.style.background = "var(--home-progress-gradient)";
 }
+
 
 
 /* =========================================================
