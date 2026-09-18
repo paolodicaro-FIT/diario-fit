@@ -13164,6 +13164,25 @@ function renderAdminUsers(users) {
             ? "🔒 ACCESSO SCADUTO"
             : "⏳ ACCESSO TEMPORANEO";
 
+      const lastActivityMs =
+        user.last_activity_at
+          ? Date.parse(user.last_activity_at)
+          : NaN;
+
+      const lastActivityLabel =
+        Number.isFinite(lastActivityMs)
+          ? new Date(lastActivityMs).toLocaleString(
+              "it-IT",
+              {
+                day:"2-digit",
+                month:"2-digit",
+                year:"numeric",
+                hour:"2-digit",
+                minute:"2-digit"
+              }
+            )
+          : "mai";
+
       return `
         <div
           class="admin-user-row"
@@ -13217,6 +13236,16 @@ function renderAdminUsers(users) {
               "
             >
               ${accessLabel}
+            </div>
+
+            <div
+              style="
+                font-size:.8em;
+                margin-top:4px;
+                opacity:.78;
+              "
+            >
+              🕒 Ultima attività: ${escapeHtml(lastActivityLabel)}
             </div>
 
           </div>
