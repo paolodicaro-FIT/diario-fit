@@ -10521,7 +10521,7 @@ html[data-theme="light"] .missing-today-legend {
         </div>
         <div class="bodycomp-actions">
           <button class="bodycomp-save" onclick="saveBodyComposition()">Salva misurazione</button>
-          <button class="bodycomp-secondary" onclick="prefillBodyComposition()">↻ Recupera dati disponibili</button>
+          <button class="bodycomp-secondary" onclick="restoreLastBodyComposition()">↻ Ripristina ultimi dati salvati</button>
         </div>
         <div id="bodycomp-message" class="bodycomp-message"></div>
       </section>
@@ -14838,8 +14838,16 @@ function bodyCompNum(id) {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
-function prefillBodyComposition() {
-  const last = bodyCompositionHistory.length ? bodyCompositionHistory[bodyCompositionHistory.length - 1] : null;
+function getLatestProgressWeight() {
+  if (!Array.isArray(weightHistory) || !weightHistory.length) return null;
+  const valid = weightHistory
+    .map(x => ({ date: String(x.date || ""), weight: Number(x.weight) }))
+    .filter(x => Number.isFinite(x.weight) && x.weight > 0)
+    .sort((a,b) => a.date.localeCompare(b.date));
+  return valid.length ? valid[valid.length - 1] : null;
+}
+
+function applyBodyCompositionData(last, useProgressWeight = true) {
   const map = {
     "bodycomp-sex":"sex","bodycomp-height":"height","bodycomp-weight":"weight",
     "bodycomp-waist":"waist","bodycomp-navel":"navel","bodycomp-neck":"neck",
@@ -14852,11 +14860,42 @@ function prefillBodyComposition() {
       if (el && last[key] != null) el.value=last[key];
     });
   }
+  const progressWeight = useProgressWeight ? getLatestProgressWeight() : null;
   const weightEl=document.getElementById("bodycomp-weight");
-  if (weightEl && weightHistory.length) {
-    weightEl.value=Number(weightHistory[weightHistory.length-1].weight).toFixed(1);
-  }
+  if (weightEl && progressWeight) weightEl.value=progressWeight.weight.toFixed(1);
   updateBodyCompositionEstimate();
+  return progressWeight;
+}
+
+function prefillBodyComposition() {
+  const last = bodyCompositionHistory.length
+    ? bodyCompositionHistory[bodyCompositionHistory.length - 1]
+    : null;
+  applyBodyCompositionData(last, true);
+}
+
+function restoreLastBodyComposition() {
+  const msg=document.getElementById("bodycomp-message");
+  const last = bodyCompositionHistory.length
+    ? bodyCompositionHistory[bodyCompositionHistory.length - 1]
+    : null;
+  const progressWeight = applyBodyCompositionData(last, true);
+
+  if (!last && !progressWeight) {
+    if (msg) {
+      msg.textContent="Nessun dato salvato disponibile da ripristinare.";
+      msg.className="bodycomp-message error";
+    }
+    return;
+  }
+
+  const parts=[];
+  if (last) parts.push("misure del "+last.date);
+  if (progressWeight) parts.push("peso da Progressi"+(progressWeight.date ? " ("+progressWeight.date+")" : ""));
+  if (msg) {
+    msg.textContent="✓ Ripristinati: "+parts.join(" · ")+".";
+    msg.className="bodycomp-message success";
+  }
 }
 
 function calculateBodyFatEstimate(data) {
