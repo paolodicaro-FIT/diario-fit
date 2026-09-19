@@ -7871,6 +7871,43 @@ html[data-theme="light"]
 .stats-progress-bodycomp .stats-progress-choice-icon{filter:drop-shadow(0 0 8px rgba(245,158,11,.35))}
 @media(max-width:720px){.bodycomp-grid{grid-template-columns:1fr}.bodycomp-fields{grid-template-columns:1fr}.bodycomp-field-wide{grid-column:auto}.bodycomp-result{grid-template-columns:repeat(3,1fr)}}
 
+
+/* =========================================================
+   COMPOSIZIONE CORPOREA — V1.1 GLOW + BARRE INTELLIGENTI
+========================================================= */
+#bodycomp-modal .bodycomp-modal-content{max-width:1040px;border:1px solid rgba(59,190,255,.28);box-shadow:0 0 28px rgba(0,151,255,.13),0 0 70px rgba(124,58,237,.08)}
+#bodycomp-modal .modal-header h3{color:#ffbf3f;text-shadow:0 0 12px rgba(255,177,32,.28)}
+.bodycomp-form-card,.bodycomp-visual-card,.bodycomp-history-card,.bodycomp-compare-card{box-shadow:inset 0 0 22px rgba(57,189,248,.025),0 0 18px rgba(0,0,0,.12)}
+.bodycomp-visual-card{border-color:rgba(34,211,238,.24);background:linear-gradient(145deg,rgba(8,31,52,.42),rgba(19,25,42,.45))}
+.bodycomp-silhouette{position:relative;color:#6ed7ff}
+.bodycomp-silhouette:before{content:"";position:absolute;width:150px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(36,180,255,.22),rgba(34,211,238,.06) 45%,transparent 70%);filter:blur(10px)}
+.bodycomp-silhouette svg{position:relative;z-index:1;filter:drop-shadow(0 0 5px rgba(91,210,255,.95)) drop-shadow(0 0 16px rgba(31,154,255,.55))}
+.bodycomp-stat{border:1px solid rgba(255,255,255,.08);transition:.2s}
+.bodycomp-stat:nth-child(1){border-color:rgba(232,121,249,.35);box-shadow:0 0 15px rgba(217,70,239,.10)}
+.bodycomp-stat:nth-child(1) strong{color:#f0a1ff;text-shadow:0 0 10px rgba(217,70,239,.35)}
+.bodycomp-stat:nth-child(2){border-color:rgba(250,204,21,.32);box-shadow:0 0 15px rgba(250,204,21,.08)}
+.bodycomp-stat:nth-child(2) strong{color:#ffd76a}
+.bodycomp-stat:nth-child(3){border-color:rgba(52,211,153,.35);box-shadow:0 0 15px rgba(52,211,153,.09)}
+.bodycomp-stat:nth-child(3) strong{color:#70f1bd;text-shadow:0 0 9px rgba(52,211,153,.25)}
+.bodycomp-save{box-shadow:0 0 16px rgba(245,158,11,.30);transition:.18s}
+.bodycomp-save:hover{transform:translateY(-1px);box-shadow:0 0 24px rgba(245,158,11,.42)}
+.bodycomp-smart-list{display:grid;gap:10px;margin-top:15px}
+.bodycomp-smart-row{display:grid;grid-template-columns:105px 1fr 64px;gap:9px;align-items:center;font-size:.78rem}
+.bodycomp-smart-label{opacity:.88}
+.bodycomp-smart-value{text-align:right;font-weight:700}
+.bodycomp-smart-track{height:8px;border-radius:99px;position:relative;background:linear-gradient(90deg,rgba(56,189,248,.35) 0 30%,rgba(34,197,94,.78) 42% 68%,rgba(250,204,21,.82) 78%,rgba(239,68,68,.85) 100%);box-shadow:inset 0 0 6px rgba(0,0,0,.4)}
+.bodycomp-smart-track:after{content:"";position:absolute;left:var(--pos,50%);top:50%;width:12px;height:12px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 7px #fff,0 0 15px rgba(56,189,248,.85)}
+.bodycomp-smart-caption{grid-column:2/4;font-size:.68rem;opacity:.62;margin-top:-6px}
+.bodycomp-compare-card{margin-top:16px;border:1px solid rgba(139,92,246,.24);border-radius:18px;padding:15px;background:linear-gradient(120deg,rgba(37,99,235,.07),rgba(126,34,206,.07))}
+.bodycomp-compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:11px}
+.bodycomp-delta{padding:10px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}
+.bodycomp-delta small{display:block;opacity:.68;margin-bottom:5px}.bodycomp-delta strong{font-size:.98rem}
+.bodycomp-delta.good strong{color:#61e7a8;text-shadow:0 0 8px rgba(52,211,153,.25)}
+.bodycomp-delta.neutral strong{color:#8bdcff}.bodycomp-delta.warn strong{color:#ffd36b}
+.bodycomp-history-row{border:1px solid rgba(255,255,255,.05)}
+.bodycomp-history-row:hover{border-color:rgba(56,189,248,.18);background:rgba(56,189,248,.055)}
+@media(max-width:720px){.bodycomp-smart-row{grid-template-columns:88px 1fr 58px}.bodycomp-compare-grid{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 
 <style>
@@ -10477,12 +10514,29 @@ html[data-theme="light"] .missing-today-legend {
           <div class="bodycomp-stat"><strong id="bodycomp-fatkg">—</strong><small>Massa grassa</small></div>
           <div class="bodycomp-stat"><strong id="bodycomp-lean">—</strong><small>Massa magra</small></div>
         </div>
+        <div class="bodycomp-smart-list" id="bodycomp-smart-list">
+          <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Peso</span><div class="bodycomp-smart-track" id="bcbar-weight"></div><span class="bodycomp-smart-value" id="bcval-weight">—</span><span class="bodycomp-smart-caption">Indicatore relativo allo storico personale</span></div>
+          <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Vita standard</span><div class="bodycomp-smart-track" id="bcbar-waist"></div><span class="bodycomp-smart-value" id="bcval-waist">—</span><span class="bodycomp-smart-caption">Posizione relativa allo storico personale</span></div>
+          <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Vita ombelico</span><div class="bodycomp-smart-track" id="bcbar-navel"></div><span class="bodycomp-smart-value" id="bcval-navel">—</span><span class="bodycomp-smart-caption">Posizione relativa allo storico personale</span></div>
+          <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Massa grassa</span><div class="bodycomp-smart-track" id="bcbar-bf"></div><span class="bodycomp-smart-value" id="bcval-bf">—</span><span class="bodycomp-smart-caption">Stima antropometrica: usala soprattutto per osservare il trend</span></div>
+        </div>
         <div class="bodycomp-note">
           Metodo di stima: U.S. Navy basato su circonferenze. La silhouette è illustrativa:
           non ricostruisce né diagnostica l'aspetto reale del corpo.
         </div>
       </section>
     </div>
+
+    <section class="bodycomp-compare-card">
+      <strong>📊 Confronto con la precedente</strong>
+      <div class="bodycomp-note" id="bodycomp-compare-note">Salva almeno due rilevazioni per vedere le variazioni.</div>
+      <div class="bodycomp-compare-grid" id="bodycomp-compare-grid">
+        <div class="bodycomp-delta neutral"><small>Peso</small><strong id="bcdelta-weight">—</strong></div>
+        <div class="bodycomp-delta neutral"><small>Vita standard</small><strong id="bcdelta-waist">—</strong></div>
+        <div class="bodycomp-delta neutral"><small>Massa grassa</small><strong id="bcdelta-bf">—</strong></div>
+        <div class="bodycomp-delta neutral"><small>Massa magra</small><strong id="bcdelta-lean">—</strong></div>
+      </div>
+    </section>
 
     <section class="bodycomp-history-card">
       <strong>Storico misurazioni</strong>
@@ -14818,7 +14872,50 @@ function updateBodyCompositionEstimate(data=collectBodyCompositionForm()) {
   set("bodycomp-bf", bf ? bf.toFixed(1).replace(".",",")+" %" : "—");
   set("bodycomp-fatkg", fatKg!=null ? fatKg.toFixed(1).replace(".",",")+" kg" : "—");
   set("bodycomp-lean", lean!=null ? lean.toFixed(1).replace(".",",")+" kg" : "—");
+  updateBodyCompositionSmartBars(data,bf);
+  updateBodyCompositionComparison(data,bf,lean);
   return bf;
+}
+
+function bodyCompHistoryPosition(key,value) {
+  const vals=bodyCompositionHistory.map(x=>Number(x[key])).filter(Number.isFinite);
+  if (!Number.isFinite(value)) return 50;
+  if (vals.length < 2) return 50;
+  const min=Math.min(...vals,value), max=Math.max(...vals,value);
+  if (max===min) return 50;
+  return Math.max(4,Math.min(96,((value-min)/(max-min))*92+4));
+}
+function setBodyCompBar(id,value,label,key) {
+  const bar=document.getElementById("bcbar-"+id), val=document.getElementById("bcval-"+id);
+  if(bar) bar.style.setProperty("--pos",bodyCompHistoryPosition(key,value)+"%");
+  if(val) val.textContent=label;
+}
+function updateBodyCompositionSmartBars(data,bf) {
+  setBodyCompBar("weight",data.weight,data.weight ? data.weight.toFixed(1).replace(".",",")+" kg":"—","weight");
+  setBodyCompBar("waist",data.waist,data.waist ? data.waist.toFixed(1).replace(".",",")+" cm":"—","waist");
+  setBodyCompBar("navel",data.navel,data.navel ? data.navel.toFixed(1).replace(".",",")+" cm":"—","navel");
+  setBodyCompBar("bf",bf,bf ? bf.toFixed(1).replace(".",",")+" %":"—","bodyFat");
+}
+function updateBodyCompositionComparison(data,bf,lean) {
+  const note=document.getElementById("bodycomp-compare-note");
+  const previous=bodyCompositionHistory.slice().reverse().find(x=>x.date!==data.date);
+  const put=(id,current,old,unit,inverse=false)=>{
+    const el=document.getElementById(id); if(!el) return;
+    const card=el.closest(".bodycomp-delta");
+    if(!Number.isFinite(current)||!Number.isFinite(Number(old))){el.textContent="—";card.className="bodycomp-delta neutral";return;}
+    const d=current-Number(old), sign=d>0?"+":"";
+    el.textContent=(d===0?"±0":(sign+d.toFixed(1).replace(".",",")))+" "+unit;
+    const good=inverse ? d<0 : d>0;
+    card.className="bodycomp-delta "+(Math.abs(d)<0.05?"neutral":good?"good":"warn");
+  };
+  if(!previous){if(note)note.textContent="Salva almeno due rilevazioni per vedere le variazioni.";["bcdelta-weight","bcdelta-waist","bcdelta-bf","bcdelta-lean"].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent="—";});return;}
+  if(note) note.textContent="Differenza rispetto alla rilevazione del "+previous.date+".";
+  const prevBf=Number(previous.bodyFat);
+  const prevLean=(Number.isFinite(prevBf)&&Number.isFinite(Number(previous.weight))) ? Number(previous.weight)*(1-prevBf/100) : NaN;
+  put("bcdelta-weight",data.weight,previous.weight,"kg",true);
+  put("bcdelta-waist",data.waist,previous.waist,"cm",true);
+  put("bcdelta-bf",bf,prevBf,"%",true);
+  put("bcdelta-lean",lean,prevLean,"kg",false);
 }
 
 function saveBodyComposition() {
