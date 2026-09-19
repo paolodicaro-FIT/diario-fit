@@ -14828,21 +14828,60 @@ function openAnalysisFromStats() {
 
 
 /* =========================================================
-   COMPOSIZIONE CORPOREA — V1 TEST
-   Persistenza V1: locale al browser. Backend dedicato in V2.
+   COMPOSIZIONE CORPOREA — V2 TEST
+   Persistenza D1 autenticata + localStorage come cache/fallback.
 ========================================================= */
 const BODYCOMP_STORAGE_KEY = "diario_bodycomp_history_v1";
 let bodyCompositionHistory = [];
 
-function loadBodyCompositionHistory() {
+function loadBodyCompositionLocalHistory() {
   try {
     const raw = JSON.parse(localStorage.getItem(BODYCOMP_STORAGE_KEY) || "[]");
-    bodyCompositionHistory = Array.isArray(raw) ? raw : [];
+    return Array.isArray(raw) ? raw : [];
   } catch (_) {
-    bodyCompositionHistory = [];
+    return [];
   }
-  bodyCompositionHistory.sort((a,b) => String(a.date).localeCompare(String(b.date)));
+}
+
+function persistBodyCompositionLocalHistory() {
+  localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
+}
+
+async function loadBodyCompositionHistory() {
+  const localHistory = loadBodyCompositionLocalHistory();
+  bodyCompositionHistory = localHistory.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   renderBodyCompositionHistory();
+
+  if (!localStorage.getItem("diario_backend_token")) return;
+
+  try {
+    const data = await apiFetch("/api/user/body-composition?limit=1000");
+    const serverHistory = Array.isArray(data.history) ? data.history : [];
+
+    // Prima sincronizzazione: importa nel D1 le date presenti solo nel vecchio localStorage.
+    const serverDates = new Set(serverHistory.map(x=>String(x.date)));
+    const localOnly = localHistory.filter(x=>x?.date && !serverDates.has(String(x.date)));
+    for (const item of localOnly) {
+      try {
+        await apiFetch("/api/user/body-composition",{
+          method:"POST",
+          body:JSON.stringify(item)
+        });
+      } catch (_) {}
+    }
+
+    const refreshed = localOnly.length
+      ? await apiFetch("/api/user/body-composition?limit=1000")
+      : data;
+    bodyCompositionHistory = (Array.isArray(refreshed.history) ? refreshed.history : serverHistory)
+      .slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    persistBodyCompositionLocalHistory();
+    renderBodyCompositionHistory();
+    prefillBodyComposition();
+  } catch (error) {
+    // Offline/backend non disponibile: resta operativo lo storico locale.
+    console.warn("Body composition D1 sync fallback:",error);
+  }
 }
 
 function toggleBodyCompositionModal() {
@@ -15051,7 +15090,7 @@ function updateBodyCompositionComparison(data,bf,lean) {
   put("bcdelta-lean",lean,prevLean,"kg",false);
 }
 
-function saveBodyComposition() {
+async function saveBodyComposition() {
   const data=collectBodyCompositionForm();
   const msg=document.getElementById("bodycomp-message");
   if (!data.height || !data.weight || !data.waist || !data.neck) {
@@ -15063,19 +15102,54 @@ function saveBodyComposition() {
     return;
   }
   data.bodyFat=calculateBodyFatEstimate(data);
+
+  let cloudSaved=false;
+  if (localStorage.getItem("diario_backend_token")) {
+    try {
+      await apiFetch("/api/user/body-composition",{
+        method:"POST",
+        body:JSON.stringify(data)
+      });
+      cloudSaved=true;
+    } catch (error) {
+      console.warn("Body composition save fallback:",error);
+    }
+  }
+
   const i=bodyCompositionHistory.findIndex(x=>x.date===data.date);
   if(i>=0) bodyCompositionHistory[i]=data; else bodyCompositionHistory.push(data);
   bodyCompositionHistory.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
-  localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
+  persistBodyCompositionLocalHistory();
   renderBodyCompositionHistory();
   updateBodyCompositionEstimate(data);
-  if(msg){msg.textContent="Misurazione salvata per oggi.";msg.className="bodycomp-message success";}
+  if(msg){
+    msg.textContent=cloudSaved
+      ? "✓ Misurazione salvata e sincronizzata."
+      : "Misurazione salvata sul dispositivo; sincronizzazione cloud non disponibile.";
+    msg.className=cloudSaved ? "bodycomp-message success" : "bodycomp-message";
+  }
 }
 
-function deleteBodyComposition(date) {
+async function deleteBodyComposition(date) {
+  let cloudDeleted=false;
+  if (localStorage.getItem("diario_backend_token")) {
+    try {
+      await apiFetch("/api/user/body-composition?date="+encodeURIComponent(date),{method:"DELETE"});
+      cloudDeleted=true;
+    } catch (error) {
+      console.warn("Body composition delete fallback:",error);
+    }
+  }
   bodyCompositionHistory=bodyCompositionHistory.filter(x=>x.date!==date);
-  localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
+  persistBodyCompositionLocalHistory();
   renderBodyCompositionHistory();
+  const msg=document.getElementById("bodycomp-message");
+  if(msg){
+    msg.textContent=cloudDeleted
+      ? "✓ Misurazione eliminata anche dal cloud."
+      : "Misurazione eliminata dal dispositivo; eliminazione cloud non disponibile.";
+    msg.className=cloudDeleted ? "bodycomp-message success" : "bodycomp-message";
+  }
 }
 
 function renderBodyCompositionHistory() {
