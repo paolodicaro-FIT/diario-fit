@@ -18959,6 +18959,35 @@ function renderQuickCustomizeList() {
 
     }
 
+    const defaultQuickGroup =
+      document.createElement("optgroup");
+
+    defaultQuickGroup.label =
+      "⚡ Rapidi predefiniti";
+
+    DEFAULT_QUICK_ITEMS
+      .forEach((quickItem, quickIndex) => {
+
+        if (quickItem.isWater) {
+          return;
+        }
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          `default:${quickIndex}`;
+
+        option.textContent =
+          `${quickItem.emoji || "⚡"} ${quickItem.label}`;
+
+        defaultQuickGroup.appendChild(option);
+
+      });
+
+    select.appendChild(defaultQuickGroup);
+
+
     if (
       Array.isArray(savedFoods) &&
       savedFoods.length
@@ -19088,6 +19117,31 @@ async function saveQuickCustomization() {
         water: 0,
         weight: 0
       });
+
+      continue;
+
+    }
+
+
+    if (value.startsWith("default:")) {
+
+      const quickIndex =
+        Number(value.split(":")[1]);
+
+      const quickItem =
+        DEFAULT_QUICK_ITEMS[quickIndex];
+
+      if (quickItem && !quickItem.isWater) {
+
+        updated.push({
+          ...quickItem
+        });
+
+      } else {
+
+        updated.push(current);
+
+      }
 
       continue;
 
