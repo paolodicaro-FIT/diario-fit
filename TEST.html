@@ -7841,6 +7841,36 @@ html[data-theme="light"]
 #methodology-modal .energy-goal-note{margin-top:12px!important;padding:12px 14px;border:1px solid rgba(56,189,248,.36);border-radius:15px;background:rgba(56,189,248,.07);font-size:.9rem!important;line-height:1.5!important;color:#cfe8ff!important}
 @media(max-width:560px){#methodology-modal .energy-goal-card{grid-template-columns:46px minmax(0,1fr);gap:10px;padding:14px}#methodology-modal .energy-goal-badge{grid-column:1/-1;margin-top:2px;grid-template-columns:42px 1fr;padding:10px 13px}#methodology-modal .energy-goal-copy strong{font-size:1.14rem}#methodology-modal .energy-goal-copy p{font-size:1rem;line-height:1.58}#methodology-modal .energy-goal-badge b{font-size:1.12rem}#methodology-modal .energy-goal-badge small{font-size:.82rem}#methodology-modal .energy-goal-note{font-size:.96rem!important}}
 
+
+/* =========================================================
+   COMPOSIZIONE CORPOREA — V1 TEST
+========================================================= */
+.bodycomp-modal-content{max-width:900px;width:min(94vw,900px);max-height:90vh;overflow:auto}
+.bodycomp-intro{margin:0 0 14px;color:var(--muted,#aeb7c6);font-size:.92rem}
+.bodycomp-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(240px,.85fr);gap:18px}
+.bodycomp-form-card,.bodycomp-visual-card,.bodycomp-history-card{border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:16px;background:rgba(255,255,255,.035)}
+.bodycomp-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.bodycomp-field label{display:block;font-size:.78rem;opacity:.8;margin-bottom:5px}
+.bodycomp-field input,.bodycomp-field select{width:100%;box-sizing:border-box;border-radius:11px;padding:10px 11px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.18);color:inherit}
+.bodycomp-field-wide{grid-column:1/-1}
+.bodycomp-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.bodycomp-save{border:0;border-radius:12px;padding:10px 15px;font-weight:700;cursor:pointer;background:#f59e0b;color:#161616}
+.bodycomp-secondary{border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 15px;cursor:pointer;background:rgba(255,255,255,.06);color:inherit}
+.bodycomp-message{min-height:1.2em;margin-top:9px;font-size:.86rem}
+.bodycomp-message.success{color:#7ee2a8}.bodycomp-message.error{color:#ff9a9a}
+.bodycomp-silhouette{height:220px;display:flex;align-items:center;justify-content:center}
+.bodycomp-silhouette svg{height:205px;width:auto;filter:drop-shadow(0 0 14px rgba(92,180,255,.20))}
+.bodycomp-result{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.bodycomp-stat{padding:10px 7px;border-radius:12px;background:rgba(255,255,255,.055);text-align:center}
+.bodycomp-stat strong{display:block;font-size:1.18rem}.bodycomp-stat small{opacity:.72;font-size:.72rem}
+.bodycomp-note{font-size:.75rem;line-height:1.35;opacity:.68;margin-top:11px}
+.bodycomp-history-card{margin-top:16px}
+.bodycomp-history-list{display:grid;gap:7px;margin-top:10px;max-height:220px;overflow:auto}
+.bodycomp-history-row{display:grid;grid-template-columns:95px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.045);font-size:.82rem}
+.bodycomp-history-row button{border:0;background:transparent;color:inherit;cursor:pointer;opacity:.72}
+.stats-progress-bodycomp .stats-progress-choice-icon{filter:drop-shadow(0 0 8px rgba(245,158,11,.35))}
+@media(max-width:720px){.bodycomp-grid{grid-template-columns:1fr}.bodycomp-fields{grid-template-columns:1fr}.bodycomp-field-wide{grid-column:auto}.bodycomp-result{grid-template-columns:repeat(3,1fr)}}
+
 </style>
 
 <style>
@@ -10338,8 +10368,126 @@ html[data-theme="light"] .missing-today-legend {
         <span class="stats-progress-choice-arrow">›</span>
       </button>
 
+      <button
+        type="button"
+        class="stats-progress-choice stats-progress-bodycomp"
+        onclick="openBodyCompositionFromStats()"
+      >
+        <span class="stats-progress-choice-icon">🧍</span>
+        <span class="stats-progress-choice-text">
+          <strong>Composizione corporea</strong>
+          <small>Misure, circonferenze e andamento nel tempo</small>
+        </span>
+        <span class="stats-progress-choice-arrow">›</span>
+      </button>
+
     </div>
 
+  </div>
+</div>
+
+
+
+<!-- =====================================================
+     MODAL COMPOSIZIONE CORPOREA — V1 TEST
+========================================================= -->
+<div class="modal-overlay" id="bodycomp-modal">
+  <div class="modal-content bodycomp-modal-content">
+    <div class="modal-header">
+      <h3>🧍 Composizione corporea</h3>
+      <button class="modal-close" onclick="toggleBodyCompositionModal()" title="Chiudi">✕</button>
+    </div>
+
+    <p class="bodycomp-intro">
+      Registra le circonferenze e segui la loro evoluzione. La percentuale di massa grassa,
+      quando calcolabile, è una stima antropometrica indicativa e non una misurazione clinica.
+    </p>
+
+    <div class="bodycomp-grid">
+      <section class="bodycomp-form-card">
+        <div class="bodycomp-fields">
+          <div class="bodycomp-field">
+            <label for="bodycomp-sex">Sesso</label>
+            <select id="bodycomp-sex">
+              <option value="male">Maschio</option>
+              <option value="female">Femmina</option>
+            </select>
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-height">Altezza (cm)</label>
+            <input id="bodycomp-height" type="number" min="130" max="220" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-weight">Peso (kg)</label>
+            <input id="bodycomp-weight" type="number" min="20" max="500" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-waist">Vita standard (cm)</label>
+            <input id="bodycomp-waist" type="number" min="30" max="250" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-navel">Vita all'ombelico (cm)</label>
+            <input id="bodycomp-navel" type="number" min="30" max="250" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-neck">Collo (cm)</label>
+            <input id="bodycomp-neck" type="number" min="20" max="100" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-chest">Torace (cm)</label>
+            <input id="bodycomp-chest" type="number" min="40" max="250" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-hips">Fianchi (cm)</label>
+            <input id="bodycomp-hips" type="number" min="40" max="250" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-arm">Braccio (cm)</label>
+            <input id="bodycomp-arm" type="number" min="10" max="100" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-thigh">Coscia (cm)</label>
+            <input id="bodycomp-thigh" type="number" min="20" max="150" step="0.1">
+          </div>
+          <div class="bodycomp-field">
+            <label for="bodycomp-calf">Polpaccio (cm)</label>
+            <input id="bodycomp-calf" type="number" min="10" max="100" step="0.1">
+          </div>
+        </div>
+        <div class="bodycomp-actions">
+          <button class="bodycomp-save" onclick="saveBodyComposition()">Salva misurazione</button>
+          <button class="bodycomp-secondary" onclick="prefillBodyComposition()">↻ Recupera dati disponibili</button>
+        </div>
+        <div id="bodycomp-message" class="bodycomp-message"></div>
+      </section>
+
+      <section class="bodycomp-visual-card">
+        <div class="bodycomp-silhouette" aria-hidden="true">
+          <svg viewBox="0 0 160 320" role="img">
+            <circle cx="80" cy="34" r="22" fill="none" stroke="currentColor" stroke-width="5"/>
+            <path d="M59 62 C45 77 43 105 47 131 L34 194 M101 62 C115 77 117 105 113 131 L126 194
+                     M58 65 C66 78 94 78 102 65 L108 151 C105 181 98 208 96 230
+                     L108 302 M62 65 L52 151 C55 181 62 208 64 230 L52 302
+                     M64 230 C72 238 88 238 96 230"
+                  fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="bodycomp-result">
+          <div class="bodycomp-stat"><strong id="bodycomp-bf">—</strong><small>Massa grassa stimata</small></div>
+          <div class="bodycomp-stat"><strong id="bodycomp-fatkg">—</strong><small>Massa grassa</small></div>
+          <div class="bodycomp-stat"><strong id="bodycomp-lean">—</strong><small>Massa magra</small></div>
+        </div>
+        <div class="bodycomp-note">
+          Metodo di stima: U.S. Navy basato su circonferenze. La silhouette è illustrativa:
+          non ricostruisce né diagnostica l'aspetto reale del corpo.
+        </div>
+      </section>
+    </div>
+
+    <section class="bodycomp-history-card">
+      <strong>Storico misurazioni</strong>
+      <div id="bodycomp-history-list" class="bodycomp-history-list"></div>
+    </section>
   </div>
 </div>
 
@@ -14502,7 +14650,9 @@ function closeModalWithNavigation(
     ||
     modal.id === "weekly-summary-modal"
     ||
-    modal.id === "personal-analysis-modal";
+    modal.id === "personal-analysis-modal"
+    ||
+    modal.id === "bodycomp-modal";
 
   modal.style.display = "none";
 
@@ -14565,6 +14715,148 @@ function openAnalysisFromStats() {
 
   togglePersonalAnalysisModal();
 
+}
+
+
+
+/* =========================================================
+   COMPOSIZIONE CORPOREA — V1 TEST
+   Persistenza V1: locale al browser. Backend dedicato in V2.
+========================================================= */
+const BODYCOMP_STORAGE_KEY = "diario_bodycomp_history_v1";
+let bodyCompositionHistory = [];
+
+function loadBodyCompositionHistory() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(BODYCOMP_STORAGE_KEY) || "[]");
+    bodyCompositionHistory = Array.isArray(raw) ? raw : [];
+  } catch (_) {
+    bodyCompositionHistory = [];
+  }
+  bodyCompositionHistory.sort((a,b) => String(a.date).localeCompare(String(b.date)));
+  renderBodyCompositionHistory();
+}
+
+function toggleBodyCompositionModal() {
+  const modal = document.getElementById("bodycomp-modal");
+  if (!modal) return;
+  if (getComputedStyle(modal).display !== "none") {
+    closeModalWithNavigation(modal);
+    return;
+  }
+  modal.style.display = "flex";
+  loadBodyCompositionHistory();
+  prefillBodyComposition();
+}
+
+function openBodyCompositionFromStats() {
+  returnToStatsProgress = true;
+  document.getElementById("stats-progress-modal").style.display = "none";
+  toggleBodyCompositionModal();
+}
+
+function bodyCompNum(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const n = Number(String(el.value || "").trim().replace(",", "."));
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+function prefillBodyComposition() {
+  const last = bodyCompositionHistory.length ? bodyCompositionHistory[bodyCompositionHistory.length - 1] : null;
+  const map = {
+    "bodycomp-sex":"sex","bodycomp-height":"height","bodycomp-weight":"weight",
+    "bodycomp-waist":"waist","bodycomp-navel":"navel","bodycomp-neck":"neck",
+    "bodycomp-chest":"chest","bodycomp-hips":"hips","bodycomp-arm":"arm",
+    "bodycomp-thigh":"thigh","bodycomp-calf":"calf"
+  };
+  if (last) {
+    Object.entries(map).forEach(([id,key]) => {
+      const el=document.getElementById(id);
+      if (el && last[key] != null) el.value=last[key];
+    });
+  }
+  const weightEl=document.getElementById("bodycomp-weight");
+  if (weightEl && weightHistory.length) {
+    weightEl.value=Number(weightHistory[weightHistory.length-1].weight).toFixed(1);
+  }
+  updateBodyCompositionEstimate();
+}
+
+function calculateBodyFatEstimate(data) {
+  const h=data.height, waist=data.waist, neck=data.neck, hips=data.hips;
+  if (!(h && waist && neck) || waist <= neck) return null;
+  let density;
+  if (data.sex === "female") {
+    if (!hips || (waist + hips) <= neck) return null;
+    density = 1.29579 - 0.35004*Math.log10(waist + hips - neck) + 0.22100*Math.log10(h);
+  } else {
+    density = 1.0324 - 0.19077*Math.log10(waist - neck) + 0.15456*Math.log10(h);
+  }
+  if (!Number.isFinite(density) || density <= 0) return null;
+  const bf = 495/density - 450;
+  return Number.isFinite(bf) && bf > 1 && bf < 70 ? bf : null;
+}
+
+function collectBodyCompositionForm() {
+  return {
+    date:getLocalISODate(),
+    sex:document.getElementById("bodycomp-sex")?.value || "male",
+    height:bodyCompNum("bodycomp-height"), weight:bodyCompNum("bodycomp-weight"),
+    waist:bodyCompNum("bodycomp-waist"), navel:bodyCompNum("bodycomp-navel"),
+    neck:bodyCompNum("bodycomp-neck"), chest:bodyCompNum("bodycomp-chest"),
+    hips:bodyCompNum("bodycomp-hips"), arm:bodyCompNum("bodycomp-arm"),
+    thigh:bodyCompNum("bodycomp-thigh"), calf:bodyCompNum("bodycomp-calf")
+  };
+}
+
+function updateBodyCompositionEstimate(data=collectBodyCompositionForm()) {
+  const bf=calculateBodyFatEstimate(data);
+  const fatKg=(bf && data.weight) ? data.weight*bf/100 : null;
+  const lean=(fatKg != null) ? data.weight-fatKg : null;
+  const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
+  set("bodycomp-bf", bf ? bf.toFixed(1).replace(".",",")+" %" : "—");
+  set("bodycomp-fatkg", fatKg!=null ? fatKg.toFixed(1).replace(".",",")+" kg" : "—");
+  set("bodycomp-lean", lean!=null ? lean.toFixed(1).replace(".",",")+" kg" : "—");
+  return bf;
+}
+
+function saveBodyComposition() {
+  const data=collectBodyCompositionForm();
+  const msg=document.getElementById("bodycomp-message");
+  if (!data.height || !data.weight || !data.waist || !data.neck) {
+    if(msg){msg.textContent="Inserisci almeno altezza, peso, vita standard e collo.";msg.className="bodycomp-message error";}
+    return;
+  }
+  if (data.sex==="female" && !data.hips) {
+    if(msg){msg.textContent="Per la stima femminile è necessaria anche la circonferenza fianchi.";msg.className="bodycomp-message error";}
+    return;
+  }
+  data.bodyFat=calculateBodyFatEstimate(data);
+  const i=bodyCompositionHistory.findIndex(x=>x.date===data.date);
+  if(i>=0) bodyCompositionHistory[i]=data; else bodyCompositionHistory.push(data);
+  bodyCompositionHistory.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
+  renderBodyCompositionHistory();
+  updateBodyCompositionEstimate(data);
+  if(msg){msg.textContent="Misurazione salvata per oggi.";msg.className="bodycomp-message success";}
+}
+
+function deleteBodyComposition(date) {
+  bodyCompositionHistory=bodyCompositionHistory.filter(x=>x.date!==date);
+  localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
+  renderBodyCompositionHistory();
+}
+
+function renderBodyCompositionHistory() {
+  const box=document.getElementById("bodycomp-history-list");
+  if(!box) return;
+  if(!bodyCompositionHistory.length){box.innerHTML='<div style="opacity:.7;font-size:.84rem">Nessuna misurazione salvata.</div>';return;}
+  box.innerHTML=bodyCompositionHistory.slice().reverse().map(x=>{
+    const bf=Number.isFinite(Number(x.bodyFat)) ? Number(x.bodyFat).toFixed(1).replace(".",",")+"%" : "—";
+    const waist=x.waist ? Number(x.waist).toFixed(1).replace(".",",")+" cm" : "—";
+    return `<div class="bodycomp-history-row"><span>${escapeHTML(String(x.date))}</span><span>Vita ${waist} · Massa grassa ${bf}</span><button type="button" onclick="deleteBodyComposition('${String(x.date).replace(/'/g,"")}')" title="Elimina">🗑️</button></div>`;
+  }).join("");
 }
 
 
@@ -23117,6 +23409,18 @@ function formatReportDate(dateKey) {
     year: "numeric"
   });
 }
+
+
+document.addEventListener("input", function(event) {
+  if (event.target && event.target.closest && event.target.closest("#bodycomp-modal")) {
+    updateBodyCompositionEstimate();
+  }
+});
+document.addEventListener("change", function(event) {
+  if (event.target && event.target.closest && event.target.closest("#bodycomp-modal")) {
+    updateBodyCompositionEstimate();
+  }
+});
 
 </script>
 
