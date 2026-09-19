@@ -14847,43 +14847,90 @@ function persistBodyCompositionLocalHistory() {
   localStorage.setItem(BODYCOMP_STORAGE_KEY,JSON.stringify(bodyCompositionHistory));
 }
 
+function normalizeBodyCompositionForCloud(item) {
+  const n=v => (v === null || v === undefined || v === "") ? null : Number(v);
+  const normalized={
+    date:String(item?.date || getLocalISODate()),
+    sex:item?.sex === "female" ? "female" : "male",
+    height:n(item?.height), weight:n(item?.weight),
+    waist:n(item?.waist), navel:n(item?.navel), neck:n(item?.neck),
+    chest:n(item?.chest), hips:n(item?.hips), arm:n(item?.arm),
+    thigh:n(item?.thigh), calf:n(item?.calf)
+  };
+  const calculated=calculateBodyFatEstimate(normalized);
+  normalized.bodyFat=Number.isFinite(Number(item?.bodyFat))
+    ? Number(item.bodyFat)
+    : calculated;
+  return normalized;
+}
+
 async function loadBodyCompositionHistory() {
   const localHistory = loadBodyCompositionLocalHistory();
   bodyCompositionHistory = localHistory.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   renderBodyCompositionHistory();
 
-  if (!localStorage.getItem("diario_backend_token")) return;
+  const token=localStorage.getItem("diario_backend_token");
+  if (!token) return;
 
+  const msg=document.getElementById("bodycomp-message");
   try {
     const data = await apiFetch("/api/user/body-composition?limit=1000");
     const serverHistory = Array.isArray(data.history) ? data.history : [];
-
-    // Prima sincronizzazione: importa nel D1 le date presenti solo nel vecchio localStorage.
     const serverDates = new Set(serverHistory.map(x=>String(x.date)));
     const localOnly = localHistory.filter(x=>x?.date && !serverDates.has(String(x.date)));
-    for (const item of localOnly) {
+
+    let imported=0;
+    const importErrors=[];
+    for (const raw of localOnly) {
+      const item=normalizeBodyCompositionForCloud(raw);
       try {
         await apiFetch("/api/user/body-composition",{
           method:"POST",
           body:JSON.stringify(item)
         });
-      } catch (_) {}
+        imported++;
+      } catch (error) {
+        importErrors.push(String(item.date)+": "+String(error?.message || error));
+      }
     }
 
-    const refreshed = localOnly.length
+    const refreshed = imported
       ? await apiFetch("/api/user/body-composition?limit=1000")
       : data;
+
     bodyCompositionHistory = (Array.isArray(refreshed.history) ? refreshed.history : serverHistory)
       .slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+
+    // Protezione: se un import fallisce, NON cancelliamo dal cache locale le misure non sincronizzate.
+    if (importErrors.length) {
+      const byDate=new Map(bodyCompositionHistory.map(x=>[String(x.date),x]));
+      localHistory.forEach(x=>{
+        if(x?.date && !byDate.has(String(x.date))) byDate.set(String(x.date),x);
+      });
+      bodyCompositionHistory=[...byDate.values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    }
+
     persistBodyCompositionLocalHistory();
     renderBodyCompositionHistory();
     prefillBodyComposition();
+
+    if (msg && (imported || importErrors.length)) {
+      if (importErrors.length) {
+        msg.textContent="Dati locali protetti. Sincronizzazione cloud non completata: "+importErrors.join(" · ");
+        msg.className="bodycomp-message error";
+      } else {
+        msg.textContent="✓ "+imported+" rilevazione"+(imported===1?"":"i")+" importata"+(imported===1?"":"e")+" nel cloud.";
+        msg.className="bodycomp-message success";
+      }
+    }
   } catch (error) {
-    // Offline/backend non disponibile: resta operativo lo storico locale.
     console.warn("Body composition D1 sync fallback:",error);
+    if(msg){
+      msg.textContent="Dati locali protetti. Cloud non raggiungibile: "+String(error?.message || error);
+      msg.className="bodycomp-message error";
+    }
   }
 }
-
 function toggleBodyCompositionModal() {
   const modal = document.getElementById("bodycomp-modal");
   if (!modal) return;
