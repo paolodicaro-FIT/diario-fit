@@ -36,3 +36,6 @@ TEST-peso-reale-Gemini-completo.html
 TEST-report-2.0-validato.html
 TEST-report-grafico-peso-completo.html
 TEST_PRE_CATALOG_TEST.html
+
+# Archivio locale di sviluppo / file di passaggio
+FileDiPassaggio/
