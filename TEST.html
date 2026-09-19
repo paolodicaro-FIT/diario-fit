@@ -11859,6 +11859,12 @@ applyTheme();
 
 
 
+/* Preset: revisione CREA 2026-09-19, riferimenti dicembre 2019.
+   Fonte: CREA Centro di ricerca Alimenti e Nutrizione, https://www.alimentinutrizione.it
+   Solo le righe marcate CREA sono normalizzate in questa revisione.
+   Valori per la quantità indicata, parte edibile; tracce rese numericamente come 0.
+   Carboidrati disponibili CREA espressi come monosaccaridi, non total carbs con fibra.
+   Ricette e prodotti non identificati restano stime: vedere audit allegato. */
 const DEFAULT_PRESET_FOODS = [
   // 🥗 ANTIPASTI
   { category:"Antipasti", emoji:"🥩", label:"Bresaola — 100 g", value:"🥩 Bresaola — 100 g|152|33|2|0|0|0", weight:100 },
@@ -11866,10 +11872,10 @@ const DEFAULT_PRESET_FOODS = [
   { category:"Antipasti", emoji:"🥩", label:"Prosciutto crudo — 100 g", value:"🥩 Prosciutto crudo — 100 g|270|26|18|0|0|0", weight:100 },
   { category:"Antipasti", emoji:"🥩", label:"Speck — 100 g", value:"🥩 Speck — 100 g|300|30|20|1|0.5|0", weight:100 },
   { category:"Antipasti", emoji:"🍗", label:"Fesa di tacchino affettata — 100 g", value:"🍗 Fesa di tacchino affettata — 100 g|110|23|2|1|1|0", weight:100 },
-  { category:"Antipasti", emoji:"🧀", label:"Mozzarella vaccina — 100 g", value:"🧀 Mozzarella vaccina — 100 g|250|18|19|1|1|0", weight:100 },
+  { category:"Antipasti", emoji:"🧀", label:"Mozzarella vaccina — 100 g", value:"🧀 Mozzarella vaccina — 100 g|253|18.7|19.5|0.7|0.7|0", weight:100 }, // CREA 164820; media di riferimento, dicembre 2019
   { category:"Antipasti", emoji:"🍅", label:"Caprese — porzione media (~250 g)", value:"🍅 Caprese — porzione media (~250 g)|350|20|25|8|6|0", weight:250 },
-  { category:"Antipasti", emoji:"🐟", label:"Salmone affumicato — 100 g", value:"🐟 Salmone affumicato — 100 g|180|22|10|0|0|0", weight:100 },
-  { category:"Antipasti", emoji:"🐟", label:"Tonno al naturale sgocciolato — 100 g", value:"🐟 Tonno al naturale sgocciolato — 100 g|116|26|1|0|0|0", weight:100 },
+  { category:"Antipasti", emoji:"🐟", label:"Salmone affumicato — 100 g", value:"🐟 Salmone affumicato — 100 g|147|25.4|4.5|1.2|1.2|0", weight:100 }, // CREA 122410; media di riferimento, dicembre 2019
+  { category:"Antipasti", emoji:"🐟", label:"Tonno al naturale sgocciolato — 100 g", value:"🐟 Tonno al naturale sgocciolato — 100 g|103|25.1|0.3|0|0|0", weight:100 }, // CREA 123550; media di riferimento, dicembre 2019
   { category:"Antipasti", emoji:"🦐", label:"Gamberi sgusciati — 100 g", value:"🦐 Gamberi sgusciati — 100 g|85|20|1|0|0|0", weight:100 },
   { category:"Antipasti", emoji:"🐙", label:"Polpo — 100 g", value:"🐙 Polpo — 100 g|82|15|1|2|0|0", weight:100 },
   { category:"Antipasti", emoji:"🫒", label:"Olive verdi sgocciolate — 50 g", value:"🫒 Olive verdi sgocciolate — 50 g|70|0.5|7|2|0|0", weight:50 },
@@ -11877,33 +11883,33 @@ const DEFAULT_PRESET_FOODS = [
   { category:"Antipasti", emoji:"🫘", label:"Hummus — 50 g", value:"🫘 Hummus — 50 g|120|4|8|8|0.5|0", weight:50 },
 
   // 🍝 PRIMI
-  { category:"Primi", emoji:"🍝", label:"Pasta di semola — 100 g secca", value:"🍝 Pasta di semola — 100 g secca|350|12|1.5|72|3.5|0", weight:100 },
-  { category:"Primi", emoji:"🍝", label:"Pasta integrale — 100 g secca", value:"🍝 Pasta integrale — 100 g secca|345|13|2.5|65|2.5|0", weight:100 },
-  { category:"Primi", emoji:"🍚", label:"Riso bianco — 100 g secco", value:"🍚 Riso bianco — 100 g secco|360|7|0.7|80|0.1|0", weight:100 },
-  { category:"Primi", emoji:"🍚", label:"Riso basmati — 100 g secco", value:"🍚 Riso basmati — 100 g secco|350|8|0.7|78|0.1|0", weight:100 },
-  { category:"Primi", emoji:"🌾", label:"Cous cous — 100 g secco", value:"🌾 Cous cous — 100 g secco|360|12|1.5|72|2|0", weight:100 },
-  { category:"Primi", emoji:"🌾", label:"Farro — 100 g secco", value:"🌾 Farro — 100 g secco|335|15|2.5|67|0.5|0", weight:100 },
-  { category:"Primi", emoji:"🌾", label:"Orzo — 100 g secco", value:"🌾 Orzo — 100 g secco|350|10|2|73|0.7|0", weight:100 },
-  { category:"Primi", emoji:"🌾", label:"Quinoa — 100 g secca", value:"🌾 Quinoa — 100 g secca|370|14|6|64|2.5|0", weight:100 },
-  { category:"Primi", emoji:"🥔", label:"Gnocchi di patate — 200 g", value:"🥔 Gnocchi di patate — 200 g|300|6|1|63|2|0", weight:200 },
+  { category:"Primi", emoji:"🍝", label:"Pasta di semola — 100 g secca", value:"🍝 Pasta di semola — 100 g secca|341|13.5|1.2|72.7|2.2|0", weight:100 }, // CREA 000800; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🍝", label:"Pasta integrale — 100 g secca", value:"🍝 Pasta integrale — 100 g secca|330|13.3|2.2|64.8|3|0", weight:100 }, // CREA 000850; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🍚", label:"Riso bianco brillato — 100 g secco", value:"🍚 Riso bianco brillato — 100 g secco|334|6.7|0.4|80.4|0.2|0", weight:100 }, // CREA 000100; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🍚", label:"Riso basmati — 100 g secco", value:"🍚 Riso basmati — 100 g secco|367|9|1.9|82.9|1.1|0", weight:100 }, // CREA 000130; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🌾", label:"Cous cous — 100 g secco", value:"🌾 Cous cous — 100 g secco|361|13.7|1.1|76.5|2.7|0", weight:100 }, // CREA 000045; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🌾", label:"Farro perlato — 100 g secco", value:"🌾 Farro perlato — 100 g secco|353|14.6|2.4|69.3|2.4|0", weight:100 }, // CREA 000020; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🌾", label:"Orzo perlato — 100 g secco", value:"🌾 Orzo perlato — 100 g secco|346|9.4|1.5|73.7|1.5|0", weight:100 }, // CREA 000090; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🌾", label:"Quinoa — 100 g secca", value:"🌾 Quinoa — 100 g secca|376|15.4|8.1|57.8|5.3|0", weight:100 }, // CREA 000096; media di riferimento, dicembre 2019
+  { category:"Primi", emoji:"🥔", label:"Gnocchi di patate crudi — 200 g", value:"🥔 Gnocchi di patate crudi — 200 g|328|7.8|0.6|75.8|2.8|0", weight:200 }, // CREA 006590; media di riferimento, dicembre 2019
   { category:"Primi", emoji:"🍝", label:"Lasagne — porzione media (~250 g)", value:"🍝 Lasagne — porzione media (~250 g)|400|24|20|32|6|0", weight:250 },
   { category:"Primi", emoji:"🍚", label:"Risotto — porzione media (~250 g)", value:"🍚 Risotto — porzione media (~250 g)|350|9|12|50|3|0", weight:250 },
   { category:"Primi", emoji:"🍝", label:"Pasta al pomodoro — porzione media (~250 g)", value:"🍝 Pasta al pomodoro — porzione media (~250 g)|330|10|8|52|8|0", weight:250 },
 
   // 🍗 SECONDI
-  { category:"Secondi", emoji:"🍗", label:"Petto di pollo crudo — 100 g", value:"🍗 Petto di pollo crudo — 100 g|110|23|1.5|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🍗", label:"Petto di tacchino crudo — 100 g", value:"🍗 Petto di tacchino crudo — 100 g|110|24|1|0|0|0", weight:100 },
+  { category:"Secondi", emoji:"🍗", label:"Petto di pollo crudo — 100 g", value:"🍗 Petto di pollo crudo — 100 g|100|23.3|0.8|0|0|0", weight:100 }, // CREA 106500; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🍗", label:"Petto di tacchino crudo — 100 g", value:"🍗 Petto di tacchino crudo — 100 g|107|24|1.2|0|0|0", weight:100 }, // CREA 106850; media di riferimento, dicembre 2019
   { category:"Secondi", emoji:"🥩", label:"Manzo magro crudo — 100 g", value:"🥩 Manzo magro crudo — 100 g|170|26|7|0|0|0", weight:100 },
   { category:"Secondi", emoji:"🥩", label:"Vitello magro crudo — 100 g", value:"🥩 Vitello magro crudo — 100 g|160|26|6|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🥩", label:"Lonza di maiale cruda — 100 g", value:"🥩 Lonza di maiale cruda — 100 g|165|27|6|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🥚", label:"Uovo intero — 1 pz (~50 g edibili)", value:"🥚 Uovo intero — 1 pz (~50 g edibili)|70|6.3|4.8|0.4|0.2|0", weight:50 },
-  { category:"Secondi", emoji:"🥚", label:"Albume d'uovo — 100 g", value:"🥚 Albume d'uovo — 100 g|50|11|0.2|0.7|0.7|0", weight:100 },
-  { category:"Secondi", emoji:"🐟", label:"Tonno al naturale sgocciolato — 100 g", value:"🐟 Tonno al naturale sgocciolato — 100 g|116|26|1|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🐟", label:"Salmone crudo — 100 g", value:"🐟 Salmone crudo — 100 g|208|20|13|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🐟", label:"Sgombro crudo — 100 g", value:"🐟 Sgombro crudo — 100 g|205|19|14|0|0|0", weight:100 },
+  { category:"Secondi", emoji:"🥩", label:"Lonza di maiale cruda — 100 g", value:"🥩 Lonza di maiale cruda — 100 g|146|20.7|7|0|0|0", weight:100 }, // CREA 105210; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🥚", label:"Uovo intero crudo — 1 pz (~50 g edibili)", value:"🥚 Uovo intero crudo — 1 pz (~50 g edibili)|64|6.2|4.4|0|0|0", weight:50 }, // CREA 181100; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🥚", label:"Albume d'uovo crudo — 100 g", value:"🥚 Albume d'uovo crudo — 100 g|43|10.7|0|0|0|0", weight:100 }, // CREA 182010; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🐟", label:"Tonno al naturale sgocciolato — 100 g", value:"🐟 Tonno al naturale sgocciolato — 100 g|103|25.1|0.3|0|0|0", weight:100 }, // CREA 123550; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🐟", label:"Salmone crudo — 100 g", value:"🐟 Salmone crudo — 100 g|185|18.4|12|1|1|0", weight:100 }, // CREA 122400; media di riferimento, dicembre 2019
+  { category:"Secondi", emoji:"🐟", label:"Sgombro crudo — 100 g", value:"🐟 Sgombro crudo — 100 g|170|17|11.1|0.5|0.5|0", weight:100 }, // CREA 123000; media di riferimento, dicembre 2019
   { category:"Secondi", emoji:"🐟", label:"Orata cruda — 100 g", value:"🐟 Orata cruda — 100 g|120|20|4|0|0|0", weight:100 },
   { category:"Secondi", emoji:"🐟", label:"Branzino crudo — 100 g", value:"🐟 Branzino crudo — 100 g|120|20|4|0|0|0", weight:100 },
-  { category:"Secondi", emoji:"🐟", label:"Merluzzo crudo — 100 g", value:"🐟 Merluzzo crudo — 100 g|82|18|1|0|0|0", weight:100 },
+  { category:"Secondi", emoji:"🐟", label:"Merluzzo crudo — 100 g", value:"🐟 Merluzzo crudo — 100 g|71|17|0.3|0|0|0", weight:100 }, // CREA 121410; media di riferimento, dicembre 2019
   { category:"Secondi", emoji:"🦐", label:"Gamberi sgusciati — 100 g", value:"🦐 Gamberi sgusciati — 100 g|85|20|1|0|0|0", weight:100 },
   { category:"Secondi", emoji:"🌱", label:"Tofu al naturale — 100 g", value:"🌱 Tofu al naturale — 100 g|145|16|9|2|0.5|0", weight:100 },
   { category:"Secondi", emoji:"🧀", label:"Fiocchi di latte — 200 g", value:"🧀 Fiocchi di latte — 200 g|196|26|9|3|3|0", weight:200 },
@@ -11929,7 +11935,7 @@ const DEFAULT_PRESET_FOODS = [
   { category:"Frutta e frutta secca", emoji:"🍐", label:"Pera senza buccia — ~170 g edibili", value:"🍐 Pera senza buccia — ~170 g edibili|73|0.5|0.2|15|15|0", weight:170 },
   { category:"Frutta e frutta secca", emoji:"🥝", label:"Kiwi — ~75 g edibili", value:"🥝 Kiwi — ~75 g edibili|36|0.9|0.5|6.8|6.8|0", weight:75 },
   { category:"Frutta e frutta secca", emoji:"🍑", label:"Pesca con buccia — ~150 g edibili", value:"🍑 Pesca con buccia — ~150 g edibili|43|1.1|0|8.7|8.7|0", weight:150 },
-  { category:"Frutta e frutta secca", emoji:"🍑", label:"Nettarina — ~140 g edibili (valori medi)", value:"🍑 Nettarina — ~140 g edibili (valori medi)|62|1.5|0.4|14.8|11.1|0", weight:140 },
+  { category:"Frutta e frutta secca", emoji:"🍑", label:"Nettarina — ~140 g edibili (valori medi)", value:"🍑 Nettarina — ~140 g edibili (valori medi)|50|2|0.1|9.8|9.8|0", weight:140 }, // CREA 007330; media di riferimento, dicembre 2019
   { category:"Frutta e frutta secca", emoji:"🍑", label:"Albicocche — ~70 g edibili", value:"🍑 Albicocche — ~70 g edibili|29|0.3|0.1|6.9|6.9|0", weight:70 },
   { category:"Frutta e frutta secca", emoji:"🍓", label:"Fragole fresche — 200 g", value:"🍓 Fragole fresche — 200 g|60|1.8|0.8|10.6|10.6|0", weight:200 },
   { category:"Frutta e frutta secca", emoji:"🫐", label:"Mirtilli freschi — 100 g", value:"🫐 Mirtilli freschi — 100 g|49|0.9|0.2|10.1|10.1|0", weight:100 },
@@ -11956,7 +11962,7 @@ const DEFAULT_PRESET_FOODS = [
   { category:"Dolci", emoji:"🍫", label:"Barretta proteica — 1 pz (~55 g, valori medi)", value:"🍫 Barretta proteica — 1 pz (~55 g, valori medi)|200|20|7|15|2|0", weight:55 },
 
   // ☕ COLAZIONE E BEVANDE
-  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 0% — 150 g (valori medi)", value:"🥣 Yogurt greco 0% — 150 g (valori medi)|90|15|0|5|5.5|0", weight:150 },
+  { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 0% — 150 g (valori medi)", value:"🥣 Yogurt greco 0% — 150 g (valori medi)|77|13.5|0|6|6|0", weight:150 }, // CREA 150030; media di riferimento, dicembre 2019
   { category:"Colazione e bevande", emoji:"🥣", label:"Yogurt greco 2% — 150 g (valori medi)", value:"🥣 Yogurt greco 2% — 150 g (valori medi)|110|15|3|5|5.5|0", weight:150 },
   { category:"Colazione e bevande", emoji:"🥛", label:"Latte parzialmente scremato — 250 ml", value:"🥛 Latte parzialmente scremato — 250 ml|115|8|4|12|12|250" },
   { category:"Colazione e bevande", emoji:"🥛", label:"Latte scremato — 250 ml", value:"🥛 Latte scremato — 250 ml|85|8.5|0.3|12|12|250" },
@@ -11972,8 +11978,8 @@ const DEFAULT_PRESET_FOODS = [
   // 🫒 CONDIMENTI
   { category:"Condimenti", emoji:"🫒", label:"Olio extravergine di oliva — 10 g", value:"🫒 Olio extravergine di oliva — 10 g|90|0|10|0|0|0", weight:10 },
   { category:"Condimenti", emoji:"🧈", label:"Burro — 10 g", value:"🧈 Burro — 10 g|76|0.1|8.3|0.1|0.1|0", weight:10 },
-  { category:"Condimenti", emoji:"🧀", label:"Parmigiano Reggiano — 10 g", value:"🧀 Parmigiano Reggiano — 10 g|40|3.3|2.9|0|0|0", weight:10 },
-  { category:"Condimenti", emoji:"🧀", label:"Grana Padano — 10 g", value:"🧀 Grana Padano — 10 g|40|3.3|2.9|0|0|0", weight:10 },
+  { category:"Condimenti", emoji:"🧀", label:"Parmigiano Reggiano — 10 g", value:"🧀 Parmigiano Reggiano — 10 g|40|3.2|3|0|0|0", weight:10 }, // CREA 166000; media di riferimento, dicembre 2019
+  { category:"Condimenti", emoji:"🧀", label:"Grana Padano — 10 g", value:"🧀 Grana Padano — 10 g|39|3.4|2.9|0|0|0", weight:10 }, // CREA 162410; media di riferimento, dicembre 2019
   { category:"Condimenti", emoji:"🥚", label:"Maionese — 15 g (valori medi)", value:"🥚 Maionese — 15 g (valori medi)|100|0.2|11|0.5|0.1|0", weight:15 },
   { category:"Condimenti", emoji:"🍅", label:"Ketchup — 15 g (valori medi)", value:"🍅 Ketchup — 15 g (valori medi)|17|0.3|0.1|4|3|0", weight:15 },
   { category:"Condimenti", emoji:"🍖", label:"Salsa BBQ — 15 g (valori medi)", value:"🍖 Salsa BBQ — 15 g (valori medi)|25|0.3|0.1|6|4|0", weight:15 },
@@ -11984,7 +11990,7 @@ const DEFAULT_PRESET_FOODS = [
 
 const DEFAULT_QUICK_ITEMS = [
   { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (35g Whey + Creatina + 500ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 500, weight:35 },
-  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 215, pro: 43, fat: 0.9, carb: 6.2, sugar: 6.3, water: 0, weight:185 },
+  { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 202, pro: 41.5, fat: 0.9, carb: 7.2, sugar: 6.8, water: 0, weight:185 },
   { emoji: "⚡", label: "Pre W.O.", name: "Shaker Pre-Workout (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
   { emoji: "🏋️", label: "Post W.O.", name: "Shaker Post-Workout (35g Whey + 300ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 300, weight:35 },
   { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 188, pro: 2, fat: 19, carb: 1.3, sugar: 1, water: 0, weight:25 },
@@ -12368,11 +12374,11 @@ async function loadUserDataFromBackend() {
       return {
         ...item,
         name: "Yogurt Greco 0% (150g) + Whey (35g)",
-        kcal: 215,
-        pro: 43,
+        kcal: 202,
+        pro: 41.5,
         fat: 0.9,
-        carb: 6.2,
-        sugar: 6.3,
+        carb: 7.2,
+        sugar: 6.8,
         water: 0,
         weight: 185
       };
