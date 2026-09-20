@@ -7928,11 +7928,13 @@ html[data-theme="light"]
 .bodycomp-chart-tabs{display:flex;gap:5px;flex-wrap:wrap}
 .bodycomp-chart-tab{border:1px solid rgba(255,255,255,.10);border-radius:9px;padding:6px 9px;background:rgba(255,255,255,.04);color:inherit;font-size:.72rem;font-weight:700;cursor:pointer}
 .bodycomp-chart-tab.active{border-color:rgba(56,189,248,.48);background:rgba(56,189,248,.13);color:#8bdcff}
-.bodycomp-chart-wrap{position:relative;margin-top:12px;min-height:230px}
+.bodycomp-chart-wrap{position:relative;margin-top:12px;min-height:230px;transition:min-height .2s ease}
 #bodycomp-history-chart{display:block;width:100%;height:230px}
-.bodycomp-chart-empty{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;color:var(--subtext);font-size:.78rem}
+.bodycomp-chart-empty{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;color:var(--subtext);font-size:.78rem;padding:14px}
 .bodycomp-chart-summary{margin-top:8px;color:var(--subtext);font-size:.72rem;text-align:center}
-@media(max-width:720px){.bodycomp-guide-grid{grid-template-columns:1fr}.bodycomp-chart-wrap,#bodycomp-history-chart{height:210px;min-height:210px}}
+.bodycomp-chart-wrap.compact{min-height:105px}
+.bodycomp-chart-wrap.compact #bodycomp-history-chart{height:105px}
+@media(max-width:720px){.bodycomp-guide-grid{grid-template-columns:1fr}.bodycomp-chart-wrap,#bodycomp-history-chart{height:210px;min-height:210px}.bodycomp-chart-wrap.compact{min-height:105px}.bodycomp-chart-wrap.compact #bodycomp-history-chart{height:105px}}
 
 /* V1.2 — silhouette anatomica approvata */
 .bodycomp-silhouette.bodycomp-anatomical{height:285px;min-height:285px}
@@ -15599,6 +15601,13 @@ function toggleBodyCompositionModal() {
   }
   modal.style.display = "flex";
   loadBodyCompositionHistory();
+  // Il grafico Peso usa lo storico peso generale di DiarioFIT, non solo le rilevazioni corporee.
+  loadWeightHistory()
+    .then(() => renderBodyCompositionChart())
+    .catch(error => {
+      console.warn("Weight history for body composition chart unavailable:", error);
+      renderBodyCompositionChart();
+    });
   prefillBodyComposition();
 }
 
@@ -15895,9 +15904,17 @@ function renderBodyCompositionChart() {
     bodyFat:{label:"Massa grassa stimata",unit:"%"}
   }[bodyCompositionChartMetric];
 
-  const points=bodyCompositionHistory
+  const source = bodyCompositionChartMetric === "weight"
+    ? (Array.isArray(weightHistory) ? weightHistory : [])
+    : bodyCompositionHistory;
+
+  const points=source
     .map(x=>({date:String(x.date||""),value:Number(x[bodyCompositionChartMetric])}))
-    .filter(x=>x.date && Number.isFinite(x.value));
+    .filter(x=>x.date && Number.isFinite(x.value))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  const wrap=canvas.closest(".bodycomp-chart-wrap");
+  if(wrap) wrap.classList.toggle("compact",points.length<2);
 
   const rect=canvas.getBoundingClientRect();
   const width=Math.max(300,Math.round(rect.width||canvas.parentElement?.clientWidth||600));
@@ -15909,8 +15926,13 @@ function renderBodyCompositionChart() {
   ctx.clearRect(0,0,width,height);
 
   if(points.length<2){
-    if(empty) empty.style.display="flex";
-    if(summary) summary.textContent=points.length===1 ? meta.label+": una sola rilevazione disponibile." : "";
+    if(empty){
+      empty.style.display="flex";
+      empty.textContent=points.length===1
+        ? "1 rilevazione disponibile — ne serve un'altra per mostrare il trend."
+        : "Servono almeno due rilevazioni valide per visualizzare il trend.";
+    }
+    if(summary) summary.textContent=points.length===1 ? meta.label+": 1 rilevazione disponibile." : "";
     return;
   }
   if(empty) empty.style.display="none";
