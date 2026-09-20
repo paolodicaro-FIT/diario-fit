@@ -45,6 +45,7 @@ done < <(
     find "$BASE" -maxdepth 1 -type f \
       \( -name 'worker-PRE-*.js' -o \
          -name 'worker-BACKUP-*.js' -o \
+         -name 'worker-*-SORGENTE.js' -o \
          -name 'worker-*.bak' -o \
          -name 'worker-*.txt' \) \
       -print0
