@@ -7915,13 +7915,21 @@ html[data-theme="light"]
    COMPOSIZIONE CORPOREA — V2.1 STORICO GRAFICO + GUIDA MISURE
 ========================================================= */
 .bodycomp-history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.bodycomp-guide-btn{border:1px solid rgba(56,189,248,.28);border-radius:10px;padding:7px 10px;background:rgba(56,189,248,.08);color:inherit;font-weight:700;cursor:pointer}
-.bodycomp-guide{display:none;margin-top:12px;padding:13px;border:1px solid rgba(56,189,248,.20);border-radius:14px;background:rgba(56,189,248,.045)}
+.bodycomp-guide-btn{border:1px solid rgba(56,189,248,.32);border-radius:10px;padding:7px 10px;background:rgba(56,189,248,.09);color:inherit;font-weight:800;cursor:pointer}
+.bodycomp-guide{display:none;margin-top:12px;padding:14px;border:1px solid rgba(56,189,248,.22);border-radius:16px;background:linear-gradient(145deg,rgba(56,189,248,.065),rgba(255,255,255,.018));box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
 .bodycomp-guide.open{display:block}
-.bodycomp-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;margin-top:9px}
-.bodycomp-guide-item{font-size:.76rem;line-height:1.42;color:var(--subtext)}
-.bodycomp-guide-item strong{display:block;color:var(--text);margin-bottom:2px}
-.bodycomp-guide-note{margin-top:10px;font-size:.72rem;line-height:1.45;color:var(--subtext);opacity:.9}
+.bodycomp-guide-hero{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px;padding:10px 11px;border:1px solid rgba(56,189,248,.18);border-radius:12px;background:rgba(56,189,248,.055)}
+.bodycomp-guide-hero-icon{display:flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:rgba(56,189,248,.11);border:1px solid rgba(56,189,248,.24);font-size:1rem}
+.bodycomp-guide-hero strong{display:block;color:var(--text);font-size:.88rem;margin-bottom:3px}
+.bodycomp-guide-hero p{margin:0;color:var(--subtext);font-size:.72rem;line-height:1.45}
+.bodycomp-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bodycomp-guide-item{position:relative;padding:10px 11px 10px 39px;border:1px solid rgba(255,255,255,.075);border-radius:12px;background:linear-gradient(145deg,rgba(255,255,255,.038),rgba(255,255,255,.014));font-size:.73rem;line-height:1.48;color:var(--subtext)}
+.bodycomp-guide-item::before{content:attr(data-icon);position:absolute;left:10px;top:10px;display:flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:7px;background:rgba(255,159,28,.08);border:1px solid rgba(255,159,28,.16);font-size:.72rem}
+.bodycomp-guide-item strong{display:block;color:var(--text);font-size:.77rem;margin-bottom:3px}
+.bodycomp-guide-note{margin-top:9px;padding:10px 11px;border-left:2px solid var(--accent);border-radius:0 10px 10px 0;background:rgba(255,159,28,.055);font-size:.70rem;line-height:1.5;color:var(--subtext)}
+.bodycomp-guide-note strong{color:var(--text)}
+html[data-theme="light"] .bodycomp-guide{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(240,249,255,.96))}
+html[data-theme="light"] .bodycomp-guide-item{background:linear-gradient(145deg,#fff,#f8fafc);border-color:rgba(30,41,59,.10)}
 .bodycomp-chart-card{margin-top:16px;border:1px solid rgba(56,189,248,.20);border-radius:18px;padding:15px;background:linear-gradient(145deg,rgba(56,189,248,.045),rgba(139,92,246,.035))}
 .bodycomp-chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .bodycomp-chart-head small{display:block;margin-top:3px;color:var(--subtext);font-size:.7rem}
@@ -10780,18 +10788,21 @@ html[data-theme="light"] .missing-today-legend {
         <button type="button" class="bodycomp-guide-btn" onclick="toggleBodyCompositionGuide()">📏 Come misurare</button>
       </div>
       <div id="bodycomp-measure-guide" class="bodycomp-guide">
-        <strong>📏 Misure confrontabili nel tempo</strong>
-        <div class="bodycomp-guide-grid">
-          <div class="bodycomp-guide-item"><strong>Vita standard</strong>Misura a fine espirazione, a metà tra l'ultima costa e la cresta iliaca, con metro orizzontale e senza stringere.</div>
-          <div class="bodycomp-guide-item"><strong>Vita all'ombelico</strong>Metro orizzontale all'altezza dell'ombelico, addome rilassato e senza trattenere il respiro.</div>
-          <div class="bodycomp-guide-item"><strong>Collo</strong>Misura appena sotto il pomo d'Adamo, mantenendo il metro aderente ma non stretto.</div>
-          <div class="bodycomp-guide-item"><strong>Torace</strong>Metro orizzontale nel punto più ampio del torace, postura naturale e braccia rilassate.</div>
-          <div class="bodycomp-guide-item"><strong>Fianchi</strong>Misura nel punto di massima circonferenza di glutei e fianchi, con piedi vicini.</div>
-          <div class="bodycomp-guide-item"><strong>Braccio</strong>Usa sempre lo stesso lato e la stessa condizione (rilassato oppure contratto); misura nel punto più ampio.</div>
-          <div class="bodycomp-guide-item"><strong>Coscia</strong>Usa sempre lo stesso lato, gamba rilassata, misurando nello stesso punto anatomico ad ogni rilevazione.</div>
-          <div class="bodycomp-guide-item"><strong>Polpaccio</strong>Usa sempre lo stesso lato e misura la massima circonferenza con muscolo rilassato.</div>
+        <div class="bodycomp-guide-hero">
+          <span class="bodycomp-guide-hero-icon">📏</span>
+          <div><strong>Misure confrontabili nel tempo</strong><p>Usa sempre gli stessi punti anatomici e condizioni simili: è la costanza della misurazione a rendere utile il confronto.</p></div>
         </div>
-        <div class="bodycomp-guide-note">Per confronti più affidabili, misura possibilmente nelle stesse condizioni: stesso momento della giornata, prima del pasto, postura naturale e senza allenamento immediatamente precedente. Diario FIT usa vita standard, collo e altezza per la stima U.S. Navy maschile; nel profilo femminile usa anche i fianchi.</div>
+        <div class="bodycomp-guide-grid">
+          <div class="bodycomp-guide-item" data-icon="↔️"><strong>Vita standard</strong>Fine espirazione, a metà tra ultima costa e cresta iliaca. Metro orizzontale, aderente ma senza stringere.</div>
+          <div class="bodycomp-guide-item" data-icon="◎"><strong>Vita all'ombelico</strong>Metro orizzontale all'altezza dell'ombelico, con addome rilassato e senza trattenere il respiro.</div>
+          <div class="bodycomp-guide-item" data-icon="◯"><strong>Collo</strong>Appena sotto il pomo d'Adamo. Mantieni il metro aderente alla pelle, ma non stretto.</div>
+          <div class="bodycomp-guide-item" data-icon="🫁"><strong>Torace</strong>Nel punto più ampio del torace, con metro orizzontale, postura naturale e braccia rilassate.</div>
+          <div class="bodycomp-guide-item" data-icon="◇"><strong>Fianchi</strong>Nel punto di massima circonferenza di glutei e fianchi, mantenendo i piedi vicini.</div>
+          <div class="bodycomp-guide-item" data-icon="💪"><strong>Braccio</strong>Usa sempre lo stesso lato e la stessa condizione — rilassato o contratto — misurando il punto più ampio.</div>
+          <div class="bodycomp-guide-item" data-icon="🦵"><strong>Coscia</strong>Usa sempre lo stesso lato, con gamba rilassata, e lo stesso punto anatomico a ogni rilevazione.</div>
+          <div class="bodycomp-guide-item" data-icon="↕️"><strong>Polpaccio</strong>Usa sempre lo stesso lato e misura la massima circonferenza con il muscolo rilassato.</div>
+        </div>
+        <div class="bodycomp-guide-note"><strong>Per confronti più affidabili:</strong> misura possibilmente nello stesso momento della giornata, prima del pasto, con postura naturale e senza un allenamento immediatamente precedente. La stima U.S. Navy usa vita standard, collo e altezza nel profilo maschile; nel profilo femminile usa anche i fianchi.</div>
       </div>
       <div id="bodycomp-history-list" class="bodycomp-history-list"></div>
     </section>
