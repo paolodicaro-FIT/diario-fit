@@ -12313,6 +12313,7 @@ let editingProfileId = null;
 
 let editingSavedMealIndex = -1;
 let savedMealDraftItems = [];
+let savedMealPendingItem = null;
 let savedMealEditorMode = "create";
 
 
@@ -18051,6 +18052,7 @@ function updateSavedMealEditorModeUI() {
 
 
 function createSavedMeal() {
+  savedMealPendingItem = null;
   savedMealEditorMode = "create";
   editingSavedMealIndex = -1;
   savedMealDraftItems = [];
@@ -18070,6 +18072,7 @@ function createSavedMeal() {
 
 
 function closeSavedMealEditor() {
+  savedMealPendingItem = null;
   editingSavedMealIndex = -1;
   savedMealDraftItems = [];
 
@@ -18475,7 +18478,7 @@ function selectFoodOption(value, label) {
       waterIndex = 6;
     }
 
-    savedMealDraftItems.push({
+    savedMealPendingItem = {
       name: parts[0],
       kcal: parseFloat(parts[1] || 0) || 0,
       pro: parseFloat(parts[2] || 0) || 0,
@@ -18483,12 +18486,9 @@ function selectFoodOption(value, label) {
       carb: parseFloat(parts[4] || 0) || 0,
       sugar,
       waterMl: parseFloat(parts[waterIndex] || 0) || 0,
-      weight:
-        parts.length >= 8
-          ? parseFloat(parts[7] || 0) || 0
-          : 0,
+      weight: parts.length >= 8 ? parseFloat(parts[7] || 0) || 0 : 0,
       multiplier: 1
-    });
+    };
 
     foodPickerMode = "normal";
     closeFoodPicker();
@@ -18504,6 +18504,7 @@ function selectFoodOption(value, label) {
 
 
 function useSavedMeal(index) {
+  savedMealPendingItem = null;
   const meal =
     Array.isArray(savedMeals)
       ? savedMeals[index]
@@ -18724,6 +18725,7 @@ async function deleteSavedMeal(index) {
 
 
 function editSavedMeal(index) {
+  savedMealPendingItem = null;
   savedMealEditorMode = "edit";
 
   const meal =
@@ -18851,138 +18853,88 @@ async function saveSavedMeal() {
 
 
 function renderSavedMealDraftItems() {
-  const container =
-    document.getElementById("saved-meal-items");
+  const container = document.getElementById("saved-meal-items");
+  if (!container) return;
 
-  if (!container) {
-    return;
-  }
+  const pendingHtml = savedMealPendingItem ? (() => {
+    const item = savedMealPendingItem;
+    const mult = Number(item.multiplier) > 0 ? Number(item.multiplier) : 1;
+    const kcal = Math.round((Number(item.kcal) || 0) * mult);
+    const pro = Math.round((Number(item.pro) || 0) * mult * 10) / 10;
+    const fat = Math.round((Number(item.fat) || 0) * mult * 10) / 10;
+    const carb = Math.round((Number(item.carb) || 0) * mult * 10) / 10;
+    const sugar = Math.round((Number(item.sugar) || 0) * mult * 10) / 10;
+    const weight = Math.round((Number(item.weight) || 0) * mult);
 
-  if (
-    !Array.isArray(savedMealDraftItems) ||
-    savedMealDraftItems.length === 0
-  ) {
-    container.innerHTML = `
-      <div style="
-        padding:12px;
-        text-align:center;
-        color:var(--muted);
-        border:1px dashed rgba(255,255,255,.12);
-        border-radius:14px;
-      ">
-        Nessun alimento aggiunto
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML =
-    savedMealDraftItems.map((item, index) => {
-
-      const mult =
-        Number(item.multiplier) > 0
-          ? Number(item.multiplier)
-          : 1;
-
-      const kcal =
-        Math.round(
-          (Number(item.kcal) || 0) * mult
-        );
-
-      return `
-        <div
-          style="
-            padding:10px 12px;
-            margin-bottom:8px;
-            border:1px solid rgba(255,255,255,.10);
-            border-radius:12px;
-          "
-        >
-          <div
-            style="
-              display:flex;
-              align-items:center;
-              gap:8px;
-            "
-          >
-            <span style="flex:1; min-width:0;">
-              ${escapeHTML(item.name)}
-            </span>
-
-            <small style="
-              color:var(--accent);
-              font-weight:700;
-              white-space:nowrap;
-            ">
-              ${kcal} kcal
-            </small>
-
-            <button
-              type="button"
-              title="Rimuovi alimento"
-              onclick="removeSavedMealDraftItem(${index})"
-              style="
-                border:0;
-                background:transparent;
-                padding:4px 5px;
-                cursor:pointer;
-                font-size:.9rem;
-              "
-            >
-              🗑️
-            </button>
-          </div>
-
-          <div
-            style="
-              display:flex;
-              align-items:center;
-              justify-content:flex-end;
-              gap:6px;
-              margin-top:8px;
-            "
-          >
-            <button
-              type="button"
-              class="mini-btn"
-              onclick="changeSavedMealItemMultiplier(${index}, -0.5)"
-            >
-              −
-            </button>
-
-            <input
-              type="number"
-              value="${mult}"
-              min="0.5"
-              step="0.5"
-              onchange="setSavedMealItemMultiplier(${index}, this.value)"
-              style="
-                width:64px;
-                text-align:center;
-                padding:6px 4px;
-              "
-            >
-
-            <button
-              type="button"
-              class="mini-btn"
-              onclick="changeSavedMealItemMultiplier(${index}, 0.5)"
-            >
-              ＋
-            </button>
-
-            <small style="
-              color:var(--muted);
-              min-width:20px;
-            ">
-              ×
-            </small>
-          </div>
+    return `
+      <div style="padding:11px 12px;margin-bottom:10px;border:1px solid rgba(255,159,28,.58);background:rgba(255,159,28,.08);border-radius:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="flex:1;min-width:0;font-weight:800;">👁️ Anteprima · ${escapeHTML(item.name)}</span>
+          <strong style="color:var(--accent);white-space:nowrap;">${kcal} kcal</strong>
         </div>
-      `;
-    }).join("");
+        <div style="margin-top:7px;font-size:.74rem;color:var(--muted);line-height:1.55;">
+          🥩 ${pro} g · 🥑 ${fat} g · 🍞 ${carb} g · 🍬 ${sugar} g${weight ? ` · ⚖️ ${weight} g` : ""}
+        </div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;margin-top:9px;">
+          <button type="button" class="mini-btn" onclick="changeSavedMealPendingMultiplier(-0.5)">−</button>
+          <input type="number" value="${mult}" min="0.5" step="0.5" onchange="setSavedMealPendingMultiplier(this.value)" style="width:64px;text-align:center;padding:6px 4px;">
+          <button type="button" class="mini-btn" onclick="changeSavedMealPendingMultiplier(0.5)">＋</button>
+          <small style="color:var(--muted);">×</small>
+          <button type="button" class="mini-btn" onclick="cancelSavedMealPendingItem()">Annulla</button>
+          <button type="button" class="mini-btn primary" onclick="confirmSavedMealPendingItem()">➕ Aggiungi</button>
+        </div>
+      </div>`;
+  })() : "";
+
+  const confirmedHtml = Array.isArray(savedMealDraftItems) && savedMealDraftItems.length
+    ? savedMealDraftItems.map((item, index) => {
+        const mult = Number(item.multiplier) > 0 ? Number(item.multiplier) : 1;
+        const kcal = Math.round((Number(item.kcal) || 0) * mult);
+        return `
+          <div style="padding:10px 12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.10);border-radius:12px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="flex:1;min-width:0;">${escapeHTML(item.name)}</span>
+              <small style="color:var(--accent);font-weight:700;white-space:nowrap;">${kcal} kcal</small>
+              <button type="button" title="Rimuovi alimento" onclick="removeSavedMealDraftItem(${index})" style="border:0;background:transparent;padding:4px 5px;cursor:pointer;font-size:.9rem;">🗑️</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:8px;">
+              <button type="button" class="mini-btn" onclick="changeSavedMealItemMultiplier(${index}, -0.5)">−</button>
+              <input type="number" value="${mult}" min="0.5" step="0.5" onchange="setSavedMealItemMultiplier(${index}, this.value)" style="width:64px;text-align:center;padding:6px 4px;">
+              <button type="button" class="mini-btn" onclick="changeSavedMealItemMultiplier(${index}, 0.5)">＋</button>
+              <small style="color:var(--muted);min-width:20px;">×</small>
+            </div>
+          </div>`;
+      }).join("")
+    : `<div style="padding:12px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.12);border-radius:14px;">Nessun alimento aggiunto</div>`;
+
+  container.innerHTML = pendingHtml + confirmedHtml;
 }
 
+function confirmSavedMealPendingItem() {
+  if (!savedMealPendingItem) return;
+  savedMealDraftItems.push({ ...savedMealPendingItem });
+  savedMealPendingItem = null;
+  renderSavedMealDraftItems();
+}
+
+function cancelSavedMealPendingItem() {
+  savedMealPendingItem = null;
+  renderSavedMealDraftItems();
+}
+
+function changeSavedMealPendingMultiplier(delta) {
+  if (!savedMealPendingItem) return;
+  const current = Number(savedMealPendingItem.multiplier) > 0 ? Number(savedMealPendingItem.multiplier) : 1;
+  savedMealPendingItem.multiplier = Math.max(0.5, Math.round((current + delta) * 10) / 10);
+  renderSavedMealDraftItems();
+}
+
+function setSavedMealPendingMultiplier(value) {
+  if (!savedMealPendingItem) return;
+  const parsed = parseFloat(value);
+  savedMealPendingItem.multiplier = Number.isFinite(parsed) && parsed > 0 ? Math.max(0.5, parsed) : 1;
+  renderSavedMealDraftItems();
+}
 
 function changeSavedMealItemMultiplier(index, delta) {
   const item = savedMealDraftItems[index];
