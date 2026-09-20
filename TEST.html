@@ -7909,6 +7909,31 @@ html[data-theme="light"]
 @media(max-width:720px){.bodycomp-smart-row{grid-template-columns:88px 1fr 58px}.bodycomp-compare-grid{grid-template-columns:repeat(2,1fr)}}
 
 
+
+
+/* =========================================================
+   COMPOSIZIONE CORPOREA — V2.1 STORICO GRAFICO + GUIDA MISURE
+========================================================= */
+.bodycomp-history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bodycomp-guide-btn{border:1px solid rgba(56,189,248,.28);border-radius:10px;padding:7px 10px;background:rgba(56,189,248,.08);color:inherit;font-weight:700;cursor:pointer}
+.bodycomp-guide{display:none;margin-top:12px;padding:13px;border:1px solid rgba(56,189,248,.20);border-radius:14px;background:rgba(56,189,248,.045)}
+.bodycomp-guide.open{display:block}
+.bodycomp-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;margin-top:9px}
+.bodycomp-guide-item{font-size:.76rem;line-height:1.42;color:var(--subtext)}
+.bodycomp-guide-item strong{display:block;color:var(--text);margin-bottom:2px}
+.bodycomp-guide-note{margin-top:10px;font-size:.72rem;line-height:1.45;color:var(--subtext);opacity:.9}
+.bodycomp-chart-card{margin-top:16px;border:1px solid rgba(56,189,248,.20);border-radius:18px;padding:15px;background:linear-gradient(145deg,rgba(56,189,248,.045),rgba(139,92,246,.035))}
+.bodycomp-chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bodycomp-chart-head small{display:block;margin-top:3px;color:var(--subtext);font-size:.7rem}
+.bodycomp-chart-tabs{display:flex;gap:5px;flex-wrap:wrap}
+.bodycomp-chart-tab{border:1px solid rgba(255,255,255,.10);border-radius:9px;padding:6px 9px;background:rgba(255,255,255,.04);color:inherit;font-size:.72rem;font-weight:700;cursor:pointer}
+.bodycomp-chart-tab.active{border-color:rgba(56,189,248,.48);background:rgba(56,189,248,.13);color:#8bdcff}
+.bodycomp-chart-wrap{position:relative;margin-top:12px;min-height:230px}
+#bodycomp-history-chart{display:block;width:100%;height:230px}
+.bodycomp-chart-empty{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;color:var(--subtext);font-size:.78rem}
+.bodycomp-chart-summary{margin-top:8px;color:var(--subtext);font-size:.72rem;text-align:center}
+@media(max-width:720px){.bodycomp-guide-grid{grid-template-columns:1fr}.bodycomp-chart-wrap,#bodycomp-history-chart{height:210px;min-height:210px}}
+
 /* V1.2 — silhouette anatomica approvata */
 .bodycomp-silhouette.bodycomp-anatomical{height:285px;min-height:285px}
 .bodycomp-silhouette.bodycomp-anatomical:before{width:210px;height:265px;background:radial-gradient(circle,rgba(0,174,255,.24),rgba(24,119,255,.09) 48%,transparent 72%);filter:blur(14px)}
@@ -10728,8 +10753,44 @@ html[data-theme="light"] .missing-today-legend {
       </div>
     </section>
 
+    <section class="bodycomp-chart-card">
+      <div class="bodycomp-chart-head">
+        <div>
+          <strong>📈 Evoluzione nel tempo</strong>
+          <small>Grafico basato sulle misurazioni salvate. Tocca una voce per cambiare parametro.</small>
+        </div>
+        <div class="bodycomp-chart-tabs" aria-label="Parametro del grafico">
+          <button type="button" class="bodycomp-chart-tab active" data-bodycomp-chart="weight" onclick="setBodyCompositionChartMetric('weight')">Peso</button>
+          <button type="button" class="bodycomp-chart-tab" data-bodycomp-chart="waist" onclick="setBodyCompositionChartMetric('waist')">Vita</button>
+          <button type="button" class="bodycomp-chart-tab" data-bodycomp-chart="bodyFat" onclick="setBodyCompositionChartMetric('bodyFat')">Massa grassa</button>
+        </div>
+      </div>
+      <div class="bodycomp-chart-wrap">
+        <canvas id="bodycomp-history-chart" aria-label="Grafico storico composizione corporea"></canvas>
+        <div id="bodycomp-chart-empty" class="bodycomp-chart-empty">Servono almeno due rilevazioni valide per visualizzare il trend.</div>
+      </div>
+      <div id="bodycomp-chart-summary" class="bodycomp-chart-summary"></div>
+    </section>
+
     <section class="bodycomp-history-card">
-      <strong>Storico misurazioni</strong>
+      <div class="bodycomp-history-head">
+        <strong>Storico misurazioni</strong>
+        <button type="button" class="bodycomp-guide-btn" onclick="toggleBodyCompositionGuide()">📏 Come misurare</button>
+      </div>
+      <div id="bodycomp-measure-guide" class="bodycomp-guide">
+        <strong>📏 Misure confrontabili nel tempo</strong>
+        <div class="bodycomp-guide-grid">
+          <div class="bodycomp-guide-item"><strong>Vita standard</strong>Misura a fine espirazione, a metà tra l'ultima costa e la cresta iliaca, con metro orizzontale e senza stringere.</div>
+          <div class="bodycomp-guide-item"><strong>Vita all'ombelico</strong>Metro orizzontale all'altezza dell'ombelico, addome rilassato e senza trattenere il respiro.</div>
+          <div class="bodycomp-guide-item"><strong>Collo</strong>Misura appena sotto il pomo d'Adamo, mantenendo il metro aderente ma non stretto.</div>
+          <div class="bodycomp-guide-item"><strong>Torace</strong>Metro orizzontale nel punto più ampio del torace, postura naturale e braccia rilassate.</div>
+          <div class="bodycomp-guide-item"><strong>Fianchi</strong>Misura nel punto di massima circonferenza di glutei e fianchi, con piedi vicini.</div>
+          <div class="bodycomp-guide-item"><strong>Braccio</strong>Usa sempre lo stesso lato e la stessa condizione (rilassato oppure contratto); misura nel punto più ampio.</div>
+          <div class="bodycomp-guide-item"><strong>Coscia</strong>Usa sempre lo stesso lato, gamba rilassata, misurando nello stesso punto anatomico ad ogni rilevazione.</div>
+          <div class="bodycomp-guide-item"><strong>Polpaccio</strong>Usa sempre lo stesso lato e misura la massima circonferenza con muscolo rilassato.</div>
+        </div>
+        <div class="bodycomp-guide-note">Per confronti più affidabili, misura possibilmente nelle stesse condizioni: stesso momento della giornata, prima del pasto, postura naturale e senza allenamento immediatamente precedente. Diario FIT usa vita standard, collo e altezza per la stima U.S. Navy maschile; nel profilo femminile usa anche i fianchi.</div>
+      </div>
       <div id="bodycomp-history-list" class="bodycomp-history-list"></div>
     </section>
   </div>
@@ -15806,15 +15867,95 @@ async function deleteBodyComposition(date) {
   }
 }
 
+let bodyCompositionChartMetric = "weight";
+
+function toggleBodyCompositionGuide() {
+  const guide=document.getElementById("bodycomp-measure-guide");
+  if(guide) guide.classList.toggle("open");
+}
+
+function setBodyCompositionChartMetric(metric) {
+  if(!["weight","waist","bodyFat"].includes(metric)) return;
+  bodyCompositionChartMetric=metric;
+  document.querySelectorAll("[data-bodycomp-chart]").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.bodycompChart===metric);
+  });
+  renderBodyCompositionChart();
+}
+
+function renderBodyCompositionChart() {
+  const canvas=document.getElementById("bodycomp-history-chart");
+  const empty=document.getElementById("bodycomp-chart-empty");
+  const summary=document.getElementById("bodycomp-chart-summary");
+  if(!canvas) return;
+
+  const meta={
+    weight:{label:"Peso",unit:"kg"},
+    waist:{label:"Vita standard",unit:"cm"},
+    bodyFat:{label:"Massa grassa stimata",unit:"%"}
+  }[bodyCompositionChartMetric];
+
+  const points=bodyCompositionHistory
+    .map(x=>({date:String(x.date||""),value:Number(x[bodyCompositionChartMetric])}))
+    .filter(x=>x.date && Number.isFinite(x.value));
+
+  const rect=canvas.getBoundingClientRect();
+  const width=Math.max(300,Math.round(rect.width||canvas.parentElement?.clientWidth||600));
+  const height=Math.max(190,Math.round(rect.height||230));
+  const dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+  canvas.width=Math.round(width*dpr); canvas.height=Math.round(height*dpr);
+  const ctx=canvas.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,width,height);
+
+  if(points.length<2){
+    if(empty) empty.style.display="flex";
+    if(summary) summary.textContent=points.length===1 ? meta.label+": una sola rilevazione disponibile." : "";
+    return;
+  }
+  if(empty) empty.style.display="none";
+
+  const pad={l:42,r:18,t:18,b:34};
+  const values=points.map(p=>p.value);
+  let min=Math.min(...values), max=Math.max(...values);
+  let spread=max-min;
+  if(spread===0) spread=Math.max(Math.abs(max)*.04,1);
+  min-=spread*.18; max+=spread*.18; spread=max-min;
+  const x=i=>pad.l+(i/(points.length-1))*(width-pad.l-pad.r);
+  const y=v=>pad.t+(max-v)/spread*(height-pad.t-pad.b);
+
+  const styles=getComputedStyle(document.documentElement);
+  const text=styles.getPropertyValue("--subtext").trim()||"#94a3b8";
+  const accent=styles.getPropertyValue("--cyan").trim()||"#38bdf8";
+  ctx.font="11px system-ui, sans-serif"; ctx.fillStyle=text; ctx.strokeStyle="rgba(148,163,184,.16)"; ctx.lineWidth=1;
+  for(let i=0;i<4;i++){
+    const yy=pad.t+i*(height-pad.t-pad.b)/3;
+    ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(width-pad.r,yy);ctx.stroke();
+    const val=max-i*spread/3; ctx.fillText(val.toFixed(1).replace(".",","),4,yy+4);
+  }
+  ctx.strokeStyle=accent;ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.lineCap="round";ctx.beginPath();
+  points.forEach((p,i)=>{const xx=x(i),yy=y(p.value);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.stroke();
+  points.forEach((p,i)=>{const xx=x(i),yy=y(p.value);ctx.fillStyle=accent;ctx.beginPath();ctx.arc(xx,yy,3.5,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle=text;
+  const labelIndexes=points.length<=5 ? points.map((_,i)=>i) : [0,Math.round((points.length-1)/2),points.length-1];
+  labelIndexes.forEach(i=>{
+    const label=points[i].date.slice(5).split("-").reverse().join("/");
+    const tw=ctx.measureText(label).width;ctx.fillText(label,Math.max(2,Math.min(width-tw-2,x(i)-tw/2)),height-10);
+  });
+  const first=points[0],last=points[points.length-1],delta=last.value-first.value;
+  if(summary) summary.textContent=`${meta.label}: ${first.value.toFixed(1).replace(".",",")} → ${last.value.toFixed(1).replace(".",",")} ${meta.unit} · variazione ${delta>0?"+":""}${delta.toFixed(1).replace(".",",")} ${meta.unit}`;
+}
+
 function renderBodyCompositionHistory() {
   const box=document.getElementById("bodycomp-history-list");
   if(!box) return;
-  if(!bodyCompositionHistory.length){box.innerHTML='<div style="opacity:.7;font-size:.84rem">Nessuna misurazione salvata.</div>';return;}
+  if(!bodyCompositionHistory.length){box.innerHTML='<div style="opacity:.7;font-size:.84rem">Nessuna misurazione salvata.</div>';renderBodyCompositionChart();return;}
   box.innerHTML=bodyCompositionHistory.slice().reverse().map(x=>{
     const bf=Number.isFinite(Number(x.bodyFat)) ? Number(x.bodyFat).toFixed(1).replace(".",",")+"%" : "—";
     const waist=x.waist ? Number(x.waist).toFixed(1).replace(".",",")+" cm" : "—";
     return `<div class="bodycomp-history-row"><span>${escapeHTML(String(x.date))}</span><span>Vita ${waist} · Massa grassa ${bf}</span><button type="button" onclick="deleteBodyComposition('${String(x.date).replace(/'/g,"")}')" title="Elimina">🗑️</button></div>`;
   }).join("");
+  renderBodyCompositionChart();
 }
 
 
@@ -24468,6 +24609,10 @@ document.addEventListener("change", function(event) {
   }
 });
 
+
+window.addEventListener("resize",()=>{
+  if(document.getElementById("bodycomp-modal")?.style.display==="flex") renderBodyCompositionChart();
+});
 </script>
 
 </body>
