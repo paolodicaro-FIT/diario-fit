@@ -9823,13 +9823,13 @@ html[data-theme="light"] .missing-today-legend {
       </div>
     </div>
     <div class="free-grid">
-      <label>🔥 Kcal<input type="number" id="quick-preview-kcal" min="0" step="1"></label>
-      <label>🥩 Proteine (g)<input type="number" id="quick-preview-pro" min="0" step="0.1"></label>
-      <label>🥑 Grassi (g)<input type="number" id="quick-preview-fat" min="0" step="0.1"></label>
-      <label>🍞 Carboidrati (g)<input type="number" id="quick-preview-carb" min="0" step="0.1"></label>
-      <label>🍬 Zuccheri (g)<input type="number" id="quick-preview-sugar" min="0" step="0.1"></label>
-      <label>⚖️ Peso (g)<input type="number" id="quick-preview-weight" min="0" step="1"></label>
-      <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" min="0" step="1"></label>
+      <label>🔥 Kcal<input type="number" id="quick-preview-kcal" oninput="syncQuickPreviewField('kcal', this.value)" min="0" step="1"></label>
+      <label>🥩 Proteine (g)<input type="number" id="quick-preview-pro" oninput="syncQuickPreviewField('pro', this.value)" min="0" step="0.1"></label>
+      <label>🥑 Grassi (g)<input type="number" id="quick-preview-fat" oninput="syncQuickPreviewField('fat', this.value)" min="0" step="0.1"></label>
+      <label>🍞 Carboidrati (g)<input type="number" id="quick-preview-carb" oninput="syncQuickPreviewField('carb', this.value)" min="0" step="0.1"></label>
+      <label>🍬 Zuccheri (g)<input type="number" id="quick-preview-sugar" oninput="syncQuickPreviewField('sugar', this.value)" min="0" step="0.1"></label>
+      <label>⚖️ Peso (g)<input type="number" id="quick-preview-weight" oninput="syncQuickPreviewField('weight', this.value)" min="0" step="1"></label>
+      <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" oninput="syncQuickPreviewField('water', this.value)" min="0" step="1"></label>
     </div>
     <div style="display:flex; gap:8px; margin-top:12px;">
       <button type="button" class="btn" style="flex:1;" onclick="closeQuickDiaryPreview()">Annulla</button>
@@ -20069,6 +20069,27 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
   document.getElementById("quick-diary-preview-modal").style.display = "flex";
 }
 
+function syncQuickPreviewField(key, value) {
+  if (!quickDiaryPreviewPending) return;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 0) return;
+  if (!quickDiaryPreviewPending.finalValues) quickDiaryPreviewPending.finalValues = {};
+  quickDiaryPreviewPending.finalValues[key] = parsed;
+}
+
+function captureQuickPreviewFields() {
+  if (!quickDiaryPreviewPending) return null;
+  const map = { kcal:"kcal", pro:"pro", fat:"fat", carb:"carb", sugar:"sugar", waterMl:"water", weight:"weight" };
+  const out = {};
+  for (const [key, suffix] of Object.entries(map)) {
+    const value = Number(document.getElementById(`quick-preview-${suffix}`)?.value);
+    if (!Number.isFinite(value) || value < 0) return null;
+    out[key] = value;
+  }
+  quickDiaryPreviewPending.finalValues = { ...out };
+  return out;
+}
+
 function applyQuickPreviewMultiplier() {
   if (!quickDiaryPreviewPending?.baseValues) return;
   const mult = Number(quickDiaryPreviewPending.multiplier) > 0 ? Number(quickDiaryPreviewPending.multiplier) : 1;
@@ -20082,6 +20103,7 @@ function applyQuickPreviewMultiplier() {
   set("quick-preview-sugar", Math.round(b.sugar * mult * 10) / 10);
   set("quick-preview-water", Math.round(b.waterMl * mult));
   set("quick-preview-weight", Math.round(b.weight * mult));
+  captureQuickPreviewFields();
   const title = document.getElementById("quick-preview-name");
   if (title) title.textContent = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
   quickDiaryPreviewPending.name = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
@@ -20110,16 +20132,10 @@ function closeQuickDiaryPreview() {
 
 async function confirmQuickDiaryPreview() {
   if (!quickDiaryPreviewPending) return;
-  const read = id => {
-    const v=Number(document.getElementById(id)?.value);
-    return Number.isFinite(v) && v >= 0 ? v : null;
-  };
-  const values = {
-    kcal:read("quick-preview-kcal"), pro:read("quick-preview-pro"), fat:read("quick-preview-fat"),
-    carb:read("quick-preview-carb"), sugar:read("quick-preview-sugar"), waterMl:read("quick-preview-water"),
-    weight:read("quick-preview-weight")
-  };
-  if (Object.values(values).some(v => v === null)) {
+  // I campi visibili sono l'autorità finale: qualunque correzione manuale
+  // viene catturata al momento della conferma, indipendentemente dal moltiplicatore.
+  const values = captureQuickPreviewFields();
+  if (!values) {
     alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
     return;
   }
