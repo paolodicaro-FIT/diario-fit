@@ -13833,27 +13833,125 @@ async function runAdminMaintenance() {
 }
 
 
-function loadAdminMaintenanceReminder() {
+async function loadAdminMaintenanceReminder() {
+  const status =
+    document.getElementById("admin-maintenance-status");
+
   const reminder =
     document.getElementById("admin-maintenance-reminder");
 
-  if (!reminder || !currentUser || currentUser.role !== "admin") {
+  const runBtn =
+    document.getElementById("admin-maintenance-run-btn");
+
+  if (
+    !status ||
+    !reminder ||
+    !runBtn ||
+    !currentUser ||
+    currentUser.role !== "admin"
+  ) {
     return;
   }
 
-  const lastLocal =
-    localStorage.getItem("diario_admin_last_maintenance_check");
+  const token = adminMaintenanceToken();
 
-  const days =
-    adminMaintenanceDaysSince(lastLocal);
+  if (!token) {
+    return;
+  }
 
-  if (days === null) {
+  try {
+    const response =
+      await fetch(
+        BACKEND_API_URL + "/api/admin/maintenance/status",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "MAINTENANCE_STATUS_FAILED");
+    }
+
+    if (!data.has_previous_check) {
+      status.innerHTML =
+        "⚪ Stato non ancora analizzato.";
+
+      reminder.textContent =
+        "Nessuna analisi registrata. Controllo consigliato: ogni 30 giorni.";
+
+      runBtn.style.display = "none";
+      return;
+    }
+
+    const days =
+      adminMaintenanceDaysSince(data.checked_at);
+
+    const stale =
+      days !== null && days >= 30;
+
+    let icon = "🟢";
+    let title = "Ultimo controllo: sistema OK";
+
+    if (data.maintenance_needed === true) {
+      icon = "🟡";
+      title = "Ultimo controllo: manutenzione consigliata";
+    } else if (stale) {
+      icon = "🟡";
+      title = "Nuova analisi consigliata";
+    }
+
+    status.innerHTML =
+      `<strong>${icon} ${title}</strong><br>` +
+      `<span style="color:var(--muted);">` +
+      `Ultima analisi: ${formatAdminMaintenanceDate(data.checked_at)}` +
+      `</span>`;
+
+    if (data.stats) {
+      const stats = data.stats;
+
+      status.innerHTML +=
+        "<br>" +
+        `Utenti: ${Number(stats.users || 0)} · ` +
+        `Sessioni: ${Number(stats.sessions_total || 0)} ` +
+        `(${Number(stats.sessions_active || 0)} attive, ` +
+        `${Number(stats.sessions_expired || 0)} scadute)`;
+    }
+
+    if (days === null) {
+      reminder.textContent =
+        "Controllo consigliato: ogni 30 giorni.";
+    } else if (days >= 30) {
+      reminder.textContent =
+        `⏰ Sono passati ${days} giorni dall'ultima analisi. ` +
+        "È consigliato eseguire un nuovo controllo.";
+    } else {
+      const remaining =
+        Math.max(0, 30 - days);
+
+      reminder.textContent =
+        `Prossimo controllo consigliato tra ${remaining} ` +
+        `${remaining === 1 ? "giorno" : "giorni"}.`;
+    }
+
+    // Lo stato storico non abilita mai automaticamente un'azione distruttiva:
+    // per mostrare il pulsante di manutenzione serve una nuova analisi esplicita.
+    runBtn.style.display = "none";
+
+  } catch (error) {
+    console.error("Errore stato manutenzione:", error);
+
+    status.innerHTML =
+      "⚪ Stato precedente non disponibile.";
+
     reminder.textContent =
-      "Nessuna analisi effettuata su questo dispositivo. " +
-      "Controllo consigliato: ogni 30 giorni.";
-  } else if (days >= 30) {
-    reminder.textContent =
-      `⏰ Sono passati ${days} giorni dall'ultima analisi su questo dispositivo.`;
+      "Premi Analizza sistema per eseguire un controllo aggiornato.";
+
+    runBtn.style.display = "none";
   }
 }
 
