@@ -14874,57 +14874,25 @@ async function loadBodyCompositionHistory() {
 
   const msg=document.getElementById("bodycomp-message");
   try {
+    // Con utente autenticato D1 è la fonte autorevole.
+    // NON reimportiamo automaticamente le righe presenti solo nel localStorage:
+    // su un altro dispositivo potrebbero essere copie obsolete di una misura
+    // cancellata correttamente dal cloud.
     const data = await apiFetch("/api/user/body-composition?limit=1000");
-    const serverHistory = Array.isArray(data.history) ? data.history : [];
-    const serverDates = new Set(serverHistory.map(x=>String(x.date)));
-    const localOnly = localHistory.filter(x=>x?.date && !serverDates.has(String(x.date)));
-
-    let imported=0;
-    const importErrors=[];
-    for (const raw of localOnly) {
-      const item=normalizeBodyCompositionForCloud(raw);
-      try {
-        await apiFetch("/api/user/body-composition",{
-          method:"POST",
-          body:JSON.stringify(item)
-        });
-        imported++;
-      } catch (error) {
-        importErrors.push(String(item.date)+": "+String(error?.message || error));
-      }
-    }
-
-    const refreshed = imported
-      ? await apiFetch("/api/user/body-composition?limit=1000")
-      : data;
-
-    bodyCompositionHistory = (Array.isArray(refreshed.history) ? refreshed.history : serverHistory)
+    bodyCompositionHistory = (Array.isArray(data.history) ? data.history : [])
       .slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
 
-    // Protezione: se un import fallisce, NON cancelliamo dal cache locale le misure non sincronizzate.
-    if (importErrors.length) {
-      const byDate=new Map(bodyCompositionHistory.map(x=>[String(x.date),x]));
-      localHistory.forEach(x=>{
-        if(x?.date && !byDate.has(String(x.date))) byDate.set(String(x.date),x);
-      });
-      bodyCompositionHistory=[...byDate.values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
-    }
-
+    // Allineiamo la cache locale allo stato confermato dal cloud.
     persistBodyCompositionLocalHistory();
     renderBodyCompositionHistory();
     prefillBodyComposition();
 
-    if (msg && (imported || importErrors.length)) {
-      if (importErrors.length) {
-        msg.textContent="Dati locali protetti. Sincronizzazione cloud non completata: "+importErrors.join(" · ");
-        msg.className="bodycomp-message error";
-      } else {
-        msg.textContent="✓ "+imported+" rilevazione"+(imported===1?"":"i")+" importata"+(imported===1?"":"e")+" nel cloud.";
-        msg.className="bodycomp-message success";
-      }
-    }
   } catch (error) {
     console.warn("Body composition D1 sync fallback:",error);
+    // Se il cloud non è raggiungibile manteniamo intatta la cache locale.
+    bodyCompositionHistory = localHistory.slice()
+      .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    renderBodyCompositionHistory();
     if(msg){
       msg.textContent="Dati locali protetti. Cloud non raggiungibile: "+String(error?.message || error);
       msg.className="bodycomp-message error";
