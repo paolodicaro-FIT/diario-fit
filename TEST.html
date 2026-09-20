@@ -9847,6 +9847,20 @@ html[data-theme="light"] .missing-today-legend {
       <!-- Componenti generati dinamicamente via JS -->
     </div>
 
+    <div id="saved-meal-diary-preview" style="display:none; margin-top:14px; padding:12px; border:1px solid rgba(56,189,248,.35); border-radius:14px; background:rgba(56,189,248,.055);">
+      <div style="font-weight:850; color:var(--cyan); margin-bottom:4px;">👁️ Anteprima prima dell’aggiunta</div>
+      <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento. Il pasto salvato originale non cambia.</div>
+      <div class="free-grid">
+        <label>🔥 Kcal<input type="number" id="saved-meal-preview-kcal" min="0" step="1"></label>
+        <label>🥩 Proteine (g)<input type="number" id="saved-meal-preview-pro" min="0" step="0.1"></label>
+        <label>🥑 Grassi (g)<input type="number" id="saved-meal-preview-fat" min="0" step="0.1"></label>
+        <label>🍞 Carboidrati (g)<input type="number" id="saved-meal-preview-carb" min="0" step="0.1"></label>
+        <label>🍬 Zuccheri (g)<input type="number" id="saved-meal-preview-sugar" min="0" step="0.1"></label>
+        <label>⚖️ Peso (g)<input type="number" id="saved-meal-preview-weight" min="0" step="1"></label>
+        <label class="full">💧 Acqua (ml)<input type="number" id="saved-meal-preview-water" min="0" step="1"></label>
+      </div>
+    </div>
+
     <button
       type="button"
       class="save-food-btn"
@@ -18048,6 +18062,11 @@ function updateSavedMealEditorModeUI() {
   if (updateOriginal) {
     updateOriginal.checked = false;
   }
+
+  const diaryPreview = document.getElementById("saved-meal-diary-preview");
+  if (diaryPreview) {
+    diaryPreview.style.display = isUseMode ? "block" : "none";
+  }
 }
 
 
@@ -18503,6 +18522,31 @@ function selectFoodOption(value, label) {
 }
 
 
+function refreshSavedMealDiaryPreview() {
+  if (savedMealEditorMode !== "use") return;
+
+  const totals = (Array.isArray(savedMealDraftItems) ? savedMealDraftItems : []).reduce((acc, item) => {
+    const mult = Number(item.multiplier) > 0 ? Number(item.multiplier) : 1;
+    acc.kcal += (Number(item.kcal) || 0) * mult;
+    acc.pro += (Number(item.pro) || 0) * mult;
+    acc.fat += (Number(item.fat) || 0) * mult;
+    acc.carb += (Number(item.carb) || 0) * mult;
+    acc.sugar += (Number(item.sugar) || 0) * mult;
+    acc.weight += (Number(item.weight) || 0) * mult;
+    acc.water += (Number(item.waterMl) || 0) * mult;
+    return acc;
+  }, { kcal:0, pro:0, fat:0, carb:0, sugar:0, weight:0, water:0 });
+
+  const set = (id, value) => { const el = document.getElementById(id); if (el) el.value = value; };
+  set("saved-meal-preview-kcal", Math.round(totals.kcal));
+  set("saved-meal-preview-pro", Math.round(totals.pro * 10) / 10);
+  set("saved-meal-preview-fat", Math.round(totals.fat * 10) / 10);
+  set("saved-meal-preview-carb", Math.round(totals.carb * 10) / 10);
+  set("saved-meal-preview-sugar", Math.round(totals.sugar * 10) / 10);
+  set("saved-meal-preview-weight", Math.round(totals.weight));
+  set("saved-meal-preview-water", Math.round(totals.water));
+}
+
 function useSavedMeal(index) {
   savedMealPendingItem = null;
   const meal =
@@ -18546,6 +18590,7 @@ function useSavedMeal(index) {
   ).value = meal.name || "";
 
   renderSavedMealDraftItems();
+  refreshSavedMealDiaryPreview();
 
   document.getElementById(
     "saved-meals-modal"
@@ -18558,141 +18603,55 @@ function useSavedMeal(index) {
 
 
 async function addSavedMealToDiary() {
+  if (!ensureDiaryWriteAccess()) return;
 
-  if (!ensureDiaryWriteAccess()) {
-    return;
-  }
-
-  const mealCategory =
-    document.getElementById("meal-category").value;
-
+  const mealCategory = document.getElementById("meal-category").value;
   if (!mealCategory) {
     alert("⚠️ Seleziona prima il tipo di pasto.");
     return;
   }
 
-  if (
-    !Array.isArray(savedMealDraftItems) ||
-    savedMealDraftItems.length === 0
-  ) {
+  if (!Array.isArray(savedMealDraftItems) || savedMealDraftItems.length === 0) {
     alert("Il pasto non contiene alimenti.");
     return;
   }
 
-  const updateOriginal =
-    document.getElementById(
-      "saved-meal-update-original"
-    )?.checked === true;
+  const readNumber = id => {
+    const value = Number(document.getElementById(id)?.value);
+    return Number.isFinite(value) && value >= 0 ? value : null;
+  };
 
-  let nextId = Date.now();
+  const kcal = readNumber("saved-meal-preview-kcal");
+  const pro = readNumber("saved-meal-preview-pro");
+  const fat = readNumber("saved-meal-preview-fat");
+  const carb = readNumber("saved-meal-preview-carb");
+  const sugar = readNumber("saved-meal-preview-sugar");
+  const weight = readNumber("saved-meal-preview-weight");
+  const waterMl = readNumber("saved-meal-preview-water");
 
-  const usedIds =
-    new Set(
-      Array.isArray(log)
-        ? log.map(item => Number(item.id))
-        : []
-    );
-
-  function getUniqueDiaryId() {
-    while (usedIds.has(nextId)) {
-      nextId++;
-    }
-
-    const id = nextId;
-
-    usedIds.add(id);
-    nextId++;
-
-    return id;
+  if ([kcal, pro, fat, carb, sugar, weight, waterMl].some(v => v === null)) {
+    alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
+    return;
   }
 
-  const time = getCurrentTimeStr();
-
-  savedMealDraftItems.forEach(item => {
-    const mult =
-      Number(item.multiplier) > 0
-        ? Number(item.multiplier)
-        : 1;
-
-    const baseName =
-      item.name || "Alimento";
-
-    const name =
-      mult === 1
-        ? baseName
-        : `${baseName} (${mult}x)`;
-
-    log.push({
-      id: getUniqueDiaryId(),
-      time,
-      meal: mealCategory,
-      name,
-      kcal: Math.round(
-        (Number(item.kcal) || 0) * mult
-      ),
-      pro: Math.round(
-        (Number(item.pro) || 0) * mult * 10
-      ) / 10,
-      fat: Math.round(
-        (Number(item.fat) || 0) * mult * 10
-      ) / 10,
-      carb: Math.round(
-        (Number(item.carb) || 0) * mult * 10
-      ) / 10,
-      sugar: Math.round(
-        (Number(item.sugar) || 0) * mult * 10
-      ) / 10,
-      waterMl: Math.round(
-        (Number(item.waterMl) || 0) * mult
-      ),
-      weight: Math.round(
-        (Number(item.weight) || 0) * mult
-      )
-    });
+  const mealName = document.getElementById("saved-meal-name")?.value.trim() || "Pasto salvato";
+  log.push({
+    id: Date.now(),
+    time: getCurrentTimeStr(),
+    meal: mealCategory,
+    name: mealName,
+    kcal: Math.round(kcal),
+    pro: Math.round(pro * 10) / 10,
+    fat: Math.round(fat * 10) / 10,
+    carb: Math.round(carb * 10) / 10,
+    sugar: Math.round(sugar * 10) / 10,
+    waterMl: Math.round(waterMl),
+    weight: Math.round(weight)
   });
 
-  if (
-    updateOriginal &&
-    editingSavedMealIndex >= 0 &&
-    Array.isArray(savedMeals) &&
-    savedMeals[editingSavedMealIndex]
-  ) {
-    savedMeals[editingSavedMealIndex] = {
-      ...savedMeals[editingSavedMealIndex],
-
-      name:
-        document.getElementById(
-          "saved-meal-name"
-        ).value.trim() ||
-        savedMeals[editingSavedMealIndex].name,
-
-      items:
-        savedMealDraftItems.map(item => ({
-          name: item.name || "",
-          kcal: Number(item.kcal) || 0,
-          pro: Number(item.pro) || 0,
-          fat: Number(item.fat) || 0,
-          carb: Number(item.carb) || 0,
-          sugar: Number(item.sugar) || 0,
-          waterMl: Number(item.waterMl) || 0,
-          weight: Number(item.weight) || 0,
-          multiplier:
-            Number(item.multiplier) > 0
-              ? Number(item.multiplier)
-              : 1
-        }))
-    };
-
-    await saveUserSettingsToBackend();
-  }
-
   await saveAndRender();
-
   closeSavedMealEditor();
-
-  resetMealCategory();
-
-  alert("Pasto aggiunto al diario.");
+  document.getElementById("meal-category").value = "";
 }
 
 
@@ -18955,6 +18914,7 @@ function changeSavedMealItemMultiplier(index, delta) {
     );
 
   renderSavedMealDraftItems();
+  refreshSavedMealDiaryPreview();
 }
 
 
@@ -18973,6 +18933,7 @@ function setSavedMealItemMultiplier(index, value) {
       : 1;
 
   renderSavedMealDraftItems();
+  refreshSavedMealDiaryPreview();
 }
 
 
