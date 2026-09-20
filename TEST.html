@@ -18630,17 +18630,17 @@ async function addSavedMealToDiary() {
         (Number(item.kcal) || 0) * mult
       ),
       pro: Math.round(
-        (Number(item.pro) || 0) * mult
-      ),
+        (Number(item.pro) || 0) * mult * 10
+      ) / 10,
       fat: Math.round(
-        (Number(item.fat) || 0) * mult
-      ),
+        (Number(item.fat) || 0) * mult * 10
+      ) / 10,
       carb: Math.round(
-        (Number(item.carb) || 0) * mult
-      ),
+        (Number(item.carb) || 0) * mult * 10
+      ) / 10,
       sugar: Math.round(
-        (Number(item.sugar) || 0) * mult
-      ),
+        (Number(item.sugar) || 0) * mult * 10
+      ) / 10,
       waterMl: Math.round(
         (Number(item.waterMl) || 0) * mult
       ),
@@ -19609,6 +19609,42 @@ function renderQuickCustomizeList() {
 
 
     if (
+      Array.isArray(savedMeals) &&
+      savedMeals.length
+    ) {
+
+      const mealGroup =
+        document.createElement("optgroup");
+
+      mealGroup.label =
+        "🍽️ Piatti salvati";
+
+      savedMeals.forEach((meal, mealIndex) => {
+
+        if (!meal || !meal.id) {
+          return;
+        }
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          `meal:${meal.id}`;
+
+        option.textContent =
+          `🍽️ ${meal.name || `Piatto ${mealIndex + 1}`}`;
+
+        mealGroup.appendChild(option);
+
+      });
+
+      if (mealGroup.children.length) {
+        select.appendChild(mealGroup);
+      }
+    }
+
+
+    if (
       Array.isArray(savedFoods) &&
       savedFoods.length
     ) {
@@ -19768,6 +19804,37 @@ async function saveQuickCustomization() {
     }
 
 
+    if (value.startsWith("meal:")) {
+
+      const mealId =
+        value.slice("meal:".length);
+
+      const meal =
+        Array.isArray(savedMeals)
+          ? savedMeals.find(
+              item => String(item?.id || "") === String(mealId)
+            )
+          : null;
+
+      if (meal) {
+
+        updated.push({
+          quickType: "savedMeal",
+          savedMealId: meal.id,
+          emoji: "🍽️",
+          label: meal.name || "Piatto salvato"
+        });
+
+      } else {
+
+        updated.push(current);
+
+      }
+
+      continue;
+    }
+
+
     if (value.startsWith("saved:")) {
 
       const foodIndex =
@@ -19898,21 +19965,57 @@ function renderQuickGrid() {
         ? "quick-btn water"
         : "quick-btn";
 
-    btn.innerHTML =
-      `<span class="quick-btn-icon">${escapeHTML(item.emoji || "")}</span>` +
-      `<span class="quick-btn-label">${escapeHTML(item.label || "")}</span>`;
+    if (item.quickType === "savedMeal") {
 
-    btn.onclick = () =>
-      addQuick(
-        item.name,
-        item.kcal,
-        item.pro,
-        item.fat,
-        item.carb,
-        item.sugar || 0,
-        item.water || 0,
-        item.weight || 0
-      );
+      const meal =
+        Array.isArray(savedMeals)
+          ? savedMeals.find(
+              savedMeal =>
+                String(savedMeal?.id || "") ===
+                String(item.savedMealId || "")
+            )
+          : null;
+
+      if (meal) {
+
+        btn.innerHTML =
+          `<span class="quick-btn-icon">🍽️</span>` +
+          `<span class="quick-btn-label">${escapeHTML(meal.name || "Piatto salvato")}</span>`;
+
+        btn.onclick = () =>
+          addSavedMealQuick(item.savedMealId);
+
+      } else {
+
+        btn.innerHTML =
+          `<span class="quick-btn-icon">⚠️</span>` +
+          `<span class="quick-btn-label">Piatto eliminato</span>`;
+
+        btn.title =
+          "Il piatto salvato collegato a questo rapido non esiste più.";
+
+        btn.onclick = () =>
+          alert("Questo rapido era collegato a un piatto salvato che è stato eliminato. Personalizza il pulsante per sceglierne un altro.");
+      }
+
+    } else {
+
+      btn.innerHTML =
+        `<span class="quick-btn-icon">${escapeHTML(item.emoji || "")}</span>` +
+        `<span class="quick-btn-label">${escapeHTML(item.label || "")}</span>`;
+
+      btn.onclick = () =>
+        addQuick(
+          item.name,
+          item.kcal,
+          item.pro,
+          item.fat,
+          item.carb,
+          item.sugar || 0,
+          item.water || 0,
+          item.weight || 0
+        );
+    }
 
     container.appendChild(btn);
 
@@ -19920,6 +20023,102 @@ function renderQuickGrid() {
 
 }
 
+
+async function addSavedMealQuick(savedMealId) {
+
+  if (!ensureDiaryWriteAccess()) {
+    return;
+  }
+
+  const mealCategory =
+    document.getElementById("meal-category").value;
+
+  if (!mealCategory) {
+    alert("⚠️ Seleziona prima il tipo di pasto.");
+    return;
+  }
+
+  const savedMeal =
+    Array.isArray(savedMeals)
+      ? savedMeals.find(
+          meal =>
+            String(meal?.id || "") ===
+            String(savedMealId || "")
+        )
+      : null;
+
+  if (!savedMeal) {
+    alert("Il piatto salvato collegato a questo rapido non esiste più.");
+    renderQuickGrid();
+    return;
+  }
+
+  const items =
+    Array.isArray(savedMeal.items)
+      ? savedMeal.items
+      : [];
+
+  if (!items.length) {
+    alert("Il piatto salvato non contiene alimenti.");
+    return;
+  }
+
+  let nextId = Date.now();
+
+  const usedIds =
+    new Set(
+      Array.isArray(log)
+        ? log.map(item => Number(item.id))
+        : []
+    );
+
+  function getUniqueDiaryId() {
+    while (usedIds.has(nextId)) {
+      nextId++;
+    }
+
+    const id = nextId;
+    usedIds.add(id);
+    nextId++;
+    return id;
+  }
+
+  const time = getCurrentTimeStr();
+
+  items.forEach(item => {
+
+    const mult =
+      Number(item.multiplier) > 0
+        ? Number(item.multiplier)
+        : 1;
+
+    const baseName =
+      item.name || "Alimento";
+
+    const name =
+      mult === 1
+        ? baseName
+        : `${baseName} (${mult}x)`;
+
+    log.push({
+      id: getUniqueDiaryId(),
+      time,
+      meal: mealCategory,
+      name,
+      kcal: Math.round((Number(item.kcal) || 0) * mult),
+      pro: Math.round((Number(item.pro) || 0) * mult * 10) / 10,
+      fat: Math.round((Number(item.fat) || 0) * mult * 10) / 10,
+      carb: Math.round((Number(item.carb) || 0) * mult * 10) / 10,
+      sugar: Math.round((Number(item.sugar) || 0) * mult * 10) / 10,
+      waterMl: Math.round((Number(item.waterMl) || 0) * mult),
+      weight: Math.round((Number(item.weight) || 0) * mult)
+    });
+
+  });
+
+  await saveAndRender();
+  resetMealCategory();
+}
 
 function applyUserDisplayName() {
 
