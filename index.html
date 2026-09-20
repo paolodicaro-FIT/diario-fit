@@ -19145,10 +19145,7 @@ function renderFoodPickerModal(filterText = "") {
   categories.forEach(category => {
     const matches = DEFAULT_PRESET_FOODS.filter(food =>
       food.category === category.name &&
-      (
-        food.label.toLowerCase().includes(query) ||
-        food.label.toLowerCase().includes(query)
-      )
+      food.label.toLowerCase().includes(query)
     );
 
     addFoodGroup(
@@ -21085,7 +21082,21 @@ async function addFromSelect() {
       ? multRaw
       : 1;
 
-  const parts = selectedFoodValue.split("|");
+  const parts = String(selectedFoodValue).split("|");
+
+  // Difesa da selezioni incomplete o corrotte: i formati supportati
+  // contengono almeno nome, kcal, proteine, grassi, carboidrati e acqua.
+  const baseNameRaw = String(parts[0] || "").trim();
+  const requiredNumericValues = parts.slice(1, 6).map(Number);
+  const hasInvalidSelection =
+    parts.length < 6 ||
+    !baseNameRaw ||
+    requiredNumericValues.some(value => !Number.isFinite(value) || value < 0);
+
+  if (hasInvalidSelection) {
+    alert("⚠️ I dati dell’alimento selezionato non sono validi. Seleziona nuovamente l’alimento.");
+    return;
+  }
 
   const meal =
     document.getElementById("meal-category").value;
@@ -21095,7 +21106,7 @@ async function addFromSelect() {
     return;
   }
 
-  const baseName = parts[0];
+  const baseName = baseNameRaw;
   const name =
     mult === 1
       ? baseName
