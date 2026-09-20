@@ -9804,6 +9804,33 @@ html[data-theme="light"] .missing-today-legend {
 
 
 <!-- =====================================================
+     MODAL ANTEPRIMA RAPIDO / PREDEFINITO / PREFERITO
+===================================================== -->
+<div class="modal-overlay" id="quick-diary-preview-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>👁️ Anteprima prima dell’aggiunta</h3>
+      <button class="modal-close" onclick="closeQuickDiaryPreview()">✕</button>
+    </div>
+    <div id="quick-preview-name" style="font-weight:850; color:var(--accent); margin-bottom:6px;"></div>
+    <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento prima di aggiungerlo al diario.</div>
+    <div class="free-grid">
+      <label>🔥 Kcal<input type="number" id="quick-preview-kcal" min="0" step="1"></label>
+      <label>🥩 Proteine (g)<input type="number" id="quick-preview-pro" min="0" step="0.1"></label>
+      <label>🥑 Grassi (g)<input type="number" id="quick-preview-fat" min="0" step="0.1"></label>
+      <label>🍞 Carboidrati (g)<input type="number" id="quick-preview-carb" min="0" step="0.1"></label>
+      <label>🍬 Zuccheri (g)<input type="number" id="quick-preview-sugar" min="0" step="0.1"></label>
+      <label>⚖️ Peso (g)<input type="number" id="quick-preview-weight" min="0" step="1"></label>
+      <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" min="0" step="1"></label>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button type="button" class="btn" style="flex:1;" onclick="closeQuickDiaryPreview()">Annulla</button>
+      <button type="button" class="save-food-btn" style="flex:1; margin-top:0;" onclick="confirmQuickDiaryPreview()">➕ Aggiungi al diario</button>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
      MODAL NUOVO / MODIFICA PASTO SALVATO
 ===================================================== -->
 
@@ -9849,7 +9876,7 @@ html[data-theme="light"] .missing-today-legend {
 
     <div id="saved-meal-diary-preview" style="display:none; margin-top:14px; padding:12px; border:1px solid rgba(56,189,248,.35); border-radius:14px; background:rgba(56,189,248,.055);">
       <div style="font-weight:850; color:var(--cyan); margin-bottom:4px;">👁️ Anteprima prima dell’aggiunta</div>
-      <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento. Il pasto salvato originale non cambia.</div>
+      <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento. Il pasto salvato originale non cambia. Nel diario resteranno separati i singoli alimenti che compongono il piatto.</div>
       <div class="free-grid">
         <label>🔥 Kcal<input type="number" id="saved-meal-preview-kcal" min="0" step="1"></label>
         <label>🥩 Proteine (g)<input type="number" id="saved-meal-preview-pro" min="0" step="0.1"></label>
@@ -18621,39 +18648,64 @@ async function addSavedMealToDiary() {
     return Number.isFinite(value) && value >= 0 ? value : null;
   };
 
-  const kcal = readNumber("saved-meal-preview-kcal");
-  const pro = readNumber("saved-meal-preview-pro");
-  const fat = readNumber("saved-meal-preview-fat");
-  const carb = readNumber("saved-meal-preview-carb");
-  const sugar = readNumber("saved-meal-preview-sugar");
-  const weight = readNumber("saved-meal-preview-weight");
-  const waterMl = readNumber("saved-meal-preview-water");
+  const edited = {
+    kcal: readNumber("saved-meal-preview-kcal"),
+    pro: readNumber("saved-meal-preview-pro"),
+    fat: readNumber("saved-meal-preview-fat"),
+    carb: readNumber("saved-meal-preview-carb"),
+    sugar: readNumber("saved-meal-preview-sugar"),
+    weight: readNumber("saved-meal-preview-weight"),
+    water: readNumber("saved-meal-preview-water")
+  };
 
-  if ([kcal, pro, fat, carb, sugar, weight, waterMl].some(v => v === null)) {
+  if (Object.values(edited).some(v => v === null)) {
     alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
     return;
   }
 
-  const mealName = document.getElementById("saved-meal-name")?.value.trim() || "Pasto salvato";
-  log.push({
-    id: Date.now(),
-    time: getCurrentTimeStr(),
-    meal: mealCategory,
-    name: mealName,
-    kcal: Math.round(kcal),
-    pro: Math.round(pro * 10) / 10,
-    fat: Math.round(fat * 10) / 10,
-    carb: Math.round(carb * 10) / 10,
-    sugar: Math.round(sugar * 10) / 10,
-    waterMl: Math.round(waterMl),
-    weight: Math.round(weight)
+  const original = savedMealDraftItems.reduce((acc, item) => {
+    const mult = Number(item.multiplier) > 0 ? Number(item.multiplier) : 1;
+    acc.kcal += (Number(item.kcal) || 0) * mult;
+    acc.pro += (Number(item.pro) || 0) * mult;
+    acc.fat += (Number(item.fat) || 0) * mult;
+    acc.carb += (Number(item.carb) || 0) * mult;
+    acc.sugar += (Number(item.sugar) || 0) * mult;
+    acc.weight += (Number(item.weight) || 0) * mult;
+    acc.water += (Number(item.waterMl) || 0) * mult;
+    return acc;
+  }, {kcal:0,pro:0,fat:0,carb:0,sugar:0,weight:0,water:0});
+
+  const ratio = (key) => original[key] > 0 ? edited[key] / original[key] : 1;
+  const ratios = {
+    kcal: ratio("kcal"), pro: ratio("pro"), fat: ratio("fat"), carb: ratio("carb"),
+    sugar: ratio("sugar"), weight: ratio("weight"), water: ratio("water")
+  };
+
+  let nextId = Date.now();
+  const usedIds = new Set(Array.isArray(log) ? log.map(item => Number(item.id)) : []);
+  const uniqueId = () => { while (usedIds.has(nextId)) nextId++; const id=nextId++; usedIds.add(id); return id; };
+  const time = getCurrentTimeStr();
+
+  savedMealDraftItems.forEach(item => {
+    const mult = Number(item.multiplier) > 0 ? Number(item.multiplier) : 1;
+    const baseName = item.name || "Alimento";
+    log.push({
+      id: uniqueId(), time, meal: mealCategory,
+      name: mult === 1 ? baseName : `${baseName} (${mult}x)`,
+      kcal: Math.round((Number(item.kcal)||0) * mult * ratios.kcal),
+      pro: Math.round((Number(item.pro)||0) * mult * ratios.pro * 10) / 10,
+      fat: Math.round((Number(item.fat)||0) * mult * ratios.fat * 10) / 10,
+      carb: Math.round((Number(item.carb)||0) * mult * ratios.carb * 10) / 10,
+      sugar: Math.round((Number(item.sugar)||0) * mult * ratios.sugar * 10) / 10,
+      waterMl: Math.round((Number(item.waterMl)||0) * mult * ratios.water),
+      weight: Math.round((Number(item.weight)||0) * mult * ratios.weight)
+    });
   });
 
   await saveAndRender();
   closeSavedMealEditor();
-  document.getElementById("meal-category").value = "";
+  resetMealCategory();
 }
-
 
 async function deleteSavedMeal(index) {
   const meal =
@@ -19896,7 +19948,7 @@ function renderQuickGrid() {
           `<span class="quick-btn-label">${escapeHTML(meal.name || "Piatto salvato")}</span>`;
 
         btn.onclick = () =>
-          addSavedMealQuick(item.savedMealId);
+          openSavedMealQuickPreview(item.savedMealId);
 
       } else {
 
@@ -19937,100 +19989,22 @@ function renderQuickGrid() {
 }
 
 
-async function addSavedMealQuick(savedMealId) {
-
-  if (!ensureDiaryWriteAccess()) {
-    return;
-  }
-
-  const mealCategory =
-    document.getElementById("meal-category").value;
-
+function openSavedMealQuickPreview(savedMealId) {
+  if (!ensureDiaryWriteAccess()) return;
+  const mealCategory = document.getElementById("meal-category").value;
   if (!mealCategory) {
     alert("⚠️ Seleziona prima il tipo di pasto.");
     return;
   }
-
-  const savedMeal =
-    Array.isArray(savedMeals)
-      ? savedMeals.find(
-          meal =>
-            String(meal?.id || "") ===
-            String(savedMealId || "")
-        )
-      : null;
-
-  if (!savedMeal) {
+  const index = Array.isArray(savedMeals)
+    ? savedMeals.findIndex(meal => String(meal?.id || "") === String(savedMealId || ""))
+    : -1;
+  if (index < 0) {
     alert("Il piatto salvato collegato a questo rapido non esiste più.");
     renderQuickGrid();
     return;
   }
-
-  const items =
-    Array.isArray(savedMeal.items)
-      ? savedMeal.items
-      : [];
-
-  if (!items.length) {
-    alert("Il piatto salvato non contiene alimenti.");
-    return;
-  }
-
-  let nextId = Date.now();
-
-  const usedIds =
-    new Set(
-      Array.isArray(log)
-        ? log.map(item => Number(item.id))
-        : []
-    );
-
-  function getUniqueDiaryId() {
-    while (usedIds.has(nextId)) {
-      nextId++;
-    }
-
-    const id = nextId;
-    usedIds.add(id);
-    nextId++;
-    return id;
-  }
-
-  const time = getCurrentTimeStr();
-
-  items.forEach(item => {
-
-    const mult =
-      Number(item.multiplier) > 0
-        ? Number(item.multiplier)
-        : 1;
-
-    const baseName =
-      item.name || "Alimento";
-
-    const name =
-      mult === 1
-        ? baseName
-        : `${baseName} (${mult}x)`;
-
-    log.push({
-      id: getUniqueDiaryId(),
-      time,
-      meal: mealCategory,
-      name,
-      kcal: Math.round((Number(item.kcal) || 0) * mult),
-      pro: Math.round((Number(item.pro) || 0) * mult * 10) / 10,
-      fat: Math.round((Number(item.fat) || 0) * mult * 10) / 10,
-      carb: Math.round((Number(item.carb) || 0) * mult * 10) / 10,
-      sugar: Math.round((Number(item.sugar) || 0) * mult * 10) / 10,
-      waterMl: Math.round((Number(item.waterMl) || 0) * mult),
-      weight: Math.round((Number(item.weight) || 0) * mult)
-    });
-
-  });
-
-  await saveAndRender();
-  resetMealCategory();
+  useSavedMeal(index);
 }
 
 function applyUserDisplayName() {
@@ -20057,67 +20031,63 @@ function applyUserDisplayName() {
 }
 
 
-async function addQuick(
-  name,
-  kcal,
-  pro,
-  fat,
-  carb,
-  sugar = 0,
-  waterMl = 0,
-  weight = 0
-) {
+let quickDiaryPreviewPending = null;
 
-  if (!ensureDiaryWriteAccess()) {
-    return;
-  }
-
-  const meal =
-    document.getElementById(
-      "meal-category"
-    ).value;
-
+function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0) {
+  if (!ensureDiaryWriteAccess()) return;
+  const meal = document.getElementById("meal-category").value;
   if (!meal) {
     alert("⚠️ Seleziona prima il tipo di pasto.");
     return;
   }
 
-
-  log.push({
-
-    id: Date.now(),
-
-    time:
-      getCurrentTimeStr(),
-
-    meal,
-
-    name,
-
-    kcal,
-
-    pro,
-
-    fat,
-
-    carb,
-
-    sugar,
-
-    waterMl,
-
-    weight:
-      Number(weight) || 0
-
-  });
-
-
-  await saveAndRender();
-
-  resetMealCategory();
-
+  quickDiaryPreviewPending = { name, meal };
+  const set = (id, value) => { const el=document.getElementById(id); if (el) el.value=value; };
+  const title = document.getElementById("quick-preview-name");
+  if (title) title.textContent = name || "Alimento";
+  set("quick-preview-kcal", Math.round(Number(kcal)||0));
+  set("quick-preview-pro", Math.round((Number(pro)||0)*10)/10);
+  set("quick-preview-fat", Math.round((Number(fat)||0)*10)/10);
+  set("quick-preview-carb", Math.round((Number(carb)||0)*10)/10);
+  set("quick-preview-sugar", Math.round((Number(sugar)||0)*10)/10);
+  set("quick-preview-water", Math.round(Number(waterMl)||0));
+  set("quick-preview-weight", Math.round(Number(weight)||0));
+  document.getElementById("quick-diary-preview-modal").style.display = "flex";
 }
 
+function closeQuickDiaryPreview() {
+  quickDiaryPreviewPending = null;
+  const modal = document.getElementById("quick-diary-preview-modal");
+  if (modal) modal.style.display = "none";
+}
+
+async function confirmQuickDiaryPreview() {
+  if (!quickDiaryPreviewPending) return;
+  const read = id => {
+    const v=Number(document.getElementById(id)?.value);
+    return Number.isFinite(v) && v >= 0 ? v : null;
+  };
+  const values = {
+    kcal:read("quick-preview-kcal"), pro:read("quick-preview-pro"), fat:read("quick-preview-fat"),
+    carb:read("quick-preview-carb"), sugar:read("quick-preview-sugar"), waterMl:read("quick-preview-water"),
+    weight:read("quick-preview-weight")
+  };
+  if (Object.values(values).some(v => v === null)) {
+    alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
+    return;
+  }
+  log.push({
+    id:Date.now(), time:getCurrentTimeStr(), meal:quickDiaryPreviewPending.meal,
+    name:quickDiaryPreviewPending.name,
+    kcal:Math.round(values.kcal), pro:Math.round(values.pro*10)/10, fat:Math.round(values.fat*10)/10,
+    carb:Math.round(values.carb*10)/10, sugar:Math.round(values.sugar*10)/10,
+    waterMl:Math.round(values.waterMl), weight:Math.round(values.weight)
+  });
+  document.getElementById("quick-diary-preview-modal").style.display = "none";
+  quickDiaryPreviewPending = null;
+  await saveAndRender();
+  resetMealCategory();
+}
 
 /* =========================================================
    RESET DEL TIPO DI PASTO
