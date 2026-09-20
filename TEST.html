@@ -15178,24 +15178,33 @@ async function saveBodyComposition() {
 }
 
 async function deleteBodyComposition(date) {
-  let cloudDeleted=false;
-  if (localStorage.getItem("diario_backend_token")) {
+  const msg=document.getElementById("bodycomp-message");
+  const token=localStorage.getItem("diario_backend_token");
+
+  // Se l'utente è autenticato, D1 è la fonte autorevole.
+  // Se il cloud non conferma DELETE, non rimuoviamo nulla localmente.
+  if (token) {
     try {
       await apiFetch("/api/user/body-composition?date="+encodeURIComponent(date),{method:"DELETE"});
-      cloudDeleted=true;
     } catch (error) {
-      console.warn("Body composition delete fallback:",error);
+      console.warn("Body composition cloud delete failed:",error);
+      if(msg){
+        msg.textContent="Eliminazione NON eseguita: il cloud non ha confermato la cancellazione. I dati sono rimasti protetti.";
+        msg.className="bodycomp-message error";
+      }
+      return;
     }
   }
-  bodyCompositionHistory=bodyCompositionHistory.filter(x=>x.date!==date);
+
+  bodyCompositionHistory=bodyCompositionHistory.filter(x=>String(x.date)!==String(date));
   persistBodyCompositionLocalHistory();
   renderBodyCompositionHistory();
-  const msg=document.getElementById("bodycomp-message");
+
   if(msg){
-    msg.textContent=cloudDeleted
-      ? "✓ Misurazione eliminata anche dal cloud."
-      : "Misurazione eliminata dal dispositivo; eliminazione cloud non disponibile.";
-    msg.className=cloudDeleted ? "bodycomp-message success" : "bodycomp-message";
+    msg.textContent=token
+      ? "✓ Misurazione eliminata dal cloud e dal dispositivo."
+      : "✓ Misurazione eliminata dal dispositivo.";
+    msg.className="bodycomp-message success";
   }
 }
 
