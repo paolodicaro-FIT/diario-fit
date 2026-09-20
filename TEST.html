@@ -10094,6 +10094,72 @@ html[data-theme="light"] .missing-today-legend {
         ＋ Nuovo utente
       </button>
 
+      <div
+        id="admin-maintenance-panel"
+        style="
+          margin-top:16px;
+          padding:12px;
+          border:1px solid rgba(56,189,248,.25);
+          border-radius:14px;
+          background:rgba(56,189,248,.055);
+        "
+      >
+        <div class="admin-subheading" style="margin-top:0;">
+          🛠️ Manutenzione sistema
+        </div>
+
+        <p style="margin:0 0 10px;">
+          Analizza il database online. La manutenzione automatica interviene
+          solo sulle sessioni scadute e non elimina dati del diario,
+          pesi, composizione corporea o impostazioni utenti.
+        </p>
+
+        <div
+          id="admin-maintenance-status"
+          style="
+            padding:10px;
+            margin-bottom:9px;
+            border:1px solid var(--border);
+            border-radius:10px;
+            background:rgba(255,255,255,.025);
+            font-size:.76rem;
+            line-height:1.5;
+          "
+        >
+          ⚪ Stato non ancora analizzato.
+        </div>
+
+        <div
+          id="admin-maintenance-reminder"
+          style="
+            margin-bottom:9px;
+            color:var(--muted);
+            font-size:.68rem;
+          "
+        >
+          Controllo consigliato: ogni 30 giorni.
+        </div>
+
+        <button
+          type="button"
+          class="btn full"
+          id="admin-maintenance-analyze-btn"
+          onclick="analyzeAdminMaintenance()"
+        >
+          🔍 Analizza sistema
+        </button>
+
+        <button
+          type="button"
+          class="btn primary full"
+          id="admin-maintenance-run-btn"
+          onclick="runAdminMaintenance()"
+          style="display:none; margin-top:7px;"
+        >
+          🧹 Esegui manutenzione
+        </button>
+      </div>
+
     </div>
 
 
@@ -13532,6 +13598,7 @@ async function loadAdminUsers() {
     }
 
     renderAdminUsers(data.users || []);
+    loadAdminMaintenanceReminder();
 
   } catch (error) {
 
@@ -13546,6 +13613,248 @@ async function loadAdminUsers() {
       '</p>';
   }
 
+}
+
+
+function adminMaintenanceToken() {
+  return localStorage.getItem("diario_backend_token") || "";
+}
+
+
+function formatAdminMaintenanceDate(value) {
+  if (!value) {
+    return "mai";
+  }
+
+  const date = new Date(value);
+
+  if (!Number.isFinite(date.getTime())) {
+    return "data non disponibile";
+  }
+
+  return date.toLocaleString("it-IT", {
+    dateStyle: "short",
+    timeStyle: "short"
+  });
+}
+
+
+function adminMaintenanceDaysSince(value) {
+  if (!value) {
+    return null;
+  }
+
+  const ms = Date.now() - new Date(value).getTime();
+
+  if (!Number.isFinite(ms)) {
+    return null;
+  }
+
+  return Math.max(0, Math.floor(ms / 86400000));
+}
+
+
+function renderAdminMaintenance(data) {
+  const status =
+    document.getElementById("admin-maintenance-status");
+
+  const reminder =
+    document.getElementById("admin-maintenance-reminder");
+
+  const runBtn =
+    document.getElementById("admin-maintenance-run-btn");
+
+  if (!status || !reminder || !runBtn) {
+    return;
+  }
+
+  const stats = data.stats || {};
+  const needsMaintenance =
+    data.maintenance_needed === true;
+
+  const icon =
+    needsMaintenance ? "🟡" : "🟢";
+
+  const title =
+    needsMaintenance
+      ? "Manutenzione consigliata"
+      : "Sistema OK";
+
+  status.innerHTML =
+    `<strong>${icon} ${title}</strong><br>` +
+    `Utenti: ${Number(stats.users || 0)} · ` +
+    `Sessioni: ${Number(stats.sessions_total || 0)} ` +
+    `(${Number(stats.sessions_active || 0)} attive, ` +
+    `${Number(stats.sessions_expired || 0)} scadute)<br>` +
+    `Giornate diario: ${Number(stats.diary_days || 0)} · ` +
+    `Pesi: ${Number(stats.weight_history || 0)} · ` +
+    `Composizione corporea: ${Number(stats.body_composition_history || 0)} · ` +
+    `Audit: ${Number(stats.audit_log || 0)}<br>` +
+    `<span style="color:var(--muted);">` +
+    `Analisi: ${formatAdminMaintenanceDate(data.checked_at)}` +
+    `</span>`;
+
+  const days =
+    adminMaintenanceDaysSince(data.previous_check_at);
+
+  if (days === null) {
+    reminder.textContent =
+      "Prima analisi registrata. Controllo consigliato: ogni 30 giorni.";
+  } else if (days >= 30) {
+    reminder.textContent =
+      `⏰ Erano trascorsi ${days} giorni dall'ultimo controllo.`;
+  } else {
+    reminder.textContent =
+      `Ultimo controllo precedente: ${days} ` +
+      `${days === 1 ? "giorno" : "giorni"} fa · ` +
+      "prossimo controllo consigliato a 30 giorni.";
+  }
+
+  runBtn.style.display =
+    needsMaintenance ? "block" : "none";
+}
+
+
+async function analyzeAdminMaintenance() {
+  if (!currentUser || currentUser.role !== "admin") {
+    return;
+  }
+
+  const token = adminMaintenanceToken();
+  const status =
+    document.getElementById("admin-maintenance-status");
+  const analyzeBtn =
+    document.getElementById("admin-maintenance-analyze-btn");
+
+  if (!token || !status || !analyzeBtn) {
+    return;
+  }
+
+  analyzeBtn.disabled = true;
+  status.innerHTML = "⏳ Analisi del database in corso...";
+
+  try {
+    const response =
+      await fetch(
+        BACKEND_API_URL + "/api/admin/maintenance/analyze",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "MAINTENANCE_ANALYSIS_FAILED");
+    }
+
+    renderAdminMaintenance(data);
+    localStorage.setItem(
+      "diario_admin_last_maintenance_check",
+      data.checked_at || new Date().toISOString()
+    );
+
+  } catch (error) {
+    console.error("Errore analisi manutenzione:", error);
+
+    status.innerHTML =
+      '<span style="color:var(--red);">' +
+      "🔴 Analisi non riuscita. Nessuna modifica è stata eseguita." +
+      "</span>";
+  } finally {
+    analyzeBtn.disabled = false;
+  }
+}
+
+
+async function runAdminMaintenance() {
+  if (!currentUser || currentUser.role !== "admin") {
+    return;
+  }
+
+  if (!confirm(
+    "Eseguire la manutenzione online? " +
+    "Verranno eliminate esclusivamente le sessioni scadute."
+  )) {
+    return;
+  }
+
+  const token = adminMaintenanceToken();
+  const runBtn =
+    document.getElementById("admin-maintenance-run-btn");
+
+  if (!token || !runBtn) {
+    return;
+  }
+
+  runBtn.disabled = true;
+  runBtn.textContent = "⏳ Manutenzione in corso...";
+
+  try {
+    const response =
+      await fetch(
+        BACKEND_API_URL + "/api/admin/maintenance/run",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "MAINTENANCE_RUN_FAILED");
+    }
+
+    alert(
+      "Manutenzione completata.\\n" +
+      "Sessioni scadute eliminate: " +
+      Number(data.deleted_expired_sessions || 0)
+    );
+
+    await analyzeAdminMaintenance();
+
+  } catch (error) {
+    console.error("Errore manutenzione:", error);
+
+    alert(
+      "La manutenzione non è riuscita. " +
+      "Controlla la connessione e riprova."
+    );
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = "🧹 Esegui manutenzione";
+  }
+}
+
+
+function loadAdminMaintenanceReminder() {
+  const reminder =
+    document.getElementById("admin-maintenance-reminder");
+
+  if (!reminder || !currentUser || currentUser.role !== "admin") {
+    return;
+  }
+
+  const lastLocal =
+    localStorage.getItem("diario_admin_last_maintenance_check");
+
+  const days =
+    adminMaintenanceDaysSince(lastLocal);
+
+  if (days === null) {
+    reminder.textContent =
+      "Nessuna analisi effettuata su questo dispositivo. " +
+      "Controllo consigliato: ogni 30 giorni.";
+  } else if (days >= 30) {
+    reminder.textContent =
+      `⏰ Sono passati ${days} giorni dall'ultima analisi su questo dispositivo.`;
+  }
 }
 
 
