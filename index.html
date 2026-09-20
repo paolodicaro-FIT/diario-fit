@@ -7967,6 +7967,27 @@ html[data-theme="light"]
   background:transparent!important;
 }
 
+
+
+/* =========================================================
+   INFO / HELP - STAMPA E PDF
+========================================================= */
+.doc-header-actions {
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.doc-print-btn {
+  white-space:nowrap;
+  color:var(--accent);
+  border-color:rgba(255,159,28,.32);
+}
+@media (max-width:420px) {
+  .doc-print-btn {
+    padding:5px 6px;
+    font-size:.72rem;
+  }
+}
 </style>
 
 <style>
@@ -11080,13 +11101,23 @@ html[data-theme="light"] .missing-today-legend {
         ℹ️ Informazioni
       </h3>
 
-      <button
-        class="modal-close"
-        onclick="toggleInfoModal()"
-        aria-label="Chiudi"
-      >
-        ✕
-      </button>
+      <div class="doc-header-actions">
+        <button
+          type="button"
+          class="mini-btn doc-print-btn"
+          onclick="printInfoHelpDocument('info')"
+          title="Stampa o salva in PDF"
+        >
+          🖨️ Stampa / PDF
+        </button>
+        <button
+          class="modal-close"
+          onclick="toggleInfoModal()"
+          aria-label="Chiudi"
+        >
+          ✕
+        </button>
+      </div>
 
     </div>
 
@@ -11210,8 +11241,15 @@ html[data-theme="light"] .missing-today-legend {
         </p>
 
         <p>
-          Registro e valori raggiunti si aggiornano
-          automaticamente.
+          Per inserimenti rapidi, alimenti predefiniti e preferiti,
+          Diario FIT mostra prima una <strong>anteprima modificabile</strong>:
+          puoi controllare quantità, calorie e macronutrienti e confermare
+          solo quando i valori sono corretti.
+        </p>
+
+        <p>
+          Dopo la conferma, registro e valori raggiunti
+          si aggiornano automaticamente.
         </p>
 
       </section>
@@ -11225,7 +11263,16 @@ html[data-theme="light"] .missing-today-legend {
         <p>
           La sezione Statistiche e Progressi raccoglie
           gli strumenti dedicati all'andamento nel tempo:
-          peso, trend, medie settimanali e analisi personale.
+          peso e trend, medie settimanali, analisi personale
+          e <strong>composizione corporea</strong>.
+        </p>
+
+        <p>
+          Nell'area Composizione corporea puoi registrare
+          circonferenze e altre misure antropometriche e conservarne
+          lo storico. Quando i dati necessari sono disponibili,
+          Diario FIT può mostrare anche una stima indicativa
+          della percentuale di massa grassa.
         </p>
 
         <p>
@@ -11509,13 +11556,23 @@ html[data-theme="light"] .missing-today-legend {
         📖 Help
       </h3>
 
-      <button
-        class="modal-close"
-        onclick="toggleHelpModal()"
-        aria-label="Chiudi"
-      >
-        ✕
-      </button>
+      <div class="doc-header-actions">
+        <button
+          type="button"
+          class="mini-btn doc-print-btn"
+          onclick="printInfoHelpDocument('help')"
+          title="Stampa o salva in PDF"
+        >
+          🖨️ Stampa / PDF
+        </button>
+        <button
+          class="modal-close"
+          onclick="toggleHelpModal()"
+          aria-label="Chiudi"
+        >
+          ✕
+        </button>
+      </div>
 
     </div>
 
@@ -11582,12 +11639,15 @@ html[data-theme="light"] .missing-today-legend {
         </div>
 
         <p>
-          Tocca uno dei pulsanti rapidi per aggiungere
-          immediatamente l'alimento al registro.
+          Tocca uno dei pulsanti rapidi per preparare
+          l'inserimento dell'alimento che usi più spesso.
+          Prima del salvataggio si apre un'<strong>anteprima modificabile</strong>
+          con quantità, calorie e macronutrienti.
         </p>
 
         <p>
-          Tramite ⚙️ puoi personalizzare gli alimenti
+          Controlla i valori e premi Conferma per aggiungerli
+          al registro. Tramite ⚙️ puoi personalizzare gli alimenti
           o le integrazioni che usi più frequentemente.
         </p>
 
@@ -11603,8 +11663,15 @@ html[data-theme="light"] .missing-today-legend {
 
         <p>
           Il catalogo permette di selezionare un alimento
-          già memorizzato, impostarne la quantità o il
-          moltiplicatore e aggiungerlo al pasto corrente.
+          già memorizzato e impostarne quantità o moltiplicatore.
+          Premendo ＋ Aggiungi alimento si apre la stessa
+          <strong>anteprima modificabile</strong> usata dagli inserimenti rapidi.
+        </p>
+
+        <p>
+          Nell'anteprima puoi correggere peso, calorie, proteine,
+          grassi, carboidrati, zuccheri e acqua prima della conferma.
+          Le modifiche valgono per quell'inserimento.
         </p>
 
       </section>
@@ -11751,9 +11818,9 @@ html[data-theme="light"] .missing-today-legend {
 
         <p>
           Apri 📊 Statistiche e Progressi per accedere
-          alle tre aree dedicate all'andamento nel tempo:
-          ⚖️ Progressi, 📊 Medie settimanali
-          e 📈 Analisi personale.
+          alle quattro aree dedicate all'andamento nel tempo:
+          ⚖️ Progressi, 📊 Medie settimanali,
+          📈 Analisi personale e 🧍 Composizione corporea.
         </p>
 
       </section>
@@ -11782,6 +11849,34 @@ html[data-theme="light"] .missing-today-legend {
         <p>
           Il grafico mostra sia le rilevazioni reali
           sia la linea del trend nel tempo.
+        </p>
+
+      </section>
+
+
+      <section class="help2-card">
+
+        <div class="help2-card-title">
+          <span>🧍</span>
+          <h4>Composizione corporea</h4>
+        </div>
+
+        <p>
+          In Composizione corporea puoi registrare peso, altezza,
+          vita standard, vita all'ombelico, collo, torace, fianchi,
+          braccio, coscia e polpaccio.
+        </p>
+
+        <p>
+          Salva ogni misurazione per conservarla nello storico.
+          Il comando ↻ Ripristina ultimi dati salvati riporta nei campi
+          l'ultima rilevazione disponibile.
+        </p>
+
+        <p>
+          Quando i dati necessari sono presenti, Diario FIT mostra
+          una <strong>stima antropometrica indicativa della massa grassa</strong>.
+          Non è una misurazione clinica.
         </p>
 
       </section>
@@ -12086,6 +12181,84 @@ html[data-theme="light"] .missing-today-legend {
 
 
 <script>
+
+/* =========================================================
+   INFO / HELP - STAMPA / SALVA PDF
+========================================================= */
+function printInfoHelpDocument(type) {
+  const isInfo = type === "info";
+  const selector = isInfo ? "#info-modal .info2-content" : "#help-modal .help2-content";
+  const source = document.querySelector(selector);
+  if (!source) {
+    alert("Contenuto non disponibile per la stampa.");
+    return;
+  }
+
+  const clone = source.cloneNode(true);
+  clone.querySelectorAll(".modal-header, button, .theme-selector").forEach(el => el.remove());
+
+  const title = isInfo ? "Diario FIT — Informazioni" : "Diario FIT — Help";
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) {
+    alert("Il browser ha bloccato la finestra di stampa. Consenti i popup per Diario FIT e riprova.");
+    return;
+  }
+
+  const baseHref = new URL(".", window.location.href).href;
+  printWindow.document.open();
+  printWindow.document.write(`<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="${baseHref}">
+<title>${title}</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm 15mm; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#fff; color:#17202a; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:10.5pt; line-height:1.48; }
+  .info2-content, .help2-content { width:100%; max-width:none; margin:0; padding:0; background:#fff; color:#17202a; }
+  .info2-hero, .help2-hero { display:grid; grid-template-columns:34mm 1fr; align-items:center; gap:7mm; margin:0 0 7mm; padding:5mm; border:1px solid #d7dde5; border-radius:4mm; background:#f7f9fb; break-inside:avoid; }
+  .help2-hero { grid-template-columns:24mm 1fr; }
+  .info2-logo, .help2-logo { display:block; width:100%; max-width:32mm; height:auto; border-radius:3mm; }
+  .help2-hero-logo-wrap { width:22mm; height:22mm; display:flex; align-items:center; justify-content:center; }
+  .info2-kicker, .help2-kicker { font-size:8pt; font-weight:800; letter-spacing:.08em; color:#506070; text-transform:uppercase; }
+  h2 { margin:1mm 0 2mm; font-size:20pt; line-height:1.1; color:#111827; }
+  h2 span { color:#d97706; }
+  h3 { color:#111827; }
+  p { margin:0 0 2.5mm; color:#334155; }
+  a { color:#1d4ed8; text-decoration:none; overflow-wrap:anywhere; }
+  .info2-grid, .help2-grid, .help2-science-grid { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .info2-card, .help2-card, .help2-science-item, .info2-note, .help2-warning, .help2-science { border:1px solid #d7dde5; border-radius:3mm; padding:4mm; background:#fff; break-inside:avoid; }
+  .info2-card-wide, .help2-card-wide, .help2-science { grid-column:1 / -1; }
+  .info2-card-title, .help2-card-title, .help2-science-header, .info2-note-title, .help2-warning-title { display:flex; align-items:center; gap:2.5mm; margin-bottom:2.5mm; }
+  .info2-card-title h4, .help2-card-title h4 { margin:0; font-size:11.5pt; color:#111827; }
+  .info2-card-icon, .help2-card-title > span { font-size:14pt; }
+  .info2-highlight, .info2-small-note { padding:3mm; background:#f8fafc; border-radius:2mm; }
+  .info2-note, .help2-warning { margin-top:5mm; }
+  .info2-footer { margin-top:5mm; text-align:center; color:#64748b; font-size:8pt; }
+  .help2-science { margin-top:5mm; }
+  .help2-science-grid { margin-top:4mm; }
+  .help2-science-item strong { color:#111827; }
+  details { border:1px solid #d7dde5; border-radius:3mm; padding:3mm 4mm; margin:3mm 0; break-inside:avoid; }
+  summary { font-weight:700; color:#111827; }
+  @media print {
+    body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    a { color:#17202a; }
+  }
+</style>
+</head>
+<body>
+${clone.outerHTML}
+<script>
+window.addEventListener("load", () => setTimeout(() => window.print(), 180));
+<\/script>
+</body>
+</html>`);
+  printWindow.document.close();
+}
+
 
 /* =========================================================
    TEMA
