@@ -12694,7 +12694,6 @@ let userSettings = {};
 let historyLogs;
 let log;
 let quickAddItems;
-let profiles;
 
 let selectedFoodValue = "";
 let selectedFoodDisplayText = "";
@@ -13675,118 +13674,6 @@ document
 
     }
   );
-
-
-/* =========================================================
-   PROFILI - HELPER BASE64 UNICODE
-========================================================= */
-
-function b64EncodeUnicode(str) {
-
-  return btoa(
-    encodeURIComponent(str).replace(
-      /%([0-9A-F]{2})/g,
-      (match, p1) =>
-        String.fromCharCode("0x" + p1)
-    )
-  );
-
-}
-
-function b64DecodeUnicode(str) {
-
-  return decodeURIComponent(
-    atob(str)
-      .split("")
-      .map(c =>
-        "%" +
-        ("00" + c.charCodeAt(0).toString(16)).slice(-2)
-      )
-      .join("")
-  );
-
-}
-
-
-/* =========================================================
-   PROFILI - IMPORT SU DISPOSITIVO AMICO
-========================================================= */
-
-function importProfileFromUrlIfPresent() {
-
-  const encoded =
-    new URLSearchParams(location.search).get("profile");
-
-  if (!encoded) {
-    return;
-  }
-
-  try {
-
-    const json =
-      b64DecodeUnicode(
-        decodeURIComponent(encoded)
-      );
-
-    const profile = JSON.parse(json);
-
-    if (!profile || !profile.name) {
-      throw new Error("Formato profilo non valido.");
-    }
-
-    const confirmMsg =
-      `Vuoi importare il profilo "${profile.name}" su questo ` +
-      `dispositivo? Verranno impostati target, inserimento ` +
-      `rapido e alimenti preferiti dedicati a questo profilo.`;
-
-    if (confirm(confirmMsg)) {
-
-      localStorage.setItem(
-        "diario_user_name",
-        profile.name
-      );
-
-      localStorage.setItem(
-        "diario_targets",
-        JSON.stringify(
-          profile.targets ||
-          { kcal: 2000, pro: 160, fat: 65, carb: 180, sugar: 50, water: 2500 }
-        )
-      );
-
-      localStorage.setItem(
-        "diario_quick_items",
-        JSON.stringify(
-          profile.quickItems || DEFAULT_QUICK_ITEMS
-        )
-      );
-
-      localStorage.setItem(
-        "diario_saved_foods",
-        JSON.stringify(
-          profile.favoriteFoods || []
-        )
-      );
-
-    }
-
-  } catch (err) {
-
-    alert(
-      "Il link del profilo non è valido o è corrotto. Chiedi un nuovo link a chi te lo ha inviato."
-    );
-
-  } finally {
-
-    history.replaceState(
-      null,
-      "",
-      location.pathname
-    );
-
-  }
-
-}
 
 
 /* =========================================================
@@ -15300,13 +15187,6 @@ async function initApp() {
 
   await loadUserDataFromBackend();
 
-
-  profiles =
-    JSON.parse(
-      localStorage.getItem(
-        "diario_profiles"
-      )
-    ) || [];
 
 
   await loadUserHistoryFromBackend();
