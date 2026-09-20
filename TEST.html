@@ -9814,6 +9814,14 @@ html[data-theme="light"] .missing-today-legend {
     </div>
     <div id="quick-preview-name" style="font-weight:850; color:var(--accent); margin-bottom:6px;"></div>
     <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento prima di aggiungerlo al diario.</div>
+    <div style="margin-bottom:10px;">
+      <label style="display:block; margin-bottom:4px;">✖️ Moltiplicatore</label>
+      <div class="multiplier-control" style="max-width:180px;">
+        <button type="button" onclick="changeQuickPreviewMultiplier(-0.5)">−</button>
+        <input type="number" id="quick-preview-multiplier" value="1" min="0.5" step="0.5" oninput="setQuickPreviewMultiplier(this.value)">
+        <button type="button" onclick="changeQuickPreviewMultiplier(0.5)">+</button>
+      </div>
+    </div>
     <div class="free-grid">
       <label>🔥 Kcal<input type="number" id="quick-preview-kcal" min="0" step="1"></label>
       <label>🥩 Proteine (g)<input type="number" id="quick-preview-pro" min="0" step="0.1"></label>
@@ -20041,8 +20049,14 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
     return;
   }
 
-  quickDiaryPreviewPending = { name, meal };
+  quickDiaryPreviewPending = {
+    name, meal,
+    baseName: name,
+    baseValues: { kcal:Number(kcal)||0, pro:Number(pro)||0, fat:Number(fat)||0, carb:Number(carb)||0, sugar:Number(sugar)||0, waterMl:Number(waterMl)||0, weight:Number(weight)||0 },
+    multiplier: 1
+  };
   const set = (id, value) => { const el=document.getElementById(id); if (el) el.value=value; };
+  set("quick-preview-multiplier", 1);
   const title = document.getElementById("quick-preview-name");
   if (title) title.textContent = name || "Alimento";
   set("quick-preview-kcal", Math.round(Number(kcal)||0));
@@ -20053,6 +20067,39 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
   set("quick-preview-water", Math.round(Number(waterMl)||0));
   set("quick-preview-weight", Math.round(Number(weight)||0));
   document.getElementById("quick-diary-preview-modal").style.display = "flex";
+}
+
+function applyQuickPreviewMultiplier() {
+  if (!quickDiaryPreviewPending?.baseValues) return;
+  const mult = Number(quickDiaryPreviewPending.multiplier) > 0 ? Number(quickDiaryPreviewPending.multiplier) : 1;
+  const b = quickDiaryPreviewPending.baseValues;
+  const set = (id, value) => { const el=document.getElementById(id); if (el) el.value=value; };
+  set("quick-preview-multiplier", mult);
+  set("quick-preview-kcal", Math.round(b.kcal * mult));
+  set("quick-preview-pro", Math.round(b.pro * mult * 10) / 10);
+  set("quick-preview-fat", Math.round(b.fat * mult * 10) / 10);
+  set("quick-preview-carb", Math.round(b.carb * mult * 10) / 10);
+  set("quick-preview-sugar", Math.round(b.sugar * mult * 10) / 10);
+  set("quick-preview-water", Math.round(b.waterMl * mult));
+  set("quick-preview-weight", Math.round(b.weight * mult));
+  const title = document.getElementById("quick-preview-name");
+  if (title) title.textContent = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
+  quickDiaryPreviewPending.name = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
+}
+
+function changeQuickPreviewMultiplier(delta) {
+  if (!quickDiaryPreviewPending) return;
+  const current = Number(quickDiaryPreviewPending.multiplier) > 0 ? Number(quickDiaryPreviewPending.multiplier) : 1;
+  quickDiaryPreviewPending.multiplier = Math.max(0.5, Math.round((current + delta) * 10) / 10);
+  applyQuickPreviewMultiplier();
+}
+
+function setQuickPreviewMultiplier(value) {
+  if (!quickDiaryPreviewPending) return;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return;
+  quickDiaryPreviewPending.multiplier = Math.max(0.5, parsed);
+  applyQuickPreviewMultiplier();
 }
 
 function closeQuickDiaryPreview() {
@@ -20250,7 +20297,18 @@ async function addFromSelect() {
     name,
     meal,
     source: "foodSelect",
-    resetFoodSelection: true
+    resetFoodSelection: true,
+    baseName,
+    baseValues: {
+      kcal: parseFloat(parts[1]) || 0,
+      pro: parseFloat(parts[2]) || 0,
+      fat: parseFloat(parts[3]) || 0,
+      carb: parseFloat(parts[4]) || 0,
+      sugar: parts.length >= 7 ? (parseFloat(parts[5] || 0) || 0) : 0,
+      waterMl: parseFloat(parts[waterIndex] || 0) || 0,
+      weight: parts.length >= 8 ? (parseFloat(parts[7] || 0) || 0) : 0
+    },
+    multiplier: mult
   };
 
   const set = (id, value) => {
@@ -20261,13 +20319,7 @@ async function addFromSelect() {
   const title = document.getElementById("quick-preview-name");
   if (title) title.textContent = name || "Alimento";
 
-  set("quick-preview-kcal", kcal);
-  set("quick-preview-pro", pro);
-  set("quick-preview-fat", fat);
-  set("quick-preview-carb", carb);
-  set("quick-preview-sugar", sugar);
-  set("quick-preview-water", waterMl);
-  set("quick-preview-weight", weight);
+  applyQuickPreviewMultiplier();
 
   const modal = document.getElementById("quick-diary-preview-modal");
   if (modal) modal.style.display = "flex";
