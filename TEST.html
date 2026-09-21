@@ -8070,6 +8070,21 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
  .ux2-macros{gap:4px}.ux2-macro{padding:8px 3px}.ux2-macro label{font-size:.52rem}
 }
 
+
+@media(max-width:760px){
+  .ux2-diary-fold{margin-top:12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441;overflow:hidden}
+  .ux2-diary-toggle{width:100%;min-height:52px;padding:11px 13px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:space-between;text-align:left;font-weight:850;font-size:.92rem}
+  .ux2-diary-toggle small{color:#8fb2c0;font-size:.66rem;font-weight:650}
+  .ux2-diary-toggle b{color:#38bdf8;font-size:1.25rem}
+  .ux2-diary-body{padding:0 12px 12px;border-top:1px solid rgba(72,181,216,.18)}
+  .ux2-diary-body[hidden]{display:none!important}
+  .ux2-diary-body .log-item{padding:9px 2px}
+  .ux2-diary-body .meal-header{font-size:.72rem}
+  .ux2-methods-real{grid-template-columns:1fr}
+  .ux2-methods-real .ux2-method{min-height:72px;text-align:left;padding:11px 14px}
+  .ux2-methods-real .ux2-method .mi{display:inline-block;margin:0 9px 0 0;vertical-align:middle}
+}
+
 </style>
 
 <style>
@@ -8883,14 +8898,11 @@ html[data-theme="light"] .missing-today-legend {
     </section>
 
     <button class="ux2-add" type="button" onclick="ux2OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
-    <div class="ux2-secondary">
-      <button type="button" disabled style="opacity:.62">📷 &nbsp; Foto<small>Funzione sospesa</small></button>
-      <button type="button" onclick="ux2OpenAdd()">🔎 &nbsp; Cerca alimento<small>Nei tuoi alimenti</small></button>
-    </div>
-
-    <section class="ux2-meals">
-      <div class="ux2-meals-head"><strong>🍴 &nbsp; Pasti di oggi</strong><button type="button" onclick="ux2ShowLegacyLog()">Vedi tutto ›</button></div>
-      <div id="ux2-log"><div class="ux2-empty">Nessun alimento registrato oggi.</div></div>
+<section class="ux2-diary-fold">
+      <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
+        <span>📖 &nbsp; Diario di oggi <small id="ux2-diary-count"></small></span><b id="ux2-diary-chevron">⌄</b>
+      </button>
+      <div id="ux2-diary-body" class="ux2-diary-body" hidden></div>
     </section>
   </main>
 
@@ -24658,48 +24670,140 @@ window.addEventListener("resize",()=>{
 });
 
 /* =========================================================
-   DIARIOFIT UX BETA V2 — BRIDGE ALLA LOGICA ESISTENTE
+   DIARIOFIT UX BETA V2.2 — BRIDGE ALLA LOGICA ESISTENTE
+   La nuova Home legge direttamente log + TARGETS.
 ========================================================= */
-function ux2Pct(v,t){return t>0?Math.max(0,Math.min(100,(Number(v)||0)/(Number(t)||1)*100)):0;}
-function ux2SyncHome(){
-  const read=id=>Number((document.getElementById(id)?.innerText||"0").replace(",", "."))||0;
-  const k=read("tot-kcal"),p=read("tot-pro"),f=read("tot-fat"),c=read("tot-carb"),w=read("tot-water");
-  if(typeof TARGETS==="undefined"||!TARGETS)return;
-  const put=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
-  put("ux2-kcal-now",k); put("ux2-kcal-target",TARGETS.kcal); put("ux2-goal-kcal",TARGETS.kcal);
-  put("ux2-pro",p);put("ux2-carb",c);put("ux2-fat",f);put("ux2-water",w);
-  put("ux2-pro-target",TARGETS.pro);
-  put("ux2-carb-target",TARGETS.carb);
-  put("ux2-fat-target",TARGETS.fat);
-  put("ux2-water-target",TARGETS.water);
-  const kp=Math.round(ux2Pct(k,TARGETS.kcal));put("ux2-kcal-percent",kp+"%");
-  const ring=document.getElementById("ux2-ring");if(ring)ring.style.setProperty("--p",kp);
-  [["ux2-pro-bar",p,TARGETS.pro],["ux2-carb-bar",c,TARGETS.carb],["ux2-fat-bar",f,TARGETS.fat],["ux2-water-bar",w,TARGETS.water]].forEach(([id,v,t])=>{const e=document.getElementById(id);if(e)e.style.width=ux2Pct(v,t)+"%"});
-  ux2RenderLog();
+function ux2Pct(v,t){
+  return Number(t)>0 ? Math.max(0,Math.min(100,(Number(v)||0)/Number(t)*100)) : 0;
 }
-function ux2RenderLog(){
- const host=document.getElementById("ux2-log");if(!host)return;
- const source=document.getElementById("log-container");
- if(!source||!source.innerHTML.trim()){host.innerHTML='<div class="ux2-empty">Nessun alimento registrato oggi.</div>';return}
- host.innerHTML=source.innerHTML;
+function ux2Put(id,v){
+  const e=document.getElementById(id);
+  if(e)e.textContent=v;
+}
+function ux2TotalsFromLog(){
+  const items=Array.isArray(log)?log:[];
+  const t={kcal:0,pro:0,fat:0,carb:0,sugar:0,water:0};
+  items.forEach(item=>{
+    t.kcal += Number(item?.kcal)||0;
+    t.pro += Number(item?.pro)||0;
+    t.fat += Number(item?.fat)||0;
+    t.carb += Number(item?.carb)||0;
+    t.sugar += Number(item?.sugar)||0;
+    t.water += Number(item?.waterMl)||0;
+  });
+  t.kcal=Math.round(t.kcal);
+  t.pro=Math.round(t.pro*10)/10;
+  t.fat=Math.round(t.fat*10)/10;
+  t.carb=Math.round(t.carb*10)/10;
+  t.sugar=Math.round(t.sugar*10)/10;
+  t.water=Math.round(t.water);
+  return t;
+}
+function ux2SyncHome(){
+  if(typeof TARGETS==="undefined" || !TARGETS)return;
+  const t=ux2TotalsFromLog();
+
+  ux2Put("ux2-kcal-now",t.kcal);
+  ux2Put("ux2-kcal-target",TARGETS.kcal);
+  ux2Put("ux2-goal-kcal",TARGETS.kcal);
+  ux2Put("ux2-pro",t.pro);
+  ux2Put("ux2-carb",t.carb);
+  ux2Put("ux2-fat",t.fat);
+  ux2Put("ux2-water",t.water);
+  ux2Put("ux2-pro-target",TARGETS.pro);
+  ux2Put("ux2-carb-target",TARGETS.carb);
+  ux2Put("ux2-fat-target",TARGETS.fat);
+  ux2Put("ux2-water-target",TARGETS.water);
+
+  const kp=Math.round(ux2Pct(t.kcal,TARGETS.kcal));
+  ux2Put("ux2-kcal-percent",kp+"%");
+  const ring=document.getElementById("ux2-ring");
+  if(ring)ring.style.setProperty("--p",kp);
+
+  [
+    ["ux2-pro-bar",t.pro,TARGETS.pro],
+    ["ux2-carb-bar",t.carb,TARGETS.carb],
+    ["ux2-fat-bar",t.fat,TARGETS.fat],
+    ["ux2-water-bar",t.water,TARGETS.water]
+  ].forEach(([id,v,target])=>{
+    const e=document.getElementById(id);
+    if(e)e.style.width=ux2Pct(v,target)+"%";
+  });
+
+  ux2SyncDiary();
+}
+function ux2SyncDiary(){
+  const body=document.getElementById("ux2-diary-body");
+  if(!body)return;
+  const source=document.getElementById("log-container");
+  const count=Array.isArray(log)?log.length:0;
+  ux2Put("ux2-diary-count",count ? "· "+count+" inseriment"+(count===1?"o":"i") : "");
+  if(source && source.innerHTML.trim()){
+    body.innerHTML=source.innerHTML;
+  }else{
+    body.innerHTML='<div class="ux2-empty">Nessun alimento registrato oggi.</div>';
+  }
+}
+function ux2ToggleDiary(){
+  const body=document.getElementById("ux2-diary-body");
+  const chev=document.getElementById("ux2-diary-chevron");
+  if(!body)return;
+  const opening=body.hidden;
+  body.hidden=!opening;
+  if(chev)chev.textContent=opening?"⌃":"⌄";
+  if(opening)ux2SyncDiary();
 }
 function ux2OpenAdd(){
- const s=document.getElementById("ux2-add-sheet");if(s)s.classList.add("open");
- const q=document.getElementById("quick-grid-container"),h=document.getElementById("ux2-quick-host");
- if(q&&h)h.innerHTML=q.innerHTML;
+  const sheet=document.getElementById("ux2-add-sheet");
+  if(sheet)sheet.classList.add("open");
+  const q=document.getElementById("quick-grid-container");
+  const h=document.getElementById("ux2-quick-host");
+  if(q&&h)h.innerHTML=q.innerHTML;
 }
-function ux2CloseAdd(){document.getElementById("ux2-add-sheet")?.classList.remove("open")}
-function ux2OpenFoodPicker(){ux2CloseAdd();openFoodPicker()}
-function ux2OpenSavedMeals(){ux2CloseAdd();openSavedMealsModal()}
-function ux2OpenManual(){ux2CloseAdd();document.querySelector(".free-entry-card")?.scrollIntoView({behavior:"smooth"});document.querySelector(".free-entry-card")?.style.setProperty("display","block","important")}
-function ux2ShowLegacyLog(){document.querySelector(".free-entry-card+section")?.style.setProperty("display","block","important");document.querySelector(".free-entry-card+section")?.scrollIntoView({behavior:"smooth"})}
-function ux2OpenMore(){toggleHelpModal()}
+function ux2CloseAdd(){
+  document.getElementById("ux2-add-sheet")?.classList.remove("open");
+}
+function ux2OpenFoodPicker(){
+  ux2CloseAdd();
+  openFoodPicker();
+}
+function ux2OpenSavedMeals(){
+  ux2CloseAdd();
+  openSavedMealsModal();
+}
+function ux2OpenManual(){
+  ux2CloseAdd();
+  const card=document.querySelector(".free-entry-card");
+  if(card){
+    card.style.setProperty("display","block","important");
+    card.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+}
+function ux2OpenMore(){
+  toggleHelpModal();
+}
+
+/* Aggancio alle funzioni reali: nessun dato demo, nessun DOM intermedio. */
 const ux2OriginalUpdateDashboard=updateDashboard;
-updateDashboard=function(){ux2OriginalUpdateDashboard.apply(this,arguments);setTimeout(ux2SyncHome,0)};
+updateDashboard=function(){
+  const result=ux2OriginalUpdateDashboard.apply(this,arguments);
+  ux2SyncHome();
+  return result;
+};
 const ux2OriginalRenderLog=renderLog;
-renderLog=function(){ux2OriginalRenderLog.apply(this,arguments);setTimeout(ux2RenderLog,0)};
+renderLog=function(){
+  const result=ux2OriginalRenderLog.apply(this,arguments);
+  ux2SyncDiary();
+  return result;
+};
+const ux2OriginalUpdateTargetDisplays=updateTargetDisplays;
+updateTargetDisplays=function(){
+  const result=ux2OriginalUpdateTargetDisplays.apply(this,arguments);
+  ux2SyncHome();
+  return result;
+};
 window.addEventListener("load",()=>{
-  [250,700,1500,3000].forEach(ms=>setTimeout(ux2SyncHome,ms));
+  [0,250,700,1500].forEach(ms=>setTimeout(ux2SyncHome,ms));
 });
 
 </script>
@@ -24715,9 +24819,8 @@ window.addEventListener("load",()=>{
   <div class="ux2-handle"></div>
   <div class="ux2-sheet-head"><h2>Aggiungi alimento</h2><button class="ux2-close" onclick="ux2CloseAdd()">×</button></div>
   <input class="ux2-search" type="text" placeholder="🔍 Cerca un alimento..." onclick="ux2OpenFoodPicker()">
-  <div class="ux2-methods">
-   <button class="ux2-method" type="button" disabled style="opacity:.58"><span class="mi">📷</span>Da foto<small>Funzione sospesa</small></button>
-   <button class="ux2-method" type="button" disabled style="opacity:.58"><span class="mi">▥</span>Codice a barre<small>Non ancora disponibile</small></button>
+  <div class="ux2-methods ux2-methods-real">
+   <button class="ux2-method" type="button" onclick="ux2OpenFoodPicker()"><span class="mi">🔎</span>Cerca alimento<small>Cerca e seleziona dai tuoi alimenti</small></button>
    <button class="ux2-method" type="button" onclick="ux2OpenManual()"><span class="mi">✏️</span>Inserimento manuale<small>Calorie, macro e quantità</small></button>
    <button class="ux2-method" type="button" onclick="ux2OpenSavedMeals()"><span class="mi">♥</span>Pasti salvati<small>I tuoi pasti abituali</small></button>
   </div>
