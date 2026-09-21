@@ -8868,18 +8868,18 @@ html[data-theme="light"] .missing-today-legend {
           <div class="ux2-flame">🔥</div>
           <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
           <div class="ux2-kcal-unit">kcal</div>
-          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">0</span></div>
+          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
           <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
         </div>
       </div>
-      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">0</b><small>kcal</small></div>
+      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
     </section>
 
     <section class="ux2-macros">
-      <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">0</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">0</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">0</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">0</span> ml</small></div>
+      <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
 
     <button class="ux2-add" type="button" onclick="ux2OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
@@ -24664,11 +24664,14 @@ function ux2Pct(v,t){return t>0?Math.max(0,Math.min(100,(Number(v)||0)/(Number(t
 function ux2SyncHome(){
   const read=id=>Number((document.getElementById(id)?.innerText||"0").replace(",", "."))||0;
   const k=read("tot-kcal"),p=read("tot-pro"),f=read("tot-fat"),c=read("tot-carb"),w=read("tot-water");
-  if(!window.TARGETS)return;
+  if(typeof TARGETS==="undefined"||!TARGETS)return;
   const put=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
   put("ux2-kcal-now",k); put("ux2-kcal-target",TARGETS.kcal); put("ux2-goal-kcal",TARGETS.kcal);
   put("ux2-pro",p);put("ux2-carb",c);put("ux2-fat",f);put("ux2-water",w);
-  put("ux2-pro-target",TARGETS.pro);put("ux2-carb-target",TARGETS.carb);put("ux2-fat-target",TARGETS.fat);put("ux2-water-target",TARGETS.water);
+  put("ux2-pro-target",TARGETS.pro);
+  put("ux2-carb-target",TARGETS.carb);
+  put("ux2-fat-target",TARGETS.fat);
+  put("ux2-water-target",TARGETS.water);
   const kp=Math.round(ux2Pct(k,TARGETS.kcal));put("ux2-kcal-percent",kp+"%");
   const ring=document.getElementById("ux2-ring");if(ring)ring.style.setProperty("--p",kp);
   [["ux2-pro-bar",p,TARGETS.pro],["ux2-carb-bar",c,TARGETS.carb],["ux2-fat-bar",f,TARGETS.fat],["ux2-water-bar",w,TARGETS.water]].forEach(([id,v,t])=>{const e=document.getElementById(id);if(e)e.style.width=ux2Pct(v,t)+"%"});
@@ -24695,7 +24698,9 @@ const ux2OriginalUpdateDashboard=updateDashboard;
 updateDashboard=function(){ux2OriginalUpdateDashboard.apply(this,arguments);setTimeout(ux2SyncHome,0)};
 const ux2OriginalRenderLog=renderLog;
 renderLog=function(){ux2OriginalRenderLog.apply(this,arguments);setTimeout(ux2RenderLog,0)};
-window.addEventListener("load",()=>setTimeout(ux2SyncHome,700));
+window.addEventListener("load",()=>{
+  [250,700,1500,3000].forEach(ms=>setTimeout(ux2SyncHome,ms));
+});
 
 </script>
 
