@@ -8016,6 +8016,214 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
     font-size:.72rem;
   }
 }
+
+/* =========================================================
+   DIARIOFIT UX BETA V2 — HOME STRUTTURALE
+   Mobile-first, fedele al mockup approvato.
+========================================================= */
+#ux2-home,#ux2-bottom-nav,#ux2-add-sheet{display:none}
+@media(max-width:760px){
+  body{padding:0;background:linear-gradient(180deg,#082531 0%,#061820 100%);overflow-x:hidden}
+  #app-container{max-width:520px;min-height:100vh;padding:8px 12px 92px}
+  .header-container{padding:10px 4px 7px;margin:0;border:0;background:transparent;box-shadow:none}
+  .header-title-btn{padding:3px 0;border:0;background:transparent;box-shadow:none;pointer-events:none;cursor:default}
+  .header-title{font-size:1.28rem}.header-title span{color:#2ddd7e}
+  .header-brand-icon{width:38px;height:38px;border-radius:10px}
+  .header-subtitle-row{display:none}
+  .top-toolbar{gap:7px}
+  .top-toolbar .toolbar-btn{width:42px;min-width:42px;height:42px;padding:0;border-radius:12px;background:#12323f;border-color:rgba(114,180,203,.28);font-size:0}
+  .top-toolbar .toolbar-btn::first-letter{font-size:1rem}
+  .top-toolbar .toolbar-btn .label{display:none}
+  .top-toolbar .toolbar-btn[onclick="toggleHelpModal()"]{display:none!important}
+  #admin-toolbar-btn{font-size:1rem!important}
+  .current-date{margin:5px 0 12px;padding:12px;border:1px solid rgba(79,183,218,.30);border-radius:14px;background:#103744;color:#f8fafc;text-align:center;font-size:.82rem;font-weight:800}
+  /* Nascondiamo la vecchia Home, non le sue funzioni/dati. */
+  .target-card,.target-card+button,.target-card+button+section,
+  #meal-focus-card,#meal-focus-card+section,.free-entry-card,.free-entry-card+section{display:none!important}
+  #history-card{margin:0 0 12px}
+
+  #ux2-home{display:block}
+  .ux2-calorie-zone{display:grid;grid-template-columns:1fr 86px;align-items:center;gap:10px;margin:6px 0 12px}
+  .ux2-ring{--p:0;position:relative;width:190px;height:190px;margin:auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#12dc8a calc(var(--p)*1%),#35596a 0);box-shadow:0 0 26px rgba(18,220,138,.12)}
+  .ux2-ring:before{content:"";position:absolute;inset:15px;border-radius:50%;background:radial-gradient(circle,#0d3340,#092530 72%)}
+  .ux2-ring-content{position:relative;text-align:center;z-index:1}
+  .ux2-flame{font-size:1.65rem}.ux2-kcal-now{font-size:2.25rem;font-weight:900;line-height:1;color:#fff}.ux2-kcal-unit{font-size:.78rem;color:#a9c1cb}.ux2-kcal-of{margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,.15);font-size:.72rem;color:#b6c9d1}.ux2-percent{display:inline-block;margin-top:4px;padding:2px 9px;border:1px solid #20d98b;border-radius:99px;color:#fff;font-size:.7rem}
+  .ux2-goal{padding:12px 6px;border:1px solid rgba(30,180,231,.5);border-radius:14px;background:#103746;text-align:center}.ux2-goal b{display:block;font-size:1.18rem}.ux2-goal small{color:#b7cbd3;font-size:.62rem}
+  .ux2-macros{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}
+  .ux2-macro{min-width:0;padding:9px 5px;border:1px solid rgba(48,185,220,.35);border-radius:13px;background:#103744;text-align:center}.ux2-macro .ico{font-size:1.15rem}.ux2-macro b{display:block;font-size:1rem;margin:2px 0}.ux2-macro label{display:block;color:#50d7ff;font-size:.58rem;font-weight:800}.ux2-track{height:7px;margin:7px 2px 4px;border-radius:99px;background:#365565;overflow:hidden}.ux2-track i{display:block;height:100%;width:0;border-radius:inherit;background:#13dc8b}.ux2-macro small{display:block;color:#a9bdc6;font-size:.55rem}
+  .ux2-add{width:100%;min-height:58px;border:1px solid #42f39d;border-radius:14px;background:linear-gradient(135deg,#55e77e,#00d892);color:#05291b;font-size:1.02rem;font-weight:900;box-shadow:0 8px 24px rgba(0,218,146,.18)}
+  .ux2-secondary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0 13px}.ux2-secondary button{min-height:52px;padding:8px;border:1px solid rgba(56,189,248,.48);border-radius:13px;background:#123646;color:#fff;text-align:left;font-weight:800}.ux2-secondary small{display:block;margin-top:2px;color:#9eb7c2;font-size:.62rem;font-weight:500}
+  .ux2-meals{padding:12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441}.ux2-meals-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ux2-meals-head strong{font-size:1rem}.ux2-meals-head button{border:0;background:transparent;color:#38bdf8;font-weight:800}
+  #ux2-log .meal-header{font-size:.72rem}.ux2-empty{padding:14px;text-align:center;color:#91a9b3}
+  #ux2-log .log-item{padding:9px 3px}.ux2-meals .delete-btn{display:none}
+  #ux2-log .log-name{font-size:.76rem}#ux2-log .log-meta{font-size:.6rem}
+  #ux2-bottom-nav{position:fixed;z-index:4500;left:50%;bottom:0;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,520px);padding:7px 9px max(9px,env(safe-area-inset-bottom));border-top:1px solid rgba(56,189,248,.42);background:linear-gradient(180deg,rgba(12,45,57,.98),rgba(5,24,32,.99));backdrop-filter:blur(16px);box-shadow:0 -8px 28px rgba(0,0,0,.32),0 -1px 0 rgba(45,221,126,.10)}
+  #ux2-bottom-nav button{min-height:56px;border:0;border-radius:14px;background:transparent;color:#9fb8c2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:800}
+  #ux2-bottom-nav span{font-size:1.65rem;line-height:1.05;filter:drop-shadow(0 2px 5px rgba(0,0,0,.28))}
+  #ux2-bottom-nav small{font-size:.72rem;letter-spacing:.01em}
+  #ux2-bottom-nav .active{color:#59e6a3;background:linear-gradient(180deg,rgba(45,221,126,.12),rgba(56,189,248,.06));box-shadow:inset 0 0 0 1px rgba(45,221,126,.18)}
+  #ux2-add-sheet{position:fixed;z-index:6000;inset:0;background:rgba(0,8,12,.68);align-items:flex-end;justify-content:center}
+  #ux2-add-sheet.open{display:flex}
+  .ux2-sheet{width:min(100%,520px);max-height:88vh;overflow:auto;padding:10px 14px 24px;border:1px solid rgba(72,181,216,.28);border-radius:22px 22px 0 0;background:#0c2935;box-shadow:0 -18px 55px rgba(0,0,0,.45)}
+  .ux2-handle{width:76px;height:5px;margin:0 auto 14px;border-radius:99px;background:#7898a7}.ux2-sheet-head{display:flex;align-items:center;justify-content:space-between}.ux2-sheet-head h2{margin:0;font-size:1.25rem}.ux2-close{width:38px;height:38px;border:0;border-radius:50%;background:#294656;color:#fff;font-size:1.25rem}
+  .ux2-search{width:100%;margin:14px 0 10px;min-height:48px;border-color:#5797b0;background:#123b4b}
+  .ux2-methods{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ux2-method{min-height:90px;padding:12px 8px;border:1px solid rgba(81,176,208,.38);border-radius:15px;background:#123746;color:#fff;font-weight:800}.ux2-method .mi{display:block;font-size:1.5rem;margin-bottom:5px}.ux2-method small{display:block;color:#a9bec7;font-size:.62rem;margin-top:3px;font-weight:500}
+  .ux2-sheet-section{margin-top:15px}.ux2-sheet-section h3{font-size:.9rem;margin:0 0 8px}.ux2-tip{margin-top:15px;padding:11px;border:1px solid rgba(56,189,248,.35);border-radius:13px;background:#10394a;color:#b8ccd4;font-size:.72rem}
+}
+@media(max-width:390px){
+ .ux2-ring{width:172px;height:172px}.ux2-kcal-now{font-size:2rem}
+ .ux2-macros{gap:4px}.ux2-macro{padding:8px 3px}.ux2-macro label{font-size:.52rem}
+}
+
+
+@media(max-width:760px){
+  .ux2-status-btn{width:100%;min-height:46px;margin-top:9px;padding:10px 14px;border:1px solid rgba(56,189,248,.38);border-radius:14px;background:#103746;color:#fff;font-weight:800;font-size:.88rem}
+  .ux2-diary-fold{margin-top:12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441;overflow:hidden}
+  .ux2-diary-toggle{width:100%;min-height:52px;padding:11px 13px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:space-between;text-align:left;font-weight:850;font-size:.92rem}
+  .ux2-diary-toggle small{color:#8fb2c0;font-size:.66rem;font-weight:650}
+  .ux2-diary-toggle b{color:#38bdf8;font-size:1.25rem}
+  .ux2-diary-body{padding:0 12px 12px;border-top:1px solid rgba(72,181,216,.18)}
+  .ux2-diary-body[hidden]{display:none!important}
+  .ux2-diary-body .log-item{padding:9px 2px}
+  .ux2-diary-body .meal-header{font-size:.72rem}
+  .ux2-methods-real{grid-template-columns:1fr}
+  .ux2-methods-real .ux2-method{min-height:72px;text-align:left;padding:11px 14px}
+  .ux2-methods-real .ux2-method .mi{display:inline-block;margin:0 9px 0 0;vertical-align:middle}
+}
+
+
+
+#ux25-more-modal{display:none}
+@media(max-width:760px){
+  #ux25-more-modal.ux25-open{display:flex;position:fixed;z-index:6500;inset:0;align-items:flex-end;justify-content:center;padding:0;background:rgba(1,10,15,.72);backdrop-filter:blur(5px)}
+  .ux25-more-panel{width:min(100%,520px);padding:16px 15px calc(22px + env(safe-area-inset-bottom));border:1px solid rgba(56,189,248,.34);border-bottom:0;border-radius:24px 24px 0 0;background:linear-gradient(155deg,#103746,#071f29 72%);box-shadow:0 -18px 55px rgba(0,0,0,.48)}
+  .ux25-more-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .ux25-more-head small{display:block;color:#59e6a3;font-size:.62rem;font-weight:900;letter-spacing:.13em}
+  .ux25-more-head h2{margin:2px 0 0;color:#fff;font-size:1.45rem}
+  .ux25-more-close{width:42px;height:42px;border:1px solid rgba(56,189,248,.28);border-radius:13px;background:#153f4e;color:#fff;font-size:1.05rem}
+  .ux25-more-intro{margin:9px 0 14px;color:#a8c0ca;font-size:.78rem}
+  .ux25-more-card{width:100%;min-height:82px;margin-top:9px;padding:13px;border:1px solid rgba(56,189,248,.24);border-radius:17px;background:linear-gradient(135deg,rgba(18,62,77,.96),rgba(10,39,50,.96));color:#fff;display:grid;grid-template-columns:48px 1fr 20px;align-items:center;gap:11px;text-align:left;box-shadow:0 7px 18px rgba(0,0,0,.16)}
+  .ux25-more-icon{font-size:1.85rem;text-align:center}
+  .ux25-more-card strong{display:block;font-size:1rem}
+  .ux25-more-card small{display:block;margin-top:4px;color:#a9c0ca;font-size:.72rem;line-height:1.35;font-weight:600}
+  .ux25-more-card b{color:#59e6a3;font-size:1.55rem}
+}
+
+
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.5.1 — COMPATTAZIONE VERTICALE HOME
+   Solo mobile: recupera spazio senza cambiare struttura/logica.
+========================================================= */
+@media(max-width:760px){
+  /* Testata: stessi 5 comandi, leggermente più compatti. */
+  .header-container{padding:9px 11px;margin-bottom:6px}
+  .header-brand-icon{width:34px;height:34px}
+  .header-title{font-size:1.20rem}
+  .top-toolbar{gap:5px}
+  .top-toolbar .toolbar-btn{width:36px;min-width:36px;height:36px;border-radius:10px}
+
+  /* Data: meno altezza, stessa leggibilità. */
+  .current-date{margin:3px 0 8px;padding:8px 10px;border-radius:12px;font-size:.78rem}
+
+  /* CTA principali: recupero verticale moderato. */
+  .ux2-add{min-height:43px!important;padding-top:7px!important;padding-bottom:7px!important;font-size:.94rem!important}
+  .ux2-status-btn{min-height:40px;margin-top:6px;padding:7px 12px;font-size:.84rem}
+
+  /* Diario leggermente più vicino ai due comandi. */
+  .ux2-diary-fold{margin-top:8px}
+}
+
+
+
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.5.3 — RIFINITURA MOBILE FINALE
+   Solo mobile. Desktop/tablet tornano al comportamento precedente.
+========================================================= */
+@media(max-width:760px){
+  /* Ultimi pixel recuperati senza toccare cerchio, macro, data o stato. */
+  .ux2-add{
+    min-height:31px!important;
+    padding-top:2px!important;
+    padding-bottom:2px!important;
+  }
+
+  .ux2-diary-fold{
+    min-height:42px!important;
+  }
+
+  .ux2-diary-fold > summary{
+    min-height:42px!important;
+    padding-top:5px!important;
+    padding-bottom:5px!important;
+  }
+}
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.3 — INSERIMENTO REALE, NON CLONATO
+========================================================= */
+#ux23-add-header{display:none}
+@media(max-width:760px){
+  /* In modalità inserimento la Home lascia spazio ai controlli ORIGINALI. */
+  body.ux23-add-mode #ux2-home{display:none!important}
+  body.ux23-add-mode #ux2-bottom-nav{display:none!important}
+
+  body.ux23-add-mode #ux23-add-header{
+    display:flex!important;
+    align-items:center;
+    gap:11px;
+    margin:4px 0 10px;
+    padding:10px 12px;
+    border:1px solid rgba(62,180,216,.28);
+    border-radius:15px;
+    background:#0f3441;
+  }
+  #ux23-add-header button{
+    width:42px;height:42px;flex:0 0 42px;
+    border:1px solid rgba(56,189,248,.42);
+    border-radius:12px;background:#123b4b;color:#fff;
+    font-size:1.65rem;line-height:1;
+  }
+  #ux23-add-header strong{display:block;font-size:1.05rem}
+  #ux23-add-header small{display:block;margin-top:2px;color:#9eb7c2;font-size:.68rem}
+
+  /* Queste sono le vere sezioni già funzionanti di DiarioFIT. */
+  body.ux23-add-mode #meal-focus-card,
+  body.ux23-add-mode #ux23-original-add-card,
+  body.ux23-add-mode .free-entry-card{
+    display:block!important;
+  }
+
+  /* Nessun duplicato del registro durante l'inserimento. */
+  body.ux23-add-mode .free-entry-card+section{display:none!important}
+
+  /* Home normale: le sezioni originali restano nascoste. */
+  body:not(.ux23-add-mode) #ux23-add-header{display:none!important}
+}
+
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.4 — PAGINA MOBILE AGGIUNGI ALIMENTO
+========================================================= */
+#ux24-add-page{display:none}
+@media(max-width:760px){
+  body.ux24-add-mode #ux2-home,
+  body.ux24-add-mode #ux2-bottom-nav{display:none!important}
+  body.ux24-add-mode #ux24-add-page{
+    display:block!important;min-height:100vh;padding:8px 12px 90px;
+  }
+  .ux24-add-top{display:flex;align-items:center;gap:11px;margin:4px 0 12px;padding:10px 12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441}
+  .ux24-back{min-height:42px;padding:0 12px;flex:0 0 auto;border:1px solid rgba(56,189,248,.42);border-radius:12px;background:#123b4b;color:#fff;font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:6px}.ux24-back span{font-size:.76rem;white-space:nowrap}
+  .ux24-add-top strong{display:block;font-size:1.08rem}
+  .ux24-add-top small,.ux24-quick-title small{display:block;color:#9eb7c2;font-size:.69rem;margin-top:2px}
+  #ux24-meal-host #meal-focus-card{display:block!important;margin:0 0 12px!important}
+  #ux24-original-add-host #ux23-original-add-card{display:block!important;margin:0!important}
+  #ux24-original-add-host #quick-grid-container{display:grid!important}
+
+  body:not(.ux24-add-mode) #ux24-add-page{display:none!important}
+}
+
 </style>
 
 <style>
@@ -8806,6 +9014,38 @@ html[data-theme="light"] .missing-today-legend {
     class="current-date"
     id="display-date"
   ></div>
+  <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
+  <main id="ux2-home" aria-label="Oggi">
+    <section class="ux2-calorie-zone">
+      <div class="ux2-ring" id="ux2-ring">
+        <div class="ux2-ring-content">
+          <div class="ux2-flame">🔥</div>
+          <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
+          <div class="ux2-kcal-unit">kcal</div>
+          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
+          <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+        </div>
+      </div>
+      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+    </section>
+
+    <section class="ux2-macros">
+      <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">—</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
+    </section>
+
+    <button class="ux2-add" type="button" onclick="ux24OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
+    <button class="ux2-status-btn" type="button" onclick="openMissingTodayModal()">💡 A che punto sono oggi?</button>
+<section class="ux2-diary-fold">
+      <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
+        <span>📖 &nbsp; Diario di oggi <small id="ux2-diary-count"></small></span><b id="ux2-diary-chevron">⌄</b>
+      </button>
+      <div id="ux2-diary-body" class="ux2-diary-body" hidden></div>
+    </section>
+  </main>
+
 
 
   <!-- ===================================================
@@ -9163,13 +9403,20 @@ html[data-theme="light"] .missing-today-legend {
     </div>
 
   </section>
-
-
-  <!-- ===================================================
+<!-- ===================================================
        PASTO CORRENTE
   ==================================================== -->
 
-  <section class="card meal-focus-card meal-focus-pending" id="meal-focus-card">
+  <section id="ux24-add-page" class="ux24-add-page" aria-label="Aggiungi alimento">
+  <div class="ux24-add-top">
+    <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹ <span>Torna a Oggi</span></button>
+    <div><strong>Aggiungi alimento</strong><small>Scegli il pasto e poi come inserire</small></div>
+  </div>
+  <div id="ux24-meal-host"></div>
+  <div id="ux24-original-add-host"></div>
+</section>
+
+<section class="card meal-focus-card meal-focus-pending" id="meal-focus-card">
 
     <div class="meal-focus-layout">
 
@@ -9227,7 +9474,7 @@ html[data-theme="light"] .missing-today-legend {
        QUICK ADD
   ==================================================== -->
 
-  <section class="card">
+  <section class="card" id="ux23-original-add-card">
 
     <div class="section-title">
 
@@ -9328,7 +9575,7 @@ html[data-theme="light"] .missing-today-legend {
        INSERIMENTO LIBERO 2.0
   ==================================================== -->
 
-  <section class="card free-entry-card">
+  <section class="card free-entry-card" id="ux24-manual-card">
 
     <div class="free-entry-header">
 
@@ -24568,7 +24815,194 @@ document.addEventListener("change", function(event) {
 window.addEventListener("resize",()=>{
   if(document.getElementById("bodycomp-modal")?.style.display==="flex") renderBodyCompositionChart();
 });
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.2 — BRIDGE ALLA LOGICA ESISTENTE
+   La nuova Home legge direttamente log + TARGETS.
+========================================================= */
+function ux2Pct(v,t){
+  return Number(t)>0 ? Math.max(0,Math.min(100,(Number(v)||0)/Number(t)*100)) : 0;
+}
+function ux2Put(id,v){
+  const e=document.getElementById(id);
+  if(e)e.textContent=v;
+}
+function ux2TotalsFromLog(){
+  const items=Array.isArray(log)?log:[];
+  const t={kcal:0,pro:0,fat:0,carb:0,sugar:0,water:0};
+  items.forEach(item=>{
+    t.kcal += Number(item?.kcal)||0;
+    t.pro += Number(item?.pro)||0;
+    t.fat += Number(item?.fat)||0;
+    t.carb += Number(item?.carb)||0;
+    t.sugar += Number(item?.sugar)||0;
+    t.water += Number(item?.waterMl)||0;
+  });
+  t.kcal=Math.round(t.kcal);
+  t.pro=Math.round(t.pro*10)/10;
+  t.fat=Math.round(t.fat*10)/10;
+  t.carb=Math.round(t.carb*10)/10;
+  t.sugar=Math.round(t.sugar*10)/10;
+  t.water=Math.round(t.water);
+  return t;
+}
+function ux2SyncHome(){
+  if(typeof TARGETS==="undefined" || !TARGETS)return;
+  const t=ux2TotalsFromLog();
+
+  ux2Put("ux2-kcal-now",t.kcal);
+  ux2Put("ux2-kcal-target",TARGETS.kcal);
+  ux2Put("ux2-goal-kcal",TARGETS.kcal);
+  ux2Put("ux2-pro",t.pro);
+  ux2Put("ux2-carb",t.carb);
+  ux2Put("ux2-fat",t.fat);
+  ux2Put("ux2-water",t.water);
+  ux2Put("ux2-pro-target",TARGETS.pro);
+  ux2Put("ux2-carb-target",TARGETS.carb);
+  ux2Put("ux2-fat-target",TARGETS.fat);
+  ux2Put("ux2-water-target",TARGETS.water);
+
+  const kp=Math.round(ux2Pct(t.kcal,TARGETS.kcal));
+  ux2Put("ux2-kcal-percent",kp+"%");
+  const ring=document.getElementById("ux2-ring");
+  if(ring)ring.style.setProperty("--p",kp);
+
+  [
+    ["ux2-pro-bar",t.pro,TARGETS.pro],
+    ["ux2-carb-bar",t.carb,TARGETS.carb],
+    ["ux2-fat-bar",t.fat,TARGETS.fat],
+    ["ux2-water-bar",t.water,TARGETS.water]
+  ].forEach(([id,v,target])=>{
+    const e=document.getElementById(id);
+    if(e)e.style.width=ux2Pct(v,target)+"%";
+  });
+
+  ux2SyncDiary();
+}
+function ux2SyncDiary(){
+  const body=document.getElementById("ux2-diary-body");
+  if(!body)return;
+  const source=document.getElementById("log-container");
+  const count=Array.isArray(log)?log.length:0;
+  ux2Put("ux2-diary-count",count ? "· "+count+" inseriment"+(count===1?"o":"i") : "");
+  if(source && source.innerHTML.trim()){
+    body.innerHTML=source.innerHTML;
+  }else{
+    body.innerHTML='<div class="ux2-empty">Nessun alimento registrato oggi.</div>';
+  }
+}
+function ux2ToggleDiary(){
+  const body=document.getElementById("ux2-diary-body");
+  const chev=document.getElementById("ux2-diary-chevron");
+  if(!body)return;
+  const opening=body.hidden;
+  body.hidden=!opening;
+  if(chev)chev.textContent=opening?"⌃":"⌄";
+  if(opening)ux2SyncDiary();
+}
+let ux24Origins=null;
+function ux24Prepare(){
+  if(ux24Origins)return;
+  const meal=document.getElementById("meal-focus-card");
+  const addCard=document.getElementById("ux23-original-add-card");
+  ux24Origins={
+    meal:{node:meal,parent:meal?.parentNode,next:meal?.nextSibling},
+    addCard:{node:addCard,parent:addCard?.parentNode,next:addCard?.nextSibling}
+  };
+}
+function ux24Move(node,hostId){const host=document.getElementById(hostId);if(node&&host)host.appendChild(node);}
+function ux24RestoreOne(o){if(!o?.node||!o?.parent)return;if(o.next&&o.next.parentNode===o.parent)o.parent.insertBefore(o.node,o.next);else o.parent.appendChild(o.node);}
+function ux24OpenAdd(){
+  ux24Prepare();
+  ux24Move(ux24Origins.meal.node,"ux24-meal-host");
+  ux24Move(ux24Origins.addCard.node,"ux24-original-add-host");
+  document.body.classList.add("ux24-add-mode");
+  document.body.classList.remove("ux23-add-mode");
+  if(typeof renderQuickGrid==="function")renderQuickGrid();
+  if(typeof updateMealFocusState==="function")updateMealFocusState();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function ux24CloseAdd(){
+  if(ux24Origins){ux24RestoreOne(ux24Origins.meal);ux24RestoreOne(ux24Origins.addCard);}
+  document.body.classList.remove("ux24-add-mode");window.scrollTo({top:0,behavior:"smooth"});
+}
+function ux2OpenMore(){
+  const modal=document.getElementById("ux25-more-modal");
+  if(!modal)return;
+  modal.classList.add("ux25-open");
+  modal.setAttribute("aria-hidden","false");
+}
+function ux25CloseMore(){
+  const modal=document.getElementById("ux25-more-modal");
+  if(!modal)return;
+  modal.classList.remove("ux25-open");
+  modal.setAttribute("aria-hidden","true");
+}
+function ux25OpenInfo(){
+  ux25CloseMore();
+  toggleInfoModal();
+}
+function ux25OpenHelp(){
+  ux25CloseMore();
+  toggleHelpModal();
+}
+
+document.addEventListener("click",function(event){
+  const modal=document.getElementById("ux25-more-modal");
+  if(modal && event.target===modal)ux25CloseMore();
+});
+
+/* Aggancio alle funzioni reali: nessun dato demo, nessun DOM intermedio. */
+const ux2OriginalUpdateDashboard=updateDashboard;
+updateDashboard=function(){
+  const result=ux2OriginalUpdateDashboard.apply(this,arguments);
+  ux2SyncHome();
+  return result;
+};
+const ux2OriginalRenderLog=renderLog;
+renderLog=function(){
+  const result=ux2OriginalRenderLog.apply(this,arguments);
+  ux2SyncDiary();
+  return result;
+};
+const ux2OriginalUpdateTargetDisplays=updateTargetDisplays;
+updateTargetDisplays=function(){
+  const result=ux2OriginalUpdateTargetDisplays.apply(this,arguments);
+  ux2SyncHome();
+  return result;
+};
+window.addEventListener("load",()=>{
+  [0,250,700,1500].forEach(ms=>setTimeout(ux2SyncHome,ms));
+});
+
 </script>
 
+
+
+<div id="ux25-more-modal" class="ux25-more-overlay" aria-hidden="true">
+  <section class="ux25-more-panel" role="dialog" aria-modal="true" aria-labelledby="ux25-more-title">
+    <div class="ux25-more-head">
+      <div><small>DIARIO FIT</small><h2 id="ux25-more-title">Altro</h2></div>
+      <button type="button" class="ux25-more-close" onclick="ux25CloseMore()" aria-label="Chiudi">✕</button>
+    </div>
+    <p class="ux25-more-intro">Informazioni e guida all'uso di DiarioFIT.</p>
+    <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
+      <span class="ux25-more-icon">ℹ️</span>
+      <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
+      <b>›</b>
+    </button>
+    <button type="button" class="ux25-more-card" onclick="ux25OpenHelp()">
+      <span class="ux25-more-icon">❓</span>
+      <span><strong>Guida</strong><small>Come usare DiarioFIT e le sue funzioni.</small></span>
+      <b>›</b>
+    </button>
+  </section>
+</div>
+
+<nav id="ux2-bottom-nav" aria-label="Navigazione principale">
+ <button type="button" class="active"><span>🏠</span><small>Oggi</small></button>
+ <button type="button" onclick="toggleStatsProgressModal()"><span>📊</span><small>Progressi</small></button>
+ <button type="button" onclick="ux2OpenMore()"><span>⚙️</span><small>Altro</small></button>
+</nav>
 </body>
 </html>
