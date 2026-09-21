@@ -8017,6 +8017,294 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   }
 }
 
+
+
+/* =========================================================
+   DIARIOFIT DESKTOP LAB V1.2 — RIFINITURA HOME
+========================================================= */
+@media(min-width:921px){
+  body{padding-top:10px}
+
+  /* Header desktop: più compatto, senza cambiare i comandi reali. */
+  .header-container{
+    min-height:76px;
+    margin-bottom:6px;
+    padding:9px 14px;
+    border-radius:15px;
+  }
+  .header-title-btn{
+    display:inline-flex;
+    align-items:center;
+    min-height:38px;
+    padding:5px 9px;
+  }
+  .header-title{font-size:1.16rem}
+  .header-subtitle{margin-top:1px;font-size:.67rem}
+  .top-toolbar{gap:6px;align-items:center}
+  .toolbar-btn{height:34px;min-width:38px;padding:0 9px;font-size:.75rem}
+  .current-date{margin:4px 1px 8px;font-size:.73rem}
+
+  /* Home: meno aria verticale, stessi contenuti e stessa gerarchia. */
+  #ux2-home{
+    gap:10px 16px;
+    grid-template-columns:minmax(280px,360px) minmax(0,1fr);
+  }
+  .ux2-calorie-zone{
+    min-height:344px;
+    padding:17px 18px;
+    gap:10px;
+  }
+  .ux2-ring{width:220px;height:220px}
+  .ux2-goal{padding:8px 12px}
+
+  .ux2-macros{gap:10px}
+  .ux2-macro{
+    min-height:122px;
+    padding:12px 10px 10px;
+  }
+  .ux2-macro b{margin:3px 0 1px}
+  .ux2-track{margin-top:8px}
+
+  .ux2-add{min-height:48px}
+  .ux2-status-btn{min-height:42px}
+  .ux2-diary-fold{margin-top:0}
+  .ux2-diary-toggle{min-height:48px}
+
+  /* Su PC la navigazione è una dock discreta, non una seconda card dominante. */
+  #ux2-bottom-nav{
+    bottom:10px;
+    width:min(520px,calc(100% - 40px));
+    padding:4px;
+    border-radius:15px;
+    background:rgba(7,31,40,.96);
+    box-shadow:0 8px 25px rgba(0,0,0,.28);
+  }
+  #ux2-bottom-nav button{
+    min-height:45px;
+    border-radius:11px;
+    flex-direction:row;
+    gap:7px;
+  }
+  #ux2-bottom-nav span{font-size:1.15rem}
+  #ux2-bottom-nav small{font-size:.69rem}
+}
+
+/* Tablet resta separato: niente regole desktop V1.2 sopra i 921px. */
+
+/* =========================================================
+   DIARIOFIT DESKTOP/TABLET LAB V1 — HOME
+   Laboratorio separato: nessuna modifica alla UX mobile <=760px.
+========================================================= */
+@media(min-width:761px){
+  body{
+    padding:18px 18px 92px;
+    background:
+      radial-gradient(circle at 82% 0%,rgba(45,221,126,.075),transparent 28%),
+      radial-gradient(circle at 8% 15%,rgba(56,189,248,.07),transparent 30%),
+      var(--bg);
+  }
+
+  #app-container{max-width:1120px}
+
+  /* La nuova Home diventa la Home principale anche su schermi larghi. */
+  #ux2-home{
+    display:grid!important;
+    grid-template-columns:minmax(280px,360px) minmax(0,1fr);
+    grid-template-rows:auto auto auto 1fr;
+    gap:12px 16px;
+    align-items:start;
+    margin-top:4px;
+  }
+
+  /* Nasconde SOLO i blocchi Home legacy, mantenendo DOM/logica attivi. */
+  #history-card,
+  .target-card,
+  .target-card + button,
+  .target-card + button + section,
+  #meal-focus-card,
+  #ux23-original-add-card,
+  #ux24-manual-card,
+  #ux24-manual-card + section.card{
+    display:none!important;
+  }
+
+  .ux2-calorie-zone{
+    grid-column:1;
+    grid-row:1 / span 3;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    min-height:356px;
+    margin:0;
+    padding:22px 18px;
+    border:1px solid rgba(56,189,248,.26);
+    border-radius:20px;
+    background:linear-gradient(145deg,rgba(16,55,68,.94),rgba(9,35,45,.96));
+    box-shadow:0 12px 34px rgba(0,0,0,.20);
+  }
+
+  .ux2-ring{
+    --p:0;
+    position:relative;
+    width:230px;height:230px;margin:auto;
+    border-radius:50%;
+    display:grid;place-items:center;
+    background:conic-gradient(#12dc8a calc(var(--p)*1%),#35596a 0);
+    box-shadow:0 0 34px rgba(18,220,138,.13);
+  }
+  .ux2-ring:before{
+    content:"";position:absolute;inset:18px;border-radius:50%;
+    background:radial-gradient(circle,#0d3340,#092530 72%);
+  }
+  .ux2-ring-content{position:relative;text-align:center;z-index:1}
+  .ux2-flame{font-size:1.8rem}
+  .ux2-kcal-now{font-size:2.7rem;font-weight:900;line-height:1;color:#fff}
+  .ux2-kcal-unit{font-size:.82rem;color:#a9c1cb}
+  .ux2-kcal-of{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.15);font-size:.78rem;color:#b6c9d1}
+  .ux2-percent{display:inline-block;margin-top:5px;padding:3px 11px;border:1px solid #20d98b;border-radius:99px;color:#fff;font-size:.74rem}
+  .ux2-goal{
+    width:min(100%,230px);padding:10px 12px;
+    border:1px solid rgba(30,180,231,.48);border-radius:13px;
+    background:#103746;text-align:center
+  }
+  .ux2-goal b{display:inline-block;margin:0 6px;font-size:1.15rem}
+  .ux2-goal small{color:#b7cbd3;font-size:.68rem}
+
+  .ux2-macros{
+    grid-column:2;grid-row:1;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;margin:0;
+  }
+  .ux2-macro{
+    min-width:0;min-height:132px;padding:15px 10px;
+    border:1px solid rgba(48,185,220,.30);border-radius:17px;
+    background:linear-gradient(145deg,#103744,#0c2e3a);
+    text-align:center;box-shadow:0 7px 20px rgba(0,0,0,.12)
+  }
+  .ux2-macro .ico{font-size:1.35rem}
+  .ux2-macro b{display:block;font-size:1.25rem;margin:5px 0 2px}
+  .ux2-macro label{display:block;color:#50d7ff;font-size:.68rem;font-weight:800}
+  .ux2-track{height:7px;margin:11px 3px 5px;border-radius:99px;background:#365565;overflow:hidden}
+  .ux2-track i{display:block;height:100%;width:0;border-radius:inherit;background:#13dc8b}
+  .ux2-macro small{display:block;color:#a9bdc6;font-size:.62rem}
+
+  .ux2-add{
+    grid-column:2;grid-row:2;width:100%;min-height:52px;
+    border:1px solid #42f39d;border-radius:15px;
+    background:linear-gradient(135deg,#55e77e,#00d892);
+    color:#05291b;font-size:1rem;font-weight:900;
+    box-shadow:0 8px 24px rgba(0,218,146,.16)
+  }
+  .ux2-status-btn{
+    grid-column:2;grid-row:3;width:100%;min-height:46px;
+    padding:8px 14px;border:1px solid rgba(56,189,248,.34);
+    border-radius:14px;background:#103746;color:#fff;
+    font-weight:800;font-size:.88rem
+  }
+
+  .ux2-diary-fold{
+    grid-column:1 / -1;grid-row:4;
+    margin:2px 0 0;border:1px solid rgba(62,180,216,.28);
+    border-radius:17px;background:#0f3441;overflow:hidden
+  }
+  .ux2-diary-toggle{
+    width:100%;min-height:52px;padding:11px 15px;border:0;background:transparent;
+    color:#fff;display:flex;align-items:center;justify-content:space-between;
+    text-align:left;font-weight:850;font-size:.96rem
+  }
+  .ux2-diary-toggle small{color:#8fb2c0;font-size:.68rem;font-weight:650}
+  .ux2-diary-toggle b{color:#38bdf8;font-size:1.25rem}
+  .ux2-diary-body{padding:0 15px 14px;border-top:1px solid rgba(72,181,216,.18)}
+  .ux2-diary-body[hidden]{display:none!important}
+
+  /* Navigazione coerente con mobile, ma contenuta e centrata. */
+  #ux2-bottom-nav{
+    display:grid!important;
+    position:fixed;z-index:4500;left:50%;bottom:12px;transform:translateX(-50%);
+    display:grid;grid-template-columns:repeat(3,1fr);
+    width:min(620px,calc(100% - 36px));padding:6px;
+    border:1px solid rgba(56,189,248,.35);border-radius:18px;
+    background:linear-gradient(180deg,rgba(12,45,57,.97),rgba(5,24,32,.98));
+    backdrop-filter:blur(16px);box-shadow:0 10px 34px rgba(0,0,0,.34)
+  }
+  #ux2-bottom-nav button{
+    min-height:52px;border:0;border-radius:13px;background:transparent;color:#9fb8c2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:800
+  }
+  #ux2-bottom-nav span{font-size:1.42rem;line-height:1}
+  #ux2-bottom-nav small{font-size:.68rem}
+  #ux2-bottom-nav .active{
+    color:#59e6a3;background:linear-gradient(180deg,rgba(45,221,126,.12),rgba(56,189,248,.06));
+    box-shadow:inset 0 0 0 1px rgba(45,221,126,.18)
+  }
+
+  /* Il flusso Aggiungi usa gli stessi controlli reali anche nel laboratorio desktop. */
+  body.ux24-add-mode #ux2-home,
+  body.ux24-add-mode #ux2-bottom-nav{display:none!important}
+  body.ux24-add-mode #ux24-add-page{
+    display:block!important;width:min(760px,100%);min-height:70vh;margin:10px auto 90px;padding:0;
+  }
+  .ux24-add-top{
+    display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:11px 13px;
+    border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441
+  }
+  .ux24-back{
+    min-height:42px;padding:0 13px;border:1px solid rgba(56,189,248,.42);
+    border-radius:12px;background:#123b4b;color:#fff;font-weight:700
+  }
+  #ux24-meal-host #meal-focus-card,
+  #ux24-original-add-host #ux23-original-add-card,
+  #ux24-manual-host #ux24-manual-card{display:block!important}
+  #ux24-meal-host #meal-focus-card{margin-bottom:10px!important}
+  #ux24-original-add-host #ux23-original-add-card{margin-bottom:10px!important}
+
+  .ux254-manual-trigger{
+    width:100%;min-height:40px;margin-top:7px;padding:7px 10px;
+    border:1px solid rgba(56,189,248,.30);border-radius:10px;
+    background:rgba(18,59,75,.72);color:#eaf7fb;font:inherit;font-size:.82rem;font-weight:700
+  }
+  #ux24-manual-host:empty{display:none}
+
+  /* Altro funziona come dialog centrato su schermo largo. */
+  #ux25-more-modal.ux25-open{
+    display:flex;position:fixed;z-index:6500;inset:0;align-items:center;justify-content:center;
+    padding:20px;background:rgba(1,10,15,.72);backdrop-filter:blur(5px)
+  }
+  .ux25-more-panel{
+    width:min(520px,100%);padding:18px;border:1px solid rgba(56,189,248,.34);
+    border-radius:22px;background:linear-gradient(155deg,#103746,#071f29 72%);
+    box-shadow:0 22px 65px rgba(0,0,0,.48)
+  }
+  .ux25-more-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .ux25-more-head small{display:block;color:#59e6a3;font-size:.62rem;font-weight:900;letter-spacing:.13em}
+  .ux25-more-head h2{margin:2px 0 0;color:#fff;font-size:1.45rem}
+  .ux25-more-close{width:42px;height:42px;border:1px solid rgba(56,189,248,.28);border-radius:13px;background:#153f4d;color:#fff}
+  .ux25-more-intro{color:#a9c0ca}
+  .ux25-more-card{
+    width:100%;min-height:78px;margin-top:9px;padding:12px;border:1px solid rgba(56,189,248,.24);
+    border-radius:16px;background:linear-gradient(135deg,rgba(18,62,77,.96),rgba(10,39,50,.96));
+    color:#fff;display:grid;grid-template-columns:48px 1fr 20px;align-items:center;gap:11px;text-align:left
+  }
+  .ux25-more-icon{font-size:1.75rem;text-align:center}
+  .ux25-more-card strong{display:block}
+  .ux25-more-card small{display:block;margin-top:3px;color:#a9c0ca;font-size:.72rem}
+  .ux25-more-card b{color:#59e6a3;font-size:1.4rem}
+}
+
+/* Tablet: stessa architettura, proporzioni più raccolte. */
+@media(min-width:761px) and (max-width:920px){
+  #app-container{max-width:820px}
+  #ux2-home{grid-template-columns:270px minmax(0,1fr);gap:10px 12px}
+  .ux2-calorie-zone{min-height:330px;padding:18px 12px}
+  .ux2-ring{width:190px;height:190px}
+  .ux2-kcal-now{font-size:2.25rem}
+  .ux2-macros{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ux2-macro{min-height:105px;padding:10px 8px}
+}
+
+
 /* =========================================================
    DIARIOFIT UX BETA V2 — HOME STRUTTURALE
    Mobile-first, fedele al mockup approvato.
