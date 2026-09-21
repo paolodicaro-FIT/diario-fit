@@ -8085,6 +8085,49 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   .ux2-methods-real .ux2-method .mi{display:inline-block;margin:0 9px 0 0;vertical-align:middle}
 }
 
+
+/* =========================================================
+   DIARIOFIT UX BETA V2.3 — INSERIMENTO REALE, NON CLONATO
+========================================================= */
+#ux23-add-header{display:none}
+@media(max-width:760px){
+  /* In modalità inserimento la Home lascia spazio ai controlli ORIGINALI. */
+  body.ux23-add-mode #ux2-home{display:none!important}
+  body.ux23-add-mode #ux2-bottom-nav{display:none!important}
+
+  body.ux23-add-mode #ux23-add-header{
+    display:flex!important;
+    align-items:center;
+    gap:11px;
+    margin:4px 0 10px;
+    padding:10px 12px;
+    border:1px solid rgba(62,180,216,.28);
+    border-radius:15px;
+    background:#0f3441;
+  }
+  #ux23-add-header button{
+    width:42px;height:42px;flex:0 0 42px;
+    border:1px solid rgba(56,189,248,.42);
+    border-radius:12px;background:#123b4b;color:#fff;
+    font-size:1.65rem;line-height:1;
+  }
+  #ux23-add-header strong{display:block;font-size:1.05rem}
+  #ux23-add-header small{display:block;margin-top:2px;color:#9eb7c2;font-size:.68rem}
+
+  /* Queste sono le vere sezioni già funzionanti di DiarioFIT. */
+  body.ux23-add-mode #meal-focus-card,
+  body.ux23-add-mode #ux23-original-add-card,
+  body.ux23-add-mode .free-entry-card{
+    display:block!important;
+  }
+
+  /* Nessun duplicato del registro durante l'inserimento. */
+  body.ux23-add-mode .free-entry-card+section{display:none!important}
+
+  /* Home normale: le sezioni originali restano nascoste. */
+  body:not(.ux23-add-mode) #ux23-add-header{display:none!important}
+}
+
 </style>
 
 <style>
@@ -8897,7 +8940,7 @@ html[data-theme="light"] .missing-today-legend {
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
 
-    <button class="ux2-add" type="button" onclick="ux2OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
+    <button class="ux2-add" type="button" onclick="ux23OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
 <section class="ux2-diary-fold">
       <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
         <span>📖 &nbsp; Diario di oggi <small id="ux2-diary-count"></small></span><b id="ux2-diary-chevron">⌄</b>
@@ -9265,6 +9308,12 @@ html[data-theme="light"] .missing-today-legend {
   </section>
 
 
+  <!-- UX BETA V2.3: intestazione inserimento, usa i controlli originali -->
+  <section id="ux23-add-header" class="ux23-add-header">
+    <button type="button" onclick="ux23CloseAdd()" aria-label="Torna a Oggi">‹</button>
+    <div><strong>Aggiungi alimento</strong><small>Scegli prima il pasto, poi come inserire</small></div>
+  </section>
+
   <!-- ===================================================
        PASTO CORRENTE
   ==================================================== -->
@@ -9327,7 +9376,7 @@ html[data-theme="light"] .missing-today-legend {
        QUICK ADD
   ==================================================== -->
 
-  <section class="card">
+  <section class="card" id="ux23-original-add-card">
 
     <div class="section-title">
 
@@ -24753,31 +24802,14 @@ function ux2ToggleDiary(){
   if(chev)chev.textContent=opening?"⌃":"⌄";
   if(opening)ux2SyncDiary();
 }
-function ux2OpenAdd(){
-  const sheet=document.getElementById("ux2-add-sheet");
-  if(sheet)sheet.classList.add("open");
-  const q=document.getElementById("quick-grid-container");
-  const h=document.getElementById("ux2-quick-host");
-  if(q&&h)h.innerHTML=q.innerHTML;
+function ux23OpenAdd(){
+  document.body.classList.add("ux23-add-mode");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(typeof renderQuickGrid==="function")renderQuickGrid();
 }
-function ux2CloseAdd(){
-  document.getElementById("ux2-add-sheet")?.classList.remove("open");
-}
-function ux2OpenFoodPicker(){
-  ux2CloseAdd();
-  openFoodPicker();
-}
-function ux2OpenSavedMeals(){
-  ux2CloseAdd();
-  openSavedMealsModal();
-}
-function ux2OpenManual(){
-  ux2CloseAdd();
-  const card=document.querySelector(".free-entry-card");
-  if(card){
-    card.style.setProperty("display","block","important");
-    card.scrollIntoView({behavior:"smooth",block:"start"});
-  }
+function ux23CloseAdd(){
+  document.body.classList.remove("ux23-add-mode");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 function ux2OpenMore(){
   toggleHelpModal();
@@ -24814,19 +24846,5 @@ window.addEventListener("load",()=>{
  <button type="button" onclick="toggleStatsProgressModal()"><span>▥</span><small>Progressi</small></button>
  <button type="button" onclick="ux2OpenMore()"><span>•••</span><small>Altro</small></button>
 </nav>
-<div id="ux2-add-sheet" onclick="if(event.target===this)ux2CloseAdd()">
- <section class="ux2-sheet">
-  <div class="ux2-handle"></div>
-  <div class="ux2-sheet-head"><h2>Aggiungi alimento</h2><button class="ux2-close" onclick="ux2CloseAdd()">×</button></div>
-  <input class="ux2-search" type="text" placeholder="🔍 Cerca un alimento..." onclick="ux2OpenFoodPicker()">
-  <div class="ux2-methods ux2-methods-real">
-   <button class="ux2-method" type="button" onclick="ux2OpenFoodPicker()"><span class="mi">🔎</span>Cerca alimento<small>Cerca e seleziona dai tuoi alimenti</small></button>
-   <button class="ux2-method" type="button" onclick="ux2OpenManual()"><span class="mi">✏️</span>Inserimento manuale<small>Calorie, macro e quantità</small></button>
-   <button class="ux2-method" type="button" onclick="ux2OpenSavedMeals()"><span class="mi">♥</span>Pasti salvati<small>I tuoi pasti abituali</small></button>
-  </div>
-  <div class="ux2-sheet-section"><h3>⚡ Inserimento rapido</h3><div id="ux2-quick-host"></div></div>
-  <div class="ux2-tip">💡 Puoi continuare a usare i pulsanti rapidi già configurati in DiarioFIT.</div>
- </section>
-</div>
 </body>
 </html>
