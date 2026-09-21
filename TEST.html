@@ -8026,7 +8026,7 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   body{padding:0;background:linear-gradient(180deg,#082531 0%,#061820 100%);overflow-x:hidden}
   #app-container{max-width:520px;min-height:100vh;padding:8px 12px 92px}
   .header-container{padding:10px 4px 7px;margin:0;border:0;background:transparent;box-shadow:none}
-  .header-title-btn{padding:3px 0;border:0;background:transparent;box-shadow:none}
+  .header-title-btn{padding:3px 0;border:0;background:transparent;box-shadow:none;pointer-events:none;cursor:default}
   .header-title{font-size:1.28rem}.header-title span{color:#2ddd7e}
   .header-brand-icon{width:38px;height:38px;border-radius:10px}
   .header-subtitle-row{display:none}
@@ -8034,11 +8034,13 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   .top-toolbar .toolbar-btn{width:42px;min-width:42px;height:42px;padding:0;border-radius:12px;background:#12323f;border-color:rgba(114,180,203,.28);font-size:0}
   .top-toolbar .toolbar-btn::first-letter{font-size:1rem}
   .top-toolbar .toolbar-btn .label{display:none}
+  .top-toolbar .toolbar-btn[onclick="toggleHelpModal()"]{display:none!important}
   #admin-toolbar-btn{font-size:1rem!important}
   .current-date{margin:5px 0 12px;padding:12px;border:1px solid rgba(79,183,218,.30);border-radius:14px;background:#103744;color:#f8fafc;text-align:center;font-size:.82rem;font-weight:800}
   /* Nascondiamo la vecchia Home, non le sue funzioni/dati. */
-  #history-card,.target-card,.target-card+button,.target-card+button+section,
+  .target-card,.target-card+button,.target-card+button+section,
   #meal-focus-card,#meal-focus-card+section,.free-entry-card,.free-entry-card+section{display:none!important}
+  #history-card{margin:0 0 12px}
 
   #ux2-home{display:block}
   .ux2-calorie-zone{display:grid;grid-template-columns:1fr 86px;align-items:center;gap:10px;margin:6px 0 12px}
@@ -8072,6 +8074,7 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
 
 @media(max-width:760px){
+  .ux2-status-btn{width:100%;min-height:46px;margin-top:9px;padding:10px 14px;border:1px solid rgba(56,189,248,.38);border-radius:14px;background:#103746;color:#fff;font-weight:800;font-size:.88rem}
   .ux2-diary-fold{margin-top:12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441;overflow:hidden}
   .ux2-diary-toggle{width:100%;min-height:52px;padding:11px 13px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:space-between;text-align:left;font-weight:850;font-size:.92rem}
   .ux2-diary-toggle small{color:#8fb2c0;font-size:.66rem;font-weight:650}
@@ -8963,6 +8966,7 @@ html[data-theme="light"] .missing-today-legend {
     </section>
 
     <button class="ux2-add" type="button" onclick="ux24OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
+    <button class="ux2-status-btn" type="button" onclick="openMissingTodayModal()">💡 A che punto sono oggi?</button>
 <section class="ux2-diary-fold">
       <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
         <span>📖 &nbsp; Diario di oggi <small id="ux2-diary-count"></small></span><b id="ux2-diary-chevron">⌄</b>
