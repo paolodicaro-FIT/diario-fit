@@ -8140,19 +8140,13 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
     display:block!important;min-height:100vh;padding:8px 12px 90px;
   }
   .ux24-add-top{display:flex;align-items:center;gap:11px;margin:4px 0 12px;padding:10px 12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441}
-  .ux24-back{width:42px;height:42px;flex:0 0 42px;border:1px solid rgba(56,189,248,.42);border-radius:12px;background:#123b4b;color:#fff;font-size:1.65rem}
+  .ux24-back{min-height:42px;padding:0 12px;flex:0 0 auto;border:1px solid rgba(56,189,248,.42);border-radius:12px;background:#123b4b;color:#fff;font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:6px}.ux24-back span{font-size:.76rem;white-space:nowrap}
   .ux24-add-top strong{display:block;font-size:1.08rem}
   .ux24-add-top small,.ux24-quick-title small{display:block;color:#9eb7c2;font-size:.69rem;margin-top:2px}
   #ux24-meal-host #meal-focus-card{display:block!important;margin:0 0 12px!important}
-  .ux24-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:15px}
-  .ux24-actions button{min-height:68px;padding:10px 13px;text-align:left;display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto;column-gap:9px;align-items:center;border:1px solid rgba(62,180,216,.30);border-radius:14px;background:#103b49;color:#fff}
-  .ux24-actions button span{grid-row:1/3;font-size:1.55rem;text-align:center}
-  .ux24-actions button b{font-size:.95rem}.ux24-actions button small{font-size:.68rem;color:#a9c0ca}
-  .ux24-quick-title{margin:14px 2px 8px}.ux24-quick-title b{font-size:.96rem}
-  #ux24-quick-host #quick-grid-container{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:0!important}
-  #ux24-quick-host #quick-grid-container .quick-btn{width:100%!important;min-width:0!important;min-height:58px!important;margin:0!important;padding:8px!important}
-  #ux24-manual-host #ux24-manual-card{display:block!important;margin-top:12px!important}
-  #ux24-manual-host:empty{display:none}
+  #ux24-original-add-host #ux23-original-add-card{display:block!important;margin:0!important}
+  #ux24-original-add-host #quick-grid-container{display:grid!important}
+
   body:not(.ux24-add-mode) #ux24-add-page{display:none!important}
 }
 
@@ -9340,18 +9334,11 @@ html[data-theme="light"] .missing-today-legend {
 
   <section id="ux24-add-page" class="ux24-add-page" aria-label="Aggiungi alimento">
   <div class="ux24-add-top">
-    <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹</button>
-    <div><strong>Torna a Oggi</strong><small>Scegli il pasto e poi come inserire</small></div>
+    <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹ <span>Torna a Oggi</span></button>
+    <div><strong>Aggiungi alimento</strong><small>Scegli il pasto e poi come inserire</small></div>
   </div>
   <div id="ux24-meal-host"></div>
-  <div class="ux24-actions">
-    <button type="button" onclick="ux24SearchFood()"><span>🔎</span><b>Cerca alimento</b><small>Predefiniti e preferiti</small></button>
-    <button type="button" onclick="ux24SavedMeals()"><span>♥</span><b>Pasti salvati</b><small>I tuoi pasti abituali</small></button>
-    <button type="button" onclick="ux24Manual()"><span>✍️</span><b>Inserimento manuale</b><small>Calorie, macro e quantità</small></button>
-  </div>
-  <div class="ux24-quick-title"><b>⚡ Inserimento rapido</b><small>I tuoi pulsanti personalizzati</small></div>
-  <div id="ux24-quick-host"></div>
-  <div id="ux24-manual-host"></div>
+  <div id="ux24-original-add-host"></div>
 </section>
 
 <section class="card meal-focus-card meal-focus-pending" id="meal-focus-card">
@@ -24842,12 +24829,10 @@ let ux24Origins=null;
 function ux24Prepare(){
   if(ux24Origins)return;
   const meal=document.getElementById("meal-focus-card");
-  const quick=document.getElementById("quick-grid-container");
-  const manual=document.getElementById("ux24-manual-card");
+  const addCard=document.getElementById("ux23-original-add-card");
   ux24Origins={
     meal:{node:meal,parent:meal?.parentNode,next:meal?.nextSibling},
-    quick:{node:quick,parent:quick?.parentNode,next:quick?.nextSibling},
-    manual:{node:manual,parent:manual?.parentNode,next:manual?.nextSibling}
+    addCard:{node:addCard,parent:addCard?.parentNode,next:addCard?.nextSibling}
   };
 }
 function ux24Move(node,hostId){const host=document.getElementById(hostId);if(node&&host)host.appendChild(node);}
@@ -24855,7 +24840,7 @@ function ux24RestoreOne(o){if(!o?.node||!o?.parent)return;if(o.next&&o.next.pare
 function ux24OpenAdd(){
   ux24Prepare();
   ux24Move(ux24Origins.meal.node,"ux24-meal-host");
-  ux24Move(ux24Origins.quick.node,"ux24-quick-host");
+  ux24Move(ux24Origins.addCard.node,"ux24-original-add-host");
   document.body.classList.add("ux24-add-mode");
   document.body.classList.remove("ux23-add-mode");
   if(typeof renderQuickGrid==="function")renderQuickGrid();
@@ -24863,14 +24848,8 @@ function ux24OpenAdd(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function ux24CloseAdd(){
-  if(ux24Origins){ux24RestoreOne(ux24Origins.meal);ux24RestoreOne(ux24Origins.quick);ux24RestoreOne(ux24Origins.manual);}
+  if(ux24Origins){ux24RestoreOne(ux24Origins.meal);ux24RestoreOne(ux24Origins.addCard);}
   document.body.classList.remove("ux24-add-mode");window.scrollTo({top:0,behavior:"smooth"});
-}
-function ux24SearchFood(){openFoodPicker();}
-function ux24SavedMeals(){openSavedMealsModal();}
-function ux24Manual(){
-  ux24Prepare();ux24Move(ux24Origins.manual.node,"ux24-manual-host");
-  document.getElementById("ux24-manual-card")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function ux2OpenMore(){
   toggleHelpModal();
