@@ -38,6 +38,15 @@ while IFS= read -r -d '' file; do
 
 done < <(find "$BASE" -maxdepth 1 -type f -name 'TEST-*.html' -print0)
 
+# Backup index intermedi più vecchi dell'index.html ufficiale.
+while IFS= read -r -d '' file; do
+
+    if [ -f index.html ] && [ "$file" -ot index.html ]; then
+        CANDIDATI+=("$file")
+    fi
+
+done < <(find "$BASE" -maxdepth 1 -type f -name 'index-PRE-*.html' -print0)
+
 # Backup Worker intermedi.
 while IFS= read -r -d '' file; do
     CANDIDATI+=("$file")
