@@ -8035,7 +8035,7 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
   /* La nuova Home diventa la Home principale anche su schermi larghi. */
   #ux2-home{
-    display:grid;
+    display:grid!important;
     grid-template-columns:minmax(280px,360px) minmax(0,1fr);
     grid-template-rows:auto auto auto 1fr;
     gap:12px 16px;
@@ -8148,6 +8148,7 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
   /* Navigazione coerente con mobile, ma contenuta e centrata. */
   #ux2-bottom-nav{
+    display:grid!important;
     position:fixed;z-index:4500;left:50%;bottom:12px;transform:translateX(-50%);
     display:grid;grid-template-columns:repeat(3,1fr);
     width:min(620px,calc(100% - 36px));padding:6px;
