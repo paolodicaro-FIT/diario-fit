@@ -8221,6 +8221,17 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   #ux24-original-add-host #ux23-original-add-card{display:block!important;margin:0!important}
   #ux24-original-add-host #quick-grid-container{display:grid!important}
 
+  .ux254-manual-trigger{
+    width:100%;min-height:38px;margin-top:7px;padding:7px 10px;
+    border:1px solid rgba(56,189,248,.30);border-radius:10px;
+    background:rgba(18,59,75,.72);color:#eaf7fb;
+    font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;
+  }
+  #ux24-manual-host:empty{display:none}
+  #ux24-manual-host #ux24-manual-card{
+    display:block!important;margin:10px 0 0!important;
+  }
+
   body:not(.ux24-add-mode) #ux24-add-page{display:none!important}
 }
 
@@ -9414,6 +9425,7 @@ html[data-theme="light"] .missing-today-legend {
   </div>
   <div id="ux24-meal-host"></div>
   <div id="ux24-original-add-host"></div>
+  <div id="ux24-manual-host"></div>
 </section>
 
 <section class="card meal-focus-card meal-focus-pending" id="meal-focus-card">
@@ -9566,6 +9578,14 @@ html[data-theme="light"] .missing-today-legend {
       style="margin-top:8px;"
     >
       🍽️ Pasti salvati
+    </button>
+
+    <button
+      type="button"
+      class="ux254-manual-trigger"
+      onclick="ux254OpenManual()"
+    >
+      ✍️ Inserimento manuale
     </button>
 
   </section>
@@ -24905,9 +24925,11 @@ function ux24Prepare(){
   if(ux24Origins)return;
   const meal=document.getElementById("meal-focus-card");
   const addCard=document.getElementById("ux23-original-add-card");
+  const manual=document.getElementById("ux24-manual-card");
   ux24Origins={
     meal:{node:meal,parent:meal?.parentNode,next:meal?.nextSibling},
-    addCard:{node:addCard,parent:addCard?.parentNode,next:addCard?.nextSibling}
+    addCard:{node:addCard,parent:addCard?.parentNode,next:addCard?.nextSibling},
+    manual:{node:manual,parent:manual?.parentNode,next:manual?.nextSibling}
   };
 }
 function ux24Move(node,hostId){const host=document.getElementById(hostId);if(node&&host)host.appendChild(node);}
@@ -24923,8 +24945,19 @@ function ux24OpenAdd(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function ux24CloseAdd(){
-  if(ux24Origins){ux24RestoreOne(ux24Origins.meal);ux24RestoreOne(ux24Origins.addCard);}
+  if(ux24Origins){
+    ux24RestoreOne(ux24Origins.meal);
+    ux24RestoreOne(ux24Origins.addCard);
+    ux24RestoreOne(ux24Origins.manual);
+  }
   document.body.classList.remove("ux24-add-mode");window.scrollTo({top:0,behavior:"smooth"});
+}
+function ux254OpenManual(){
+  ux24Prepare();
+  ux24Move(ux24Origins.manual.node,"ux24-manual-host");
+  requestAnimationFrame(()=>{
+    document.getElementById("ux24-manual-card")?.scrollIntoView({behavior:"smooth",block:"start"});
+  });
 }
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
