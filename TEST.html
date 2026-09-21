@@ -8018,117 +8018,57 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 }
 
 /* =========================================================
-   DIARIOFIT UX BETA V1.1 — HOME / NAV MOCKUP
+   DIARIOFIT UX BETA V2 — HOME STRUTTURALE
+   Mobile-first, fedele al mockup approvato.
 ========================================================= */
-.ux-home-actions,
-.ux-bottom-nav { display:none; }
+#ux2-home,#ux2-bottom-nav,#ux2-add-sheet{display:none}
+@media(max-width:760px){
+  body{padding:0;background:linear-gradient(180deg,#082531 0%,#061820 100%);overflow-x:hidden}
+  #app-container{max-width:520px;min-height:100vh;padding:8px 12px 92px}
+  .header-container{padding:10px 4px 7px;margin:0;border:0;background:transparent;box-shadow:none}
+  .header-title-btn{padding:3px 0;border:0;background:transparent;box-shadow:none}
+  .header-title{font-size:1.28rem}.header-title span{color:#2ddd7e}
+  .header-brand-icon{width:38px;height:38px;border-radius:10px}
+  .header-subtitle-row{display:none}
+  .top-toolbar{gap:7px}
+  .top-toolbar .toolbar-btn{width:42px;min-width:42px;height:42px;padding:0;border-radius:12px;background:#12323f;border-color:rgba(114,180,203,.28);font-size:0}
+  .top-toolbar .toolbar-btn::first-letter{font-size:1rem}
+  .top-toolbar .toolbar-btn .label{display:none}
+  #admin-toolbar-btn{font-size:1rem!important}
+  .current-date{margin:5px 0 12px;padding:12px;border:1px solid rgba(79,183,218,.30);border-radius:14px;background:#103744;color:#f8fafc;text-align:center;font-size:.82rem;font-weight:800}
+  /* Nascondiamo la vecchia Home, non le sue funzioni/dati. */
+  #history-card,.target-card,.target-card+button,.target-card+button+section,
+  #meal-focus-card,#meal-focus-card+section,.free-entry-card,.free-entry-card+section{display:none!important}
 
-@media (max-width:760px) {
-  body {
-    padding:0;
-    background:linear-gradient(180deg,#0a2530 0%,#08171e 100%);
-  }
-
-  #app-container {
-    max-width:520px;
-    min-height:100vh;
-    padding:8px 12px 86px;
-  }
-
-  .header-container {
-    padding:10px 4px;
-    margin-bottom:4px;
-    border:0;
-    background:transparent;
-    box-shadow:none;
-  }
-
-  .header-title-btn {
-    padding:4px 2px;
-    border:0;
-    background:transparent;
-    box-shadow:none;
-  }
-
-  .header-title { font-size:1.28rem; }
-  .header-title span { color:#31d67b; }
-  .header-brand-icon { width:28px; height:28px; }
-  .header-subtitle-row { display:none; }
-  .top-toolbar .toolbar-btn:not(#admin-toolbar-btn) { display:none; }
-
-  .current-date {
-    margin:4px 0 10px;
-    padding:10px 12px;
-    border:1px solid rgba(125,180,199,.18);
-    border-radius:12px;
-    background:rgba(22,52,64,.72);
-    color:var(--text);
-    text-align:center;
-    font-size:.78rem;
-  }
-
-  .dashboard-grid {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:7px;
-  }
-
-  .dashboard-grid .metric.water { grid-column:auto; }
-
-  .metric {
-    padding:9px;
-    border-color:rgba(125,180,199,.16);
-    background:rgba(31,63,75,.76);
-  }
-
-  .metric-value { color:#f8fafc; }
-
-  .btn.primary,
-  .mini-btn.primary,
-  .add-selected,
-  .save-food-btn {
-    background:linear-gradient(135deg,#22c55e,#20d977);
-    border-color:#22c55e;
-    color:#052416;
-  }
-
-  .card {
-    border-color:rgba(125,180,199,.16);
-    background:
-      linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008)),
-      rgba(15,43,54,.88);
-  }
-
-  .ux-bottom-nav {
-    position:fixed;
-    z-index:4500;
-    left:50%;
-    bottom:0;
-    transform:translateX(-50%);
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    width:min(100%,520px);
-    padding:7px 10px max(7px,env(safe-area-inset-bottom));
-    border-top:1px solid rgba(125,180,199,.16);
-    background:rgba(7,24,31,.96);
-    backdrop-filter:blur(14px);
-  }
-
-  .ux-bottom-nav button {
-    border:0;
-    background:transparent;
-    color:#8fa6b0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:2px;
-    font-weight:700;
-  }
-
-  .ux-bottom-nav button span { font-size:1.25rem; }
-  .ux-bottom-nav button small { font-size:.64rem; }
-  .ux-bottom-nav button.active { color:#38bdf8; }
+  #ux2-home{display:block}
+  .ux2-calorie-zone{display:grid;grid-template-columns:1fr 86px;align-items:center;gap:10px;margin:6px 0 12px}
+  .ux2-ring{--p:0;position:relative;width:190px;height:190px;margin:auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#12dc8a calc(var(--p)*1%),#35596a 0);box-shadow:0 0 26px rgba(18,220,138,.12)}
+  .ux2-ring:before{content:"";position:absolute;inset:15px;border-radius:50%;background:radial-gradient(circle,#0d3340,#092530 72%)}
+  .ux2-ring-content{position:relative;text-align:center;z-index:1}
+  .ux2-flame{font-size:1.65rem}.ux2-kcal-now{font-size:2.25rem;font-weight:900;line-height:1;color:#fff}.ux2-kcal-unit{font-size:.78rem;color:#a9c1cb}.ux2-kcal-of{margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,.15);font-size:.72rem;color:#b6c9d1}.ux2-percent{display:inline-block;margin-top:4px;padding:2px 9px;border:1px solid #20d98b;border-radius:99px;color:#fff;font-size:.7rem}
+  .ux2-goal{padding:12px 6px;border:1px solid rgba(30,180,231,.5);border-radius:14px;background:#103746;text-align:center}.ux2-goal b{display:block;font-size:1.18rem}.ux2-goal small{color:#b7cbd3;font-size:.62rem}
+  .ux2-macros{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}
+  .ux2-macro{min-width:0;padding:9px 5px;border:1px solid rgba(48,185,220,.35);border-radius:13px;background:#103744;text-align:center}.ux2-macro .ico{font-size:1.15rem}.ux2-macro b{display:block;font-size:1rem;margin:2px 0}.ux2-macro label{display:block;color:#50d7ff;font-size:.58rem;font-weight:800}.ux2-track{height:7px;margin:7px 2px 4px;border-radius:99px;background:#365565;overflow:hidden}.ux2-track i{display:block;height:100%;width:0;border-radius:inherit;background:#13dc8b}.ux2-macro small{display:block;color:#a9bdc6;font-size:.55rem}
+  .ux2-add{width:100%;min-height:58px;border:1px solid #42f39d;border-radius:14px;background:linear-gradient(135deg,#55e77e,#00d892);color:#05291b;font-size:1.02rem;font-weight:900;box-shadow:0 8px 24px rgba(0,218,146,.18)}
+  .ux2-secondary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0 13px}.ux2-secondary button{min-height:52px;padding:8px;border:1px solid rgba(56,189,248,.48);border-radius:13px;background:#123646;color:#fff;text-align:left;font-weight:800}.ux2-secondary small{display:block;margin-top:2px;color:#9eb7c2;font-size:.62rem;font-weight:500}
+  .ux2-meals{padding:12px;border:1px solid rgba(62,180,216,.28);border-radius:15px;background:#0f3441}.ux2-meals-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ux2-meals-head strong{font-size:1rem}.ux2-meals-head button{border:0;background:transparent;color:#38bdf8;font-weight:800}
+  #ux2-log .meal-header{font-size:.72rem}.ux2-empty{padding:14px;text-align:center;color:#91a9b3}
+  #ux2-log .log-item{padding:9px 3px}.ux2-meals .delete-btn{display:none}
+  #ux2-log .log-name{font-size:.76rem}#ux2-log .log-meta{font-size:.6rem}
+  #ux2-bottom-nav{position:fixed;z-index:4500;left:50%;bottom:0;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,520px);padding:8px 10px max(8px,env(safe-area-inset-bottom));border-top:1px solid rgba(77,174,205,.2);background:rgba(5,24,32,.97);backdrop-filter:blur(14px)}
+  #ux2-bottom-nav button{border:0;background:transparent;color:#93aab4;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}#ux2-bottom-nav span{font-size:1.25rem}#ux2-bottom-nav small{font-size:.64rem}#ux2-bottom-nav .active{color:#38bdf8}
+  #ux2-add-sheet{position:fixed;z-index:6000;inset:0;background:rgba(0,8,12,.68);align-items:flex-end;justify-content:center}
+  #ux2-add-sheet.open{display:flex}
+  .ux2-sheet{width:min(100%,520px);max-height:88vh;overflow:auto;padding:10px 14px 24px;border:1px solid rgba(72,181,216,.28);border-radius:22px 22px 0 0;background:#0c2935;box-shadow:0 -18px 55px rgba(0,0,0,.45)}
+  .ux2-handle{width:76px;height:5px;margin:0 auto 14px;border-radius:99px;background:#7898a7}.ux2-sheet-head{display:flex;align-items:center;justify-content:space-between}.ux2-sheet-head h2{margin:0;font-size:1.25rem}.ux2-close{width:38px;height:38px;border:0;border-radius:50%;background:#294656;color:#fff;font-size:1.25rem}
+  .ux2-search{width:100%;margin:14px 0 10px;min-height:48px;border-color:#5797b0;background:#123b4b}
+  .ux2-methods{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ux2-method{min-height:90px;padding:12px 8px;border:1px solid rgba(81,176,208,.38);border-radius:15px;background:#123746;color:#fff;font-weight:800}.ux2-method .mi{display:block;font-size:1.5rem;margin-bottom:5px}.ux2-method small{display:block;color:#a9bec7;font-size:.62rem;margin-top:3px;font-weight:500}
+  .ux2-sheet-section{margin-top:15px}.ux2-sheet-section h3{font-size:.9rem;margin:0 0 8px}.ux2-tip{margin-top:15px;padding:11px;border:1px solid rgba(56,189,248,.35);border-radius:13px;background:#10394a;color:#b8ccd4;font-size:.72rem}
 }
-/* ===== FINE DIARIOFIT UX BETA V1.1 ===== */
+@media(max-width:390px){
+ .ux2-ring{width:172px;height:172px}.ux2-kcal-now{font-size:2rem}
+ .ux2-macros{gap:4px}.ux2-macro{padding:8px 3px}.ux2-macro label{font-size:.52rem}
+}
 
 </style>
 
@@ -8920,6 +8860,40 @@ html[data-theme="light"] .missing-today-legend {
     class="current-date"
     id="display-date"
   ></div>
+  <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
+  <main id="ux2-home" aria-label="Oggi">
+    <section class="ux2-calorie-zone">
+      <div class="ux2-ring" id="ux2-ring">
+        <div class="ux2-ring-content">
+          <div class="ux2-flame">🔥</div>
+          <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
+          <div class="ux2-kcal-unit">kcal</div>
+          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">0</span></div>
+          <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+        </div>
+      </div>
+      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">0</b><small>kcal</small></div>
+    </section>
+
+    <section class="ux2-macros">
+      <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">0</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">0</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">0</span> g</small></div>
+      <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">0</span> ml</small></div>
+    </section>
+
+    <button class="ux2-add" type="button" onclick="ux2OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
+    <div class="ux2-secondary">
+      <button type="button" disabled style="opacity:.62">📷 &nbsp; Foto<small>Funzione sospesa</small></button>
+      <button type="button" onclick="ux2OpenAdd()">🔎 &nbsp; Cerca alimento<small>Nei tuoi alimenti</small></button>
+    </div>
+
+    <section class="ux2-meals">
+      <div class="ux2-meals-head"><strong>🍴 &nbsp; Pasti di oggi</strong><button type="button" onclick="ux2ShowLegacyLog()">Vedi tutto ›</button></div>
+      <div id="ux2-log"><div class="ux2-empty">Nessun alimento registrato oggi.</div></div>
+    </section>
+  </main>
+
 
 
   <!-- ===================================================
@@ -24682,20 +24656,69 @@ document.addEventListener("change", function(event) {
 window.addEventListener("resize",()=>{
   if(document.getElementById("bodycomp-modal")?.style.display==="flex") renderBodyCompositionChart();
 });
+
+/* =========================================================
+   DIARIOFIT UX BETA V2 — BRIDGE ALLA LOGICA ESISTENTE
+========================================================= */
+function ux2Pct(v,t){return t>0?Math.max(0,Math.min(100,(Number(v)||0)/(Number(t)||1)*100)):0;}
+function ux2SyncHome(){
+  const read=id=>Number((document.getElementById(id)?.innerText||"0").replace(",", "."))||0;
+  const k=read("tot-kcal"),p=read("tot-pro"),f=read("tot-fat"),c=read("tot-carb"),w=read("tot-water");
+  if(!window.TARGETS)return;
+  const put=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  put("ux2-kcal-now",k); put("ux2-kcal-target",TARGETS.kcal); put("ux2-goal-kcal",TARGETS.kcal);
+  put("ux2-pro",p);put("ux2-carb",c);put("ux2-fat",f);put("ux2-water",w);
+  put("ux2-pro-target",TARGETS.pro);put("ux2-carb-target",TARGETS.carb);put("ux2-fat-target",TARGETS.fat);put("ux2-water-target",TARGETS.water);
+  const kp=Math.round(ux2Pct(k,TARGETS.kcal));put("ux2-kcal-percent",kp+"%");
+  const ring=document.getElementById("ux2-ring");if(ring)ring.style.setProperty("--p",kp);
+  [["ux2-pro-bar",p,TARGETS.pro],["ux2-carb-bar",c,TARGETS.carb],["ux2-fat-bar",f,TARGETS.fat],["ux2-water-bar",w,TARGETS.water]].forEach(([id,v,t])=>{const e=document.getElementById(id);if(e)e.style.width=ux2Pct(v,t)+"%"});
+  ux2RenderLog();
+}
+function ux2RenderLog(){
+ const host=document.getElementById("ux2-log");if(!host)return;
+ const source=document.getElementById("log-container");
+ if(!source||!source.innerHTML.trim()){host.innerHTML='<div class="ux2-empty">Nessun alimento registrato oggi.</div>';return}
+ host.innerHTML=source.innerHTML;
+}
+function ux2OpenAdd(){
+ const s=document.getElementById("ux2-add-sheet");if(s)s.classList.add("open");
+ const q=document.getElementById("quick-grid-container"),h=document.getElementById("ux2-quick-host");
+ if(q&&h)h.innerHTML=q.innerHTML;
+}
+function ux2CloseAdd(){document.getElementById("ux2-add-sheet")?.classList.remove("open")}
+function ux2OpenFoodPicker(){ux2CloseAdd();openFoodPicker()}
+function ux2OpenSavedMeals(){ux2CloseAdd();openSavedMealsModal()}
+function ux2OpenManual(){ux2CloseAdd();document.querySelector(".free-entry-card")?.scrollIntoView({behavior:"smooth"});document.querySelector(".free-entry-card")?.style.setProperty("display","block","important")}
+function ux2ShowLegacyLog(){document.querySelector(".free-entry-card+section")?.style.setProperty("display","block","important");document.querySelector(".free-entry-card+section")?.scrollIntoView({behavior:"smooth"})}
+function ux2OpenMore(){toggleHelpModal()}
+const ux2OriginalUpdateDashboard=updateDashboard;
+updateDashboard=function(){ux2OriginalUpdateDashboard.apply(this,arguments);setTimeout(ux2SyncHome,0)};
+const ux2OriginalRenderLog=renderLog;
+renderLog=function(){ux2OriginalRenderLog.apply(this,arguments);setTimeout(ux2RenderLog,0)};
+window.addEventListener("load",()=>setTimeout(ux2SyncHome,700));
+
 </script>
 
 
-<nav class="ux-bottom-nav" aria-label="Navigazione principale">
-  <button type="button" class="active" aria-current="page">
-    <span>⌂</span><small>Oggi</small>
-  </button>
-  <button type="button">
-    <span>↗</span><small>Progressi</small>
-  </button>
-  <button type="button">
-    <span>•••</span><small>Altro</small>
-  </button>
+<nav id="ux2-bottom-nav" aria-label="Navigazione principale">
+ <button type="button" class="active"><span>⌂</span><small>Oggi</small></button>
+ <button type="button" onclick="toggleStatsProgressModal()"><span>▥</span><small>Progressi</small></button>
+ <button type="button" onclick="ux2OpenMore()"><span>•••</span><small>Altro</small></button>
 </nav>
-
+<div id="ux2-add-sheet" onclick="if(event.target===this)ux2CloseAdd()">
+ <section class="ux2-sheet">
+  <div class="ux2-handle"></div>
+  <div class="ux2-sheet-head"><h2>Aggiungi alimento</h2><button class="ux2-close" onclick="ux2CloseAdd()">×</button></div>
+  <input class="ux2-search" type="text" placeholder="🔍 Cerca un alimento..." onclick="ux2OpenFoodPicker()">
+  <div class="ux2-methods">
+   <button class="ux2-method" type="button" disabled style="opacity:.58"><span class="mi">📷</span>Da foto<small>Funzione sospesa</small></button>
+   <button class="ux2-method" type="button" disabled style="opacity:.58"><span class="mi">▥</span>Codice a barre<small>Non ancora disponibile</small></button>
+   <button class="ux2-method" type="button" onclick="ux2OpenManual()"><span class="mi">✏️</span>Inserimento manuale<small>Calorie, macro e quantità</small></button>
+   <button class="ux2-method" type="button" onclick="ux2OpenSavedMeals()"><span class="mi">♥</span>Pasti salvati<small>I tuoi pasti abituali</small></button>
+  </div>
+  <div class="ux2-sheet-section"><h3>⚡ Inserimento rapido</h3><div id="ux2-quick-host"></div></div>
+  <div class="ux2-tip">💡 Puoi continuare a usare i pulsanti rapidi già configurati in DiarioFIT.</div>
+ </section>
+</div>
 </body>
 </html>
