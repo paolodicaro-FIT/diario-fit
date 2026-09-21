@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Diario FIT">
 
-<title>Diario FIT - Desktop Lab V1</title>
+<title>Diario FIT - Desktop Lab V1.2</title>
 
 <link
   rel="icon"
@@ -8018,6 +8018,79 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 }
 
 
+
+/* =========================================================
+   DIARIOFIT DESKTOP LAB V1.2 — RIFINITURA HOME
+========================================================= */
+@media(min-width:921px){
+  body{padding-top:10px}
+
+  /* Header desktop: più compatto, senza cambiare i comandi reali. */
+  .header-container{
+    min-height:76px;
+    margin-bottom:6px;
+    padding:9px 14px;
+    border-radius:15px;
+  }
+  .header-title-btn{
+    display:inline-flex;
+    align-items:center;
+    min-height:38px;
+    padding:5px 9px;
+  }
+  .header-title{font-size:1.16rem}
+  .header-subtitle{margin-top:1px;font-size:.67rem}
+  .top-toolbar{gap:6px;align-items:center}
+  .toolbar-btn{height:34px;min-width:38px;padding:0 9px;font-size:.75rem}
+  .current-date{margin:4px 1px 8px;font-size:.73rem}
+
+  /* Home: meno aria verticale, stessi contenuti e stessa gerarchia. */
+  #ux2-home{
+    gap:10px 16px;
+    grid-template-columns:minmax(280px,360px) minmax(0,1fr);
+  }
+  .ux2-calorie-zone{
+    min-height:344px;
+    padding:17px 18px;
+    gap:10px;
+  }
+  .ux2-ring{width:220px;height:220px}
+  .ux2-goal{padding:8px 12px}
+
+  .ux2-macros{gap:10px}
+  .ux2-macro{
+    min-height:122px;
+    padding:12px 10px 10px;
+  }
+  .ux2-macro b{margin:3px 0 1px}
+  .ux2-track{margin-top:8px}
+
+  .ux2-add{min-height:48px}
+  .ux2-status-btn{min-height:42px}
+  .ux2-diary-fold{margin-top:0}
+  .ux2-diary-toggle{min-height:48px}
+
+  /* Su PC la navigazione è una dock discreta, non una seconda card dominante. */
+  #ux2-bottom-nav{
+    bottom:10px;
+    width:min(520px,calc(100% - 40px));
+    padding:4px;
+    border-radius:15px;
+    background:rgba(7,31,40,.96);
+    box-shadow:0 8px 25px rgba(0,0,0,.28);
+  }
+  #ux2-bottom-nav button{
+    min-height:45px;
+    border-radius:11px;
+    flex-direction:row;
+    gap:7px;
+  }
+  #ux2-bottom-nav span{font-size:1.15rem}
+  #ux2-bottom-nav small{font-size:.69rem}
+}
+
+/* Tablet resta separato: niente regole desktop V1.2 sopra i 921px. */
+
 /* =========================================================
    DIARIOFIT DESKTOP/TABLET LAB V1 — HOME
    Laboratorio separato: nessuna modifica alla UX mobile <=760px.
@@ -8035,7 +8108,7 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
   /* La nuova Home diventa la Home principale anche su schermi larghi. */
   #ux2-home{
-    display:grid!important;
+    display:grid;
     grid-template-columns:minmax(280px,360px) minmax(0,1fr);
     grid-template-rows:auto auto auto 1fr;
     gap:12px 16px;
@@ -8148,7 +8221,6 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
   /* Navigazione coerente con mobile, ma contenuta e centrata. */
   #ux2-bottom-nav{
-    display:grid!important;
     position:fixed;z-index:4500;left:50%;bottom:12px;transform:translateX(-50%);
     display:grid;grid-template-columns:repeat(3,1fr);
     width:min(620px,calc(100% - 36px));padding:6px;
