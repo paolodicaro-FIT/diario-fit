@@ -8136,66 +8136,29 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
 
 
+
 /* =========================================================
-   DIARIOFIT UX BETA V2.5.2 — HOME PIÙ COMPATTA + RESPONSIVE
+   DIARIOFIT UX BETA V2.5.3 — RIFINITURA MOBILE FINALE
+   Solo mobile. Desktop/tablet tornano al comportamento precedente.
 ========================================================= */
-
-/* Mobile: intervento chirurgico sui soli due elementi concordati. */
 @media(max-width:760px){
+  /* Ultimi pixel recuperati senza toccare cerchio, macro, data o stato. */
   .ux2-add{
-    min-height:35px!important;
-    padding-top:4px!important;
-    padding-bottom:4px!important;
+    min-height:31px!important;
+    padding-top:2px!important;
+    padding-bottom:2px!important;
   }
+
   .ux2-diary-fold{
-    min-height:46px!important;
+    min-height:42px!important;
   }
+
   .ux2-diary-fold > summary{
-    min-height:46px!important;
-    padding-top:7px!important;
-    padding-bottom:7px!important;
+    min-height:42px!important;
+    padding-top:5px!important;
+    padding-bottom:5px!important;
   }
 }
-
-/* Tablet e PC: rende visibile la nuova UX senza alterare la logica.
-   Il layout resta centrato e si allarga in modo controllato. */
-@media(min-width:761px){
-  #ux2-home{
-    display:block!important;
-    width:min(100% - 32px, 900px);
-    margin:18px auto 96px;
-  }
-
-  #ux2-bottom-nav{
-    display:flex!important;
-    width:min(100% - 32px, 900px);
-    left:50%!important;
-    right:auto!important;
-    transform:translateX(-50%);
-    border-radius:18px 18px 0 0;
-  }
-
-  /* Nasconde la vecchia Home visuale, lasciando vivi dati e logica. */
-  body:not(.ux24-add-mode) #main-content > .card,
-  body:not(.ux24-add-mode) #dashboard-grid,
-  body:not(.ux24-add-mode) #history-card{
-    display:none!important;
-  }
-
-  /* La schermata Aggiungi usa lo stesso flusso reale anche su tablet/PC. */
-  body.ux24-add-mode #ux2-home{display:none!important}
-  body.ux24-add-mode #ux24-add-page{
-    display:block!important;
-    width:min(100% - 32px, 760px);
-    margin:18px auto 96px;
-  }
-  body.ux24-add-mode #ux2-bottom-nav{display:none!important}
-
-  #ux25-more-modal .ux25-more-sheet{
-    width:min(92vw,560px);
-  }
-}
-
 
 /* =========================================================
    DIARIOFIT UX BETA V2.3 — INSERIMENTO REALE, NON CLONATO
