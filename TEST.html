@@ -8057,8 +8057,11 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   #ux2-log .meal-header{font-size:.72rem}.ux2-empty{padding:14px;text-align:center;color:#91a9b3}
   #ux2-log .log-item{padding:9px 3px}.ux2-meals .delete-btn{display:none}
   #ux2-log .log-name{font-size:.76rem}#ux2-log .log-meta{font-size:.6rem}
-  #ux2-bottom-nav{position:fixed;z-index:4500;left:50%;bottom:0;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,520px);padding:8px 10px max(8px,env(safe-area-inset-bottom));border-top:1px solid rgba(77,174,205,.2);background:rgba(5,24,32,.97);backdrop-filter:blur(14px)}
-  #ux2-bottom-nav button{border:0;background:transparent;color:#93aab4;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}#ux2-bottom-nav span{font-size:1.25rem}#ux2-bottom-nav small{font-size:.64rem}#ux2-bottom-nav .active{color:#38bdf8}
+  #ux2-bottom-nav{position:fixed;z-index:4500;left:50%;bottom:0;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,520px);padding:7px 9px max(9px,env(safe-area-inset-bottom));border-top:1px solid rgba(56,189,248,.42);background:linear-gradient(180deg,rgba(12,45,57,.98),rgba(5,24,32,.99));backdrop-filter:blur(16px);box-shadow:0 -8px 28px rgba(0,0,0,.32),0 -1px 0 rgba(45,221,126,.10)}
+  #ux2-bottom-nav button{min-height:56px;border:0;border-radius:14px;background:transparent;color:#9fb8c2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:800}
+  #ux2-bottom-nav span{font-size:1.65rem;line-height:1.05;filter:drop-shadow(0 2px 5px rgba(0,0,0,.28))}
+  #ux2-bottom-nav small{font-size:.72rem;letter-spacing:.01em}
+  #ux2-bottom-nav .active{color:#59e6a3;background:linear-gradient(180deg,rgba(45,221,126,.12),rgba(56,189,248,.06));box-shadow:inset 0 0 0 1px rgba(45,221,126,.18)}
   #ux2-add-sheet{position:fixed;z-index:6000;inset:0;background:rgba(0,8,12,.68);align-items:flex-end;justify-content:center}
   #ux2-add-sheet.open{display:flex}
   .ux2-sheet{width:min(100%,520px);max-height:88vh;overflow:auto;padding:10px 14px 24px;border:1px solid rgba(72,181,216,.28);border-radius:22px 22px 0 0;background:#0c2935;box-shadow:0 -18px 55px rgba(0,0,0,.45)}
@@ -8086,6 +8089,24 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   .ux2-methods-real{grid-template-columns:1fr}
   .ux2-methods-real .ux2-method{min-height:72px;text-align:left;padding:11px 14px}
   .ux2-methods-real .ux2-method .mi{display:inline-block;margin:0 9px 0 0;vertical-align:middle}
+}
+
+
+
+#ux25-more-modal{display:none}
+@media(max-width:760px){
+  #ux25-more-modal.ux25-open{display:flex;position:fixed;z-index:6500;inset:0;align-items:flex-end;justify-content:center;padding:0;background:rgba(1,10,15,.72);backdrop-filter:blur(5px)}
+  .ux25-more-panel{width:min(100%,520px);padding:16px 15px calc(22px + env(safe-area-inset-bottom));border:1px solid rgba(56,189,248,.34);border-bottom:0;border-radius:24px 24px 0 0;background:linear-gradient(155deg,#103746,#071f29 72%);box-shadow:0 -18px 55px rgba(0,0,0,.48)}
+  .ux25-more-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .ux25-more-head small{display:block;color:#59e6a3;font-size:.62rem;font-weight:900;letter-spacing:.13em}
+  .ux25-more-head h2{margin:2px 0 0;color:#fff;font-size:1.45rem}
+  .ux25-more-close{width:42px;height:42px;border:1px solid rgba(56,189,248,.28);border-radius:13px;background:#153f4e;color:#fff;font-size:1.05rem}
+  .ux25-more-intro{margin:9px 0 14px;color:#a8c0ca;font-size:.78rem}
+  .ux25-more-card{width:100%;min-height:82px;margin-top:9px;padding:13px;border:1px solid rgba(56,189,248,.24);border-radius:17px;background:linear-gradient(135deg,rgba(18,62,77,.96),rgba(10,39,50,.96));color:#fff;display:grid;grid-template-columns:48px 1fr 20px;align-items:center;gap:11px;text-align:left;box-shadow:0 7px 18px rgba(0,0,0,.16)}
+  .ux25-more-icon{font-size:1.85rem;text-align:center}
+  .ux25-more-card strong{display:block;font-size:1rem}
+  .ux25-more-card small{display:block;margin-top:4px;color:#a9c0ca;font-size:.72rem;line-height:1.35;font-weight:600}
+  .ux25-more-card b{color:#59e6a3;font-size:1.55rem}
 }
 
 
@@ -24856,8 +24877,30 @@ function ux24CloseAdd(){
   document.body.classList.remove("ux24-add-mode");window.scrollTo({top:0,behavior:"smooth"});
 }
 function ux2OpenMore(){
+  const modal=document.getElementById("ux25-more-modal");
+  if(!modal)return;
+  modal.classList.add("ux25-open");
+  modal.setAttribute("aria-hidden","false");
+}
+function ux25CloseMore(){
+  const modal=document.getElementById("ux25-more-modal");
+  if(!modal)return;
+  modal.classList.remove("ux25-open");
+  modal.setAttribute("aria-hidden","true");
+}
+function ux25OpenInfo(){
+  ux25CloseMore();
+  toggleInfoModal();
+}
+function ux25OpenHelp(){
+  ux25CloseMore();
   toggleHelpModal();
 }
+
+document.addEventListener("click",function(event){
+  const modal=document.getElementById("ux25-more-modal");
+  if(modal && event.target===modal)ux25CloseMore();
+});
 
 /* Aggancio alle funzioni reali: nessun dato demo, nessun DOM intermedio. */
 const ux2OriginalUpdateDashboard=updateDashboard;
@@ -24885,10 +24928,31 @@ window.addEventListener("load",()=>{
 </script>
 
 
+
+<div id="ux25-more-modal" class="ux25-more-overlay" aria-hidden="true">
+  <section class="ux25-more-panel" role="dialog" aria-modal="true" aria-labelledby="ux25-more-title">
+    <div class="ux25-more-head">
+      <div><small>DIARIO FIT</small><h2 id="ux25-more-title">Altro</h2></div>
+      <button type="button" class="ux25-more-close" onclick="ux25CloseMore()" aria-label="Chiudi">✕</button>
+    </div>
+    <p class="ux25-more-intro">Informazioni e guida all'uso di DiarioFIT.</p>
+    <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
+      <span class="ux25-more-icon">ℹ️</span>
+      <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
+      <b>›</b>
+    </button>
+    <button type="button" class="ux25-more-card" onclick="ux25OpenHelp()">
+      <span class="ux25-more-icon">❓</span>
+      <span><strong>Guida</strong><small>Come usare DiarioFIT e le sue funzioni.</small></span>
+      <b>›</b>
+    </button>
+  </section>
+</div>
+
 <nav id="ux2-bottom-nav" aria-label="Navigazione principale">
- <button type="button" class="active"><span>⌂</span><small>Oggi</small></button>
- <button type="button" onclick="toggleStatsProgressModal()"><span>▥</span><small>Progressi</small></button>
- <button type="button" onclick="ux2OpenMore()"><span>•••</span><small>Altro</small></button>
+ <button type="button" class="active"><span>🏠</span><small>Oggi</small></button>
+ <button type="button" onclick="toggleStatsProgressModal()"><span>📊</span><small>Progressi</small></button>
+ <button type="button" onclick="ux2OpenMore()"><span>⚙️</span><small>Altro</small></button>
 </nav>
 </body>
 </html>
