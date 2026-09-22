@@ -8374,6 +8374,19 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 
 /* GUIDA MISURE CM */
 .bodycomp-guide-btn{margin-left:6px}.cmv1-figures{border:1px solid rgba(46,187,255,.55);border-radius:15px;background:radial-gradient(circle at 50% 35%,#0b4267,#041724 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px}.cmv1-body{position:relative;width:245px;height:470px;filter:drop-shadow(0 0 14px rgba(0,174,255,.65))}.cmv1-head{position:absolute;left:95px;top:8px;width:56px;height:66px;border-radius:48%;background:radial-gradient(circle,#1472a9,#06243a 70%);border:2px solid #27bfff}.cmv1-torso{position:absolute;left:55px;top:70px;width:136px;height:215px;clip-path:polygon(20% 0,80% 0,100% 24%,78% 100%,22% 100%,0 24%);background:radial-gradient(ellipse at 50% 28%,#1171a8,#05243a 70%);border:2px solid #27bfff}.cmv1-arm,.cmv1-leg{position:absolute;background:linear-gradient(90deg,#05243b,#1070a5,#05243b);border:2px solid #27bfff}.cmv1-arm{top:83px;width:34px;height:220px;border-radius:50%}.cmv1-arm.l{left:25px;transform:rotate(6deg)}.cmv1-arm.r{right:25px;transform:rotate(-6deg)}.cmv1-leg{top:275px;width:55px;height:185px;border-radius:45%}.cmv1-leg.l{left:62px}.cmv1-leg.r{right:62px}.cmv1-line{display:none;position:absolute;height:5px;border-radius:6px;background:#ffd426;box-shadow:0 0 12px #ffd426;z-index:8}.cmv1-line.active{display:block}.cm-neck{left:91px;top:69px;width:64px}.cm-chest{left:58px;top:130px;width:130px}.cm-waist{left:72px;top:205px;width:102px}.cm-navel{left:68px;top:226px;width:110px}.cm-hips{left:62px;top:268px;width:122px}.cm-arm{left:24px;top:153px;width:38px;transform:rotate(84deg)}.cm-thigh{left:61px;top:325px;width:57px}.cm-calf{left:65px;top:395px;width:48px}.cmv1-figures small{color:#75d9ff;text-align:center}.cmv1-detail{height:175px;position:relative;overflow:hidden;border:1px solid #25b9ff;border-radius:12px;background:radial-gradient(circle,#0e5682,#041a2c 72%)}.cmv1-detail-body{position:absolute;width:170px;height:220px;left:50%;top:8px;transform:translateX(-50%);border-radius:48% 48% 25% 25%;background:radial-gradient(ellipse,#0d6196,#05263f 70%);border:1px solid #28bdff}#cmv1-detail-line{position:absolute;left:20%;right:20%;top:40%;height:5px;border-radius:6px;background:#ffd426;box-shadow:0 0 15px #ffd426}@media(max-width:900px){.bodycomp-guide-btn{margin-left:0;margin-top:6px}.cmv1-figures{order:2}.cmv1-body{transform:scale(.78);margin:-45px 0}}
+
+/* GUIDE V3.1 */
+.bodycomp-guides-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}
+.bodycomp-guides-toolbar .mini-btn{margin:0!important}
+.sfv2-anatomy::after{content:"";position:absolute;left:27.5%;top:46%;width:25px;height:25px;transform:translate(-50%,-50%);border-radius:50%;background:#0b527b;box-shadow:0 0 12px rgba(0,174,255,.65);pointer-events:none;z-index:4}
+.sfv2-anatomy .sfv1-marker{z-index:6}
+
+/* dettaglio anatomico dinamico a destra */
+.sfv1-detail-visual{background-position:center;background-repeat:no-repeat;background-size:cover}
+.sfv1-detail-visual.sfv31-photo #sfv1-detail-dot{z-index:3}
+.sfv1-detail-visual.sfv31-photo .sfv1-detail-body{display:none}
+@media(max-width:600px){.bodycomp-guides-toolbar{display:grid;grid-template-columns:1fr 1fr}.bodycomp-guides-toolbar .mini-btn{width:100%;font-size:.72rem;padding:8px 6px}}
+
 </style>
 
 <style>
@@ -11129,8 +11142,10 @@ html[data-theme="light"] .missing-today-legend {
               <strong>📏 Pliche cutanee · 7 sedi</strong>
               <small>Facoltative. Tre letture per sede; DiarioFIT usa la media. Con tutte le 7 sedi e l'età disponibili attiva la stima plicometrica Jackson–Pollock.</small>
             </div>
-            <button type="button" class="bodycomp-guide-btn" onclick="openBodyCompositionSkinfoldGuide()">📏 Pliche</button>
-          <button type="button" class="mini-btn bodycomp-guide-btn" onclick="openBodyCompositionCmGuide()">📐 Misure in cm</button>
+            <div class="bodycomp-guides-toolbar">
+<button type="button" class="mini-btn" onclick="openBodyCompositionCmGuide()">📐 Come misurare in cm</button>
+<button type="button" class="mini-btn" onclick="openBodyCompositionSkinfoldGuide()">📏 Come misurare le pliche</button>
+</div>
           </div>
           <div id="bodycomp-sf-status" class="bodycomp-skinfold-status">Pliche non complete: la stima principale resta quella da circonferenze.</div>
           <div class="bodycomp-skinfold-grid">
@@ -16156,7 +16171,7 @@ const BODYCOMP_SKINFOLD_GUIDE={
 };
 function openBodyCompositionSkinfoldGuide(){const m=document.getElementById("bodycomp-sf-guide-modal");if(!m)return;m.style.display="flex";document.body.style.overflow="hidden";selectSkinfoldGuideSite("chest")}
 function closeBodyCompositionSkinfoldGuide(event){if(event&&event.target!==event.currentTarget)return;const m=document.getElementById("bodycomp-sf-guide-modal");if(m)m.style.display="none";document.body.style.overflow=""}
-function selectSkinfoldGuideSite(key){const x=BODYCOMP_SKINFOLD_GUIDE[key];if(!x)return;document.querySelectorAll(".sfv1-site-btn").forEach(b=>b.classList.toggle("active",b.dataset.site===key));document.querySelectorAll(".sfv1-marker").forEach(m=>m.classList.toggle("active",m.classList.contains(`sfv1-marker-${key}`)));const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set("sfv1-number",x.n);set("sfv1-name",x.name);set("sfv1-location",x.location);set("sfv1-orientation",x.orientation)}
+function selectSkinfoldGuideSite(key){const x=BODYCOMP_SKINFOLD_GUIDE[key];if(!x)return;document.querySelectorAll(".sfv1-site-btn").forEach(b=>b.classList.toggle("active",b.dataset.site===key));document.querySelectorAll(".sfv1-marker").forEach(m=>m.classList.toggle("active",m.classList.contains(`sfv1-marker-${key}`)));const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set("sfv1-number",x.n);set("sfv1-name",x.name);set("sfv1-location",x.location);set("sfv1-orientation",x.orientation);updateSkinfoldDetailVisual(key)}
 
 function updateBodyCompositionSkinfoldAverages() {
   BODYCOMP_SKINFOLD_SITES.forEach(([prefix])=>{
@@ -25151,6 +25166,30 @@ const BODYCOMP_CM_GUIDE={neck:{n:1,name:"Collo",location:"Attorno al collo, appe
 function openBodyCompositionCmGuide(){const m=document.getElementById("bodycomp-cm-guide-modal");if(!m)return;m.style.display="flex";document.body.style.overflow="hidden";selectCmGuideSite("neck")}
 function closeBodyCompositionCmGuide(event){if(event&&event.target!==event.currentTarget)return;const m=document.getElementById("bodycomp-cm-guide-modal");if(m)m.style.display="none";document.body.style.overflow=""}
 function selectCmGuideSite(key){const x=BODYCOMP_CM_GUIDE[key];if(!x)return;document.querySelectorAll("[data-cm]").forEach(b=>b.classList.toggle("active",b.dataset.cm===key));document.querySelectorAll(".cmv1-line").forEach(e=>e.classList.remove("active"));document.querySelector(".cm-"+key)?.classList.add("active");const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set("cmv1-number",x.n);set("cmv1-name",x.name);set("cmv1-location",x.location);set("cmv1-how",x.how);const l=document.getElementById("cmv1-detail-line");if(l){l.style.top=({neck:"23%",chest:"35%",waist:"48%",navel:"55%",hips:"68%",arm:"42%",thigh:"72%",calf:"82%"})[key]||"40%"}}
+
+const BODYCOMP_SKINFOLD_DETAIL_VIEW={
+ chest:{pos:"20% 24%",size:"310%",dot:["56%","48%"]},
+ ax:{pos:"8% 30%",size:"330%",dot:["56%","50%"]},
+ tri:{pos:"92% 31%",size:"330%",dot:["55%","50%"]},
+ sub:{pos:"72% 32%",size:"315%",dot:["54%","50%"]},
+ abd:{pos:"25% 47%",size:"330%",dot:["55%","50%"]},
+ sup:{pos:"34% 54%",size:"340%",dot:["55%","50%"]},
+ thigh:{pos:"22% 68%",size:"300%",dot:["54%","50%"]}
+};
+function updateSkinfoldDetailVisual(key){
+ const box=document.querySelector(".sfv1-detail-visual");
+ const anatomy=document.querySelector(".sfv2-anatomy");
+ const dot=document.getElementById("sfv1-detail-dot");
+ const cfg=BODYCOMP_SKINFOLD_DETAIL_VIEW[key];
+ if(!box||!anatomy||!cfg)return;
+ const bg=getComputedStyle(anatomy).backgroundImage;
+ box.classList.add("sfv31-photo");
+ box.style.backgroundImage=bg;
+ box.style.backgroundPosition=cfg.pos;
+ box.style.backgroundSize=cfg.size;
+ if(dot){dot.style.left=cfg.dot[0];dot.style.top=cfg.dot[1]}
+}
+
 </script>
 
 
