@@ -7734,18 +7734,29 @@ html[data-theme="light"] .bodycomp-guide{background:linear-gradient(145deg,rgba(
 html[data-theme="light"] .bodycomp-guide-item{background:linear-gradient(145deg,#fff,#f8fafc);border-color:rgba(14,116,144,.18)}
 html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circle at 50% 35%,rgba(56,189,248,.14),rgba(224,242,254,.88) 72%)}
 
-/* PLICHE CUTANEE — TEST V1 */
+/* PLICHE CUTANEE — TEST V2 */
 .bodycomp-skinfold-card{grid-column:1/-1;margin-top:12px;padding:14px;border:1px solid rgba(56,189,248,.18);border-radius:14px;background:rgba(56,189,248,.035)}
-.bodycomp-skinfold-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.bodycomp-skinfold-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .bodycomp-skinfold-head strong{font-size:.92rem}.bodycomp-skinfold-head small{display:block;margin-top:3px;color:var(--subtext);font-size:.72rem;line-height:1.35}
-.bodycomp-skinfold-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bodycomp-skinfold-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .bodycomp-skinfold-site{padding:10px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.025)}
 .bodycomp-skinfold-site-title{font-size:.78rem;font-weight:800;margin-bottom:7px}
 .bodycomp-skinfold-readings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
 .bodycomp-skinfold-readings input{min-width:0;text-align:center;padding-left:4px;padding-right:4px}
 .bodycomp-skinfold-average{margin-top:7px;color:var(--cyan);font-size:.74rem;font-weight:800}
+.bodycomp-skinfold-status{margin:10px 0 0;padding:10px 12px;border:1px solid rgba(56,189,248,.20);border-radius:12px;background:rgba(56,189,248,.055);font-size:.78rem;line-height:1.45;color:var(--subtext)}
+.bodycomp-method-box{margin-top:12px;display:grid;gap:7px;padding:11px 12px;border:1px solid rgba(74,222,128,.24);border-radius:13px;background:rgba(74,222,128,.045)}
+.bodycomp-method-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.76rem}
+.bodycomp-method-row strong{font-size:.8rem}
+.bodycomp-method-active{color:#70f1bd}
+.bodycomp-sf-guide{display:none;margin-top:12px;padding:13px;border:1px solid rgba(56,189,248,.25);border-radius:16px;background:linear-gradient(145deg,rgba(56,189,248,.07),rgba(255,255,255,.018))}
+.bodycomp-sf-guide.open{display:block}
+.bodycomp-sf-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
+.bodycomp-sf-guide-item{padding:11px;border:1px solid rgba(56,189,248,.18);border-radius:13px;background:rgba(255,255,255,.025)}
+.bodycomp-sf-guide-item strong{display:block;margin-bottom:5px;font-size:.88rem}
+.bodycomp-sf-guide-item p{margin:0;color:var(--subtext);font-size:.78rem;line-height:1.5}
 .bodycomp-date-row{display:grid;grid-template-columns:minmax(0,1fr);margin-bottom:10px}
-@media(max-width:720px){.bodycomp-skinfold-grid{grid-template-columns:1fr}.bodycomp-skinfold-readings{gap:7px}}
+@media(max-width:720px){.bodycomp-skinfold-grid,.bodycomp-sf-guide-grid{grid-template-columns:1fr}.bodycomp-skinfold-readings{gap:7px}.bodycomp-method-row{align-items:flex-start;flex-direction:column;gap:3px}}
 @media(max-width:720px){.bodycomp-guide{padding:11px}.bodycomp-guide-grid{grid-template-columns:1fr}.bodycomp-guide-item{grid-template-columns:104px minmax(0,1fr);gap:12px;padding:11px}.bodycomp-guide-visual{width:104px;height:120px}.bodycomp-guide-copy strong{font-size:1.12rem}.bodycomp-guide-copy p,.bodycomp-guide-hero p,.bodycomp-guide-note{font-size:1rem;line-height:1.62}.bodycomp-chart-wrap,#bodycomp-history-chart{height:210px;min-height:210px}.bodycomp-chart-wrap.compact{min-height:105px}.bodycomp-chart-wrap.compact #bodycomp-history-chart{height:105px}}
 @media(max-width:390px){.bodycomp-guide-item{grid-template-columns:94px minmax(0,1fr);gap:10px}.bodycomp-guide-visual{width:94px;height:112px}.bodycomp-guide-copy p,.bodycomp-guide-hero p,.bodycomp-guide-note{font-size:.98rem}}
 
@@ -11039,6 +11050,10 @@ html[data-theme="light"] .missing-today-legend {
             </select>
           </div>
           <div class="bodycomp-field">
+            <label for="bodycomp-age">Età (anni)</label>
+            <input id="bodycomp-age" oninput="updateBodyCompositionEstimate()" onchange="updateBodyCompositionEstimate()" type="number" min="18" max="100" step="1" inputmode="numeric">
+          </div>
+          <div class="bodycomp-field">
             <label for="bodycomp-height">Altezza (cm)</label>
             <input id="bodycomp-height" oninput="updateBodyCompositionEstimate()" onchange="updateBodyCompositionEstimate()" type="number" min="130" max="220" step="0.1">
           </div>
@@ -11083,19 +11098,30 @@ html[data-theme="light"] .missing-today-legend {
         <section class="bodycomp-skinfold-card">
           <div class="bodycomp-skinfold-head">
             <div>
-              <strong>📏 Pliche cutanee</strong>
-              <small>Facoltative. Inserisci fino a tre letture per sede: DiarioFIT calcola automaticamente la media.</small>
+              <strong>📏 Pliche cutanee · 7 sedi</strong>
+              <small>Facoltative. Tre letture per sede; DiarioFIT usa la media. Con tutte le 7 sedi e l'età disponibili attiva la stima plicometrica Jackson–Pollock.</small>
             </div>
+            <button type="button" class="bodycomp-guide-btn" onclick="toggleBodyCompositionSkinfoldGuide()">📏 Come misurare le pliche</button>
           </div>
+          <div id="bodycomp-sf-status" class="bodycomp-skinfold-status">Pliche non complete: la stima principale resta quella da circonferenze.</div>
           <div class="bodycomp-skinfold-grid">
             <div class="bodycomp-skinfold-site">
-              <div class="bodycomp-skinfold-site-title">Addome (mm)</div>
+              <div class="bodycomp-skinfold-site-title">Pettorale (mm)</div>
               <div class="bodycomp-skinfold-readings">
-                <input id="bodycomp-sf-abd-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
-                <input id="bodycomp-sf-abd-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
-                <input id="bodycomp-sf-abd-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-chest-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-chest-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-chest-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
               </div>
-              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-abd-avg">—</span></div>
+              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-chest-avg">—</span></div>
+            </div>
+            <div class="bodycomp-skinfold-site">
+              <div class="bodycomp-skinfold-site-title">Ascellare media (mm)</div>
+              <div class="bodycomp-skinfold-readings">
+                <input id="bodycomp-sf-ax-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-ax-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-ax-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+              </div>
+              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-ax-avg">—</span></div>
             </div>
             <div class="bodycomp-skinfold-site">
               <div class="bodycomp-skinfold-site-title">Tricipite (mm)</div>
@@ -11107,6 +11133,24 @@ html[data-theme="light"] .missing-today-legend {
               <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-tri-avg">—</span></div>
             </div>
             <div class="bodycomp-skinfold-site">
+              <div class="bodycomp-skinfold-site-title">Sottoscapolare (mm)</div>
+              <div class="bodycomp-skinfold-readings">
+                <input id="bodycomp-sf-sub-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-sub-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-sub-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+              </div>
+              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-sub-avg">—</span></div>
+            </div>
+            <div class="bodycomp-skinfold-site">
+              <div class="bodycomp-skinfold-site-title">Addome (mm)</div>
+              <div class="bodycomp-skinfold-readings">
+                <input id="bodycomp-sf-abd-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-abd-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-abd-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+              </div>
+              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-abd-avg">—</span></div>
+            </div>
+            <div class="bodycomp-skinfold-site">
               <div class="bodycomp-skinfold-site-title">Sovrailiaca (mm)</div>
               <div class="bodycomp-skinfold-readings">
                 <input id="bodycomp-sf-sup-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
@@ -11115,6 +11159,31 @@ html[data-theme="light"] .missing-today-legend {
               </div>
               <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-sup-avg">—</span></div>
             </div>
+            <div class="bodycomp-skinfold-site">
+              <div class="bodycomp-skinfold-site-title">Coscia (mm)</div>
+              <div class="bodycomp-skinfold-readings">
+                <input id="bodycomp-sf-thigh-1" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-thigh-2" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+                <input id="bodycomp-sf-thigh-3" type="number" min="0.5" max="80" step="0.5" inputmode="decimal" oninput="updateBodyCompositionSkinfoldAverages()">
+              </div>
+              <div class="bodycomp-skinfold-average">Media: <span id="bodycomp-sf-thigh-avg">—</span></div>
+            </div>
+          </div>
+          <div id="bodycomp-sf-guide" class="bodycomp-sf-guide">
+            <div class="bodycomp-guide-hero">
+              <span class="bodycomp-guide-hero-icon">🤏</span>
+              <div><strong>Come misurare le pliche</strong><p>Misura preferibilmente sul lato destro, afferra pelle e tessuto sottocutaneo senza includere il muscolo, applica il plicometro poco sotto le dita e leggi dopo circa 1–2 secondi. Ripeti tre volte senza misurare sempre nello stesso ordine.</p></div>
+            </div>
+            <div class="bodycomp-sf-guide-grid">
+              <div class="bodycomp-sf-guide-item"><strong>📍 Pettorale</strong><p>Plica diagonale. Uomo: circa a metà tra piega ascellare anteriore e capezzolo; donna: circa un terzo della distanza dalla piega ascellare.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Ascellare media</strong><p>Plica verticale sulla linea ascellare media, all'altezza della base dello sterno.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Tricipite</strong><p>Plica verticale sulla parte posteriore del braccio, a metà tra acromion e olecrano, con braccio rilassato.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Sottoscapolare</strong><p>Plica diagonale circa 1–2 cm sotto l'angolo inferiore della scapola.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Addome</strong><p>Plica verticale circa 2 cm a destra dell'ombelico.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Sovrailiaca</strong><p>Plica diagonale appena sopra la cresta iliaca, lungo la linea naturale della pelle.</p></div>
+              <div class="bodycomp-sf-guide-item"><strong>📍 Coscia</strong><p>Plica verticale sulla parte anteriore della coscia, a metà tra piega inguinale e margine superiore della rotula.</p></div>
+            </div>
+            <div class="bodycomp-guide-note"><strong>Per confronti utili</strong>Usa lo stesso plicometro, la stessa tecnica e condizioni simili. La qualità della misura conta più di qualche decimale della formula.</div>
           </div>
         </section>
 
@@ -11135,6 +11204,11 @@ html[data-theme="light"] .missing-today-legend {
           <div class="bodycomp-stat"><strong id="bodycomp-fatkg">—</strong><small>Massa grassa</small></div>
           <div class="bodycomp-stat"><strong id="bodycomp-lean">—</strong><small>Massa magra</small></div>
         </div>
+        <div class="bodycomp-method-box">
+          <div class="bodycomp-method-row"><span>📐 Circonferenze</span><strong id="bodycomp-bf-circ">—</strong></div>
+          <div class="bodycomp-method-row"><span>🤏 Pliche 7 sedi</span><strong id="bodycomp-bf-sf">Non disponibili</strong></div>
+          <div class="bodycomp-method-row"><span>Stima attiva</span><strong id="bodycomp-bf-method" class="bodycomp-method-active">Circonferenze</strong></div>
+        </div>
         <div class="bodycomp-smart-list" id="bodycomp-smart-list">
           <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Peso</span><div class="bodycomp-smart-track" id="bcbar-weight"></div><span class="bodycomp-smart-value" id="bcval-weight">—</span><span class="bodycomp-smart-caption">Indicatore relativo allo storico personale</span></div>
           <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Vita standard</span><div class="bodycomp-smart-track" id="bcbar-waist"></div><span class="bodycomp-smart-value" id="bcval-waist">—</span><span class="bodycomp-smart-caption">Posizione relativa allo storico personale</span></div>
@@ -11142,9 +11216,10 @@ html[data-theme="light"] .missing-today-legend {
           <div class="bodycomp-smart-row"><span class="bodycomp-smart-label">Massa grassa</span><div class="bodycomp-smart-track" id="bcbar-bf"></div><span class="bodycomp-smart-value" id="bcval-bf">—</span><span class="bodycomp-smart-caption">Stima antropometrica: usala soprattutto per osservare il trend</span></div>
         </div>
         <div class="bodycomp-note">
-          Metodo di stima: U.S. Navy basato su circonferenze. La stima % si aggiorna in tempo reale con
-          altezza, vita standard e collo (e fianchi nel profilo femminile); il peso aggiorna massa grassa
-          e massa magra in kg. La figura è illustrativa: varia in modo graduale con la stima e non ricostruisce l'aspetto reale del corpo.
+          DiarioFIT mostra separatamente la stima da circonferenze (U.S. Navy) e, quando sono complete 7 sedi più età,
+          la stima plicometrica Jackson–Pollock con conversione di Siri. Con le pliche complete la percentuale principale usa
+          la stima plicometrica; senza pliche resta attiva quella da circonferenze. Sono entrambe stime antropometriche, non misurazioni cliniche.
+          La figura è illustrativa e segue la stima attiva.
         </div>
       </section>
     </div>
@@ -15866,12 +15941,24 @@ async function loadBodyCompositionHistory() {
         if(!local) return row;
         return {
           ...row,
-          skinfoldAbdomen:local.skinfoldAbdomen || [],
+          age:local.age ?? row.age ?? null,
+          skinfoldChest:local.skinfoldChest || [],
+          skinfoldMidaxillary:local.skinfoldMidaxillary || [],
           skinfoldTriceps:local.skinfoldTriceps || [],
+          skinfoldSubscapular:local.skinfoldSubscapular || [],
+          skinfoldAbdomen:local.skinfoldAbdomen || [],
           skinfoldSuprailiac:local.skinfoldSuprailiac || [],
-          skinfoldAbdomenAvg:local.skinfoldAbdomenAvg ?? null,
+          skinfoldThigh:local.skinfoldThigh || [],
+          skinfoldChestAvg:local.skinfoldChestAvg ?? null,
+          skinfoldMidaxillaryAvg:local.skinfoldMidaxillaryAvg ?? null,
           skinfoldTricepsAvg:local.skinfoldTricepsAvg ?? null,
-          skinfoldSuprailiacAvg:local.skinfoldSuprailiacAvg ?? null
+          skinfoldSubscapularAvg:local.skinfoldSubscapularAvg ?? null,
+          skinfoldAbdomenAvg:local.skinfoldAbdomenAvg ?? null,
+          skinfoldSuprailiacAvg:local.skinfoldSuprailiacAvg ?? null,
+          skinfoldThighAvg:local.skinfoldThighAvg ?? null,
+          bodyFatCirc:local.bodyFatCirc ?? null,
+          bodyFatSkinfold:local.bodyFatSkinfold ?? null,
+          bodyFatMethod:local.bodyFatMethod ?? null
         };
       })
       .slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
@@ -15936,7 +16023,7 @@ function getLatestProgressWeight() {
 
 function applyBodyCompositionData(last, useProgressWeight = true) {
   const map = {
-    "bodycomp-sex":"sex","bodycomp-height":"height","bodycomp-weight":"weight",
+    "bodycomp-sex":"sex","bodycomp-age":"age","bodycomp-height":"height","bodycomp-weight":"weight",
     "bodycomp-waist":"waist","bodycomp-navel":"navel","bodycomp-neck":"neck",
     "bodycomp-chest":"chest","bodycomp-hips":"hips","bodycomp-arm":"arm",
     "bodycomp-thigh":"thigh","bodycomp-calf":"calf"
@@ -15951,11 +16038,9 @@ function applyBodyCompositionData(last, useProgressWeight = true) {
   }
   applyBodyCompositionSkinfolds(last);
 
-  // TEST V1.1: se l'ultima rilevazione non contiene ancora pliche,
-  // precarica i valori reali del 15/09/2026. Restano modificabili e
-  // NON vengono salvati finché l'utente non preme "Salva misurazione".
-  const lastHasSkinfolds = ["skinfoldAbdomen","skinfoldTriceps","skinfoldSuprailiac"]
-    .some(key => Array.isArray(last?.[key]) && last[key].some(v => Number.isFinite(Number(v)) && Number(v) > 0));
+  // TEST V2: conserva le tre sedi già rilevate; le altre quattro restano da misurare.
+  const lastHasSkinfolds = BODYCOMP_SKINFOLD_SITES
+    .some(([,key]) => Array.isArray(last?.[key]) && last[key].some(v => Number.isFinite(Number(v)) && Number(v) > 0));
 
   if (!lastHasSkinfolds) {
     const seed = { abd:[11,10,11], tri:[1,2,1], sup:[5,6,5] };
@@ -15964,8 +16049,14 @@ function applyBodyCompositionData(last, useProgressWeight = true) {
       if (el) el.value=String(v);
     }));
     if (dateEl) dateEl.value="2026-09-15";
-    updateBodyCompositionSkinfoldAverages();
   }
+
+  const ageEl=document.getElementById("bodycomp-age");
+  if(ageEl && !ageEl.value){
+    const calcAge=Number(document.getElementById("calc-age")?.value);
+    if(Number.isFinite(calcAge) && calcAge>=18) ageEl.value=String(calcAge);
+  }
+  updateBodyCompositionSkinfoldAverages();
   const progressWeight = useProgressWeight ? getLatestProgressWeight() : null;
   const weightEl=document.getElementById("bodycomp-weight");
   if (weightEl && progressWeight) weightEl.value=progressWeight.weight.toFixed(1);
@@ -16023,22 +16114,36 @@ function bodyCompSkinfoldValues(prefix) {
   return [1,2,3].map(i=>bodyCompNum(`bodycomp-sf-${prefix}-${i}`)).filter(Number.isFinite);
 }
 
+const BODYCOMP_SKINFOLD_SITES = [
+  ["chest","skinfoldChest","skinfoldChestAvg"],
+  ["ax","skinfoldMidaxillary","skinfoldMidaxillaryAvg"],
+  ["tri","skinfoldTriceps","skinfoldTricepsAvg"],
+  ["sub","skinfoldSubscapular","skinfoldSubscapularAvg"],
+  ["abd","skinfoldAbdomen","skinfoldAbdomenAvg"],
+  ["sup","skinfoldSuprailiac","skinfoldSuprailiacAvg"],
+  ["thigh","skinfoldThigh","skinfoldThighAvg"]
+];
+
 function bodyCompSkinfoldAverage(prefix) {
   const values=bodyCompSkinfoldValues(prefix);
   return values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
 }
 
+function toggleBodyCompositionSkinfoldGuide() {
+  document.getElementById("bodycomp-sf-guide")?.classList.toggle("open");
+}
+
 function updateBodyCompositionSkinfoldAverages() {
-  [["abd","bodycomp-sf-abd-avg"],["tri","bodycomp-sf-tri-avg"],["sup","bodycomp-sf-sup-avg"]].forEach(([prefix,id])=>{
+  BODYCOMP_SKINFOLD_SITES.forEach(([prefix])=>{
     const avg=bodyCompSkinfoldAverage(prefix);
-    const el=document.getElementById(id);
+    const el=document.getElementById(`bodycomp-sf-${prefix}-avg`);
     if(el) el.textContent=Number.isFinite(avg) ? avg.toFixed(1).replace(".",",")+" mm" : "—";
   });
+  updateBodyCompositionEstimate();
 }
 
 function applyBodyCompositionSkinfolds(last) {
-  const groups={abd:"skinfoldAbdomen",tri:"skinfoldTriceps",sup:"skinfoldSuprailiac"};
-  Object.entries(groups).forEach(([prefix,key])=>{
+  BODYCOMP_SKINFOLD_SITES.forEach(([prefix,key])=>{
     const values=Array.isArray(last?.[key]) ? last[key] : [];
     [1,2,3].forEach((n,i)=>{
       const el=document.getElementById(`bodycomp-sf-${prefix}-${n}`);
@@ -16048,39 +16153,85 @@ function applyBodyCompositionSkinfolds(last) {
   updateBodyCompositionSkinfoldAverages();
 }
 
+function calculateBodyFatFromSkinfolds(data) {
+  const age=Number(data.age);
+  if(!Number.isFinite(age) || age < 18 || age > 100) return null;
+
+  const avgs=[
+    data.skinfoldChestAvg,
+    data.skinfoldMidaxillaryAvg,
+    data.skinfoldTricepsAvg,
+    data.skinfoldSubscapularAvg,
+    data.skinfoldAbdomenAvg,
+    data.skinfoldSuprailiacAvg,
+    data.skinfoldThighAvg
+  ].map(Number);
+
+  if(avgs.some(v=>!Number.isFinite(v) || v<=0)) return null;
+
+  const sum=avgs.reduce((a,b)=>a+b,0);
+  let density;
+  if(data.sex==="female"){
+    density=1.097 - 0.00046971*sum + 0.00000056*sum*sum - 0.00012828*age;
+  } else {
+    density=1.112 - 0.00043499*sum + 0.00000055*sum*sum - 0.00028826*age;
+  }
+  if(!Number.isFinite(density) || density<=0) return null;
+  const bf=495/density-450;
+  return Number.isFinite(bf) && bf>1 && bf<70 ? bf : null;
+}
+
 function collectBodyCompositionForm() {
-  const abdomen=bodyCompSkinfoldValues("abd");
-  const triceps=bodyCompSkinfoldValues("tri");
-  const suprailiac=bodyCompSkinfoldValues("sup");
-  return {
+  const data={
     date:document.getElementById("bodycomp-date")?.value || getLocalISODate(),
     sex:document.getElementById("bodycomp-sex")?.value || "male",
+    age:bodyCompNum("bodycomp-age"),
     height:bodyCompNum("bodycomp-height"), weight:bodyCompNum("bodycomp-weight"),
     waist:bodyCompNum("bodycomp-waist"), navel:bodyCompNum("bodycomp-navel"),
     neck:bodyCompNum("bodycomp-neck"), chest:bodyCompNum("bodycomp-chest"),
     hips:bodyCompNum("bodycomp-hips"), arm:bodyCompNum("bodycomp-arm"),
-    thigh:bodyCompNum("bodycomp-thigh"), calf:bodyCompNum("bodycomp-calf"),
-    skinfoldAbdomen:abdomen, skinfoldTriceps:triceps, skinfoldSuprailiac:suprailiac,
-    skinfoldAbdomenAvg:abdomen.length ? abdomen.reduce((a,b)=>a+b,0)/abdomen.length : null,
-    skinfoldTricepsAvg:triceps.length ? triceps.reduce((a,b)=>a+b,0)/triceps.length : null,
-    skinfoldSuprailiacAvg:suprailiac.length ? suprailiac.reduce((a,b)=>a+b,0)/suprailiac.length : null
+    thigh:bodyCompNum("bodycomp-thigh"), calf:bodyCompNum("bodycomp-calf")
   };
+  BODYCOMP_SKINFOLD_SITES.forEach(([prefix,key,avgKey])=>{
+    const values=bodyCompSkinfoldValues(prefix);
+    data[key]=values;
+    data[avgKey]=values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  });
+  return data;
 }
 
 function updateBodyCompositionEstimate(data=collectBodyCompositionForm()) {
-  const bf=calculateBodyFatEstimate(data);
+  const bfCirc=calculateBodyFatEstimate(data);
+  const bfSkin=calculateBodyFatFromSkinfolds(data);
+  const bf=Number.isFinite(bfSkin) ? bfSkin : bfCirc;
   const fatKg=(bf && data.weight) ? data.weight*bf/100 : null;
   const lean=(fatKg != null) ? data.weight-fatKg : null;
   const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
-  set("bodycomp-bf", bf ? bf.toFixed(1).replace(".",",")+" %" : "—");
+  const fmt=v=>Number.isFinite(v) ? v.toFixed(1).replace(".",",")+" %" : "—";
+
+  set("bodycomp-bf", fmt(bf));
+  set("bodycomp-bf-circ", fmt(bfCirc));
+  set("bodycomp-bf-sf", Number.isFinite(bfSkin) ? fmt(bfSkin) : "Non disponibili");
+  set("bodycomp-bf-method", Number.isFinite(bfSkin) ? "Pliche · Jackson–Pollock 7 siti" : "Circonferenze · U.S. Navy");
   set("bodycomp-fatkg", fatKg!=null ? fatKg.toFixed(1).replace(".",",")+" kg" : "—");
   set("bodycomp-lean", lean!=null ? lean.toFixed(1).replace(".",",")+" kg" : "—");
+
+  const completed=BODYCOMP_SKINFOLD_SITES.filter(([prefix])=>Number.isFinite(bodyCompSkinfoldAverage(prefix))).length;
+  const status=document.getElementById("bodycomp-sf-status");
+  if(status){
+    if(Number.isFinite(bfSkin)){
+      status.innerHTML="✓ <strong>7 sedi su 7 complete.</strong> Stima plicometrica attiva nella percentuale principale.";
+    }else{
+      const ageOk=Number.isFinite(Number(data.age)) && Number(data.age)>=18;
+      status.innerHTML=`${completed}/7 sedi complete${ageOk ? "" : " · inserisci anche l'età"}. La stima principale resta quella da circonferenze.`;
+    }
+  }
+
   updateBodyCompositionSmartBars(data,bf);
   updateBodyCompositionDynamicFigure(data,bf);
   updateBodyCompositionComparison(data,bf,lean);
   return bf;
 }
-
 
 function updateBodyCompositionDynamicFigure(data,bf) {
   const fig=document.getElementById("bodycomp-figure");
@@ -16172,7 +16323,10 @@ async function saveBodyComposition() {
     if(msg){msg.textContent="Per la stima femminile è necessaria anche la circonferenza fianchi.";msg.className="bodycomp-message error";}
     return;
   }
-  data.bodyFat=calculateBodyFatEstimate(data);
+  data.bodyFatCirc=calculateBodyFatEstimate(data);
+  data.bodyFatSkinfold=calculateBodyFatFromSkinfolds(data);
+  data.bodyFat=Number.isFinite(data.bodyFatSkinfold) ? data.bodyFatSkinfold : data.bodyFatCirc;
+  data.bodyFatMethod=Number.isFinite(data.bodyFatSkinfold) ? "jackson-pollock-7" : "us-navy";
 
   let cloudSaved=false;
   if (localStorage.getItem("diario_backend_token")) {
@@ -16332,13 +16486,14 @@ function renderBodyCompositionHistory() {
   box.innerHTML=bodyCompositionHistory.slice().reverse().map(x=>{
     const bf=Number.isFinite(Number(x.bodyFat)) ? Number(x.bodyFat).toFixed(1).replace(".",",")+"%" : "—";
     const waist=x.waist ? Number(x.waist).toFixed(1).replace(".",",")+" cm" : "—";
-    const sf=[
-      Number.isFinite(Number(x.skinfoldAbdomenAvg)) ? "Addome "+Number(x.skinfoldAbdomenAvg).toFixed(1).replace(".",",")+" mm" : null,
-      Number.isFinite(Number(x.skinfoldTricepsAvg)) ? "Tricipite "+Number(x.skinfoldTricepsAvg).toFixed(1).replace(".",",")+" mm" : null,
-      Number.isFinite(Number(x.skinfoldSuprailiacAvg)) ? "Sovrailiaca "+Number(x.skinfoldSuprailiacAvg).toFixed(1).replace(".",",")+" mm" : null
-    ].filter(Boolean);
-    const sfText=sf.length ? ` · Pliche: ${sf.join(" · ")}` : "";
-    return `<div class="bodycomp-history-row"><span>${escapeHTML(String(x.date))}</span><span>Vita ${waist} · Massa grassa ${bf}${sfText}</span><button type="button" onclick="deleteBodyComposition('${String(x.date).replace(/'/g,"")}')" title="Elimina">🗑️</button></div>`;
+    const sfMeta=[
+      ["Pettorale","skinfoldChestAvg"],["Ascellare","skinfoldMidaxillaryAvg"],["Tricipite","skinfoldTricepsAvg"],
+      ["Sottoscapolare","skinfoldSubscapularAvg"],["Addome","skinfoldAbdomenAvg"],["Sovrailiaca","skinfoldSuprailiacAvg"],["Coscia","skinfoldThighAvg"]
+    ];
+    const sf=sfMeta.map(([label,key])=>Number.isFinite(Number(x[key])) ? label+" "+Number(x[key]).toFixed(1).replace(".",",")+" mm" : null).filter(Boolean);
+    const sfText=sf.length ? ` · Pliche ${sf.length}/7: ${sf.join(" · ")}` : " · Senza pliche";
+    const method=x.bodyFatMethod==="jackson-pollock-7" ? "pliche 7 siti" : "circonferenze";
+    return `<div class="bodycomp-history-row"><span>${escapeHTML(String(x.date))}</span><span>Vita ${waist} · Massa grassa ${bf} (${method})${sfText}</span><button type="button" onclick="deleteBodyComposition('${String(x.date).replace(/'/g,"")}')" title="Elimina">🗑️</button></div>`;
   }).join("");
   renderBodyCompositionChart();
 }
