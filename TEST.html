@@ -15950,19 +15950,20 @@ function applyBodyCompositionData(last, useProgressWeight = true) {
     });
   }
   applyBodyCompositionSkinfolds(last);
-  // Valori temporanei della rilevazione del 15/09/2026, solo per questo TEST.
-  // Verranno sostituiti dalle nuove pliche dell'utente e non sono salvati automaticamente.
-  const hasSavedSkinfolds=bodyCompositionHistory.some(x=>
-    Array.isArray(x.skinfoldAbdomen)&&x.skinfoldAbdomen.length ||
-    Array.isArray(x.skinfoldTriceps)&&x.skinfoldTriceps.length ||
-    Array.isArray(x.skinfoldSuprailiac)&&x.skinfoldSuprailiac.length
-  );
-  if(!hasSavedSkinfolds && !last?.skinfoldAbdomen){
-    const seed={abd:[11,10,11],tri:[1,2,1],sup:[5,6,5]};
-    Object.entries(seed).forEach(([prefix,values])=>values.forEach((v,i)=>{
-      const el=document.getElementById(`bodycomp-sf-${prefix}-${i+1}`); if(el) el.value=v;
+
+  // TEST V1.1: se l'ultima rilevazione non contiene ancora pliche,
+  // precarica i valori reali del 15/09/2026. Restano modificabili e
+  // NON vengono salvati finché l'utente non preme "Salva misurazione".
+  const lastHasSkinfolds = ["skinfoldAbdomen","skinfoldTriceps","skinfoldSuprailiac"]
+    .some(key => Array.isArray(last?.[key]) && last[key].some(v => Number.isFinite(Number(v)) && Number(v) > 0));
+
+  if (!lastHasSkinfolds) {
+    const seed = { abd:[11,10,11], tri:[1,2,1], sup:[5,6,5] };
+    Object.entries(seed).forEach(([prefix,values]) => values.forEach((v,i) => {
+      const el=document.getElementById(`bodycomp-sf-${prefix}-${i+1}`);
+      if (el) el.value=String(v);
     }));
-    if(dateEl) dateEl.value="2026-09-15";
+    if (dateEl) dateEl.value="2026-09-15";
     updateBodyCompositionSkinfoldAverages();
   }
   const progressWeight = useProgressWeight ? getLatestProgressWeight() : null;
