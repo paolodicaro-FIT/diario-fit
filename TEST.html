@@ -9709,7 +9709,7 @@ html[data-theme="light"] .missing-today-legend {
   <section id="ux24-add-page" class="ux24-add-page" aria-label="Aggiungi alimento">
   <div class="ux24-add-top">
     <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹ <span>Torna a Oggi</span></button>
-    <div><strong>Aggiungi alimento</strong><small>Scegli il pasto e poi come inserire</small></div>
+    <div><strong>Aggiungi alimento</strong><small>Scegli o crea un alimento; la destinazione si decide alla fine</small></div>
   </div>
   <div id="ux24-meal-host"></div>
   <div id="ux24-original-add-host"></div>
@@ -25115,7 +25115,6 @@ function ux24Move(node,hostId){const host=document.getElementById(hostId);if(nod
 function ux24RestoreOne(o){if(!o?.node||!o?.parent)return;if(o.next&&o.next.parentNode===o.parent)o.parent.insertBefore(o.node,o.next);else o.parent.appendChild(o.node);}
 function ux24OpenAdd(){
   ux24Prepare();
-  ux24Move(ux24Origins.meal.node,"ux24-meal-host");
   ux24Move(ux24Origins.addCard.node,"ux24-original-add-host");
   document.body.classList.add("ux24-add-mode");
   document.body.classList.remove("ux23-add-mode");
