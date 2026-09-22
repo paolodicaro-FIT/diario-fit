@@ -9709,7 +9709,7 @@ html[data-theme="light"] .missing-today-legend {
   <section id="ux24-add-page" class="ux24-add-page" aria-label="Aggiungi alimento">
   <div class="ux24-add-top">
     <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹ <span>Torna a Oggi</span></button>
-    <div><strong>Aggiungi alimento</strong><small>Scegli il pasto e poi come inserire</small></div>
+    <div><strong>Aggiungi alimento</strong><small>Scegli o crea un alimento; la destinazione si decide alla fine</small></div>
   </div>
   <div id="ux24-meal-host"></div>
   <div id="ux24-original-add-host"></div>
@@ -10454,7 +10454,7 @@ html[data-theme="light"] .missing-today-legend {
       <button class="modal-close" onclick="closeQuickDiaryPreview()">✕</button>
     </div>
     <div id="quick-preview-name" style="font-weight:850; color:var(--accent); margin-bottom:6px;"></div>
-    <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica i valori di questo inserimento prima di aggiungerlo al diario.</div>
+    <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica quantità e valori. La destinazione si sceglie solo alla fine.</div>
     <div style="margin-bottom:10px;">
       <label style="display:block; margin-bottom:4px;">✖️ Moltiplicatore</label>
       <div class="multiplier-control" style="max-width:180px;">
@@ -10472,9 +10472,17 @@ html[data-theme="light"] .missing-today-legend {
       <label>⚖️ Peso (g)<input type="number" id="quick-preview-weight" onchange="syncQuickPreviewWeight(this.value)" min="0" step="1"></label>
       <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" oninput="syncQuickPreviewField('water', this.value)" min="0" step="1"></label>
     </div>
-    <div style="display:flex; gap:8px; margin-top:12px;">
-      <button type="button" class="btn" style="flex:1;" onclick="closeQuickDiaryPreview()">Annulla</button>
-      <button type="button" class="save-food-btn" style="flex:1; margin-top:0;" onclick="confirmQuickDiaryPreview()">➕ Aggiungi al diario</button>
+    <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
+      <div style="font-size:.72rem; font-weight:850; color:var(--text); margin-bottom:7px;">Dove vuoi salvare questo alimento?</div>
+      <button type="button" class="save-food-btn" style="margin-top:0; background:var(--card-2); color:var(--text); border:1px solid rgba(255,159,28,.35);" onclick="confirmQuickDiaryPreview('saved')">⭐ Salva nei Miei alimenti</button>
+      <div style="font-size:.67rem; color:var(--subtext); margin:9px 0 6px;">Oppure aggiungilo al Diario:</div>
+      <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px;">
+        <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Snack / Integrazione')">🥤 Snack</button>
+        <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Colazione')">🍳 Colazione</button>
+        <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Pranzo')">🍗 Pranzo</button>
+        <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Cena')">🍽️ Cena</button>
+      </div>
+      <button type="button" class="btn" style="width:100%; margin-top:8px;" onclick="closeQuickDiaryPreview()">Annulla</button>
     </div>
   </div>
 </div>
@@ -21260,14 +21268,10 @@ let quickDiaryPreviewPending = null;
 
 function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0) {
   if (!ensureDiaryWriteAccess()) return;
-  const meal = document.getElementById("meal-category").value;
-  if (!meal) {
-    alert("⚠️ Seleziona prima il tipo di pasto.");
-    return;
-  }
-
   quickDiaryPreviewPending = {
-    name, meal,
+    name,
+    meal: "",
+    source: "quick",
     baseName: name,
     baseValues: { kcal:Number(kcal)||0, pro:Number(pro)||0, fat:Number(fat)||0, carb:Number(carb)||0, sugar:Number(sugar)||0, waterMl:Number(waterMl)||0, weight:Number(weight)||0 },
     multiplier: 1,
@@ -21376,26 +21380,84 @@ function closeQuickDiaryPreview() {
   if (modal) modal.style.display = "none";
 }
 
-async function confirmQuickDiaryPreview() {
+function resetCustomFoodFields() {
+  ["custom-name","custom-kcal","custom-pro","custom-fat","custom-carb","custom-sugar","custom-weight","custom-water"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+}
+
+async function saveQuickPreviewToMyFoods(values) {
+  if (!quickDiaryPreviewPending) return false;
+  const baseName = String(quickDiaryPreviewPending.baseName || quickDiaryPreviewPending.name || "").trim();
+  if (!baseName) return false;
+
+  const food = {
+    name: baseName,
+    kcal: Math.round(values.kcal),
+    pro: Math.round(values.pro * 10) / 10,
+    fat: Math.round(values.fat * 10) / 10,
+    carb: Math.round(values.carb * 10) / 10,
+    sugar: Math.round(values.sugar * 10) / 10,
+    water: Math.round(values.waterMl),
+    weight: Math.round(values.weight)
+  };
+
+  const index = Array.isArray(savedFoods)
+    ? savedFoods.findIndex(f => String(f?.name || "").trim().toLowerCase() === baseName.toLowerCase())
+    : -1;
+
+  if (!Array.isArray(savedFoods)) savedFoods = [];
+  if (index >= 0) savedFoods[index] = { ...savedFoods[index], ...food };
+  else savedFoods.push(food);
+
+  await saveUserSettingsToBackend();
+  renderFoodPickerModal();
+  return true;
+}
+
+async function confirmQuickDiaryPreview(destination) {
   if (!quickDiaryPreviewPending) return;
-  // I campi visibili sono l'autorità finale: qualunque correzione manuale
-  // viene catturata al momento della conferma, indipendentemente dal moltiplicatore.
+  const allowedMeals = ["Snack / Integrazione", "Colazione", "Pranzo", "Cena"];
+  if (destination !== "saved" && !allowedMeals.includes(destination)) return;
+
+  // I campi visibili restano l'autorità finale. Cambiare destinazione non
+  // ricostruisce l'anteprima e quindi non perde quantità o correzioni.
   const values = captureQuickPreviewFields();
   if (!values) {
     alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
     return;
   }
+
+  if (destination === "saved") {
+    const resetCustom = !!quickDiaryPreviewPending.resetCustomFields;
+    await saveQuickPreviewToMyFoods(values);
+    document.getElementById("quick-diary-preview-modal").style.display = "none";
+    quickDiaryPreviewPending = null;
+    if (resetCustom) resetCustomFoodFields();
+    return;
+  }
+
+  quickDiaryPreviewPending.meal = destination;
   log.push({
-    id:Date.now(), time:getCurrentTimeStr(), meal:quickDiaryPreviewPending.meal,
+    id:Date.now(), time:getCurrentTimeStr(), meal:destination,
     name:quickDiaryPreviewPending.name,
     kcal:Math.round(values.kcal), pro:Math.round(values.pro*10)/10, fat:Math.round(values.fat*10)/10,
     carb:Math.round(values.carb*10)/10, sugar:Math.round(values.sugar*10)/10,
     waterMl:Math.round(values.waterMl), weight:Math.round(values.weight)
   });
-  const shouldResetFoodSelection = !!quickDiaryPreviewPending.resetFoodSelection;
 
+  // Gli alimenti creati manualmente diventano riutilizzabili; i rapidi e i
+  // predefiniti non vengono duplicati automaticamente nei Miei alimenti.
+  if (quickDiaryPreviewPending.source === "manual") {
+    await saveQuickPreviewToMyFoods(values);
+  }
+
+  const shouldResetFoodSelection = !!quickDiaryPreviewPending.resetFoodSelection;
+  const shouldResetCustomFields = !!quickDiaryPreviewPending.resetCustomFields;
   document.getElementById("quick-diary-preview-modal").style.display = "none";
   quickDiaryPreviewPending = null;
+  if (shouldResetCustomFields) resetCustomFoodFields();
 
   if (shouldResetFoodSelection) {
     const multiplier = document.getElementById("portion-multiplier");
@@ -21533,13 +21595,7 @@ async function addFromSelect() {
     return;
   }
 
-  const meal =
-    document.getElementById("meal-category").value;
-
-  if (!meal) {
-    alert("⚠️ Seleziona prima il tipo di pasto.");
-    return;
-  }
+  const meal = "";
 
   const baseName = baseNameRaw;
   const name =
@@ -21608,207 +21664,42 @@ async function addFromSelect() {
 ========================================================= */
 
 async function addCustom() {
+  if (!ensureDiaryWriteAccess()) return;
 
-  if (!ensureDiaryWriteAccess()) {
-    return;
-  }
-
-  const name =
-    document
-      .getElementById(
-        "custom-name"
-      )
-      .value
-      .trim();
-
-
-  const kcal =
-    parseFloat(
-      document.getElementById(
-        "custom-kcal"
-      ).value
-    ) || 0;
-
-
-  const pro =
-    parseFloat(
-      document.getElementById(
-        "custom-pro"
-      ).value
-    ) || 0;
-
-
-  const fat =
-    parseFloat(
-      document.getElementById(
-        "custom-fat"
-      ).value
-    ) || 0;
-
-
-  const carb =
-    parseFloat(
-      document.getElementById(
-        "custom-carb"
-      ).value
-    ) || 0;
-
-
-  const sugar =
-    parseFloat(
-      document.getElementById(
-        "custom-sugar"
-      ).value
-    ) || 0;
-
-
-  const waterMl =
-    parseFloat(
-      document.getElementById(
-        "custom-water"
-      ).value
-    ) || 0;
-
-
-  const weight =
-    parseFloat(
-      document.getElementById(
-        "custom-weight"
-      ).value
-    ) || 0;
-
-
-  const meal =
-    document.getElementById(
-      "meal-category"
-    ).value;
-
-  if (!meal) {
-    alert("⚠️ Seleziona prima il tipo di pasto.");
-    return;
-  }
-
-
+  const read = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const name = String(document.getElementById("custom-name")?.value || "").trim();
   if (!name) {
-
-    alert(
-      "Inserisci il nome dell'alimento."
-    );
-
+    alert("Inserisci il nome dell'alimento.");
     return;
-
   }
 
+  const values = {
+    kcal: read("custom-kcal"),
+    pro: read("custom-pro"),
+    fat: read("custom-fat"),
+    carb: read("custom-carb"),
+    sugar: read("custom-sugar"),
+    waterMl: read("custom-water"),
+    weight: read("custom-weight")
+  };
 
-  log.push({
-
-    id: Date.now(),
-
-    time:
-      getCurrentTimeStr(),
-
-    meal,
-
+  quickDiaryPreviewPending = {
     name,
+    meal: "",
+    source: "manual",
+    baseName: name,
+    baseValues: { ...values },
+    multiplier: 1,
+    previewWeight: Number(values.weight) || 0,
+    resetCustomFields: true
+  };
 
-    kcal,
-
-    pro,
-
-    fat,
-
-    carb,
-
-    sugar,
-
-    waterMl,
-
-    weight
-
-  });
-
-
-  const exists =
-    savedFoods.some(
-      f =>
-        f.name.toLowerCase()
-        ===
-        name.toLowerCase()
-    );
-
-
-  if (!exists) {
-
-    savedFoods.push({
-
-      name,
-      kcal,
-      pro,
-      fat,
-      carb,
-      sugar,
-      water: waterMl,
-      weight
-
-    });
-
-
-
-
-
-    renderFoodPickerModal();
-
-  }
-
-
-  document.getElementById(
-    "custom-name"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-kcal"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-pro"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-fat"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-carb"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-sugar"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-weight"
-  ).value = "";
-
-
-  document.getElementById(
-    "custom-water"
-  ).value = "";
-
-
-  await saveUserSettingsToBackend();
-
-  await saveAndRender();
-
-  resetMealCategory();
-
+  const title = document.getElementById("quick-preview-name");
+  if (title) title.textContent = name;
+  applyQuickPreviewMultiplier();
+  const modal = document.getElementById("quick-diary-preview-modal");
+  if (modal) modal.style.display = "flex";
 }
-
 
 /* =========================================================
    DELETE
@@ -25224,7 +25115,6 @@ function ux24Move(node,hostId){const host=document.getElementById(hostId);if(nod
 function ux24RestoreOne(o){if(!o?.node||!o?.parent)return;if(o.next&&o.next.parentNode===o.parent)o.parent.insertBefore(o.node,o.next);else o.parent.appendChild(o.node);}
 function ux24OpenAdd(){
   ux24Prepare();
-  ux24Move(ux24Origins.meal.node,"ux24-meal-host");
   ux24Move(ux24Origins.addCard.node,"ux24-original-add-host");
   document.body.classList.add("ux24-add-mode");
   document.body.classList.remove("ux23-add-mode");
