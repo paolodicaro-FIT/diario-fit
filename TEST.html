@@ -6039,185 +6039,17 @@ html[data-theme="light"] .header-progress-btn {
    Solo grafica: nessuna modifica alla logica
 ========================================================= */
 
-.meal-focus-card {
-  position: relative;
-  overflow: hidden;
-  padding: 16px;
 
-  border:
-    1px solid rgba(255,159,28,.48);
 
-  background:
-    radial-gradient(
-      circle at 8% 20%,
-      rgba(255,159,28,.13),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(255,159,28,.075),
-      rgba(255,159,28,.018)
-    ),
-    var(--card);
 
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.045),
-    0 8px 24px rgba(0,0,0,.18),
-    0 0 18px rgba(255,159,28,.14);
 
-  transition:
-    border-color .25s ease,
-    box-shadow .25s ease,
-    background .25s ease;
-}
 
-.meal-focus-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
 
-  background:
-    linear-gradient(
-      115deg,
-      rgba(255,255,255,.035),
-      transparent 30%,
-      transparent 70%,
-      rgba(255,159,28,.035)
-    );
-}
 
-.meal-focus-pending {
-  border-color: rgba(255,159,28,.98);
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,184,77,.24),
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 8px 24px rgba(0,0,0,.22),
-    0 0 10px rgba(255,159,28,.62),
-    0 0 24px rgba(255,159,28,.40),
-    0 0 46px rgba(255,159,28,.22);
-}
 
-.meal-focus-layout {
-  position: relative;
-  z-index: 1;
 
-  display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(190px,.72fr);
-  align-items: center;
-  gap: 16px;
-}
 
-.meal-focus-heading {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: 12px;
-}
-
-.meal-focus-icon {
-  flex: 0 0 auto;
-
-  display: grid;
-  place-items: center;
-
-  width: 48px;
-  height: 48px;
-
-  border:
-    1px solid rgba(255,159,28,.40);
-
-  border-radius: 14px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,159,28,.20),
-      rgba(255,159,28,.055)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 0 16px rgba(255,159,28,.13);
-
-  font-size: 1.55rem;
-}
-
-.meal-focus-copy {
-  min-width: 0;
-}
-
-.meal-focus-title {
-  color: var(--text);
-
-  font-size: 1.03rem;
-  line-height: 1.15;
-  font-weight: 850;
-
-  letter-spacing: .01em;
-}
-
-.meal-focus-subtitle {
-  margin-top: 5px;
-
-  color: var(--subtext);
-
-  font-size: .76rem;
-  line-height: 1.3;
-}
-
-.meal-focus-card .meal-selector {
-  display: block;
-}
-
-.meal-focus-card #meal-category {
-  min-height: 50px;
-  padding: 10px 38px 10px 14px;
-
-  border:
-    1px solid rgba(255,159,28,.58);
-
-  border-radius: 14px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,159,28,.17),
-      rgba(255,159,28,.055)
-    ),
-    var(--card-2);
-
-  color: var(--accent-light);
-
-  font-size: .94rem;
-  font-weight: 800;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.045),
-    0 4px 12px rgba(0,0,0,.13),
-    0 0 14px rgba(255,159,28,.13);
-
-  text-shadow:
-    0 0 10px rgba(255,159,28,.13);
-
-  cursor: pointer;
-
-  transition:
-    border-color .2s ease,
-    box-shadow .2s ease,
-    background .2s ease;
-}
-
-.meal-focus-card #meal-category:hover,
-.meal-focus-card #meal-category:focus {
-  border-color: rgba(255,159,28,.88);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.055),
-    0 4px 14px rgba(0,0,0,.15),
-    0 0 19px rgba(255,159,28,.22);
-}
 
 
 /* =========================================================
@@ -6405,35 +6237,7 @@ html[data-theme="light"] .header-progress-btn {
 
 /* Tema chiaro */
 
-html[data-theme="light"] .meal-focus-card {
-  background:
-    radial-gradient(
-      circle at 8% 20%,
-      rgba(255,159,28,.12),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(255,159,28,.075),
-      rgba(255,255,255,.96)
-    );
 
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.95),
-    0 8px 22px rgba(15,23,42,.08),
-    0 0 18px rgba(255,159,28,.11);
-}
-
-html[data-theme="light"] .meal-focus-card #meal-category {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,159,28,.16),
-      rgba(255,255,255,.96)
-    );
-
-  color: #b86100;
-}
 
 
 /* Mobile */
@@ -6468,11 +6272,6 @@ html[data-theme="light"] .meal-focus-card #meal-category {
     font-size: .72rem;
   }
 
-  .meal-focus-card #meal-category {
-    min-height: 50px;
-
-    font-size: .90rem;
-  }
 }
 
 /* =========================================================
@@ -9711,63 +9510,10 @@ html[data-theme="light"] .missing-today-legend {
     <button type="button" class="ux24-back" onclick="ux24CloseAdd()" aria-label="Torna a Oggi">‹ <span>Torna a Oggi</span></button>
     <div><strong>Aggiungi alimento</strong><small>Scegli o crea un alimento; la destinazione si decide alla fine</small></div>
   </div>
-  <div id="ux24-meal-host"></div>
   <div id="ux24-original-add-host"></div>
   <div id="ux24-manual-host"></div>
 </section>
 
-<section class="card meal-focus-card meal-focus-pending" id="meal-focus-card">
-
-    <div class="meal-focus-layout">
-
-      <div class="meal-focus-heading">
-
-        <div class="meal-focus-icon" aria-hidden="true">
-          🍴
-        </div>
-
-        <div class="meal-focus-copy">
-          <div class="meal-focus-title">
-            Seleziona il pasto
-          </div>
-          <div class="meal-focus-subtitle">
-            Scegli il pasto prima di aggiungere alimenti
-          </div>
-        </div>
-
-      </div>
-
-      <div class="meal-selector">
-
-        <select id="meal-category" aria-label="Seleziona il pasto">
-
-          <option value="" selected>
-            🍴 Scegli pasto...
-          </option>
-
-          <option value="Snack / Integrazione">
-            🥤 Snack / Integrazione
-          </option>
-
-          <option value="Colazione">
-            🍳 Colazione
-          </option>
-
-          <option value="Pranzo">
-            🍗 Pranzo
-          </option>
-
-          <option value="Cena">
-            🍽️ Cena
-          </option>
-
-        </select>
-
-      </div>
-
-    </div>
-
-  </section>
 
 
   <!-- ===================================================
@@ -10608,15 +10354,15 @@ html[data-theme="light"] .missing-today-legend {
         💾 Salva
       </button>
 
-      <button
-        id="saved-meal-use-btn"
-        type="button"
-        class="save-food-btn"
-        style="flex:1; display:none;"
-        onclick="addSavedMealToDiary()"
+      <div
+        id="saved-meal-destination-buttons"
+        style="display:none; flex:2; flex-wrap:wrap; gap:8px;"
       >
-        ➕ Aggiungi al diario
-      </button>
+        <button type="button" class="save-food-btn" style="flex:1 1 46%;" onclick="addSavedMealToDiary('Snack / Integrazione')">🥤 Snack</button>
+        <button type="button" class="save-food-btn" style="flex:1 1 46%;" onclick="addSavedMealToDiary('Colazione')">🍳 Colazione</button>
+        <button type="button" class="save-food-btn" style="flex:1 1 46%;" onclick="addSavedMealToDiary('Pranzo')">🍗 Pranzo</button>
+        <button type="button" class="save-food-btn" style="flex:1 1 46%;" onclick="addSavedMealToDiary('Cena')">🍽️ Cena</button>
+      </div>
 
       <button
         type="button"
@@ -15778,7 +15524,6 @@ async function initApp() {
 
   await loadUserDiaryFromBackend(isoDateStr);
 
-  resetMealCategory();
 
 
   document.getElementById(
@@ -19289,8 +19034,8 @@ function updateSavedMealEditorModeUI() {
   const saveBtn =
     document.getElementById("saved-meal-save-btn");
 
-  const useBtn =
-    document.getElementById("saved-meal-use-btn");
+  const destinationButtons =
+    document.getElementById("saved-meal-destination-buttons");
 
   const useOptions =
     document.getElementById("saved-meal-use-options");
@@ -19308,10 +19053,10 @@ function updateSavedMealEditorModeUI() {
         : "";
   }
 
-  if (useBtn) {
-    useBtn.style.display =
+  if (destinationButtons) {
+    destinationButtons.style.display =
       isUseMode
-        ? ""
+        ? "flex"
         : "none";
   }
 
@@ -19862,14 +19607,11 @@ function useSavedMeal(index) {
 }
 
 
-async function addSavedMealToDiary() {
+async function addSavedMealToDiary(mealCategory) {
   if (!ensureDiaryWriteAccess()) return;
 
-  const mealCategory = document.getElementById("meal-category").value;
-  if (!mealCategory) {
-    alert("⚠️ Seleziona prima il tipo di pasto.");
-    return;
-  }
+  const allowedMeals = ["Snack / Integrazione", "Colazione", "Pranzo", "Cena"];
+  if (!allowedMeals.includes(mealCategory)) return;
 
   if (!Array.isArray(savedMealDraftItems) || savedMealDraftItems.length === 0) {
     alert("Il pasto non contiene alimenti.");
@@ -19937,7 +19679,6 @@ async function addSavedMealToDiary() {
 
   await saveAndRender();
   closeSavedMealEditor();
-  resetMealCategory();
 }
 
 async function deleteSavedMeal(index) {
@@ -21224,11 +20965,6 @@ function renderQuickGrid() {
 
 function openSavedMealQuickPreview(savedMealId) {
   if (!ensureDiaryWriteAccess()) return;
-  const mealCategory = document.getElementById("meal-category").value;
-  if (!mealCategory) {
-    alert("⚠️ Seleziona prima il tipo di pasto.");
-    return;
-  }
   const index = Array.isArray(savedMeals)
     ? savedMeals.findIndex(meal => String(meal?.id || "") === String(savedMealId || ""))
     : -1;
@@ -21469,91 +21205,7 @@ async function confirmQuickDiaryPreview(destination) {
   }
 
   await saveAndRender();
-  resetMealCategory();
 }
-
-/* =========================================================
-   RESET DEL TIPO DI PASTO
-========================================================= */
-
-function updateMealFocusState() {
-
-  const mealCategory =
-    document.getElementById("meal-category");
-
-  const mealFocusCard =
-    document.getElementById("meal-focus-card");
-
-  if (!mealCategory || !mealFocusCard) {
-    return;
-  }
-
-  mealFocusCard.classList.toggle(
-    "meal-focus-pending",
-    !mealCategory.value
-  );
-
-}
-
-
-function resetMealCategory() {
-
-  const mealCategory =
-    document.getElementById("meal-category");
-
-  if (mealCategory) {
-    mealCategory.value = "";
-    updateMealFocusState();
-  }
-
-}
-
-
-/* =========================================================
-   RESET AL CAMBIO DEL TIPO DI PASTO
-========================================================= */
-
-document.getElementById("meal-category").addEventListener("change", () => {
-
-  updateMealFocusState();
-
-  selectedFoodValue = "";
-  selectedFoodDisplayText = "";
-
-  const selectedLabel =
-    document.getElementById("selected-food-label");
-
-  if (selectedLabel) {
-    selectedLabel.innerText = "🍽️ Scegli alimento...";
-  }
-
-  const multiplier =
-    document.getElementById("portion-multiplier");
-
-  if (multiplier) {
-    multiplier.value = 1;
-  }
-
-  const customFields = [
-    "custom-name",
-    "custom-kcal",
-    "custom-pro",
-    "custom-fat",
-    "custom-carb",
-    "custom-sugar",
-    "custom-weight",
-    "custom-water"
-  ];
-
-  customFields.forEach(id => {
-    const field = document.getElementById(id);
-    if (field) {
-      field.value = "";
-    }
-  });
-
-});
-
 
 /* =========================================================
    ADD FROM SELECT
@@ -25102,11 +24754,9 @@ function ux2ToggleDiary(){
 let ux24Origins=null;
 function ux24Prepare(){
   if(ux24Origins)return;
-  const meal=document.getElementById("meal-focus-card");
   const addCard=document.getElementById("ux23-original-add-card");
   const manual=document.getElementById("ux24-manual-card");
   ux24Origins={
-    meal:{node:meal,parent:meal?.parentNode,next:meal?.nextSibling},
     addCard:{node:addCard,parent:addCard?.parentNode,next:addCard?.nextSibling},
     manual:{node:manual,parent:manual?.parentNode,next:manual?.nextSibling}
   };
@@ -25119,12 +24769,10 @@ function ux24OpenAdd(){
   document.body.classList.add("ux24-add-mode");
   document.body.classList.remove("ux23-add-mode");
   if(typeof renderQuickGrid==="function")renderQuickGrid();
-  if(typeof updateMealFocusState==="function")updateMealFocusState();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function ux24CloseAdd(){
   if(ux24Origins){
-    ux24RestoreOne(ux24Origins.meal);
     ux24RestoreOne(ux24Origins.addCard);
     ux24RestoreOne(ux24Origins.manual);
   }
