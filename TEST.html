@@ -13220,6 +13220,7 @@ let savedMeals;
 let userSettings = {};
 let historyLogs;
 let log;
+let currentDiaryTargetSnapshot = null;
 let quickAddItems;
 
 let selectedFoodValue = "";
@@ -13294,6 +13295,12 @@ async function loadUserDiaryFromBackend(dateKey) {
     "/api/user/diary?date=" + encodeURIComponent(dateKey)
   );
 
+  currentDiaryTargetSnapshot =
+    data.summary?.targetSnapshot &&
+    typeof data.summary.targetSnapshot === "object"
+      ? { ...data.summary.targetSnapshot }
+      : null;
+
   if (
     data.summary &&
     data.summary.closed === true
@@ -13343,6 +13350,33 @@ async function saveUserDiaryToBackend(
     throw new Error("ACCOUNT_ACCESS_EXPIRED");
   }
 
+  const incomingSummary =
+    summary && typeof summary === "object"
+      ? summary
+      : {};
+
+  const storedSnapshot =
+    incomingSummary.targetSnapshot &&
+    typeof incomingSummary.targetSnapshot === "object"
+      ? incomingSummary.targetSnapshot
+      : (
+          dateKey === getLocalISODate() &&
+          currentDiaryTargetSnapshot &&
+          typeof currentDiaryTargetSnapshot === "object"
+            ? currentDiaryTargetSnapshot
+            : (
+                historyLogs?.[dateKey]?.summary?.targetSnapshot &&
+                typeof historyLogs[dateKey].summary.targetSnapshot === "object"
+                  ? historyLogs[dateKey].summary.targetSnapshot
+                  : null
+              )
+        );
+
+  const targetSnapshot =
+    storedSnapshot
+      ? { ...storedSnapshot }
+      : createDailyTargetSnapshot();
+
   await apiFetch(
     "/api/user/diary",
     {
@@ -13351,12 +13385,16 @@ async function saveUserDiaryToBackend(
         date: dateKey,
         log: Array.isArray(log) ? log : [],
         summary: {
-          ...(summary && typeof summary === "object" ? summary : {}),
-          targetSnapshot: createDailyTargetSnapshot()
+          ...incomingSummary,
+          targetSnapshot
         }
       })
     }
   );
+
+  if (dateKey === getLocalISODate()) {
+    currentDiaryTargetSnapshot = { ...targetSnapshot };
+  }
 }
 
 
