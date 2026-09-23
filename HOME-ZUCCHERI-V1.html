@@ -9037,6 +9037,23 @@ html[data-theme="light"] .missing-today-legend {
 }
 </style>
 
+
+<style>
+/* DiarioFIT — Home nutrienti: 5 card su una riga SOLO desktop/tablet */
+@media (min-width: 769px) {
+  .ux2-macros {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .ux2-macro {
+    min-width: 0 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
+</style>
+
 </head>
 
 
