@@ -13372,10 +13372,31 @@ async function saveUserDiaryToBackend(
               )
         );
 
-  const targetSnapshot =
+  let targetSnapshot =
     storedSnapshot
       ? { ...storedSnapshot }
-      : createDailyTargetSnapshot();
+      : null;
+
+  // Ultima difesa: prima di creare uno snapshot nuovo, controlla il dato
+  // già persistito per questa giornata. Uno snapshot storico esistente
+  // non deve mai essere sostituito dai target correnti.
+  if (!targetSnapshot) {
+    try {
+      const existingDay = await apiFetch(
+        "/api/user/diary?date=" + encodeURIComponent(dateKey)
+      );
+      const remoteSnapshot = existingDay?.summary?.targetSnapshot;
+      if (remoteSnapshot && typeof remoteSnapshot === "object") {
+        targetSnapshot = { ...remoteSnapshot };
+      }
+    } catch (error) {
+      console.warn("Snapshot target storico non recuperabile:", error);
+    }
+  }
+
+  if (!targetSnapshot) {
+    targetSnapshot = createDailyTargetSnapshot();
+  }
 
   await apiFetch(
     "/api/user/diary",
@@ -21994,7 +22015,10 @@ function getWeeklyNutritionData(
           : [];
 
       targetSnapshot =
-        createDailyTargetSnapshot();
+        currentDiaryTargetSnapshot &&
+        typeof currentDiaryTargetSnapshot === "object"
+          ? currentDiaryTargetSnapshot
+          : createDailyTargetSnapshot();
 
     } else {
 
@@ -23181,6 +23205,18 @@ async function archiveCurrentLog(dateKey) {
     return;
   }
 
+  const previousTargetSnapshot =
+    historyLogs?.[dateKey]?.summary?.targetSnapshot &&
+    typeof historyLogs[dateKey].summary.targetSnapshot === "object"
+      ? { ...historyLogs[dateKey].summary.targetSnapshot }
+      : (
+          dateKey === getLocalISODate() &&
+          currentDiaryTargetSnapshot &&
+          typeof currentDiaryTargetSnapshot === "object"
+            ? { ...currentDiaryTargetSnapshot }
+            : null
+        );
+
   const acquaTotOld =
     log.reduce(
       (sum, item) =>
@@ -23242,7 +23278,11 @@ async function archiveCurrentLog(dateKey) {
         ) + "g",
 
       water:
-        acquaTotOld + "ml"
+        acquaTotOld + "ml",
+
+      ...(previousTargetSnapshot
+        ? { targetSnapshot: previousTargetSnapshot }
+        : {})
 
     }
 
