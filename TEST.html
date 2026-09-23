@@ -8419,14 +8419,16 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 /* UX TARGET + INSERIMENTO V1 */
 .progress-target-modal-content{max-width:760px}
 .progress-target-intro{color:var(--subtext);margin:0 0 12px}
-#progress-target-host .target-card{margin:0!important}
+#progress-target-host .target-card{display:block!important;margin:0!important}
 #progress-target-host .target-actions{display:flex!important}
 #progress-target-host #target-inputs{max-width:100%}
 .ux-add-highlight{animation:uxAddPulse .9s ease}
 @keyframes uxAddPulse{0%,100%{box-shadow:inherit}45%{box-shadow:0 0 0 3px rgba(74,222,128,.28),0 0 26px rgba(74,222,128,.22)}}
 @media(max-width:760px){
  #progress-target-modal .modal-content{width:min(94vw,760px);max-height:90vh;overflow:auto}
- #progress-target-host .target-card{display:block!important}
+}
+@media(min-width:761px){
+ #ux23-original-add-card{display:block!important}
 }
 
 </style>
@@ -9306,7 +9308,7 @@ html[data-theme="light"] .missing-today-legend {
 
         <button
           class="mini-btn primary"
-          onclick="toggleCalculatorModal()"
+          onclick="openTargetCalculatorFromProgress()"
         >
           🎯 Calcola
         </button>
@@ -16120,6 +16122,19 @@ function applyBodyCompositionData(last, useProgressWeight = true) {
   }
   applyBodyCompositionSkinfolds(last);
 
+  // TEST V2: conserva le tre sedi già rilevate; le altre quattro restano da misurare.
+  const lastHasSkinfolds = BODYCOMP_SKINFOLD_SITES
+    .some(([,key]) => Array.isArray(last?.[key]) && last[key].some(v => Number.isFinite(Number(v)) && Number(v) > 0));
+
+  if (!lastHasSkinfolds) {
+    const seed = { abd:[11,10,11], tri:[1,2,1], sup:[5,6,5] };
+    Object.entries(seed).forEach(([prefix,values]) => values.forEach((v,i) => {
+      const el=document.getElementById(`bodycomp-sf-${prefix}-${i+1}`);
+      if (el) el.value=String(v);
+    }));
+    if (dateEl) dateEl.value="2026-09-15";
+  }
+
   const ageEl=document.getElementById("bodycomp-age");
   if(ageEl && !ageEl.value){
     const calcAge=Number(document.getElementById("calc-age")?.value);
@@ -16194,9 +16209,8 @@ const BODYCOMP_SKINFOLD_SITES = [
 ];
 
 function bodyCompSkinfoldAverage(prefix) {
-  const values=bodyCompSkinfoldValues(prefix).filter(v=>Number.isFinite(v) && v>0);
-  // Una sede è completa solo con tutte e tre le letture valide.
-  return values.length===3 ? values.reduce((a,b)=>a+b,0)/3 : null;
+  const values=bodyCompSkinfoldValues(prefix);
+  return values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
 }
 
 const BODYCOMP_SKINFOLD_GUIDE={
@@ -16274,7 +16288,7 @@ function collectBodyCompositionForm() {
   BODYCOMP_SKINFOLD_SITES.forEach(([prefix,key,avgKey])=>{
     const values=bodyCompSkinfoldValues(prefix);
     data[key]=values;
-    data[avgKey]=bodyCompSkinfoldAverage(prefix);
+    data[avgKey]=values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
   });
   return data;
 }
@@ -25245,6 +25259,14 @@ function openTargetsFromStats(){
   modal.style.display="flex";
   document.body.style.overflow="hidden";
 }
+function openTargetCalculatorFromProgress(){
+  const progressModal=document.getElementById("progress-target-modal");
+  if(progressModal && progressModal.style.display==="flex"){
+    closeTargetsFromProgress();
+  }
+  toggleCalculatorModal();
+}
+
 function closeTargetsFromProgress(){
   const modal=document.getElementById("progress-target-modal");
   const card=document.querySelector("#progress-target-host .target-card");
