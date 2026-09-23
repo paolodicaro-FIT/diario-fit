@@ -16120,19 +16120,6 @@ function applyBodyCompositionData(last, useProgressWeight = true) {
   }
   applyBodyCompositionSkinfolds(last);
 
-  // TEST V2: conserva le tre sedi già rilevate; le altre quattro restano da misurare.
-  const lastHasSkinfolds = BODYCOMP_SKINFOLD_SITES
-    .some(([,key]) => Array.isArray(last?.[key]) && last[key].some(v => Number.isFinite(Number(v)) && Number(v) > 0));
-
-  if (!lastHasSkinfolds) {
-    const seed = { abd:[11,10,11], tri:[1,2,1], sup:[5,6,5] };
-    Object.entries(seed).forEach(([prefix,values]) => values.forEach((v,i) => {
-      const el=document.getElementById(`bodycomp-sf-${prefix}-${i+1}`);
-      if (el) el.value=String(v);
-    }));
-    if (dateEl) dateEl.value="2026-09-15";
-  }
-
   const ageEl=document.getElementById("bodycomp-age");
   if(ageEl && !ageEl.value){
     const calcAge=Number(document.getElementById("calc-age")?.value);
@@ -16207,8 +16194,9 @@ const BODYCOMP_SKINFOLD_SITES = [
 ];
 
 function bodyCompSkinfoldAverage(prefix) {
-  const values=bodyCompSkinfoldValues(prefix);
-  return values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  const values=bodyCompSkinfoldValues(prefix).filter(v=>Number.isFinite(v) && v>0);
+  // Una sede è completa solo con tutte e tre le letture valide.
+  return values.length===3 ? values.reduce((a,b)=>a+b,0)/3 : null;
 }
 
 const BODYCOMP_SKINFOLD_GUIDE={
@@ -16286,7 +16274,7 @@ function collectBodyCompositionForm() {
   BODYCOMP_SKINFOLD_SITES.forEach(([prefix,key,avgKey])=>{
     const values=bodyCompSkinfoldValues(prefix);
     data[key]=values;
-    data[avgKey]=values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+    data[avgKey]=bodyCompSkinfoldAverage(prefix);
   });
   return data;
 }
