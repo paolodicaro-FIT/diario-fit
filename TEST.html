@@ -13313,6 +13313,26 @@ async function loadUserDiaryFromBackend(dateKey) {
 }
 
 
+function createDailyTargetSnapshot() {
+  const source = TARGETS && typeof TARGETS === "object" ? TARGETS : {};
+  const meta = userSettings && typeof userSettings === "object"
+    ? userSettings.targetCalculationMeta
+    : null;
+
+  return {
+    kcal: Number(source.kcal) || 0,
+    pro: Number(source.pro) || 0,
+    fat: Number(source.fat) || 0,
+    carb: Number(source.carb) || 0,
+    sugar: Number(source.sugar) || 0,
+    water: Number(source.water) || 0,
+    mode: meta?.mode || null,
+    goal: meta?.goal || null,
+    capturedAt: new Date().toISOString()
+  };
+}
+
+
 async function saveUserDiaryToBackend(
   dateKey = getLocalISODate(),
   summary = {}
@@ -13330,10 +13350,10 @@ async function saveUserDiaryToBackend(
       body: JSON.stringify({
         date: dateKey,
         log: Array.isArray(log) ? log : [],
-        summary:
-          summary && typeof summary === "object"
-            ? summary
-            : {}
+        summary: {
+          ...(summary && typeof summary === "object" ? summary : {}),
+          targetSnapshot: createDailyTargetSnapshot()
+        }
       })
     }
   );
@@ -16846,7 +16866,8 @@ function calculatePersonalAnalysis() {
     days,
     availableDays,
     availableDaysCount,
-    averages
+    averages,
+    targetAverages
   } = overview;
 
   const previousAverages =
@@ -16990,9 +17011,7 @@ function calculatePersonalAnalysis() {
 
       const target =
         Number(
-          TARGETS?.[
-            metric.key
-          ]
+          targetAverages?.[metric.key]
         ) || 0;
 
       const status =
@@ -21927,6 +21946,7 @@ function getWeeklyNutritionData(
 
     let sourceLog = [];
     let storedSummary = {};
+    let targetSnapshot = null;
 
     if (dateKey === todayKey) {
 
@@ -21934,6 +21954,9 @@ function getWeeklyNutritionData(
         Array.isArray(log)
           ? log
           : [];
+
+      targetSnapshot =
+        createDailyTargetSnapshot();
 
     } else {
 
@@ -21950,6 +21973,12 @@ function getWeeklyNutritionData(
         typeof dayData.summary === "object"
           ? dayData.summary
           : {};
+
+      targetSnapshot =
+        storedSummary.targetSnapshot &&
+        typeof storedSummary.targetSnapshot === "object"
+          ? storedSummary.targetSnapshot
+          : null;
     }
 
     const calculated =
@@ -22008,7 +22037,8 @@ function getWeeklyNutritionData(
       isToday:
         dateKey === todayKey,
       hasData,
-      summary
+      summary,
+      targetSnapshot
     });
 
   }
@@ -22121,13 +22151,38 @@ function calculateWeeklyNutritionOverview(
           water: 0
         };
 
+  const targetKeys = ["kcal", "pro", "fat", "carb", "sugar", "water"];
+  const targetTotals = Object.fromEntries(targetKeys.map(key => [key, 0]));
+  const targetCounts = Object.fromEntries(targetKeys.map(key => [key, 0]));
+
+  availableDays.forEach(day => {
+    const snapshot = day.targetSnapshot;
+    if (!snapshot || typeof snapshot !== "object") return;
+    targetKeys.forEach(key => {
+      const value = Number(snapshot[key]);
+      if (Number.isFinite(value) && value > 0) {
+        targetTotals[key] += value;
+        targetCounts[key] += 1;
+      }
+    });
+  });
+
+  const targetAverages = {};
+  targetKeys.forEach(key => {
+    targetAverages[key] = count > 0 && targetCounts[key] === count
+      ? targetTotals[key] / targetCounts[key]
+      : null;
+  });
+
   return {
     days,
     availableDays,
     availableDaysCount:
       count,
     totals,
-    averages
+    averages,
+    targetAverages,
+    targetSnapshotDaysCount: Math.max(...Object.values(targetCounts), 0)
   };
 
 }
@@ -22146,7 +22201,8 @@ function renderWeeklySummary() {
   const {
     days,
     availableDaysCount,
-    averages
+    averages,
+    targetAverages
   } = overview;
 
 
@@ -22263,7 +22319,7 @@ function renderWeeklySummary() {
 
       const target =
         Number(
-          TARGETS?.[metric.key]
+          targetAverages?.[metric.key]
         ) || 0;
 
 
