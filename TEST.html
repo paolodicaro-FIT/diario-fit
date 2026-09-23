@@ -13301,20 +13301,15 @@ async function loadUserDiaryFromBackend(dateKey) {
       ? { ...data.summary.targetSnapshot }
       : null;
 
-  if (
-    data.summary &&
-    data.summary.closed === true
-  ) {
-    log = [];
-  } else {
-    log = Array.isArray(data.log)
-      ? data.log.map(item => ({
-          ...item,
-          sugar:
-            item.sugar ?? 0
-        }))
-      : [];
-  }
+  // Un giorno marcato come chiuso resta comunque consultabile:
+  // `closed` e un metadato di stato, non deve mai svuotare il diario caricato.
+  log = Array.isArray(data.log)
+    ? data.log.map(item => ({
+        ...item,
+        sugar:
+          item.sugar ?? 0
+      }))
+    : [];
 
   return data;
 }
@@ -23571,6 +23566,12 @@ async function finalizePendingClosedDay() {
         );
 
 
+      const existingTargetSnapshot =
+        dayData.summary?.targetSnapshot &&
+        typeof dayData.summary.targetSnapshot === "object"
+          ? { ...dayData.summary.targetSnapshot }
+          : null;
+
       const summary = {
         kcal: totals.kcal,
         pro: totals.pro + "g",
@@ -23578,7 +23579,10 @@ async function finalizePendingClosedDay() {
         carb: totals.carb + "g",
         sugar: totals.sugar + "g",
         water: totals.water + "ml",
-        closed: true
+        closed: true,
+        ...(existingTargetSnapshot
+          ? { targetSnapshot: existingTargetSnapshot }
+          : {})
       };
 
 
