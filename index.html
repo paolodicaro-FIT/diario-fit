@@ -13220,6 +13220,7 @@ let savedMeals;
 let userSettings = {};
 let historyLogs;
 let log;
+let currentDiaryTargetSnapshot = null;
 let quickAddItems;
 
 let selectedFoodValue = "";
@@ -13294,22 +13295,43 @@ async function loadUserDiaryFromBackend(dateKey) {
     "/api/user/diary?date=" + encodeURIComponent(dateKey)
   );
 
-  if (
-    data.summary &&
-    data.summary.closed === true
-  ) {
-    log = [];
-  } else {
-    log = Array.isArray(data.log)
-      ? data.log.map(item => ({
-          ...item,
-          sugar:
-            item.sugar ?? 0
-        }))
-      : [];
-  }
+  currentDiaryTargetSnapshot =
+    data.summary?.targetSnapshot &&
+    typeof data.summary.targetSnapshot === "object"
+      ? { ...data.summary.targetSnapshot }
+      : null;
+
+  // Un giorno marcato come chiuso resta comunque consultabile:
+  // `closed` e un metadato di stato, non deve mai svuotare il diario caricato.
+  log = Array.isArray(data.log)
+    ? data.log.map(item => ({
+        ...item,
+        sugar:
+          item.sugar ?? 0
+      }))
+    : [];
 
   return data;
+}
+
+
+function createDailyTargetSnapshot() {
+  const source = TARGETS && typeof TARGETS === "object" ? TARGETS : {};
+  const meta = userSettings && typeof userSettings === "object"
+    ? userSettings.targetCalculationMeta
+    : null;
+
+  return {
+    kcal: Number(source.kcal) || 0,
+    pro: Number(source.pro) || 0,
+    fat: Number(source.fat) || 0,
+    carb: Number(source.carb) || 0,
+    sugar: Number(source.sugar) || 0,
+    water: Number(source.water) || 0,
+    mode: meta?.mode || null,
+    goal: meta?.goal || null,
+    capturedAt: new Date().toISOString()
+  };
 }
 
 
@@ -13323,6 +13345,92 @@ async function saveUserDiaryToBackend(
     throw new Error("ACCOUNT_ACCESS_EXPIRED");
   }
 
+  const incomingSummary =
+    summary && typeof summary === "object"
+      ? summary
+      : {};
+
+  // V1.4: il riepilogo persistito deve essere sempre completo.
+  // Viene ricostruito dal log corrente anche quando il chiamante
+  // non passa esplicitamente un summary (es. saveAndRender).
+  const diaryLog = Array.isArray(log) ? log : [];
+
+  const computedSummary = diaryLog.reduce(
+    (tot, item) => {
+      tot.kcal += Number(item?.kcal) || 0;
+      tot.pro += Number(item?.pro) || 0;
+      tot.fat += Number(item?.fat) || 0;
+      tot.carb += Number(item?.carb) || 0;
+      tot.sugar += Number(item?.sugar) || 0;
+      tot.water += Number(item?.waterMl ?? item?.water) || 0;
+      return tot;
+    },
+    {
+      kcal: 0,
+      pro: 0,
+      fat: 0,
+      carb: 0,
+      sugar: 0,
+      water: 0
+    }
+  );
+
+  const round1 = value =>
+    Math.round((Number(value) + Number.EPSILON) * 10) / 10;
+
+  const completeSummary = {
+    ...incomingSummary,
+    kcal: Math.round(computedSummary.kcal),
+    pro: round1(computedSummary.pro) + "g",
+    fat: round1(computedSummary.fat) + "g",
+    carb: round1(computedSummary.carb) + "g",
+    sugar: round1(computedSummary.sugar) + "g",
+    water: Math.round(computedSummary.water) + "ml"
+  };
+
+  const storedSnapshot =
+    incomingSummary.targetSnapshot &&
+    typeof incomingSummary.targetSnapshot === "object"
+      ? incomingSummary.targetSnapshot
+      : (
+          dateKey === getLocalISODate() &&
+          currentDiaryTargetSnapshot &&
+          typeof currentDiaryTargetSnapshot === "object"
+            ? currentDiaryTargetSnapshot
+            : (
+                historyLogs?.[dateKey]?.summary?.targetSnapshot &&
+                typeof historyLogs[dateKey].summary.targetSnapshot === "object"
+                  ? historyLogs[dateKey].summary.targetSnapshot
+                  : null
+              )
+        );
+
+  let targetSnapshot =
+    storedSnapshot
+      ? { ...storedSnapshot }
+      : null;
+
+  // Ultima difesa: prima di creare uno snapshot nuovo, controlla il dato
+  // già persistito per questa giornata. Uno snapshot storico esistente
+  // non deve mai essere sostituito dai target correnti.
+  if (!targetSnapshot) {
+    try {
+      const existingDay = await apiFetch(
+        "/api/user/diary?date=" + encodeURIComponent(dateKey)
+      );
+      const remoteSnapshot = existingDay?.summary?.targetSnapshot;
+      if (remoteSnapshot && typeof remoteSnapshot === "object") {
+        targetSnapshot = { ...remoteSnapshot };
+      }
+    } catch (error) {
+      console.warn("Snapshot target storico non recuperabile:", error);
+    }
+  }
+
+  if (!targetSnapshot) {
+    targetSnapshot = createDailyTargetSnapshot();
+  }
+
   await apiFetch(
     "/api/user/diary",
     {
@@ -13330,13 +13438,17 @@ async function saveUserDiaryToBackend(
       body: JSON.stringify({
         date: dateKey,
         log: Array.isArray(log) ? log : [],
-        summary:
-          summary && typeof summary === "object"
-            ? summary
-            : {}
+        summary: {
+          ...completeSummary,
+          targetSnapshot
+        }
       })
     }
   );
+
+  if (dateKey === getLocalISODate()) {
+    currentDiaryTargetSnapshot = { ...targetSnapshot };
+  }
 }
 
 
@@ -16846,7 +16958,8 @@ function calculatePersonalAnalysis() {
     days,
     availableDays,
     availableDaysCount,
-    averages
+    averages,
+    targetAverages
   } = overview;
 
   const previousAverages =
@@ -16990,9 +17103,7 @@ function calculatePersonalAnalysis() {
 
       const target =
         Number(
-          TARGETS?.[
-            metric.key
-          ]
+          targetAverages?.[metric.key]
         ) || 0;
 
       const status =
@@ -21927,6 +22038,7 @@ function getWeeklyNutritionData(
 
     let sourceLog = [];
     let storedSummary = {};
+    let targetSnapshot = null;
 
     if (dateKey === todayKey) {
 
@@ -21934,6 +22046,12 @@ function getWeeklyNutritionData(
         Array.isArray(log)
           ? log
           : [];
+
+      targetSnapshot =
+        currentDiaryTargetSnapshot &&
+        typeof currentDiaryTargetSnapshot === "object"
+          ? currentDiaryTargetSnapshot
+          : createDailyTargetSnapshot();
 
     } else {
 
@@ -21950,6 +22068,12 @@ function getWeeklyNutritionData(
         typeof dayData.summary === "object"
           ? dayData.summary
           : {};
+
+      targetSnapshot =
+        storedSummary.targetSnapshot &&
+        typeof storedSummary.targetSnapshot === "object"
+          ? storedSummary.targetSnapshot
+          : null;
     }
 
     const calculated =
@@ -22008,7 +22132,8 @@ function getWeeklyNutritionData(
       isToday:
         dateKey === todayKey,
       hasData,
-      summary
+      summary,
+      targetSnapshot
     });
 
   }
@@ -22121,13 +22246,38 @@ function calculateWeeklyNutritionOverview(
           water: 0
         };
 
+  const targetKeys = ["kcal", "pro", "fat", "carb", "sugar", "water"];
+  const targetTotals = Object.fromEntries(targetKeys.map(key => [key, 0]));
+  const targetCounts = Object.fromEntries(targetKeys.map(key => [key, 0]));
+
+  availableDays.forEach(day => {
+    const snapshot = day.targetSnapshot;
+    if (!snapshot || typeof snapshot !== "object") return;
+    targetKeys.forEach(key => {
+      const value = Number(snapshot[key]);
+      if (Number.isFinite(value) && value > 0) {
+        targetTotals[key] += value;
+        targetCounts[key] += 1;
+      }
+    });
+  });
+
+  const targetAverages = {};
+  targetKeys.forEach(key => {
+    targetAverages[key] = count > 0 && targetCounts[key] === count
+      ? targetTotals[key] / targetCounts[key]
+      : null;
+  });
+
   return {
     days,
     availableDays,
     availableDaysCount:
       count,
     totals,
-    averages
+    averages,
+    targetAverages,
+    targetSnapshotDaysCount: Math.max(...Object.values(targetCounts), 0)
   };
 
 }
@@ -22146,7 +22296,8 @@ function renderWeeklySummary() {
   const {
     days,
     availableDaysCount,
-    averages
+    averages,
+    targetAverages
   } = overview;
 
 
@@ -22263,7 +22414,7 @@ function renderWeeklySummary() {
 
       const target =
         Number(
-          TARGETS?.[metric.key]
+          targetAverages?.[metric.key]
         ) || 0;
 
 
@@ -23087,6 +23238,18 @@ async function archiveCurrentLog(dateKey) {
     return;
   }
 
+  const previousTargetSnapshot =
+    historyLogs?.[dateKey]?.summary?.targetSnapshot &&
+    typeof historyLogs[dateKey].summary.targetSnapshot === "object"
+      ? { ...historyLogs[dateKey].summary.targetSnapshot }
+      : (
+          dateKey === getLocalISODate() &&
+          currentDiaryTargetSnapshot &&
+          typeof currentDiaryTargetSnapshot === "object"
+            ? { ...currentDiaryTargetSnapshot }
+            : null
+        );
+
   const acquaTotOld =
     log.reduce(
       (sum, item) =>
@@ -23148,7 +23311,11 @@ async function archiveCurrentLog(dateKey) {
         ) + "g",
 
       water:
-        acquaTotOld + "ml"
+        acquaTotOld + "ml",
+
+      ...(previousTargetSnapshot
+        ? { targetSnapshot: previousTargetSnapshot }
+        : {})
 
     }
 
@@ -23437,6 +23604,12 @@ async function finalizePendingClosedDay() {
         );
 
 
+      const existingTargetSnapshot =
+        dayData.summary?.targetSnapshot &&
+        typeof dayData.summary.targetSnapshot === "object"
+          ? { ...dayData.summary.targetSnapshot }
+          : null;
+
       const summary = {
         kcal: totals.kcal,
         pro: totals.pro + "g",
@@ -23444,7 +23617,10 @@ async function finalizePendingClosedDay() {
         carb: totals.carb + "g",
         sugar: totals.sugar + "g",
         water: totals.water + "ml",
-        closed: true
+        closed: true,
+        ...(existingTargetSnapshot
+          ? { targetSnapshot: existingTargetSnapshot }
+          : {})
       };
 
 
