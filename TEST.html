@@ -22520,14 +22520,25 @@ function renderWeeklySummary() {
 
         const coverageLabel =
           targetCoverage < availableDaysCount
-            ? ` · Target medio ${targetCoverage}/${availableDaysCount} giorni`
+            ? `Target medio ${targetCoverage}/${availableDaysCount} giorni`
             : "";
 
         targetElement.textContent =
           `${roundedTarget}`
           + ` · ${percentage}%`
-          + ` · ${comparison}`
-          + coverageLabel;
+          + ` · ${comparison}`;
+
+        if (coverageLabel) {
+          targetElement.appendChild(
+            document.createElement("br")
+          );
+
+          targetElement.appendChild(
+            document.createTextNode(
+              coverageLabel
+            )
+          );
+        }
 
       }
 
