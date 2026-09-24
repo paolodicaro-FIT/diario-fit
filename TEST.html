@@ -13350,6 +13350,41 @@ async function saveUserDiaryToBackend(
       ? summary
       : {};
 
+  // V1.4: il riepilogo persistito deve essere sempre completo.
+  // Viene ricostruito dal log corrente anche quando il chiamante
+  // non passa esplicitamente un summary (es. saveAndRender).
+  const diaryLog = Array.isArray(log) ? log : [];
+
+  const computedSummary = diaryLog.reduce(
+    (tot, item) => {
+      tot.kcal += Number(item?.kcal) || 0;
+      tot.pro += Number(item?.pro) || 0;
+      tot.fat += Number(item?.fat) || 0;
+      tot.carb += Number(item?.carb) || 0;
+      tot.sugar += Number(item?.sugar) || 0;
+      tot.water += Number(item?.waterMl ?? item?.water) || 0;
+      return tot;
+    },
+    {
+      kcal: 0,
+      pro: 0,
+      fat: 0,
+      carb: 0,
+      sugar: 0,
+      water: 0
+    }
+  );
+
+  const completeSummary = {
+    kcal: computedSummary.kcal,
+    pro: computedSummary.pro + "g",
+    fat: computedSummary.fat + "g",
+    carb: computedSummary.carb + "g",
+    sugar: computedSummary.sugar + "g",
+    water: computedSummary.water + "ml",
+    ...incomingSummary
+  };
+
   const storedSnapshot =
     incomingSummary.targetSnapshot &&
     typeof incomingSummary.targetSnapshot === "object"
@@ -13401,7 +13436,7 @@ async function saveUserDiaryToBackend(
         date: dateKey,
         log: Array.isArray(log) ? log : [],
         summary: {
-          ...incomingSummary,
+          ...completeSummary,
           targetSnapshot
         }
       })
