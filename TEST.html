@@ -13379,13 +13379,13 @@ async function saveUserDiaryToBackend(
     Math.round((Number(value) + Number.EPSILON) * 10) / 10;
 
   const completeSummary = {
+    ...incomingSummary,
     kcal: Math.round(computedSummary.kcal),
     pro: round1(computedSummary.pro) + "g",
     fat: round1(computedSummary.fat) + "g",
     carb: round1(computedSummary.carb) + "g",
     sugar: round1(computedSummary.sugar) + "g",
-    water: Math.round(computedSummary.water) + "ml",
-    ...incomingSummary
+    water: Math.round(computedSummary.water) + "ml"
   };
 
   const storedSnapshot =
