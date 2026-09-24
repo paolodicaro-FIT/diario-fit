@@ -7940,7 +7940,6 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
   }
 
   /* Nasconde SOLO i blocchi Home legacy, mantenendo DOM/logica attivi. */
-  #history-card,
   .target-card,
   .target-card + button,
   .target-card + button + section,
@@ -23388,6 +23387,18 @@ function toggleHistory() {
 
     card.style.display =
       "none";
+
+    const home =
+      document.getElementById(
+        "ux2-home"
+      );
+
+    if (home) {
+      home.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
 
   }
 
