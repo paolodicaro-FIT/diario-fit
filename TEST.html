@@ -13375,13 +13375,16 @@ async function saveUserDiaryToBackend(
     }
   );
 
+  const round1 = value =>
+    Math.round((Number(value) + Number.EPSILON) * 10) / 10;
+
   const completeSummary = {
-    kcal: computedSummary.kcal,
-    pro: computedSummary.pro + "g",
-    fat: computedSummary.fat + "g",
-    carb: computedSummary.carb + "g",
-    sugar: computedSummary.sugar + "g",
-    water: computedSummary.water + "ml",
+    kcal: Math.round(computedSummary.kcal),
+    pro: round1(computedSummary.pro) + "g",
+    fat: round1(computedSummary.fat) + "g",
+    carb: round1(computedSummary.carb) + "g",
+    sugar: round1(computedSummary.sugar) + "g",
+    water: Math.round(computedSummary.water) + "ml",
     ...incomingSummary
   };
 
