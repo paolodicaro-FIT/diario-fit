@@ -23388,6 +23388,18 @@ function toggleHistory() {
     card.style.display =
       "none";
 
+    const home =
+      document.getElementById(
+        "ux2-home"
+      );
+
+    if (home) {
+      home.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
   }
 
 }
