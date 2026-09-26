@@ -18933,6 +18933,17 @@ function renderWeightProgress() {
 }
 
 
+function formatWeightChartDate(
+  date
+) {
+  const parts =
+    String(date || "").split("-");
+
+  return parts.length === 3
+    ? parts[2] + "/" + parts[1]
+    : String(date || "");
+}
+
 function drawWeightChart() {
 
   const canvas =
@@ -19197,6 +19208,57 @@ function drawWeightChart() {
       })
     );
 
+  canvas._weightChartPoints = points;
+  canvas.style.touchAction = "manipulation";
+  canvas.style.cursor = "pointer";
+
+  if (
+    !canvas._weightChartTapReady
+  ) {
+    canvas._weightChartTapReady = true;
+
+    canvas.addEventListener(
+      "click",
+      event => {
+        const box =
+          canvas.getBoundingClientRect();
+
+        const tapX =
+          event.clientX - box.left;
+
+        const tapY =
+          event.clientY - box.top;
+
+        let selectedPoint = null;
+        let nearestDistance = 24;
+
+        (
+          canvas._weightChartPoints || []
+        ).forEach(point => {
+          const distance =
+            Math.hypot(
+              point.x - tapX,
+              point.y - tapY
+            );
+
+          if (
+            distance <= nearestDistance
+          ) {
+            nearestDistance = distance;
+            selectedPoint = point;
+          }
+        });
+
+        canvas._weightChartSelectedDate =
+          selectedPoint
+            ? selectedPoint.item.date
+            : null;
+
+        drawWeightChart();
+      }
+    );
+  }
+
   const trendPoints =
     weightHistory.map(
       (item, index) => ({
@@ -19370,6 +19432,148 @@ function drawWeightChart() {
       );
 
     });
+
+  const selectedPoint =
+    points.find(
+      point =>
+        point.item.date ===
+        canvas._weightChartSelectedDate
+    );
+
+  if (selectedPoint) {
+    const label =
+      formatWeightChartDate(
+        selectedPoint.item.date
+      ) +
+      " · " +
+      Number(
+        selectedPoint.item.weight
+      ).toLocaleString(
+        "it-IT",
+        {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        }
+      ) +
+      " kg";
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(
+      selectedPoint.x,
+      selectedPoint.y,
+      8,
+      0,
+      Math.PI * 2
+    );
+    ctx.fillStyle =
+      "rgba(255,159,28,.22)";
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle =
+      "rgba(255,255,255,.95)";
+    ctx.stroke();
+
+    ctx.font =
+      "600 11px system-ui, sans-serif";
+
+    const tooltipHeight = 28;
+    const tooltipWidth =
+      Math.ceil(
+        ctx.measureText(label).width
+      ) + 20;
+
+    const tooltipX =
+      Math.min(
+        Math.max(
+          selectedPoint.x -
+          tooltipWidth / 2,
+          left
+        ),
+        width - right - tooltipWidth
+      );
+
+    const tooltipY =
+      selectedPoint.y - tooltipHeight - 12 >= top
+        ? selectedPoint.y -
+          tooltipHeight -
+          12
+        : selectedPoint.y + 12;
+
+    const radius = 8;
+
+    ctx.beginPath();
+    ctx.moveTo(
+      tooltipX + radius,
+      tooltipY
+    );
+    ctx.lineTo(
+      tooltipX + tooltipWidth - radius,
+      tooltipY
+    );
+    ctx.quadraticCurveTo(
+      tooltipX + tooltipWidth,
+      tooltipY,
+      tooltipX + tooltipWidth,
+      tooltipY + radius
+    );
+    ctx.lineTo(
+      tooltipX + tooltipWidth,
+      tooltipY + tooltipHeight - radius
+    );
+    ctx.quadraticCurveTo(
+      tooltipX + tooltipWidth,
+      tooltipY + tooltipHeight,
+      tooltipX + tooltipWidth - radius,
+      tooltipY + tooltipHeight
+    );
+    ctx.lineTo(
+      tooltipX + radius,
+      tooltipY + tooltipHeight
+    );
+    ctx.quadraticCurveTo(
+      tooltipX,
+      tooltipY + tooltipHeight,
+      tooltipX,
+      tooltipY + tooltipHeight - radius
+    );
+    ctx.lineTo(
+      tooltipX,
+      tooltipY + radius
+    );
+    ctx.quadraticCurveTo(
+      tooltipX,
+      tooltipY,
+      tooltipX + radius,
+      tooltipY
+    );
+    ctx.closePath();
+
+    ctx.shadowColor =
+      "rgba(0,0,0,.35)";
+    ctx.shadowBlur = 12;
+    ctx.fillStyle =
+      "rgba(5,18,30,.96)";
+    ctx.fill();
+
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = accent;
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      label,
+      tooltipX + tooltipWidth / 2,
+      tooltipY + tooltipHeight / 2
+    );
+
+    ctx.restore();
+  }
 
 }
 
