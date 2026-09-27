@@ -9113,7 +9113,7 @@ html[data-theme="light"] .missing-today-legend {
  .bodycomp-photo-guide-mobile-list{display:grid;gap:12px;padding:12px 12px 18px}
  .bodycomp-photo-guide-mobile-step{overflow:hidden;border:1px solid rgba(86,202,255,.28);border-radius:16px;background:linear-gradient(145deg,rgba(9,42,66,.98),rgba(4,24,40,.98));box-shadow:0 8px 22px rgba(0,0,0,.18)}
  .bodycomp-photo-guide-mobile-crop{position:relative;overflow:hidden;isolation:isolate;width:100%;aspect-ratio:600/256;background:#061827;touch-action:manipulation}
- .bodycomp-photo-guide-mobile-source{position:absolute;top:0;left:0;width:227.5%;height:var(--bodycomp-source-height,800%);background-repeat:no-repeat;background-size:100% 100%;background-position:0 0;transform:translateY(var(--bodycomp-row-offset,0%));will-change:transform}
+ .bodycomp-photo-guide-mobile-source{position:absolute;top:0;left:0;display:block;width:227.5%;height:auto;max-width:none;pointer-events:none;transform:translateY(var(--bodycomp-row-offset,0%));will-change:transform}
  .bodycomp-photo-guide-mobile-copy{padding:13px 14px 14px}
  .bodycomp-photo-guide-mobile-title{display:flex;align-items:flex-start;gap:10px;margin:0 0 7px;color:#fff;font-size:1.08rem;line-height:1.2}
  .bodycomp-photo-guide-mobile-number{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:50%;background:linear-gradient(145deg,#38bdf8,#0b76b8);color:#021723;font-size:.84rem;font-weight:900}
@@ -25841,10 +25841,13 @@ function renderBodyCompositionPhotoGuideMobile(guide){
   crop.setAttribute("aria-hidden","true");
   crop.style.aspectRatio=`600 / ${cropSpec.height}`;
 
-  const source=document.createElement("div");
+  const source=document.createElement("img");
   source.className="bodycomp-photo-guide-mobile-source";
-  source.style.backgroundImage=`url("${guide.image}")`;
-  source.style.setProperty("--bodycomp-source-height",`${2048/cropSpec.height*100}%`);
+  source.src=guide.image;
+  source.alt="";
+  source.loading="lazy";
+  source.decoding="async";
+  source.draggable=false;
   source.style.setProperty("--bodycomp-row-offset",`${-(cropSpec.top/2048*100)}%`);
   crop.append(source);
 
