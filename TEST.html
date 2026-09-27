@@ -25787,7 +25787,10 @@ const BODYCOMP_PHOTO_GUIDES={
   protocol:"Effettua tre letture per sede e usa sempre lo stesso lato del corpo.",
   image:"Guida_Pliche_Jackson-Pollock_7_Sedi_con_Plicometro_v4.png",
   alt:"Guida fotografica Jackson–Pollock a sette sedi per l'acquisizione delle pliche cutanee con plicometro.",
-  mobileCropRows:7,
+  mobileCrops:[
+   {top:0,height:270},{top:271,height:253},{top:525,height:265},{top:791,height:264},
+   {top:1056,height:271},{top:1328,height:260},{top:1589,height:448}
+  ],
   mobileSteps:[
    {n:1,title:"Pettorale",label:"Plica diagonale",text:"Afferra solo pelle e grasso con pollice e indice. Uomini: a metà tra ascella e capezzolo; donne: a un terzo dall’ascella verso il capezzolo. Mantieni la presa e leggi dopo uno–due secondi."},
    {n:2,title:"Ascellare media",label:"Plica verticale",text:"Sotto il centro dell’ascella, sulla linea ascellare media, all’altezza dello xifoide. Applica il plicometro circa un centimetro sotto le dita, perpendicolare alla plica."},
@@ -25805,7 +25808,10 @@ const BODYCOMP_PHOTO_GUIDES={
   protocol:"Protocollo DiarioFIT: vita standard a metà tra ultima costa e cresta iliaca; per il braccio mantieni sempre la stessa condizione, rilassato o contratto.",
   image:"Guida_Misure_Centimetro_8_Sedi_v1.png",
   alt:"Guida fotografica a otto sedi per la misurazione delle circonferenze corporee con metro morbido.",
-  mobileCropRows:8,
+  mobileCrops:[
+   {top:0,height:212},{top:213,height:227},{top:441,height:204},{top:646,height:219},
+   {top:866,height:218},{top:1085,height:261},{top:1347,height:279},{top:1627,height:405}
+  ],
   mobileSteps:[
    {n:1,title:"Vita standard",label:"Metro orizzontale · addome rilassato",text:"Per DiarioFIT misura a metà tra ultima costa e cresta iliaca. Piedi uniti e postura eretta; espira normalmente. Il metro resta in piano, aderente ma senza comprimere."},
    {n:2,title:"Vita all’ombelico",label:"Metro sul centro dell’ombelico",text:"Allinea il metro esattamente al centro dell’ombelico e mantienilo parallelo al pavimento. Addome libero e rilassato; espira senza trattenere il respiro."},
@@ -25824,6 +25830,8 @@ function renderBodyCompositionPhotoGuideMobile(guide){
  if(!list)return;
  list.replaceChildren();
  (guide.mobileSteps||[]).forEach((step,index)=>{
+  const cropSpec=(guide.mobileCrops||[])[index];
+  if(!cropSpec)return;
   const card=document.createElement("article");
   card.className="bodycomp-photo-guide-mobile-step";
   card.setAttribute("aria-label",`${step.n}. ${step.title}`);
@@ -25831,13 +25839,13 @@ function renderBodyCompositionPhotoGuideMobile(guide){
   const crop=document.createElement("div");
   crop.className="bodycomp-photo-guide-mobile-crop";
   crop.setAttribute("aria-hidden","true");
-  crop.style.aspectRatio=`600 / ${2048/guide.mobileCropRows}`;
+  crop.style.aspectRatio=`600 / ${cropSpec.height}`;
 
   const source=document.createElement("div");
   source.className="bodycomp-photo-guide-mobile-source";
   source.style.backgroundImage=`url("${guide.image}")`;
-  source.style.setProperty("--bodycomp-source-height",`${guide.mobileCropRows*100}%`);
-  source.style.setProperty("--bodycomp-row-offset",`${-(index*100/guide.mobileCropRows)}%`);
+  source.style.setProperty("--bodycomp-source-height",`${2048/cropSpec.height*100}%`);
+  source.style.setProperty("--bodycomp-row-offset",`${-(cropSpec.top/2048*100)}%`);
   crop.append(source);
 
   const copy=document.createElement("div");
