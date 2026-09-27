@@ -9080,6 +9080,36 @@ html[data-theme="light"] .missing-today-legend {
 .guide-text-note{margin-top:16px;padding:13px 14px;border-radius:12px;background:rgba(30,170,230,.08);border:1px solid rgba(46,187,255,.25);color:#bfeeff;line-height:1.5}
 @media(max-width:760px){.guide-text-layout{grid-template-columns:1fr}.guide-text-card{padding:15px}}
 </style>
+
+<style id="bodycomp-photo-guides-v1">
+/* Guide fotografiche — pliche Jackson–Pollock e misure in centimetri */
+.bodycomp-photo-guide-overlay{display:none;z-index:10060;padding:3vh 0;background:rgba(1,10,22,.92);backdrop-filter:blur(10px)}
+.bodycomp-photo-guide-modal{width:min(1100px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(68,201,255,.56);border-radius:22px;background:linear-gradient(145deg,#061a2a,#03111e 58%,#06192a);box-shadow:0 0 34px rgba(0,174,255,.26),0 20px 70px rgba(0,0,0,.46);color:#eef8ff}
+.bodycomp-photo-guide-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:17px 18px 14px;border-bottom:1px solid rgba(86,202,255,.24)}
+.bodycomp-photo-guide-kicker{margin:0 0 5px;color:#77e1ef;font-size:.72rem;font-weight:800;letter-spacing:.12em}
+.bodycomp-photo-guide-header h3{margin:0;color:#fff;font-size:1.35rem;line-height:1.2}
+.bodycomp-photo-guide-header p:last-child{margin:6px 0 0;color:#bdd8e8;font-size:.9rem;line-height:1.45}
+.bodycomp-photo-guide-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.bodycomp-photo-guide-action,.bodycomp-photo-guide-close{min-height:40px;border-radius:11px;border:1px solid rgba(97,210,255,.46);background:rgba(56,189,248,.12);color:#f4fbff;font-weight:800;cursor:pointer}
+.bodycomp-photo-guide-action{padding:0 12px}.bodycomp-photo-guide-close{width:40px;font-size:1.1rem}
+.bodycomp-photo-guide-action:hover,.bodycomp-photo-guide-close:hover{background:rgba(56,189,248,.24)}
+.bodycomp-photo-guide-scroller{min-height:0;overflow:auto;overscroll-behavior:contain;background:radial-gradient(circle at 50% 20%,rgba(25,91,137,.16),transparent 56%);-webkit-overflow-scrolling:touch}
+.bodycomp-photo-guide-image{display:block;width:100%;height:auto;margin:0 auto;cursor:zoom-in;transition:width .2s ease;user-select:none}
+.bodycomp-photo-guide-image.is-zoomed{width:2048px;max-width:none;cursor:zoom-out}
+.bodycomp-photo-guide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-top:1px solid rgba(86,202,255,.22);color:#b6d3e5;font-size:.78rem;line-height:1.4}
+.bodycomp-photo-guide-footer strong{color:#7ee2a8}
+@media(max-width:720px){
+ .bodycomp-photo-guide-overlay{padding:0;align-items:stretch}
+ .bodycomp-photo-guide-modal{width:100vw;max-height:100dvh;border-radius:0;border-left:0;border-right:0}
+ .bodycomp-photo-guide-header{padding:14px 13px 12px;gap:10px}
+ .bodycomp-photo-guide-header h3{font-size:1.06rem}
+ .bodycomp-photo-guide-header p:last-child{font-size:.78rem}
+ .bodycomp-photo-guide-kicker{font-size:.62rem}
+ .bodycomp-photo-guide-action{padding:0 9px;font-size:.74rem}
+ .bodycomp-photo-guide-footer{padding:9px 13px;font-size:.7rem;align-items:flex-start;flex-direction:column}
+ .bodycomp-photo-guide-image.is-zoomed{width:1500px}
+}
+</style>
 </head>
 
 
@@ -16409,7 +16439,7 @@ const BODYCOMP_SKINFOLD_GUIDE={
  sup:{n:6,name:"Sovrailiaca",location:"Subito sopra la cresta iliaca, seguendo la naturale inclinazione della pelle.",orientation:"Solleva una plica obliqua."},
  thigh:{n:7,name:"Coscia",location:"Parte anteriore della coscia, a metà tra piega inguinale e rotula.",orientation:"Solleva una plica verticale."}
 };
-function openBodyCompositionSkinfoldGuide(){const m=document.getElementById("bodycomp-sf-guide-modal");if(!m)return;m.style.display="flex";document.body.style.overflow="hidden";selectSkinfoldGuideSite("chest")}
+function openBodyCompositionSkinfoldGuide(){openBodyCompositionPhotoGuide("skinfold")}
 function closeBodyCompositionSkinfoldGuide(event){if(event&&event.target!==event.currentTarget)return;const m=document.getElementById("bodycomp-sf-guide-modal");if(m)m.style.display="none";document.body.style.overflow=""}
 function selectSkinfoldGuideSite(key){
  const x=BODYCOMP_SKINFOLD_GUIDE[key]; if(!x)return;
@@ -25728,7 +25758,7 @@ window.addEventListener("load",()=>{
 });
 
 const BODYCOMP_CM_GUIDE={neck:{n:1,name:"Collo",location:"Attorno al collo, appena sotto il pomo d’Adamo.",how:"Metro orizzontale e aderente, senza comprimere."},chest:{n:2,name:"Torace",location:"Attorno al torace nel punto più ampio.",how:"Metro orizzontale, postura naturale e rilassata."},waist:{n:3,name:"Vita",location:"A metà tra l’ultima costa e la cresta iliaca.",how:"Misura a fine espirazione normale, addome rilassato."},navel:{n:4,name:"Vita all’ombelico",location:"Circonferenza all’altezza dell’ombelico.",how:"Metro parallelo al pavimento, senza comprimere."},hips:{n:5,name:"Fianchi",location:"Nel punto di massima circonferenza di glutei e fianchi.",how:"Piedi vicini e metro orizzontale."},arm:{n:6,name:"Braccio",location:"Nel punto di massima circonferenza del braccio.",how:"Mantieni sempre la stessa condizione indicata: rilassato o contratto."},thigh:{n:7,name:"Coscia",location:"Nel punto di riferimento scelto sulla coscia.",how:"Gamba rilassata e misura sempre nello stesso punto."},calf:{n:8,name:"Polpaccio",location:"Nel punto di massima circonferenza del polpaccio.",how:"Gamba rilassata, metro orizzontale e senza compressione."}};
-function openBodyCompositionCmGuide(){const m=document.getElementById("bodycomp-cm-guide-modal");if(!m)return;m.style.display="flex";document.body.style.overflow="hidden";selectCmGuideSite("neck")}
+function openBodyCompositionCmGuide(){openBodyCompositionPhotoGuide("cm")}
 function closeBodyCompositionCmGuide(event){if(event&&event.target!==event.currentTarget)return;const m=document.getElementById("bodycomp-cm-guide-modal");if(m)m.style.display="none";document.body.style.overflow=""}
 function selectCmGuideSite(key){
  const x=BODYCOMP_CM_GUIDE[key]; if(!x)return;
@@ -25736,6 +25766,69 @@ function selectCmGuideSite(key){
  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
  set("cmv1-number",x.n); set("cmv1-name",x.name);
  set("cmv1-location",x.location); set("cmv1-how",x.how);
+}
+
+const BODYCOMP_PHOTO_GUIDES={
+ skinfold:{
+  kicker:"JACKSON–POLLOCK · 7 SEDI",
+  title:"Come misurare le pliche cutanee",
+  description:"Sette riquadri fotografici con presa della plica, punto anatomico, posizione del plicometro e lettura.",
+  protocol:"Effettua tre letture per sede e usa sempre lo stesso lato del corpo.",
+  image:"Guida_Pliche_Jackson-Pollock_7_Sedi_con_Plicometro_v4.png",
+  alt:"Guida fotografica Jackson–Pollock a sette sedi per l'acquisizione delle pliche cutanee con plicometro."
+ },
+ cm:{
+  kicker:"MISURE CON CENTIMETRO · 8 SEDI",
+  title:"Come prendere le misure corporee",
+  description:"Otto riquadri fotografici con posizione del metro, riferimento anatomico e tecnica ripetibile.",
+  protocol:"Protocollo DiarioFIT: vita standard a metà tra ultima costa e cresta iliaca; per il braccio mantieni sempre la stessa condizione, rilassato o contratto.",
+  image:"Guida_Misure_Centimetro_8_Sedi_v1.png",
+  alt:"Guida fotografica a otto sedi per la misurazione delle circonferenze corporee con metro morbido."
+ }
+};
+
+function openBodyCompositionPhotoGuide(key){
+ const guide=BODYCOMP_PHOTO_GUIDES[key];
+ const modal=document.getElementById("bodycomp-photo-guide-modal");
+ if(!guide||!modal)return;
+ const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
+ set("bodycomp-photo-guide-kicker",guide.kicker);
+ set("bodycomp-photo-guide-title",guide.title);
+ set("bodycomp-photo-guide-description",guide.description);
+ set("bodycomp-photo-guide-protocol",guide.protocol);
+ const image=document.getElementById("bodycomp-photo-guide-image");
+ if(image){
+  image.classList.remove("is-zoomed");
+  image.src=guide.image;
+  image.alt=guide.alt;
+ }
+ const zoomButton=document.getElementById("bodycomp-photo-guide-zoom");
+ if(zoomButton){zoomButton.textContent="🔎 Ingrandisci";zoomButton.setAttribute("aria-pressed","false")}
+ modal.style.display="flex";
+ modal.setAttribute("aria-hidden","false");
+ document.body.style.overflow="hidden";
+ requestAnimationFrame(()=>zoomButton?.focus());
+}
+
+function closeBodyCompositionPhotoGuide(event){
+ if(event&&event.target!==event.currentTarget)return;
+ const modal=document.getElementById("bodycomp-photo-guide-modal");
+ if(!modal)return;
+ modal.style.display="none";
+ modal.setAttribute("aria-hidden","true");
+ const image=document.getElementById("bodycomp-photo-guide-image");
+ if(image){image.classList.remove("is-zoomed");image.removeAttribute("src")}
+ const bodyModal=document.getElementById("bodycomp-modal");
+ document.body.style.overflow=bodyModal&&getComputedStyle(bodyModal).display!=="none"?"hidden":"";
+}
+
+function toggleBodyCompositionPhotoGuideZoom(){
+ const image=document.getElementById("bodycomp-photo-guide-image");
+ const button=document.getElementById("bodycomp-photo-guide-zoom");
+ if(!image||!button)return;
+ const isZoomed=image.classList.toggle("is-zoomed");
+ button.textContent=isZoomed?"↙ Riduci":"🔎 Ingrandisci";
+ button.setAttribute("aria-pressed",String(isZoomed));
 }
 
 const BODYCOMP_SKINFOLD_DETAIL_VIEW={
@@ -25903,6 +25996,30 @@ function closeTargetsFromProgress(restoreStats=true){
   </div>
   <div class="sfv1-footer"><span>Nessuna immagine anatomica: indicazioni testuali chiare e uniformi per tutte le sedi.</span><button type="button" onclick="closeBodyCompositionCmGuide()">✕ Chiudi</button></div>
  </div>
+</div>
+
+<!-- Guide fotografiche condivise: pliche Jackson–Pollock e misure con centimetro -->
+<div class="modal-overlay bodycomp-photo-guide-overlay" id="bodycomp-photo-guide-modal" aria-hidden="true" onclick="closeBodyCompositionPhotoGuide(event)">
+ <section class="bodycomp-photo-guide-modal" role="dialog" aria-modal="true" aria-labelledby="bodycomp-photo-guide-title">
+  <header class="bodycomp-photo-guide-header">
+   <div>
+    <p class="bodycomp-photo-guide-kicker" id="bodycomp-photo-guide-kicker"></p>
+    <h3 id="bodycomp-photo-guide-title">Guida fotografica</h3>
+    <p id="bodycomp-photo-guide-description"></p>
+   </div>
+   <div class="bodycomp-photo-guide-actions">
+    <button type="button" class="bodycomp-photo-guide-action" id="bodycomp-photo-guide-zoom" aria-pressed="false" onclick="toggleBodyCompositionPhotoGuideZoom()">🔎 Ingrandisci</button>
+    <button type="button" class="bodycomp-photo-guide-close" onclick="closeBodyCompositionPhotoGuide()" aria-label="Chiudi guida">✕</button>
+   </div>
+  </header>
+  <div class="bodycomp-photo-guide-scroller">
+   <img id="bodycomp-photo-guide-image" class="bodycomp-photo-guide-image" alt="" onclick="toggleBodyCompositionPhotoGuideZoom()">
+  </div>
+  <footer class="bodycomp-photo-guide-footer">
+   <span id="bodycomp-photo-guide-protocol"></span>
+   <span>DiarioFIT · guida pratica</span>
+  </footer>
+ </section>
 </div>
 
 </body>
