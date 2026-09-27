@@ -9081,7 +9081,7 @@ html[data-theme="light"] .missing-today-legend {
 @media(max-width:760px){.guide-text-layout{grid-template-columns:1fr}.guide-text-card{padding:15px}}
 </style>
 
-<style id="bodycomp-photo-guides-v1">
+<style id="bodycomp-photo-guides-v2">
 /* Guide fotografiche — pliche Jackson–Pollock e misure in centimetri */
 .bodycomp-photo-guide-overlay{display:none;z-index:10060;padding:3vh 0;background:rgba(1,10,22,.92);backdrop-filter:blur(10px)}
 .bodycomp-photo-guide-modal{width:min(1100px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(68,201,255,.56);border-radius:22px;background:linear-gradient(145deg,#061a2a,#03111e 58%,#06192a);box-shadow:0 0 34px rgba(0,174,255,.26),0 20px 70px rgba(0,0,0,.46);color:#eef8ff}
@@ -9089,11 +9089,12 @@ html[data-theme="light"] .missing-today-legend {
 .bodycomp-photo-guide-kicker{margin:0 0 5px;color:#77e1ef;font-size:.72rem;font-weight:800;letter-spacing:.12em}
 .bodycomp-photo-guide-header h3{margin:0;color:#fff;font-size:1.35rem;line-height:1.2}
 .bodycomp-photo-guide-header p:last-child{margin:6px 0 0;color:#bdd8e8;font-size:.9rem;line-height:1.45}
+.bodycomp-photo-guide-gesture-note,.bodycomp-photo-guide-mobile-list{display:none}
 .bodycomp-photo-guide-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .bodycomp-photo-guide-action,.bodycomp-photo-guide-close{min-height:40px;border-radius:11px;border:1px solid rgba(97,210,255,.46);background:rgba(56,189,248,.12);color:#f4fbff;font-weight:800;cursor:pointer}
 .bodycomp-photo-guide-action{padding:0 12px}.bodycomp-photo-guide-close{width:40px;font-size:1.1rem}
 .bodycomp-photo-guide-action:hover,.bodycomp-photo-guide-close:hover{background:rgba(56,189,248,.24)}
-.bodycomp-photo-guide-scroller{min-height:0;overflow:auto;overscroll-behavior:contain;background:radial-gradient(circle at 50% 20%,rgba(25,91,137,.16),transparent 56%);-webkit-overflow-scrolling:touch}
+.bodycomp-photo-guide-scroller{min-height:0;overflow:auto;overscroll-behavior:contain;background:radial-gradient(circle at 50% 20%,rgba(25,91,137,.16),transparent 56%);-webkit-overflow-scrolling:touch;touch-action:manipulation}
 .bodycomp-photo-guide-image{display:block;width:100%;height:auto;margin:0 auto;cursor:zoom-in;transition:width .2s ease;user-select:none}
 .bodycomp-photo-guide-image.is-zoomed{width:2048px;max-width:none;cursor:zoom-out}
 .bodycomp-photo-guide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-top:1px solid rgba(86,202,255,.22);color:#b6d3e5;font-size:.78rem;line-height:1.4}
@@ -9105,9 +9106,19 @@ html[data-theme="light"] .missing-today-legend {
  .bodycomp-photo-guide-header h3{font-size:1.06rem}
  .bodycomp-photo-guide-header p:last-child{font-size:.78rem}
  .bodycomp-photo-guide-kicker{font-size:.62rem}
- .bodycomp-photo-guide-action{padding:0 9px;font-size:.74rem}
+ .bodycomp-photo-guide-action{display:none}
  .bodycomp-photo-guide-footer{padding:9px 13px;font-size:.7rem;align-items:flex-start;flex-direction:column}
- .bodycomp-photo-guide-image.is-zoomed{width:1500px}
+ .bodycomp-photo-guide-image{display:none}
+ .bodycomp-photo-guide-gesture-note{display:block;margin:7px 0 0;color:#8fe4ff;font-size:.72rem;line-height:1.35}
+ .bodycomp-photo-guide-mobile-list{display:grid;gap:12px;padding:12px 12px 18px}
+ .bodycomp-photo-guide-mobile-step{overflow:hidden;border:1px solid rgba(86,202,255,.28);border-radius:16px;background:linear-gradient(145deg,rgba(9,42,66,.98),rgba(4,24,40,.98));box-shadow:0 8px 22px rgba(0,0,0,.18)}
+ .bodycomp-photo-guide-mobile-crop{position:relative;overflow:hidden;isolation:isolate;width:100%;aspect-ratio:600/256;background:#061827;touch-action:manipulation}
+ .bodycomp-photo-guide-mobile-source{position:absolute;top:0;left:0;width:227.5%;height:var(--bodycomp-source-height,800%);background-repeat:no-repeat;background-size:100% 100%;background-position:0 0;transform:translateY(var(--bodycomp-row-offset,0%));will-change:transform}
+ .bodycomp-photo-guide-mobile-copy{padding:13px 14px 14px}
+ .bodycomp-photo-guide-mobile-title{display:flex;align-items:flex-start;gap:10px;margin:0 0 7px;color:#fff;font-size:1.08rem;line-height:1.2}
+ .bodycomp-photo-guide-mobile-number{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:50%;background:linear-gradient(145deg,#38bdf8,#0b76b8);color:#021723;font-size:.84rem;font-weight:900}
+ .bodycomp-photo-guide-mobile-label{margin:0 0 7px;color:#8fe4ff;font-size:.72rem;font-weight:850;letter-spacing:.045em;text-transform:uppercase}
+ .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.96rem;line-height:1.55}
 }
 </style>
 </head>
@@ -25775,7 +25786,17 @@ const BODYCOMP_PHOTO_GUIDES={
   description:"Sette riquadri fotografici con presa della plica, punto anatomico, posizione del plicometro e lettura.",
   protocol:"Effettua tre letture per sede e usa sempre lo stesso lato del corpo.",
   image:"Guida_Pliche_Jackson-Pollock_7_Sedi_con_Plicometro_v4.png",
-  alt:"Guida fotografica Jackson–Pollock a sette sedi per l'acquisizione delle pliche cutanee con plicometro."
+  alt:"Guida fotografica Jackson–Pollock a sette sedi per l'acquisizione delle pliche cutanee con plicometro.",
+  mobileCropRows:7,
+  mobileSteps:[
+   {n:1,title:"Pettorale",label:"Plica diagonale",text:"Afferra solo pelle e grasso con pollice e indice. Uomini: a metà tra ascella e capezzolo; donne: a un terzo dall’ascella verso il capezzolo. Mantieni la presa e leggi dopo uno–due secondi."},
+   {n:2,title:"Ascellare media",label:"Plica verticale",text:"Sotto il centro dell’ascella, sulla linea ascellare media, all’altezza dello xifoide. Applica il plicometro circa un centimetro sotto le dita, perpendicolare alla plica."},
+   {n:3,title:"Tricipite",label:"Plica verticale",text:"Sul retro del braccio, a metà tra spalla e gomito, con il braccio rilassato lungo il fianco. Mantieni la presa della plica e leggi dopo uno–due secondi."},
+   {n:4,title:"Sottoscapolare",label:"Plica diagonale · circa 45°",text:"Uno–due centimetri sotto l’angolo inferiore della scapola, seguendo una diagonale. Per questa sede è preferibile l’assistenza di un’altra persona."},
+   {n:5,title:"Addome",label:"Plica verticale",text:"Circa due centimetri a destra dell’ombelico, rispetto alla persona misurata, con addome rilassato. Il plicometro va circa un centimetro sotto le dita."},
+   {n:6,title:"Sovrailiaca",label:"Plica diagonale",text:"Appena sopra la cresta iliaca, sulla linea ascellare anteriore, seguendo la naturale diagonale della pelle. Mantieni la presa e leggi dopo uno–due secondi."},
+   {n:7,title:"Coscia",label:"Plica verticale",text:"Davanti alla coscia, a metà tra piega inguinale e bordo superiore della rotula, con gamba rilassata. Applica il plicometro un centimetro sotto le dita."}
+  ]
  },
  cm:{
   kicker:"MISURE CON CENTIMETRO · 8 SEDI",
@@ -25783,9 +25804,60 @@ const BODYCOMP_PHOTO_GUIDES={
   description:"Otto riquadri fotografici con posizione del metro, riferimento anatomico e tecnica ripetibile.",
   protocol:"Protocollo DiarioFIT: vita standard a metà tra ultima costa e cresta iliaca; per il braccio mantieni sempre la stessa condizione, rilassato o contratto.",
   image:"Guida_Misure_Centimetro_8_Sedi_v1.png",
-  alt:"Guida fotografica a otto sedi per la misurazione delle circonferenze corporee con metro morbido."
+  alt:"Guida fotografica a otto sedi per la misurazione delle circonferenze corporee con metro morbido.",
+  mobileCropRows:8,
+  mobileSteps:[
+   {n:1,title:"Vita standard",label:"Metro orizzontale · addome rilassato",text:"Per DiarioFIT misura a metà tra ultima costa e cresta iliaca. Piedi uniti e postura eretta; espira normalmente. Il metro resta in piano, aderente ma senza comprimere."},
+   {n:2,title:"Vita all’ombelico",label:"Metro sul centro dell’ombelico",text:"Allinea il metro esattamente al centro dell’ombelico e mantienilo parallelo al pavimento. Addome libero e rilassato; espira senza trattenere il respiro."},
+   {n:3,title:"Collo",label:"Sotto la laringe · testa neutra",text:"Con testa dritta e sguardo avanti, passa il metro appena sotto pomo d’Adamo o laringe. Mantienilo orizzontale, aderente senza stringere il collo."},
+   {n:4,title:"Torace",label:"Punto più ampio · braccia rilassate",text:"Avvolgi il metro nel punto più ampio del torace, con braccia lungo i fianchi. Verifica che resti in piano davanti e dietro; misura dopo un’espirazione normale."},
+   {n:5,title:"Fianchi",label:"Massima circonferenza di fianchi e glutei",text:"Porta il metro nel punto di massima sporgenza di glutei e fianchi. Piedi uniti, peso distribuito in modo uniforme e metro parallelo al pavimento."},
+   {n:6,title:"Braccio",label:"Metà tra spalla e gomito",text:"Trova il punto medio del braccio. Puoi misurarlo rilassato oppure contratto, ma usa sempre la stessa condizione per confrontare i progressi."},
+   {n:7,title:"Coscia",label:"Punto di maggiore circonferenza",text:"Misura la circonferenza maggiore della coscia, in genere nel terzo superiore, con entrambe le gambe rilassate. Metro in piano, aderente ma non compressivo."},
+   {n:8,title:"Polpaccio",label:"Circonferenza massima · piede appoggiato",text:"Con piede completamente appoggiato e polpaccio rilassato, sposta il metro finché trovi la circonferenza massima. Mantienilo orizzontale e non stringere la pelle."}
+  ]
  }
 };
+
+function renderBodyCompositionPhotoGuideMobile(guide){
+ const list=document.getElementById("bodycomp-photo-guide-mobile-list");
+ if(!list)return;
+ list.replaceChildren();
+ (guide.mobileSteps||[]).forEach((step,index)=>{
+  const card=document.createElement("article");
+  card.className="bodycomp-photo-guide-mobile-step";
+  card.setAttribute("aria-label",`${step.n}. ${step.title}`);
+
+  const crop=document.createElement("div");
+  crop.className="bodycomp-photo-guide-mobile-crop";
+  crop.setAttribute("aria-hidden","true");
+  crop.style.aspectRatio=`600 / ${2048/guide.mobileCropRows}`;
+
+  const source=document.createElement("div");
+  source.className="bodycomp-photo-guide-mobile-source";
+  source.style.backgroundImage=`url("${guide.image}")`;
+  source.style.setProperty("--bodycomp-source-height",`${guide.mobileCropRows*100}%`);
+  source.style.setProperty("--bodycomp-row-offset",`${-(index*100/guide.mobileCropRows)}%`);
+  crop.append(source);
+
+  const copy=document.createElement("div");
+  copy.className="bodycomp-photo-guide-mobile-copy";
+  const title=document.createElement("h4");
+  title.className="bodycomp-photo-guide-mobile-title";
+  const number=document.createElement("span");
+  number.className="bodycomp-photo-guide-mobile-number";
+  number.textContent=step.n;
+  title.append(number,document.createTextNode(step.title));
+  const label=document.createElement("p");
+  label.className="bodycomp-photo-guide-mobile-label";
+  label.textContent=step.label;
+  const text=document.createElement("p");
+  text.textContent=step.text;
+  copy.append(title,label,text);
+  card.append(crop,copy);
+  list.append(card);
+ });
+}
 
 function openBodyCompositionPhotoGuide(key){
  const guide=BODYCOMP_PHOTO_GUIDES[key];
@@ -25802,6 +25874,9 @@ function openBodyCompositionPhotoGuide(key){
   image.src=guide.image;
   image.alt=guide.alt;
  }
+ renderBodyCompositionPhotoGuideMobile(guide);
+ const scroller=document.querySelector("#bodycomp-photo-guide-modal .bodycomp-photo-guide-scroller");
+ if(scroller)scroller.scrollTop=0;
  const zoomButton=document.getElementById("bodycomp-photo-guide-zoom");
  if(zoomButton){zoomButton.textContent="🔎 Ingrandisci";zoomButton.setAttribute("aria-pressed","false")}
  modal.style.display="flex";
@@ -25818,6 +25893,8 @@ function closeBodyCompositionPhotoGuide(event){
  modal.setAttribute("aria-hidden","true");
  const image=document.getElementById("bodycomp-photo-guide-image");
  if(image){image.classList.remove("is-zoomed");image.removeAttribute("src")}
+ const list=document.getElementById("bodycomp-photo-guide-mobile-list");
+ if(list)list.replaceChildren();
  const bodyModal=document.getElementById("bodycomp-modal");
  document.body.style.overflow=bodyModal&&getComputedStyle(bodyModal).display!=="none"?"hidden":"";
 }
@@ -26006,6 +26083,7 @@ function closeTargetsFromProgress(restoreStats=true){
     <p class="bodycomp-photo-guide-kicker" id="bodycomp-photo-guide-kicker"></p>
     <h3 id="bodycomp-photo-guide-title">Guida fotografica</h3>
     <p id="bodycomp-photo-guide-description"></p>
+    <p class="bodycomp-photo-guide-gesture-note">Su telefono ogni sede è una scheda leggibile. Puoi usare il classico pinch a due dita per ingrandire.</p>
    </div>
    <div class="bodycomp-photo-guide-actions">
     <button type="button" class="bodycomp-photo-guide-action" id="bodycomp-photo-guide-zoom" aria-pressed="false" onclick="toggleBodyCompositionPhotoGuideZoom()">🔎 Ingrandisci</button>
@@ -26014,6 +26092,7 @@ function closeTargetsFromProgress(restoreStats=true){
   </header>
   <div class="bodycomp-photo-guide-scroller">
    <img id="bodycomp-photo-guide-image" class="bodycomp-photo-guide-image" alt="" onclick="toggleBodyCompositionPhotoGuideZoom()">
+   <div id="bodycomp-photo-guide-mobile-list" class="bodycomp-photo-guide-mobile-list" aria-label="Istruzioni dettagliate per sede"></div>
   </div>
   <footer class="bodycomp-photo-guide-footer">
    <span id="bodycomp-photo-guide-protocol"></span>
