@@ -12974,12 +12974,6 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
 
 
 
-<div class="modal-overlay" id="day-planner-modal" onclick="closeDayPlannerModal(event)">
- <section class="modal-content day-planner-modal-content" role="dialog" aria-modal="true" aria-labelledby="day-planner-title">
-  <div class="day-planner-head"><div class="modal-header"><h3 id="day-planner-title">✨ Organizza la giornata</h3><button type="button" onclick="closeDayPlannerModal()" aria-label="Chiudi">✕</button></div><p class="day-planner-intro">Scegli ciò che hai davvero a disposizione: DiarioFIT compone una proposta pratica dai valori già conosciuti. Il piano non registra nulla finché non premi <strong>✓ Mangiato</strong>.</p></div>
-  <div class="day-planner-body"><div class="day-planner-summary" id="day-planner-summary"></div><section class="day-planner-block"><h4>1. Alimenti disponibili</h4><p>Puoi usare i tuoi alimenti, i rapidi e i preset. Aggiungi solo ciò che hai o prevedi di mangiare oggi.</p><input id="day-planner-food-search" class="day-planner-search" type="search" placeholder="Cerca: pasta, tonno, yogurt…" oninput="renderDayPlannerFoodSearch()" autocomplete="off"><div class="day-planner-food-results" id="day-planner-food-results"></div><div class="day-planner-chips" id="day-planner-selected-foods"></div></section><section class="day-planner-block"><h4>2. Pasti ancora da fare</h4><p>La selezione iniziale segue l'orario; puoi correggerla liberamente.</p><div class="day-planner-slots" id="day-planner-slots"></div><label class="day-planner-workout"><input id="day-planner-workout" type="checkbox"> 🏋️ Oggi mi alleno: dai priorità a una quota proteica e carboidrati intorno all'allenamento.</label></section><div class="day-planner-actions"><button type="button" class="day-planner-primary" onclick="generateDayPlannerPlan()">✨ Crea proposta</button><button type="button" class="day-planner-secondary" onclick="saveDayPlannerDraft()">Salva bozza</button></div><section class="day-planner-result" id="day-planner-result" aria-live="polite"></section></div>
- </section>
-</div>
 </body>
 </html>`);
   printWindow.document.close();
@@ -26037,6 +26031,13 @@ function closeTargetsFromProgress(restoreStats=true){
 </script>
 
 
+
+<div class="modal-overlay" id="day-planner-modal" onclick="closeDayPlannerModal(event)">
+ <section class="modal-content day-planner-modal-content" role="dialog" aria-modal="true" aria-labelledby="day-planner-title">
+  <div class="day-planner-head"><div class="modal-header"><h3 id="day-planner-title">✨ Organizza la giornata</h3><button type="button" onclick="closeDayPlannerModal()" aria-label="Chiudi">✕</button></div><p class="day-planner-intro">Scegli ciò che hai davvero a disposizione: DiarioFIT compone una proposta pratica dai valori già conosciuti. Il piano non registra nulla finché non premi <strong>✓ Mangiato</strong>.</p></div>
+  <div class="day-planner-body"><div class="day-planner-summary" id="day-planner-summary"></div><section class="day-planner-block"><h4>1. Alimenti disponibili</h4><p>Puoi usare i tuoi alimenti, i rapidi e i preset. Aggiungi solo ciò che hai o prevedi di mangiare oggi.</p><input id="day-planner-food-search" class="day-planner-search" type="search" placeholder="Cerca: pasta, tonno, yogurt…" oninput="renderDayPlannerFoodSearch()" autocomplete="off"><div class="day-planner-food-results" id="day-planner-food-results"></div><div class="day-planner-chips" id="day-planner-selected-foods"></div></section><section class="day-planner-block"><h4>2. Pasti ancora da fare</h4><p>La selezione iniziale segue l'orario; puoi correggerla liberamente.</p><div class="day-planner-slots" id="day-planner-slots"></div><label class="day-planner-workout"><input id="day-planner-workout" type="checkbox"> 🏋️ Oggi mi alleno: dai priorità a una quota proteica e carboidrati intorno all'allenamento.</label></section><div class="day-planner-actions"><button type="button" class="day-planner-primary" onclick="generateDayPlannerPlan()">✨ Crea proposta</button><button type="button" class="day-planner-secondary" onclick="saveDayPlannerDraft()">Salva bozza</button></div><section class="day-planner-result" id="day-planner-result" aria-live="polite"></section></div>
+ </section>
+</div>
 
 <div id="ux25-more-modal" class="ux25-more-overlay" aria-hidden="true">
   <section class="ux25-more-panel" role="dialog" aria-modal="true" aria-labelledby="ux25-more-title">
