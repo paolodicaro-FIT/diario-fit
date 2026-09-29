@@ -8469,6 +8469,7 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 .ux2-plan-btn{width:100%;min-height:46px;margin-top:9px;padding:10px 14px;border:1px solid rgba(167,139,250,.48);border-radius:14px;background:linear-gradient(135deg,rgba(124,58,237,.30),rgba(56,189,248,.15));color:#f7f2ff;font-weight:900;font-size:.9rem;cursor:pointer}.planner-modal{max-width:780px;padding:0;overflow:hidden;background:#101828}.planner-head{padding:17px 18px;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(56,189,248,.08));border-bottom:1px solid rgba(167,139,250,.25)}.planner-head .modal-header{margin:0;padding:0;border:0}.planner-head h3{color:#e4dcff;font-size:1.15rem}.planner-body{max-height:70vh;overflow:auto;padding:14px 18px 18px}.planner-block{margin-top:12px;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.03)}.planner-block h4{margin:0 0 5px;color:#f4f7ff}.planner-block p,.planner-empty{margin:0 0 9px;color:#aebed0;font-size:.8rem;line-height:1.45}.planner-search{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid rgba(125,211,252,.28);border-radius:10px;background:#0c1725;color:#fff}.planner-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px;max-height:180px;overflow:auto}.planner-option,.planner-action{padding:8px 9px;border:1px solid rgba(125,211,252,.25);border-radius:9px;background:rgba(56,189,248,.08);color:#e8f7ff;text-align:left;cursor:pointer}.planner-option small{display:block;margin-top:2px;color:#8cd8ff}.planner-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.planner-chip{display:flex;gap:5px;align-items:center;padding:6px 8px;border-radius:999px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.32);font-size:.75rem}.planner-chip button{border:0;background:transparent;color:#9cf3dd;cursor:pointer}.planner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.planner-primary{border:0;background:#55db9c;color:#06271b;font-weight:900}.planner-timeline{margin-top:13px}.planner-entry{display:grid;grid-template-columns:66px minmax(0,1fr);gap:10px;padding:11px 0;border-top:1px solid rgba(255,255,255,.09)}.planner-entry time{color:#82dcff;font-weight:900}.planner-entry strong{color:#f1f8ff}.planner-entry small{display:block;margin-top:2px;color:#9cb1c5}.planner-entry-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.planner-entry-actions button,.planner-entry-actions select,.planner-entry-actions input{padding:6px 7px;border:1px solid rgba(125,211,252,.25);border-radius:8px;background:#102033;color:#edf9ff;font-size:.72rem}.planner-entry-actions .confirm{background:#48d597;color:#06271b;border:0;font-weight:900}.planner-done{color:#8bf0b0;font-weight:900}@media(max-width:720px){.planner-modal{width:96vw}.planner-body{padding:12px}.planner-options{grid-template-columns:1fr}.planner-entry{grid-template-columns:54px minmax(0,1fr)}}
 /* Scelta allenamento — planner timeline */
 .planner-workout-row{display:flex;align-items:center;gap:11px;color:#e7f4ff;font-weight:800}.planner-workout-switch{display:grid;grid-template-columns:1fr 1fr;width:188px;min-height:38px;padding:3px;border:1px solid rgba(255,255,255,.28);border-radius:12px;background:#172232;box-shadow:0 4px 12px rgba(0,0,0,.22);cursor:pointer;color:#fff;font-size:.66rem;font-weight:950;letter-spacing:.015em;text-align:center}.planner-workout-switch span{display:flex;align-items:center;justify-content:center;min-height:30px;padding:0 8px;border-radius:9px;opacity:.5;transition:background .18s,opacity .18s,box-shadow .18s}.planner-workout-switch .dp2-off{background:rgba(184,51,79,.28);color:#ffdbe2}.planner-workout-switch .dp2-on{background:rgba(69,181,120,.18);color:#cdf9dc}.planner-workout-switch:not(.is-on) .dp2-off{opacity:1;background:#c93e5b;color:#fff;box-shadow:0 2px 7px rgba(0,0,0,.26)}.planner-workout-switch.is-on .dp2-on{opacity:1;background:#38a868;color:#fff;box-shadow:0 2px 7px rgba(0,0,0,.26)}.planner-toggle-note{display:block;margin-top:3px;color:#9eb0c4;font-size:.74rem;font-weight:500}@media(max-width:420px){.planner-workout-row{align-items:flex-start}.planner-workout-switch{width:174px;font-size:.61rem}}
+#quick-diary-preview-modal{z-index:5100}
 </style>
 
 <style>
@@ -10422,8 +10423,8 @@ html[data-theme="light"] .missing-today-legend {
       <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" oninput="syncQuickPreviewField('water', this.value)" min="0" step="1"></label>
     </div>
     <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
-      <div style="font-size:.72rem; font-weight:850; color:var(--text); margin-bottom:7px;">Dove vuoi salvare questo alimento?</div>
-      <button type="button" class="save-food-btn" style="margin-top:0; background:var(--card-2); color:var(--text); border:1px solid rgba(255,159,28,.35);" onclick="confirmQuickDiaryPreview('saved')">⭐ Salva nei Miei alimenti</button>
+      <div id="quick-preview-destination-title" style="font-size:.72rem; font-weight:850; color:var(--text); margin-bottom:7px;">Dove vuoi salvare questo alimento?</div>
+      <button id="quick-preview-save-option" type="button" class="save-food-btn" style="margin-top:0; background:var(--card-2); color:var(--text); border:1px solid rgba(255,159,28,.35);" onclick="confirmQuickDiaryPreview('saved')">⭐ Salva nei Miei alimenti</button>
       <div style="font-size:.67rem; color:var(--subtext); margin:9px 0 6px;">Oppure aggiungilo al Diario:</div>
       <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px;">
         <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Snack / Integrazione')">🥤 Snack</button>
@@ -21855,6 +21856,9 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
   set("quick-preview-sugar", Math.round((Number(sugar)||0)*10)/10);
   set("quick-preview-water", Math.round(Number(waterMl)||0));
   set("quick-preview-weight", Math.round(Number(weight)||0));
+  const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");
+  if(saveOption)saveOption.style.display="";
+  if(destinationTitle)destinationTitle.textContent="Dove vuoi salvare questo alimento?";
   document.getElementById("quick-diary-preview-modal").style.display = "flex";
 }
 
@@ -21945,6 +21949,9 @@ function closeQuickDiaryPreview() {
   quickDiaryPreviewPending = null;
   const modal = document.getElementById("quick-diary-preview-modal");
   if (modal) modal.style.display = "none";
+  const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");
+  if(saveOption)saveOption.style.display="";
+  if(destinationTitle)destinationTitle.textContent="Dove vuoi salvare questo alimento?";
 }
 
 function resetCustomFoodFields() {
@@ -22022,6 +22029,7 @@ async function confirmQuickDiaryPreview(destination) {
 
   const shouldResetFoodSelection = !!quickDiaryPreviewPending.resetFoodSelection;
   const shouldResetCustomFields = !!quickDiaryPreviewPending.resetCustomFields;
+  const plannerEntryId = quickDiaryPreviewPending.plannerEntryId;
   document.getElementById("quick-diary-preview-modal").style.display = "none";
   quickDiaryPreviewPending = null;
   if (shouldResetCustomFields) resetCustomFoodFields();
@@ -22036,6 +22044,10 @@ async function confirmQuickDiaryPreview(destination) {
   }
 
   await saveAndRender();
+  if (plannerEntryId) {
+    const plannerEntry=dp2State().entries.find(entry=>entry.id===plannerEntryId);
+    if(plannerEntry){plannerEntry.done=true;await dp2Save();renderDp2Timeline()}
+  }
 }
 
 /* =========================================================
@@ -22243,7 +22255,7 @@ async function dp2Quantity(id,quantity){const e=dp2State().entries.find(x=>x.id=
 async function dp2Change(id,catalogId){const s=dp2State(),e=s.entries.find(x=>x.id===id),f=s.foods.find(x=>x.catalogId===catalogId);if(!e||!f||e.done)return;e.food=dp2Food(f);e.multiplier=1;await dp2Save();renderDp2Timeline()}
 async function dp2Lock(id){const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;e.locked=!e.locked;await dp2Save();renderDp2Timeline()}
 async function dp2Delete(id){const s=dp2State(),e=s.entries.find(x=>x.id===id);if(!e||e.done)return;s.entries=s.entries.filter(x=>x.id!==id);await dp2Save();renderDp2Timeline()}
-async function dp2Confirm(id){if(!ensureDiaryWriteAccess())return;const s=dp2State(),e=s.entries.find(x=>x.id===id);if(!e||e.done)return;if(!confirm(`Registrare “${e.food.name}” nel diario?`))return;const f=e.food,q=e.multiplier||1;log.push({id:Date.now(),time:getCurrentTimeStr(),meal:"Programmato",name:q===1?f.name:`${f.name} (${q} porzioni)`,kcal:Math.round(f.kcal*q),pro:Math.round(f.pro*q*10)/10,fat:Math.round(f.fat*q*10)/10,carb:Math.round(f.carb*q*10)/10,sugar:Math.round(f.sugar*q*10)/10,waterMl:Math.round(f.waterMl*q),weight:Math.round(f.weight*q)});e.done=true;await saveAndRender();await dp2Save();renderDp2Timeline()}
+async function dp2Confirm(id){if(!ensureDiaryWriteAccess())return;const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;const f=e.food,q=e.multiplier||1;addQuick(f.name,f.kcal,f.pro,f.fat,f.carb,f.sugar,f.waterMl,f.weight);setQuickPreviewMultiplier(q);quickDiaryPreviewPending.plannerEntryId=id;quickDiaryPreviewPending.source="planner";const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");if(saveOption)saveOption.style.display="none";if(destinationTitle)destinationTitle.textContent="In quale pasto hai mangiato questo alimento?"}
 
 /* =========================================================
    DELETE
