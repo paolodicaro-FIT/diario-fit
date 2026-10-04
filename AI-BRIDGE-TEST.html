@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>DiarioFIT · AI Bridge Test</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08111f;--card:#101d31;--line:#263a58;--text:#edf5ff;--muted:#9eb0c8;--ok:#55d68b;--warn:#ffcc66}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(160deg,#07101d,#10233b);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+    main{width:min(720px,calc(100% - 28px));margin:32px auto;padding-bottom:32px}
+    .card{background:rgba(16,29,49,.92);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 18px 50px #0005}
+    h1{font-size:1.55rem;margin:0 0 6px}.sub{color:var(--muted);margin:0 0 20px}
+    #status{padding:12px 14px;border-radius:12px;background:#0b1728;border:1px solid var(--line);margin-bottom:16px}
+    #status.ok{border-color:#2d8054;color:var(--ok)} #status.warn{border-color:#80672d;color:var(--warn)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .item{background:#0b1728;border:1px solid var(--line);border-radius:13px;padding:12px}
+    .item b{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+    .wide{grid-column:1/-1}.value{font-size:1.08rem;overflow-wrap:anywhere}
+    details{margin-top:16px;color:var(--muted)} pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101d;padding:12px;border-radius:12px}
+    @media(max-width:520px){.grid{grid-template-columns:1fr}main{margin-top:16px}.wide{grid-column:auto}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="card">
+    <h1>🤖 DiarioFIT · AI Bridge Test</h1>
+    <p class="sub">Ricevitore isolato per il test Android → DiarioFIT. Non modifica il diario.</p>
+    <div id="status" class="warn">In attesa di un payload dal bridge Android…</div>
+    <div class="grid" id="result" hidden>
+      <div class="item wide"><b>Alimento</b><span class="value" id="name"></span></div>
+      <div class="item"><b>Porzione stimata</b><span class="value" id="portion"></span></div>
+      <div class="item"><b>Calorie</b><span class="value" id="kcal"></span></div>
+      <div class="item"><b>Proteine</b><span class="value" id="protein"></span></div>
+      <div class="item"><b>Grassi</b><span class="value" id="fat"></span></div>
+      <div class="item"><b>Carboidrati</b><span class="value" id="carbs"></span></div>
+      <div class="item"><b>Zuccheri</b><span class="value" id="sugars"></span></div>
+      <div class="item"><b>Affidabilità</b><span class="value" id="confidence"></span></div>
+      <div class="item wide"><b>Condimenti / incertezza</b><span class="value" id="condiments"></span></div>
+      <div class="item wide"><b>Note</b><span class="value" id="notes"></span></div>
+    </div>
+    <details><summary>Diagnostica payload</summary><pre id="debug">Nessun payload ricevuto.</pre></details>
+  </section>
+</main>
+<script>
+(() => {
+  const status = document.getElementById('status');
+  const result = document.getElementById('result');
+  const debug = document.getElementById('debug');
+  const set = (id,v,suffix='') => document.getElementById(id).textContent =
+    (v === null || v === undefined || v === '') ? '—' : String(v) + suffix;
+
+  function fail(message, detail='') {
+    status.className='warn'; status.textContent='⚠️ ' + message;
+    debug.textContent=detail || message;
+  }
+
+  const raw = location.hash.startsWith('#dfai=') ? location.hash.slice(6) : '';
+  if (!raw) return;
+
+  try {
+    const payload = JSON.parse(decodeURIComponent(raw));
+    history.replaceState(null, '', location.pathname + location.search);
+    debug.textContent=JSON.stringify(payload,null,2);
+
+    if (payload.protocol !== 'diariofit-ai' || Number(payload.version) !== 1)
+      return fail('Protocollo AI Bridge non riconosciuto.', debug.textContent);
+
+    const m = payload.meal;
+    if (!m || typeof m !== 'object') return fail('Payload ricevuto, ma manca meal.', debug.textContent);
+
+    set('name',m.name); set('portion',m.portion); set('kcal',m.kcal,' kcal');
+    set('protein',m.protein,' g'); set('fat',m.fat,' g'); set('carbs',m.carbs,' g');
+    set('sugars',m.sugars,' g'); set('confidence',m.confidence);
+    set('condiments',m.condiments); set('notes',m.notes);
+    result.hidden=false;
+    status.className='ok';
+    status.textContent='✅ Payload AI Bridge ricevuto e validato' + (payload.source ? ' · sorgente: '+payload.source : '');
+  } catch (err) {
+    history.replaceState(null, '', location.pathname + location.search);
+    fail('Payload non valido.', String(err));
+  }
+})();
+</script>
+</body>
+</html>
