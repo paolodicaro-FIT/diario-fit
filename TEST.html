@@ -26210,5 +26210,78 @@ function closeTargetsFromProgress(restoreStats=true){
  </section>
 </div>
 
+
+<!-- diariofit-ai-bridge-v1: ricevitore isolato Android -> TEST.html -->
+<style id="diariofit-ai-bridge-v1-style">
+#dfai-result-overlay{display:none;position:fixed;inset:0;z-index:12000;background:rgba(2,8,18,.82);backdrop-filter:blur(8px);padding:18px;align-items:center;justify-content:center}
+#dfai-result-card{width:min(620px,100%);max-height:92dvh;overflow:auto;border:1px solid rgba(73,190,255,.35);border-radius:20px;background:linear-gradient(145deg,#0b1a2b,#071321);box-shadow:0 22px 70px rgba(0,0,0,.55);color:#eef7ff;padding:20px}
+#dfai-result-card h3{margin:0 0 5px;color:#7ee2a8} #dfai-result-card .dfai-sub{margin:0 0 16px;color:#9fb3c8;font-size:.86rem}
+.dfai-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.dfai-cell{border:1px solid rgba(100,170,220,.22);border-radius:12px;padding:10px;background:rgba(4,17,31,.72)}
+.dfai-cell.wide{grid-column:1/-1}.dfai-cell b{display:block;color:#9fb3c8;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.dfai-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}.dfai-actions button{border:1px solid rgba(100,170,220,.35);border-radius:11px;padding:10px 14px;background:#12263d;color:#eef7ff;font-weight:700;cursor:pointer}
+.dfai-actions .primary{background:#176b48;border-color:#2ca56f}.dfai-badge{display:inline-block;margin-bottom:12px;padding:5px 9px;border-radius:999px;background:rgba(65,200,125,.12);border:1px solid rgba(65,200,125,.35);color:#7ee2a8;font-size:.75rem;font-weight:800}
+@media(max-width:520px){#dfai-result-overlay{padding:8px}.dfai-grid{grid-template-columns:1fr}.dfai-cell.wide{grid-column:auto}}
+</style>
+<div id="dfai-result-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-title">
+ <section id="dfai-result-card">
+  <h3 id="dfai-title">🤖 Risultato AI locale</h3>
+  <p class="dfai-sub">Ricevuto dal bridge Android. Nessun dato è stato ancora inserito nel diario.</p>
+  <span class="dfai-badge" id="dfai-source">AI BRIDGE</span>
+  <div class="dfai-grid">
+   <div class="dfai-cell wide"><b>Alimento</b><span id="dfai-name">—</span></div>
+   <div class="dfai-cell"><b>Porzione stimata</b><span id="dfai-portion">—</span></div>
+   <div class="dfai-cell"><b>Calorie</b><span id="dfai-kcal">—</span></div>
+   <div class="dfai-cell"><b>Proteine</b><span id="dfai-protein">—</span></div>
+   <div class="dfai-cell"><b>Grassi</b><span id="dfai-fat">—</span></div>
+   <div class="dfai-cell"><b>Carboidrati</b><span id="dfai-carbs">—</span></div>
+   <div class="dfai-cell"><b>Zuccheri</b><span id="dfai-sugars">—</span></div>
+   <div class="dfai-cell"><b>Affidabilità</b><span id="dfai-confidence">—</span></div>
+   <div class="dfai-cell wide"><b>Condimenti / incertezza</b><span id="dfai-condiments">—</span></div>
+   <div class="dfai-cell wide"><b>Note</b><span id="dfai-notes">—</span></div>
+  </div>
+  <div class="dfai-actions">
+   <button type="button" onclick="dfaiCloseResult()">✕ Annulla</button>
+   <button type="button" class="primary" onclick="dfaiPrepareManualEntry()">✓ Usa questi dati</button>
+  </div>
+ </section>
+</div>
+<script id="diariofit-ai-bridge-v1">
+window.dfaiPendingMeal=null;
+function dfaiText(id,value,suffix=""){const el=document.getElementById(id);if(!el)return;el.textContent=(value===null||value===undefined||value==="")?"—":String(value)+suffix}
+function dfaiCloseResult(){const o=document.getElementById("dfai-result-overlay");if(o)o.style.display="none";window.dfaiPendingMeal=null}
+function dfaiShowResult(payload){
+ const m=payload.meal||{}; window.dfaiPendingMeal={...m};
+ dfaiText("dfai-source",payload.source?("AI BRIDGE · "+payload.source):"AI BRIDGE");
+ dfaiText("dfai-name",m.name);dfaiText("dfai-portion",m.portion);dfaiText("dfai-kcal",m.kcal," kcal");
+ dfaiText("dfai-protein",m.protein," g");dfaiText("dfai-fat",m.fat," g");dfaiText("dfai-carbs",m.carbs," g");
+ dfaiText("dfai-sugars",m.sugars," g");dfaiText("dfai-confidence",m.confidence);dfaiText("dfai-condiments",m.condiments);dfaiText("dfai-notes",m.notes);
+ const o=document.getElementById("dfai-result-overlay");if(o)o.style.display="flex";
+}
+function dfaiPrepareManualEntry(){
+ const m=window.dfaiPendingMeal;if(!m)return;
+ const candidates={name:["custom-name","manual-food-name","free-food-name"],kcal:["custom-kcal","manual-food-kcal","free-food-kcal"],protein:["custom-pro","custom-protein","manual-food-protein"],fat:["custom-fat","manual-food-fat"],carbs:["custom-carb","custom-carbs","manual-food-carbs"],sugars:["custom-sugar","custom-sugars","manual-food-sugars"]};
+ const values={name:m.name,kcal:m.kcal,protein:m.protein,fat:m.fat,carbs:m.carbs,sugars:m.sugars};
+ let filled=0;
+ for(const [key,ids] of Object.entries(candidates)){for(const id of ids){const el=document.getElementById(id);if(el){el.value=values[key]??"";el.dispatchEvent(new Event("input",{bubbles:true}));filled++;break}}}
+ dfaiCloseResult();
+ if(typeof ux254OpenManual==="function")ux254OpenManual();
+ if(!filled)alert("Risultato AI ricevuto correttamente. Il collegamento automatico ai campi di inserimento verrà completato nel prossimo step.");
+}
+(function dfaiReceive(){
+ const raw=location.hash.startsWith("#dfai=")?location.hash.slice(6):"";
+ if(!raw)return;
+ try{
+  const payload=JSON.parse(decodeURIComponent(raw));
+  history.replaceState(null,"",location.pathname+location.search);
+  if(payload.protocol!=="diariofit-ai"||Number(payload.version)!==1||!payload.meal)throw new Error("Protocollo non valido");
+  window.addEventListener("load",()=>setTimeout(()=>dfaiShowResult(payload),250),{once:true});
+ }catch(err){
+  history.replaceState(null,"",location.pathname+location.search);
+  console.error("DiarioFIT AI Bridge:",err);
+  alert("⚠️ Il risultato AI ricevuto non è valido.");
+ }
+})();
+</script>
+
 </body>
 </html>
