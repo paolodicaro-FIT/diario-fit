@@ -26259,13 +26259,47 @@ function dfaiShowResult(payload){
 }
 function dfaiPrepareManualEntry(){
  const m=window.dfaiPendingMeal;if(!m)return;
- const candidates={name:["custom-name","manual-food-name","free-food-name"],kcal:["custom-kcal","manual-food-kcal","free-food-kcal"],protein:["custom-pro","custom-protein","manual-food-protein"],fat:["custom-fat","manual-food-fat"],carbs:["custom-carb","custom-carbs","manual-food-carbs"],sugars:["custom-sugar","custom-sugars","manual-food-sugars"]};
- const values={name:m.name,kcal:m.kcal,protein:m.protein,fat:m.fat,carbs:m.carbs,sugars:m.sugars};
- let filled=0;
- for(const [key,ids] of Object.entries(candidates)){for(const id of ids){const el=document.getElementById(id);if(el){el.value=values[key]??"";el.dispatchEvent(new Event("input",{bubbles:true}));filled++;break}}}
- dfaiCloseResult();
- if(typeof ux254OpenManual==="function")ux254OpenManual();
- if(!filled)alert("Risultato AI ricevuto correttamente. Il collegamento automatico ai campi di inserimento verrà completato nel prossimo step.");
+ if(typeof ensureDiaryWriteAccess==="function"&&!ensureDiaryWriteAccess())return;
+
+ const numeric=(value)=>{const n=Number(value);return Number.isFinite(n)&&n>=0?n:0};
+ const portionText=String(m.portion||"");
+ const weightMatch=portionText.match(/([0-9]+(?:[.,][0-9]+)?)\s*g\b/i);
+ const weight=weightMatch?Math.round(Number(weightMatch[1].replace(",","."))):0;
+ const name=String(m.name||"Alimento stimato").trim()||"Alimento stimato";
+
+ quickDiaryPreviewPending={
+  name,
+  meal:"",
+  source:"aiBridge",
+  baseName:name,
+  baseValues:{
+   kcal:numeric(m.kcal),
+   pro:numeric(m.protein),
+   fat:numeric(m.fat),
+   carb:numeric(m.carbs),
+   sugar:numeric(m.sugars),
+   waterMl:0,
+   weight
+  },
+  multiplier:1,
+  previewWeight:weight
+ };
+
+ const title=document.getElementById("quick-preview-name");
+ if(title)title.textContent=name;
+ if(typeof applyQuickPreviewMultiplier==="function")applyQuickPreviewMultiplier();
+
+ const saveOption=document.getElementById("quick-preview-save-option");
+ const destinationTitle=document.getElementById("quick-preview-destination-title");
+ if(saveOption)saveOption.style.display="";
+ if(destinationTitle)destinationTitle.textContent="Controlla i valori e scegli dove inserirlo:";
+
+ const overlay=document.getElementById("dfai-result-overlay");
+ if(overlay)overlay.style.display="none";
+ window.dfaiPendingMeal=null;
+
+ const modal=document.getElementById("quick-diary-preview-modal");
+ if(modal)modal.style.display="flex";
 }
 (function dfaiReceive(){
  const raw=location.hash.startsWith("#dfai=")?location.hash.slice(6):"";
