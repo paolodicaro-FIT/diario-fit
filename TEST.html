@@ -26255,6 +26255,7 @@ function closeTargetsFromProgress(restoreStats=true){
   <div class="dfai-actions">
    <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
    <button type="button" onclick="dfaiChooseAnotherWebPhoto()">↻ Cambia foto</button>
+   <button type="button" class="primary" onclick="dfaiShareWebPhotoToLocalAI()">🤖 Analizza con AI locale</button>
   </div>
  </section>
 </div>
@@ -26295,6 +26296,22 @@ function dfaiCloseWebPhoto(){
  const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="none";
  if(window.dfaiWebPhotoUrl){URL.revokeObjectURL(window.dfaiWebPhotoUrl);window.dfaiWebPhotoUrl=null}
  window.dfaiWebPhotoFile=null;
+}
+async function dfaiShareWebPhotoToLocalAI(){
+ const file=window.dfaiWebPhotoFile;
+ const status=document.getElementById("dfai-web-photo-status");
+ if(!file){if(status)status.textContent="Nessuna foto disponibile.";return}
+ if(!navigator.share||!navigator.canShare||!navigator.canShare({files:[file]})){
+  if(status)status.textContent="Questo browser non consente di condividere la foto con il bridge Android.";
+  return;
+ }
+ try{
+  if(status)status.textContent="Scegli “DiarioFIT AI POC” nel pannello Condividi con…";
+  await navigator.share({files:[file],title:"DiarioFIT · Foto pasto",text:"Analizza questa foto con DiarioFIT AI locale"});
+ }catch(err){
+  if(err&&err.name==="AbortError"){if(status)status.textContent="Condivisione annullata. La foto resta pronta."}
+  else if(status)status.textContent="Condivisione non riuscita: "+(err&&err.message?err.message:"errore sconosciuto");
+ }
 }
 function dfaiHandleWebPhoto(event){
  const file=event&&event.target&&event.target.files?event.target.files[0]:null;
