@@ -9826,6 +9826,23 @@ html[data-theme="light"] .missing-today-legend {
       ✍️ Inserimento manuale
     </button>
 
+    <!-- DiarioFIT AI Web Photo POC: acquisizione foto direttamente dal browser mobile -->
+    <button
+      type="button"
+      class="ux254-manual-trigger dfai-photo-trigger"
+      onclick="dfaiOpenWebPhoto()"
+    >
+      📷 Analizza foto pasto
+    </button>
+    <input
+      id="dfai-web-photo-input"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      hidden
+      onchange="dfaiHandleWebPhoto(event)"
+    >
+
   </section>
 
 
@@ -26219,9 +26236,28 @@ function closeTargetsFromProgress(restoreStats=true){
 .dfai-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.dfai-cell{border:1px solid rgba(100,170,220,.22);border-radius:12px;padding:10px;background:rgba(4,17,31,.72)}
 .dfai-cell.wide{grid-column:1/-1}.dfai-cell b{display:block;color:#9fb3c8;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
 .dfai-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}.dfai-actions button{border:1px solid rgba(100,170,220,.35);border-radius:11px;padding:10px 14px;background:#12263d;color:#eef7ff;font-weight:700;cursor:pointer}
-.dfai-actions .primary{background:#176b48;border-color:#2ca56f}.dfai-badge{display:inline-block;margin-bottom:12px;padding:5px 9px;border-radius:999px;background:rgba(65,200,125,.12);border:1px solid rgba(65,200,125,.35);color:#7ee2a8;font-size:.75rem;font-weight:800}
+.dfai-actions .primary{background:#176b48;border-color:#2ca56f}
+.dfai-photo-trigger{margin-top:8px;border-color:rgba(126,226,168,.42)!important;color:#b9f6d0!important}
+#dfai-web-photo-overlay{display:none;position:fixed;inset:0;z-index:11950;background:rgba(2,8,18,.86);backdrop-filter:blur(8px);padding:14px;align-items:center;justify-content:center}
+#dfai-web-photo-card{width:min(620px,100%);max-height:92dvh;overflow:auto;border:1px solid rgba(73,190,255,.35);border-radius:20px;background:linear-gradient(145deg,#0b1a2b,#071321);box-shadow:0 22px 70px rgba(0,0,0,.55);color:#eef7ff;padding:18px}
+#dfai-web-photo-card h3{margin:0 0 5px;color:#7ee2a8}#dfai-web-photo-card p{color:#9fb3c8;font-size:.86rem;line-height:1.45}
+#dfai-web-photo-preview{display:block;width:100%;max-height:52dvh;object-fit:contain;border-radius:14px;background:#02070c;margin:12px 0;border:1px solid rgba(100,170,220,.22)}
+.dfai-web-status{padding:10px 12px;border-radius:11px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.22);font-size:.82rem;line-height:1.4}
+.dfai-badge{display:inline-block;margin-bottom:12px;padding:5px 9px;border-radius:999px;background:rgba(65,200,125,.12);border:1px solid rgba(65,200,125,.35);color:#7ee2a8;font-size:.75rem;font-weight:800}
 @media(max-width:520px){#dfai-result-overlay{padding:8px}.dfai-grid{grid-template-columns:1fr}.dfai-cell.wide{grid-column:auto}}
 </style>
+<div id="dfai-web-photo-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-web-photo-title">
+ <section id="dfai-web-photo-card">
+  <h3 id="dfai-web-photo-title">📷 Foto pasto</h3>
+  <p>Foto acquisita direttamente da DiarioFIT. In questa fase verifichiamo fotocamera/selettore e prepariamo il passaggio al bridge Android per Gemini Nano.</p>
+  <img id="dfai-web-photo-preview" alt="Anteprima foto del pasto">
+  <div class="dfai-web-status" id="dfai-web-photo-status">Foto pronta. Nessun dato è stato inserito nel diario.</div>
+  <div class="dfai-actions">
+   <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
+   <button type="button" onclick="dfaiChooseAnotherWebPhoto()">↻ Cambia foto</button>
+  </div>
+ </section>
+</div>
 <div id="dfai-result-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-title">
  <section id="dfai-result-card">
   <h3 id="dfai-title">🤖 Risultato AI locale</h3>
@@ -26246,6 +26282,36 @@ function closeTargetsFromProgress(restoreStats=true){
  </section>
 </div>
 <script id="diariofit-ai-bridge-v1">
+window.dfaiWebPhotoFile=null;
+window.dfaiWebPhotoUrl=null;
+function dfaiOpenWebPhoto(){
+ const input=document.getElementById("dfai-web-photo-input");
+ if(!input)return;
+ input.value="";
+ input.click();
+}
+function dfaiChooseAnotherWebPhoto(){dfaiCloseWebPhoto();dfaiOpenWebPhoto()}
+function dfaiCloseWebPhoto(){
+ const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="none";
+ if(window.dfaiWebPhotoUrl){URL.revokeObjectURL(window.dfaiWebPhotoUrl);window.dfaiWebPhotoUrl=null}
+ window.dfaiWebPhotoFile=null;
+}
+function dfaiHandleWebPhoto(event){
+ const file=event&&event.target&&event.target.files?event.target.files[0]:null;
+ if(!file)return;
+ if(!String(file.type||"").startsWith("image/")){alert("Seleziona un'immagine valida.");return}
+ if(window.dfaiWebPhotoUrl)URL.revokeObjectURL(window.dfaiWebPhotoUrl);
+ window.dfaiWebPhotoFile=file;
+ window.dfaiWebPhotoUrl=URL.createObjectURL(file);
+ const img=document.getElementById("dfai-web-photo-preview");
+ if(img)img.src=window.dfaiWebPhotoUrl;
+ const status=document.getElementById("dfai-web-photo-status");
+ if(status){
+  const mb=(file.size/1048576).toFixed(1);
+  status.textContent="Foto acquisita correttamente · "+mb+" MB · pronta per il bridge AI.";
+ }
+ const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="flex";
+}
 window.dfaiPendingMeal=null;
 function dfaiText(id,value,suffix=""){const el=document.getElementById(id);if(!el)return;el.textContent=(value===null||value===undefined||value==="")?"—":String(value)+suffix}
 function dfaiCloseResult(){const o=document.getElementById("dfai-result-overlay");if(o)o.style.display="none";window.dfaiPendingMeal=null}
