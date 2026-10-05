@@ -26423,20 +26423,42 @@ async function dfaiShareWebPhotoToExternalAI(){
  }catch(err){if(status)status.textContent=err&&err.name==="AbortError"?"Condivisione annullata.":"Condivisione non riuscita."}
 }
 function dfaiParseExternalAI(text){
- const raw=String(text||"").trim(); if(!raw)throw new Error("RISPOSTA_VUOTA");
- const pick=(labels)=>{for(const label of labels){const m=raw.match(new RegExp("(?:^|\\r?\\n)\\s*(?:[-*•]\\s*)?(?:\\*\\*|__)?"+label+"(?:\\*\\*|__)?\\s*[:=-]\\s*([^\\r\\n]+)","i"));if(m)return m[1].trim()}return ""};
- const num=(v)=>{const m=String(v||"").replace(",",".").match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):0};
- const name=pick(["Nome","Piatto","Alimento"]),portion=pick(["Porzione","Peso","Porzione stimata"]),kcal=num(pick(["Calorie","Kcal","Energia"]));
+ const raw=String(text||"").replace(/\r\n?/g,"\n").trim();
+ if(!raw)throw new Error("RISPOSTA_VUOTA");
+ const fields={};
+ raw.split("\n").forEach(line=>{
+  const clean=String(line||"").trim().replace(/^[-*•]\s*/,"").replace(/\*\*|__/g,"");
+  const p=clean.indexOf(":");
+  if(p<1)return;
+  const key=clean.slice(0,p).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  fields[key]=clean.slice(p+1).trim();
+ });
+ const get=(...keys)=>{for(const k of keys){const v=fields[k];if(v)return v}return ""};
+ const num=v=>{const m=String(v||"").replace(",",".").match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):0};
+ const name=get("nome","piatto","alimento");
+ const portion=get("porzione","peso","porzione stimata");
+ const kcal=num(get("calorie","kcal","energia"));
  if(!name||!(kcal>0))throw new Error("FORMATO_NON_RICONOSCIUTO");
- return {protocol:"diariofit-ai",version:1,source:"AI esterna",meal:{name,portion,kcal,protein:num(pick(["Proteine","Protein"])),fat:num(pick(["Grassi","Fat"])),carbs:num(pick(["Carboidrati","Carbs"])),sugars:num(pick(["Zuccheri","Sugar","Sugars"])),condiments:pick(["Condimenti","Condimento"])||"—",confidence:pick(["Affidabilità","Confidence"])||"—",notes:pick(["Note","Nota"])||"Risposta importata da AI esterna."}};
+ return {protocol:"diariofit-ai",version:1,source:"AI esterna",meal:{
+  name,portion,kcal,
+  protein:num(get("proteine","protein")),
+  fat:num(get("grassi","fat")),
+  carbs:num(get("carboidrati","carboidrato","carbs")),
+  sugars:num(get("zuccheri","sugar","sugars")),
+  condiments:get("condimenti","condimento")||"—",
+  confidence:get("affidabilita","confidence")||"—",
+  notes:get("note","nota")||"Risposta importata da AI esterna."
+ }};
 }
 async function dfaiImportAIClipboard(){
  const status=document.getElementById("dfai-web-photo-status");
  try{
   if(!navigator.clipboard||!navigator.clipboard.readText)throw new Error("CLIPBOARD_NON_DISPONIBILE");
-  const payload=dfaiParseExternalAI(await navigator.clipboard.readText());
+  const text=await navigator.clipboard.readText();
+  const payload=dfaiParseExternalAI(text);
   dfaiCloseWebPhoto();dfaiShowResult(payload);
  }catch(err){
+  console.error("DiarioFIT import AI:",err);
   const m=err&&err.message?err.message:"ERRORE_IMPORT";
   if(status)status.textContent=m==="FORMATO_NON_RICONOSCIUTO"?"⚠️ Non riconosco la risposta copiata. Copia l'intera risposta dell'AI e riprova.":m==="RISPOSTA_VUOTA"?"⚠️ Gli appunti sono vuoti.":"⚠️ Il browser non consente di leggere gli appunti. Riprova dopo aver copiato la risposta AI.";
  }
