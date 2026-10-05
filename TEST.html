@@ -6117,7 +6117,7 @@ html[data-theme="light"] .header-progress-btn {
 
 .food-action-row {
   display: grid;
-  grid-template-columns: 118px minmax(0,1fr);
+  grid-template-columns: 118px minmax(0,1fr) minmax(0,1fr);
   gap: 10px;
   align-items: stretch;
   margin-top: 10px;
@@ -6160,6 +6160,28 @@ html[data-theme="light"] .header-progress-btn {
   min-height: 54px;
   margin-top: 0;
   align-self: stretch;
+}
+
+.food-action-row .dfai-photo-inline {
+  width: 100%;
+  height: 54px;
+  min-height: 54px;
+  margin: 0;
+  align-self: stretch;
+}
+
+@media (max-width: 560px) {
+  .food-action-row {
+    grid-template-columns: 118px minmax(0,1fr) minmax(0,1fr);
+    gap: 7px;
+  }
+
+  .food-action-row .add-food-primary,
+  .food-action-row .dfai-photo-inline {
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: .78rem;
+  }
 }
 
 
@@ -9755,24 +9777,6 @@ html[data-theme="light"] .missing-today-legend {
       <!-- Generato dinamicamente via JS da renderQuickGrid() -->
     </div>
 
-    <!-- DiarioFIT AI Web Photo POC: acquisizione foto direttamente dal browser -->
-    <button
-      type="button"
-      class="ux254-manual-trigger dfai-photo-trigger"
-      onclick="dfaiOpenWebPhoto()"
-      style="margin-bottom:8px;"
-    >
-      📷 Analizza foto pasto
-    </button>
-    <input
-      id="dfai-web-photo-input"
-      type="file"
-      accept="image/*"
-      capture="environment"
-      hidden
-      onchange="dfaiHandleWebPhoto(event)"
-    >
-
     <!-- FOOD SELECTOR CUSTOM MODAL TRIGGER -->
 
     <div class="food-action-area">
@@ -9821,6 +9825,23 @@ html[data-theme="light"] .missing-today-legend {
         >
           ＋ Aggiungi alimento
         </button>
+
+        <button
+          type="button"
+          class="ux254-manual-trigger dfai-photo-trigger dfai-photo-inline"
+          onclick="dfaiOpenWebPhoto()"
+        >
+          📷 Analizza foto pasto
+        </button>
+
+        <input
+          id="dfai-web-photo-input"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          hidden
+          onchange="dfaiHandleWebPhoto(event)"
+        >
 
       </div>
 
