@@ -26372,6 +26372,7 @@ async function dfaiAnalyzeWebPhotoCloud(){
    meal:{
     name:x.name||"Pasto stimato",
     portion:x.portion||(Number(x.serving_weight_g)>0?(x.serving_weight_g+" g"):""),
+    weight:Number(x.serving_weight_g)>0?Number(x.serving_weight_g):0,
     kcal:x.kcal,
     protein:x.pro,
     fat:x.fat,
@@ -26508,7 +26509,8 @@ function dfaiPrepareManualEntry(){
  const numeric=(value)=>{const n=Number(value);return Number.isFinite(n)&&n>=0?n:0};
  const portionText=String(m.portion||"");
  const weightMatch=portionText.match(/([0-9]+(?:[.,][0-9]+)?)\s*(?:g|gr|grammi?)\b/i);
- const weight=weightMatch?Math.round(Number(weightMatch[1].replace(",","."))):0;
+ const explicitWeight=numeric(m.weight);
+ const weight=explicitWeight>0?Math.round(explicitWeight):(weightMatch?Math.round(Number(weightMatch[1].replace(",","."))):0);
  const name=String(m.name||"Alimento stimato").trim()||"Alimento stimato";
 
  quickDiaryPreviewPending={
