@@ -26249,14 +26249,14 @@ function closeTargetsFromProgress(restoreStats=true){
 <div id="dfai-web-photo-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-web-photo-title">
  <section id="dfai-web-photo-card">
   <h3 id="dfai-web-photo-title">📷 Foto pasto</h3>
-  <p>Foto acquisita direttamente da DiarioFIT. In questa fase verifichiamo fotocamera/selettore e prepariamo il passaggio al bridge Android per Gemini Nano.</p>
+  <p>DiarioFIT prepara foto e richiesta per l'AI che hai già sul dispositivo. Dopo la risposta, copiala e torna qui: DiarioFIT proverà a importare automaticamente nome e valori nutrizionali.</p>
   <img id="dfai-web-photo-preview" alt="Anteprima foto del pasto">
   <div class="dfai-web-status" id="dfai-web-photo-status">Foto pronta. Nessun dato è stato inserito nel diario.</div>
   <div class="dfai-actions">
    <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
    <button type="button" onclick="dfaiChooseAnotherWebPhoto()">↻ Cambia foto</button>
-   <button type="button" class="primary" id="dfai-cloud-analyze-btn" onclick="dfaiAnalyzeWebPhotoCloud()">✨ Analizza foto</button>
-   <button type="button" onclick="dfaiShareWebPhotoToLocalAI()" title="Bridge sperimentale per dispositivi compatibili con Gemini Nano">📱 AI locale</button>
+   <button type="button" class="primary" onclick="dfaiShareWebPhotoToExternalAI()">🤖 Invia all'AI</button>
+   <button type="button" onclick="dfaiImportAIClipboard()">📋 Importa risposta AI</button>
   </div>
  </section>
 </div>
@@ -26402,6 +26402,43 @@ async function dfaiAnalyzeWebPhotoCloud(){
   if(status)status.textContent="⚠️ "+(friendly[code]||("Analisi non riuscita: "+code));
  }finally{
   if(btn)btn.disabled=false;
+ }
+}
+function dfaiExternalPrompt(){
+ return ["DIARIOFIT_ANALISI_PASTO","Analizza la foto del pasto allegata e stima i valori dell'intera porzione visibile.","Rispondi SOLO con questo schema, una voce per riga, senza tabelle e senza testo prima o dopo:","Nome: <nome del piatto>","Porzione: <grammi stimati> g","Calorie: <numero> kcal","Proteine: <numero> g","Grassi: <numero> g","Carboidrati: <numero> g","Zuccheri: <numero> g","Condimenti: <breve nota oppure nessuno>","Affidabilità: <bassa|media|alta>","Note: <breve nota sulle principali incertezze>"].join("\n");
+}
+async function dfaiShareWebPhotoToExternalAI(){
+ const file=window.dfaiWebPhotoFile,status=document.getElementById("dfai-web-photo-status");
+ if(!file){if(status)status.textContent="Nessuna foto disponibile.";return}
+ const prompt=dfaiExternalPrompt();
+ try{
+  if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+   if(status)status.textContent="Nel pannello Condividi scegli ChatGPT, Gemini o un'altra AI.";
+   await navigator.share({files:[file],title:"DiarioFIT · Analisi pasto",text:prompt});
+   if(status)status.textContent="Dopo la risposta dell'AI: Copia → torna qui → 📋 Importa risposta AI.";
+   return;
+  }
+  await navigator.clipboard.writeText(prompt);
+  if(status)status.textContent="Richiesta copiata. Condividi la foto con la tua AI e incolla la richiesta.";
+ }catch(err){if(status)status.textContent=err&&err.name==="AbortError"?"Condivisione annullata.":"Condivisione non riuscita."}
+}
+function dfaiParseExternalAI(text){
+ const raw=String(text||"").trim(); if(!raw)throw new Error("RISPOSTA_VUOTA");
+ const pick=(labels)=>{for(const label of labels){const m=raw.match(new RegExp("(?:^|\\n)\\s*"+label+"\\s*[:=-]\\s*([^\\n]+)","i"));if(m)return m[1].trim()}return ""};
+ const num=(v)=>{const m=String(v||"").replace(",",".").match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):0};
+ const name=pick(["Nome","Piatto","Alimento"]),portion=pick(["Porzione","Peso","Porzione stimata"]),kcal=num(pick(["Calorie","Kcal","Energia"]));
+ if(!name||!(kcal>0))throw new Error("FORMATO_NON_RICONOSCIUTO");
+ return {protocol:"diariofit-ai",version:1,source:"AI esterna",meal:{name,portion,kcal,protein:num(pick(["Proteine","Protein"])),fat:num(pick(["Grassi","Fat"])),carbs:num(pick(["Carboidrati","Carbs"])),sugars:num(pick(["Zuccheri","Sugar","Sugars"])),condiments:pick(["Condimenti","Condimento"])||"—",confidence:pick(["Affidabilità","Confidence"])||"—",notes:pick(["Note","Nota"])||"Risposta importata da AI esterna."}};
+}
+async function dfaiImportAIClipboard(){
+ const status=document.getElementById("dfai-web-photo-status");
+ try{
+  if(!navigator.clipboard||!navigator.clipboard.readText)throw new Error("CLIPBOARD_NON_DISPONIBILE");
+  const payload=dfaiParseExternalAI(await navigator.clipboard.readText());
+  dfaiCloseWebPhoto();dfaiShowResult(payload);
+ }catch(err){
+  const m=err&&err.message?err.message:"ERRORE_IMPORT";
+  if(status)status.textContent=m==="FORMATO_NON_RICONOSCIUTO"?"⚠️ Non riconosco la risposta copiata. Copia l'intera risposta dell'AI e riprova.":m==="RISPOSTA_VUOTA"?"⚠️ Gli appunti sono vuoti.":"⚠️ Il browser non consente di leggere gli appunti. Riprova dopo aver copiato la risposta AI.";
  }
 }
 async function dfaiShareWebPhotoToLocalAI(){
