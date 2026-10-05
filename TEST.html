@@ -26249,21 +26249,20 @@ function closeTargetsFromProgress(restoreStats=true){
 <div id="dfai-web-photo-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-web-photo-title">
  <section id="dfai-web-photo-card">
   <h3 id="dfai-web-photo-title">📷 Foto pasto</h3>
-  <p>DiarioFIT prepara foto e richiesta per l'AI che hai già sul dispositivo. Dopo la risposta, copiala e torna qui: DiarioFIT proverà a importare automaticamente nome e valori nutrizionali.</p>
+  <p>DiarioFIT invia la foto al motore AI del proprio backend, stima porzione e valori nutrizionali e ti mostra il risultato prima del normale salvataggio.</p>
   <img id="dfai-web-photo-preview" alt="Anteprima foto del pasto">
   <div class="dfai-web-status" id="dfai-web-photo-status">Foto pronta. Nessun dato è stato inserito nel diario.</div>
   <div class="dfai-actions">
    <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
    <button type="button" onclick="dfaiChooseAnotherWebPhoto()">↻ Cambia foto</button>
-   <button type="button" class="primary" onclick="dfaiShareWebPhotoToExternalAI()">🤖 Invia all'AI</button>
-   <button type="button" onclick="dfaiImportAIClipboard()">📋 Importa risposta AI</button>
+   <button type="button" id="dfai-cloud-analyze-btn" class="primary" onclick="dfaiAnalyzeWebPhotoCloud()">🤖 Analizza foto</button>
   </div>
  </section>
 </div>
 <div id="dfai-result-overlay" role="dialog" aria-modal="true" aria-labelledby="dfai-title">
  <section id="dfai-result-card">
-  <h3 id="dfai-title">🤖 Risultato AI locale</h3>
-  <p class="dfai-sub">Ricevuto dal bridge Android. Nessun dato è stato ancora inserito nel diario.</p>
+  <h3 id="dfai-title">🤖 Risultato analisi foto</h3>
+  <p class="dfai-sub">Stima generata da DiarioFIT. Nessun dato è stato ancora inserito nel diario.</p>
   <span class="dfai-badge" id="dfai-source">AI BRIDGE</span>
   <div class="dfai-grid">
    <div class="dfai-cell wide"><b>Alimento</b><span id="dfai-name">—</span></div>
@@ -26350,7 +26349,7 @@ async function dfaiAnalyzeWebPhotoCloud(){
   const blob=await dfaiCompressPhotoForCloud(file);
   if(status)status.textContent="Analisi AI in corso…";
   const imageBase64=await dfaiBlobToBase64(blob);
-  const data=await apiFetch("/api/gemini/estimate",{
+  const data=await apiFetch("/api/ai/meal-photo",{
    method:"POST",
    body:JSON.stringify({
     description:"",
@@ -26361,8 +26360,6 @@ async function dfaiAnalyzeWebPhotoCloud(){
   const x=data&&data.result?data.result:null;
   if(!x)throw new Error("RISPOSTA_AI_NON_VALIDA");
   const notes=[
-   x.nutrition_source?("Fonte nutrizionale: "+x.nutrition_source):"",
-   x.source_label?("Fonte: "+x.source_label):"",
    x.warning||"",
    Number.isFinite(Number(x.kcal_min))&&Number.isFinite(Number(x.kcal_max))&&Number(x.kcal_min)!==Number(x.kcal_max)
     ?("Intervallo stimato: "+x.kcal_min+"–"+x.kcal_max+" kcal"):""
@@ -26371,7 +26368,7 @@ async function dfaiAnalyzeWebPhotoCloud(){
   dfaiShowResult({
    protocol:"diariofit-ai",
    version:1,
-   source:"Gemini Cloud",
+   source:"Cloudflare Workers AI",
    meal:{
     name:x.name||"Pasto stimato",
     portion:x.portion||(Number(x.serving_weight_g)>0?(x.serving_weight_g+" g"):""),
@@ -26380,6 +26377,7 @@ async function dfaiAnalyzeWebPhotoCloud(){
     fat:x.fat,
     carbs:x.carb,
     sugars:x.sugar,
+    water:x.water_ml,
     confidence:x.confidence||"media",
     condiments:x.condiment||"—",
     notes:notes||"Stima AI da fotografia."
@@ -26389,13 +26387,10 @@ async function dfaiAnalyzeWebPhotoCloud(){
   console.error("DiarioFIT AI photo:",err);
   const code=err&&err.message?err.message:"ERRORE_AI";
   const friendly={
-   GEMINI_NOT_CONFIGURED:"Gemini non è configurato sul Worker.",
-   GEMINI_API_ERROR:"Gemini non ha completato l'analisi. Riprova.",
-   GEMINI_API_ERROR_400:"Gemini ha rifiutato la richiesta (HTTP 400).",
-   GEMINI_API_ERROR_401:"Chiave Gemini non autorizzata (HTTP 401).",
-   GEMINI_API_ERROR_403:"Accesso Gemini negato (HTTP 403).",
-   GEMINI_API_ERROR_404:"Modello Gemini non disponibile (HTTP 404).",
-   GEMINI_API_ERROR_429:"Quota Gemini esaurita o limite richieste raggiunto (HTTP 429).",
+   WORKERS_AI_NOT_CONFIGURED:"Workers AI non è configurato sul Worker.",
+   WORKERS_AI_ERROR:"Workers AI non ha completato l'analisi. Riprova.",
+   WORKERS_AI_EMPTY_RESPONSE:"Workers AI ha restituito una risposta vuota.",
+   WORKERS_AI_INVALID_JSON:"Workers AI ha restituito un risultato non interpretabile.",
    IMAGE_TOO_LARGE:"Non sono riuscito a ridurre abbastanza la fotografia.",
    AUTH_REQUIRED:"Sessione scaduta: effettua nuovamente l'accesso."
   };
@@ -26491,7 +26486,7 @@ function dfaiHandleWebPhoto(event){
  const status=document.getElementById("dfai-web-photo-status");
  if(status){
   const mb=(file.size/1048576).toFixed(1);
-  status.textContent="Foto acquisita correttamente · "+mb+" MB · pronta per il bridge AI.";
+  status.textContent="Foto acquisita correttamente · "+mb+" MB · pronta per l'analisi AI.";
  }
  const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="flex";
 }
@@ -26527,7 +26522,7 @@ function dfaiPrepareManualEntry(){
    fat:numeric(m.fat),
    carb:numeric(m.carbs),
    sugar:numeric(m.sugars),
-   waterMl:0,
+   waterMl:numeric(m.water),
    weight
   },
   multiplier:1,
