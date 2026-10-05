@@ -10452,7 +10452,16 @@ html[data-theme="light"] .missing-today-legend {
       <h3>👁️ Anteprima prima dell’aggiunta</h3>
       <button class="modal-close" onclick="closeQuickDiaryPreview()">✕</button>
     </div>
-    <div id="quick-preview-name" style="font-weight:850; color:var(--accent); margin-bottom:6px;"></div>
+    <label style="display:block; margin-bottom:8px; font-size:.70rem; color:var(--subtext);">
+      Nome alimento
+      <input
+        id="quick-preview-name"
+        type="text"
+        maxlength="120"
+        oninput="syncQuickPreviewName(this.value)"
+        style="width:100%; margin-top:4px; font-weight:850; color:var(--accent);"
+      >
+    </label>
     <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica quantità e valori. La destinazione si sceglie solo alla fine.</div>
     <div style="margin-bottom:10px;">
       <label style="display:block; margin-bottom:4px;">✖️ Moltiplicatore</label>
@@ -21897,7 +21906,7 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
   const set = (id, value) => { const el=document.getElementById(id); if (el) el.value=value; };
   set("quick-preview-multiplier", 1);
   const title = document.getElementById("quick-preview-name");
-  if (title) title.textContent = name || "Alimento";
+  if (title) title.value = name || "Alimento";
   set("quick-preview-kcal", Math.round(Number(kcal)||0));
   set("quick-preview-pro", Math.round((Number(pro)||0)*10)/10);
   set("quick-preview-fat", Math.round((Number(fat)||0)*10)/10);
@@ -21909,6 +21918,15 @@ function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0
   if(saveOption)saveOption.style.display="";
   if(destinationTitle)destinationTitle.textContent="Dove vuoi salvare questo alimento?";
   document.getElementById("quick-diary-preview-modal").style.display = "flex";
+}
+
+function syncQuickPreviewName(value) {
+  if (!quickDiaryPreviewPending) return;
+  const clean = String(value || "").trimStart().slice(0, 120);
+  quickDiaryPreviewPending.name = clean;
+  if (Number(quickDiaryPreviewPending.multiplier) === 1) {
+    quickDiaryPreviewPending.baseName = clean;
+  }
 }
 
 function syncQuickPreviewField(key, value) {
@@ -21975,8 +21993,9 @@ function applyQuickPreviewMultiplier() {
   quickDiaryPreviewPending.previewWeight = Math.round(b.weight * mult);
   captureQuickPreviewFields();
   const title = document.getElementById("quick-preview-name");
-  if (title) title.textContent = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
-  quickDiaryPreviewPending.name = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
+  const previewName = mult === 1 ? quickDiaryPreviewPending.baseName : `${quickDiaryPreviewPending.baseName} (${mult}x)`;
+  if (title) title.value = previewName;
+  quickDiaryPreviewPending.name = previewName;
 }
 
 function changeQuickPreviewMultiplier(delta) {
@@ -22046,6 +22065,15 @@ async function confirmQuickDiaryPreview(destination) {
 
   // I campi visibili restano l'autorità finale. Cambiare destinazione non
   // ricostruisce l'anteprima e quindi non perde quantità o correzioni.
+  const nameField = document.getElementById("quick-preview-name");
+  const editedName = String(nameField?.value || quickDiaryPreviewPending.name || "").trim();
+  if (!editedName) {
+    alert("Inserisci il nome dell’alimento.");
+    if (nameField) nameField.focus();
+    return;
+  }
+  quickDiaryPreviewPending.name = editedName;
+  if (Number(quickDiaryPreviewPending.multiplier) === 1) quickDiaryPreviewPending.baseName = editedName;
   const values = captureQuickPreviewFields();
   if (!values) {
     alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
@@ -22194,7 +22222,7 @@ async function addFromSelect() {
 
   quickDiaryPreviewPending.previewWeight = Number(document.getElementById("quick-preview-weight")?.value) || 0;
   const title = document.getElementById("quick-preview-name");
-  if (title) title.textContent = name || "Alimento";
+  if (title) title.value = name || "Alimento";
 
   applyQuickPreviewMultiplier();
 
@@ -22239,7 +22267,7 @@ async function addCustom() {
   };
 
   const title = document.getElementById("quick-preview-name");
-  if (title) title.textContent = name;
+  if (title) title.value = name;
   applyQuickPreviewMultiplier();
   const modal = document.getElementById("quick-diary-preview-modal");
   if (modal) modal.style.display = "flex";
@@ -26564,7 +26592,7 @@ function dfaiPrepareManualEntry(){
  };
 
  const title=document.getElementById("quick-preview-name");
- if(title)title.textContent=name;
+ if(title)title.value=name;
  if(typeof applyQuickPreviewMultiplier==="function")applyQuickPreviewMultiplier();
 
  const saveOption=document.getElementById("quick-preview-save-option");
