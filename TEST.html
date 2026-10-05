@@ -26424,7 +26424,7 @@ async function dfaiShareWebPhotoToExternalAI(){
 }
 function dfaiParseExternalAI(text){
  const raw=String(text||"").trim(); if(!raw)throw new Error("RISPOSTA_VUOTA");
- const pick=(labels)=>{for(const label of labels){const m=raw.match(new RegExp("(?:^|\\n)\\s*"+label+"\\s*[:=-]\\s*([^\\n]+)","i"));if(m)return m[1].trim()}return ""};
+ const pick=(labels)=>{for(const label of labels){const m=raw.match(new RegExp("(?:^|\\r?\\n)\\s*(?:[-*•]\\s*)?(?:\\*\\*|__)?"+label+"(?:\\*\\*|__)?\\s*[:=-]\\s*([^\\r\\n]+)","i"));if(m)return m[1].trim()}return ""};
  const num=(v)=>{const m=String(v||"").replace(",",".").match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):0};
  const name=pick(["Nome","Piatto","Alimento"]),portion=pick(["Porzione","Peso","Porzione stimata"]),kcal=num(pick(["Calorie","Kcal","Energia"]));
  if(!name||!(kcal>0))throw new Error("FORMATO_NON_RICONOSCIUTO");
