@@ -26391,6 +26391,11 @@ async function dfaiAnalyzeWebPhotoCloud(){
   const friendly={
    GEMINI_NOT_CONFIGURED:"Gemini non è configurato sul Worker.",
    GEMINI_API_ERROR:"Gemini non ha completato l'analisi. Riprova.",
+   GEMINI_API_ERROR_400:"Gemini ha rifiutato la richiesta (HTTP 400).",
+   GEMINI_API_ERROR_401:"Chiave Gemini non autorizzata (HTTP 401).",
+   GEMINI_API_ERROR_403:"Accesso Gemini negato (HTTP 403).",
+   GEMINI_API_ERROR_404:"Modello Gemini non disponibile (HTTP 404).",
+   GEMINI_API_ERROR_429:"Quota Gemini esaurita o limite richieste raggiunto (HTTP 429).",
    IMAGE_TOO_LARGE:"Non sono riuscito a ridurre abbastanza la fotografia.",
    AUTH_REQUIRED:"Sessione scaduta: effettua nuovamente l'accesso."
   };
