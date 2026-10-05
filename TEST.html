@@ -26255,7 +26255,8 @@ function closeTargetsFromProgress(restoreStats=true){
   <div class="dfai-actions">
    <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
    <button type="button" onclick="dfaiChooseAnotherWebPhoto()">↻ Cambia foto</button>
-   <button type="button" class="primary" onclick="dfaiShareWebPhotoToLocalAI()">🤖 Analizza con AI locale</button>
+   <button type="button" class="primary" id="dfai-cloud-analyze-btn" onclick="dfaiAnalyzeWebPhotoCloud()">✨ Analizza foto</button>
+   <button type="button" onclick="dfaiShareWebPhotoToLocalAI()" title="Bridge sperimentale per dispositivi compatibili con Gemini Nano">📱 AI locale</button>
   </div>
  </section>
 </div>
@@ -26296,6 +26297,107 @@ function dfaiCloseWebPhoto(){
  const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="none";
  if(window.dfaiWebPhotoUrl){URL.revokeObjectURL(window.dfaiWebPhotoUrl);window.dfaiWebPhotoUrl=null}
  window.dfaiWebPhotoFile=null;
+}
+async function dfaiCompressPhotoForCloud(file){
+ const bitmap=await createImageBitmap(file);
+ let width=bitmap.width,height=bitmap.height;
+ const maxSide=1280;
+ if(Math.max(width,height)>maxSide){
+  const scale=maxSide/Math.max(width,height);
+  width=Math.max(1,Math.round(width*scale));height=Math.max(1,Math.round(height*scale));
+ }
+ const canvas=document.createElement("canvas");
+ canvas.width=width;canvas.height=height;
+ const ctx=canvas.getContext("2d",{alpha:false});
+ ctx.drawImage(bitmap,0,0,width,height);
+ if(bitmap.close)bitmap.close();
+ let quality=.82;
+ let blob=null;
+ for(let i=0;i<7;i++){
+  blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",quality));
+  if(blob&&blob.size<=140000)break;
+  quality=Math.max(.34,quality-.09);
+  if(i===3&&blob&&blob.size>140000){
+   const scale=.82;
+   const tmp=document.createElement("canvas");
+   tmp.width=Math.max(1,Math.round(canvas.width*scale));
+   tmp.height=Math.max(1,Math.round(canvas.height*scale));
+   tmp.getContext("2d",{alpha:false}).drawImage(canvas,0,0,tmp.width,tmp.height);
+   canvas.width=tmp.width;canvas.height=tmp.height;
+   canvas.getContext("2d",{alpha:false}).drawImage(tmp,0,0);
+  }
+ }
+ if(!blob||blob.size>150000)throw new Error("IMAGE_TOO_LARGE");
+ return blob;
+}
+function dfaiBlobToBase64(blob){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=()=>resolve(String(reader.result||"").split(",")[1]||"");
+  reader.onerror=()=>reject(reader.error||new Error("FILE_READ_ERROR"));
+  reader.readAsDataURL(blob);
+ });
+}
+async function dfaiAnalyzeWebPhotoCloud(){
+ const file=window.dfaiWebPhotoFile;
+ const status=document.getElementById("dfai-web-photo-status");
+ const btn=document.getElementById("dfai-cloud-analyze-btn");
+ if(!file){if(status)status.textContent="Nessuna foto disponibile.";return}
+ if(typeof apiFetch!=="function"){if(status)status.textContent="Backend DiarioFIT non disponibile.";return}
+ try{
+  if(btn)btn.disabled=true;
+  if(status)status.textContent="Ottimizzo la foto…";
+  const blob=await dfaiCompressPhotoForCloud(file);
+  if(status)status.textContent="Analisi AI in corso…";
+  const imageBase64=await dfaiBlobToBase64(blob);
+  const data=await apiFetch("/api/gemini/estimate",{
+   method:"POST",
+   body:JSON.stringify({
+    description:"",
+    imageBase64,
+    imageMimeType:"image/jpeg"
+   })
+  });
+  const x=data&&data.result?data.result:null;
+  if(!x)throw new Error("RISPOSTA_AI_NON_VALIDA");
+  const notes=[
+   x.nutrition_source?("Fonte nutrizionale: "+x.nutrition_source):"",
+   x.source_label?("Fonte: "+x.source_label):"",
+   x.warning||"",
+   Number.isFinite(Number(x.kcal_min))&&Number.isFinite(Number(x.kcal_max))&&Number(x.kcal_min)!==Number(x.kcal_max)
+    ?("Intervallo stimato: "+x.kcal_min+"–"+x.kcal_max+" kcal"):""
+  ].filter(Boolean).join(" · ");
+  dfaiCloseWebPhoto();
+  dfaiShowResult({
+   protocol:"diariofit-ai",
+   version:1,
+   source:"Gemini Cloud",
+   meal:{
+    name:x.name||"Pasto stimato",
+    portion:x.portion||(Number(x.serving_weight_g)>0?(x.serving_weight_g+" g"):""),
+    kcal:x.kcal,
+    protein:x.pro,
+    fat:x.fat,
+    carbs:x.carb,
+    sugars:x.sugar,
+    confidence:x.confidence||"media",
+    condiments:x.condiment||"—",
+    notes:notes||"Stima AI da fotografia."
+   }
+  });
+ }catch(err){
+  console.error("DiarioFIT AI photo:",err);
+  const code=err&&err.message?err.message:"ERRORE_AI";
+  const friendly={
+   GEMINI_NOT_CONFIGURED:"Gemini non è configurato sul Worker.",
+   GEMINI_API_ERROR:"Gemini non ha completato l'analisi. Riprova.",
+   IMAGE_TOO_LARGE:"Non sono riuscito a ridurre abbastanza la fotografia.",
+   AUTH_REQUIRED:"Sessione scaduta: effettua nuovamente l'accesso."
+  };
+  if(status)status.textContent="⚠️ "+(friendly[code]||("Analisi non riuscita: "+code));
+ }finally{
+  if(btn)btn.disabled=false;
+ }
 }
 async function dfaiShareWebPhotoToLocalAI(){
  const file=window.dfaiWebPhotoFile;
