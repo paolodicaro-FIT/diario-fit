@@ -9338,7 +9338,6 @@ html[data-theme="light"] .missing-today-legend {
     </section>
 
     <button class="ux2-add" type="button" onclick="ux24OpenAdd()">＋ &nbsp; Aggiungi alimento &nbsp; ›</button>
-    <button class="ux2-plan-btn" type="button" onclick="openDayTimelinePlanner()">✨ Organizza la giornata</button>
     <button class="ux2-status-btn" type="button" onclick="openMissingTodayModal()">💡 A che punto sono oggi?</button>
 <section class="ux2-diary-fold">
       <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
@@ -9756,6 +9755,24 @@ html[data-theme="light"] .missing-today-legend {
       <!-- Generato dinamicamente via JS da renderQuickGrid() -->
     </div>
 
+    <!-- DiarioFIT AI Web Photo POC: acquisizione foto direttamente dal browser -->
+    <button
+      type="button"
+      class="ux254-manual-trigger dfai-photo-trigger"
+      onclick="dfaiOpenWebPhoto()"
+      style="margin-bottom:8px;"
+    >
+      📷 Analizza foto pasto
+    </button>
+    <input
+      id="dfai-web-photo-input"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      hidden
+      onchange="dfaiHandleWebPhoto(event)"
+    >
+
     <!-- FOOD SELECTOR CUSTOM MODAL TRIGGER -->
 
     <div class="food-action-area">
@@ -9826,22 +9843,6 @@ html[data-theme="light"] .missing-today-legend {
       ✍️ Inserimento manuale
     </button>
 
-    <!-- DiarioFIT AI Web Photo POC: acquisizione foto direttamente dal browser mobile -->
-    <button
-      type="button"
-      class="ux254-manual-trigger dfai-photo-trigger"
-      onclick="dfaiOpenWebPhoto()"
-    >
-      📷 Analizza foto pasto
-    </button>
-    <input
-      id="dfai-web-photo-input"
-      type="file"
-      accept="image/*"
-      capture="environment"
-      hidden
-      onchange="dfaiHandleWebPhoto(event)"
-    >
 
   </section>
 
