@@ -6117,10 +6117,20 @@ html[data-theme="light"] .header-progress-btn {
 
 .food-action-row {
   display: grid;
-  grid-template-columns: 118px minmax(0,1fr);
+  grid-template-columns: minmax(220px, 1fr) 118px minmax(220px, 1fr);
   gap: 10px;
   align-items: stretch;
   margin-top: 10px;
+}
+
+@media (max-width: 700px) {
+  .food-action-row {
+    grid-template-columns: 118px minmax(0, 1fr);
+  }
+
+  .food-action-row .food-picker-primary {
+    grid-column: 1 / -1;
+  }
 }
 
 .food-multiplier-primary {
@@ -9808,16 +9818,16 @@ html[data-theme="light"] .missing-today-legend {
 
     <div class="food-action-area">
 
-      <button
-        type="button"
-        class="food-picker-trigger food-picker-primary"
-        onclick="openFoodPicker()"
-      >
-        <span id="selected-food-label">🍽️ Scegli alimento...</span>
-        <small class="food-picker-arrow">▼</small>
-      </button>
-
       <div class="food-action-row">
+
+        <button
+          type="button"
+          class="food-picker-trigger food-picker-primary"
+          onclick="openFoodPicker()"
+        >
+          <span id="selected-food-label">🍽️ Scegli alimento...</span>
+          <small class="food-picker-arrow">▼</small>
+        </button>
 
         <div class="multiplier-control food-multiplier-primary">
 
@@ -9852,6 +9862,8 @@ html[data-theme="light"] .missing-today-legend {
         >
           ＋ Aggiungi alimento
         </button>
+
+      </div>
 
       </div>
 
