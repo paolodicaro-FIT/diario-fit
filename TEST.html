@@ -6125,11 +6125,39 @@ html[data-theme="light"] .header-progress-btn {
 
 @media (max-width: 700px) {
   .food-action-row {
-    grid-template-columns: 118px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr);
+    gap: 6px;
   }
 
+  .food-multiplier-primary {
+    width: 96px;
+    height: 50px;
+  }
+
+  .food-multiplier-primary button {
+    width: 30px;
+  }
+
+  .food-multiplier-primary input {
+    min-height: 48px;
+    font-size: .88rem;
+  }
+
+  .food-action-row .add-selected.add-food-primary,
   .food-action-row .food-picker-primary {
-    grid-column: 1 / -1;
+    min-height: 50px;
+    height: 50px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: .76rem;
+  }
+
+  .food-action-row .add-selected.add-food-primary {
+    letter-spacing: 0;
+  }
+
+  .food-picker-arrow {
+    margin-left: 5px;
   }
 }
 
