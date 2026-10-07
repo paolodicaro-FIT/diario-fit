@@ -9233,6 +9233,20 @@ html[data-theme="light"] .missing-today-legend {
  .bodycomp-photo-guide-mobile-label{margin:0 0 7px;color:#8fe4ff;font-size:.72rem;font-weight:850;letter-spacing:.045em;text-transform:uppercase}
  .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.96rem;line-height:1.55}
 }
+
+/* Guida cm su PC: figura e istruzioni restano nella stessa riga. */
+@media (min-width:721px){
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-image{display:none}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-list{display:grid;gap:10px;padding:14px 16px 18px}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-step{display:grid;grid-template-columns:minmax(250px,42%) minmax(0,1fr);overflow:hidden;min-height:118px;border:1px solid rgba(86,202,255,.28);border-radius:15px;background:linear-gradient(145deg,rgba(9,42,66,.98),rgba(4,24,40,.98));box-shadow:0 8px 22px rgba(0,0,0,.18)}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-crop{position:relative;min-height:100%;overflow:hidden;background:#061827}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-source{position:absolute;top:0;left:0;display:block;width:227.5%;height:auto;max-width:none;pointer-events:none;transform:translateY(var(--bodycomp-row-offset,0%))}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy{align-self:center;padding:13px 16px}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-title{display:flex;align-items:center;gap:10px;margin:0 0 6px;color:#fff;font-size:1.03rem;line-height:1.2}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-number{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:50%;background:linear-gradient(145deg,#38bdf8,#0b76b8);color:#021723;font-size:.78rem;font-weight:900}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-label{margin:0 0 6px;color:#8fe4ff;font-size:.68rem;font-weight:850;letter-spacing:.045em;text-transform:uppercase}
+  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.88rem;line-height:1.48}
+}
 </style>
 </head>
 
@@ -13159,21 +13173,6 @@ function printInfoHelpDocument(type) {
     body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     a { color:#17202a; }
   }
-</style>
-<style id="bodycomp-cm-guide-desktop-alignment">
-/* Guida cm su PC: figura e istruzioni restano nella stessa riga. */
-@media (min-width:721px){
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-image{display:none}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-list{display:grid;gap:10px;padding:14px 16px 18px}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-step{display:grid;grid-template-columns:minmax(250px,42%) minmax(0,1fr);overflow:hidden;min-height:118px;border:1px solid rgba(86,202,255,.28);border-radius:15px;background:linear-gradient(145deg,rgba(9,42,66,.98),rgba(4,24,40,.98));box-shadow:0 8px 22px rgba(0,0,0,.18)}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-crop{position:relative;min-height:100%;overflow:hidden;background:#061827}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-source{position:absolute;top:0;left:0;display:block;width:227.5%;height:auto;max-width:none;pointer-events:none;transform:translateY(var(--bodycomp-row-offset,0%))}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy{align-self:center;padding:13px 16px}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-title{display:flex;align-items:center;gap:10px;margin:0 0 6px;color:#fff;font-size:1.03rem;line-height:1.2}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-number{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:50%;background:linear-gradient(145deg,#38bdf8,#0b76b8);color:#021723;font-size:.78rem;font-weight:900}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-label{margin:0 0 6px;color:#8fe4ff;font-size:.68rem;font-weight:850;letter-spacing:.045em;text-transform:uppercase}
-  #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.88rem;line-height:1.48}
-}
 </style>
 </head>
 <body>
