@@ -18416,9 +18416,15 @@ function renderPersonalAnalysis() {
       .map(
         metric => {
 
+          const displayedTarget =
+            metric.key === "kcal" ||
+            metric.key === "water"
+              ? Math.round(metric.target)
+              : Math.round(metric.target * 10) / 10;
+
           const targetText =
             metric.target > 0
-              ? `${metric.target}${metric.unit}`
+              ? `${displayedTarget}${metric.unit}`
               : "non impostato";
 
           const isSugar =
