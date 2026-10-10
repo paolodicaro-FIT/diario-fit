@@ -8573,6 +8573,13 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
    /* Distacco normale tra le due sezioni. */
    margin-top:10px!important;
  }
+
+ /* Il modulo viene temporaneamente prima della scheda rapida:
+    rendiamo esplicita la scheda successiva invece dello storico. */
+ body.ux-manual-open #ux23-original-add-card{
+   display:block!important;
+   margin-top:10px!important;
+ }
 }
 @media(min-width:761px){
  #ux23-original-add-card{display:block!important}
