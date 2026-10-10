@@ -8564,6 +8564,12 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 @keyframes uxAddPulse{0%,100%{box-shadow:inherit}45%{box-shadow:0 0 0 3px rgba(74,222,128,.28),0 0 26px rgba(74,222,128,.22)}}
 @media(max-width:760px){
  #progress-target-modal .modal-content{width:min(94vw,760px);max-height:90vh;overflow:auto}
+
+ /* Nel flusso normale il modulo resta raggiungibile sopra la dock fissa. */
+ body.ux-manual-open #ux24-manual-card{
+   margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
+   scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
+ }
 }
 @media(min-width:761px){
  #ux23-original-add-card{display:block!important}
@@ -26048,10 +26054,9 @@ function ux24CloseAdd(){
 function ux254OpenManual(){
   const manual=document.getElementById("ux24-manual-card");
   if(!manual)return;
+
   document.body.classList.add("ux-manual-open");
-  requestAnimationFrame(()=>{
-    manual.scrollIntoView({behavior:"smooth",block:"start"});
-  });
+  requestAnimationFrame(()=>manual.scrollIntoView({behavior:"smooth",block:"nearest"}));
 }
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
