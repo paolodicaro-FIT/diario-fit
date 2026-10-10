@@ -8484,15 +8484,6 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
 }
 
 
-/* Mobile: lascia spazio di scorrimento dopo le azioni finali della scheda.
-   Così Pasti salvati e Inserimento manuale restano sempre sopra la dock fissa. */
-@media(max-width:760px){
-  #ux23-original-add-card{
-    margin-bottom:calc(122px + env(safe-area-inset-bottom));
-    scroll-margin-bottom:calc(122px + env(safe-area-inset-bottom));
-  }
-}
-
 /* GUIDA VISUALE PLICHE — V1 */
 .sfv1-overlay{z-index:10020;background:rgba(1,10,22,.9);backdrop-filter:blur(8px)}
 .sfv1-modal{width:min(1180px,94vw);max-height:92vh;overflow:auto;border:1px solid rgba(45,190,255,.65);border-radius:22px;background:linear-gradient(145deg,#071a2b,#061421 58%,#071b2b);box-shadow:0 0 34px rgba(0,174,255,.25);padding:18px;color:#eef8ff}
@@ -9880,6 +9871,25 @@ html[data-theme="light"] .missing-today-legend {
     </div>
 
 
+    <!-- Percorsi alternativi: subito disponibili, prima dell'elenco rapido. -->
+    <button
+      type="button"
+      class="add-selected"
+      onclick="openSavedMealsModal()"
+      style="margin-top:8px;"
+    >
+      🍽️ Pasti salvati
+    </button>
+
+    <button
+      type="button"
+      class="ux254-manual-trigger"
+      onclick="ux254OpenManual()"
+    >
+      ✍️ Inserimento manuale
+    </button>
+
+
     <div
       class="quick-grid"
       id="quick-grid-container"
@@ -9941,24 +9951,6 @@ html[data-theme="light"] .missing-today-legend {
       </div>
 
     </div>
-
-    <button
-      type="button"
-      class="add-selected"
-      onclick="openSavedMealsModal()"
-      style="margin-top:8px;"
-    >
-      🍽️ Pasti salvati
-    </button>
-
-    <button
-      type="button"
-      class="ux254-manual-trigger"
-      onclick="ux254OpenManual()"
-    >
-      ✍️ Inserimento manuale
-    </button>
-
 
   </section>
 
