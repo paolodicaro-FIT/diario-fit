@@ -8570,8 +8570,8 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
    /* Solo lo spazio necessario per non coprire il pulsante finale con la dock. */
    margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
    scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
-   /* Il modulo segue la scheda rapida con il normale distacco visivo. */
-   margin-top:10px!important;
+   /* Compatta il vuoto legacy tra inserimento rapido e modulo libero. */
+   margin-top:-300px!important;
  }
 }
 @media(min-width:761px){
