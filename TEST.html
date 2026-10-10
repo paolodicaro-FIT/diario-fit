@@ -8567,10 +8567,9 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 
  /* Il modulo libero può arrivare fino in fondo, oltre la dock fissa. */
  body.ux-manual-open #ux24-manual-card{
-   /* Spazio dopo il modulo: consente a scrollIntoView di allinearlo in alto. */
-   margin-bottom:calc(100vh + env(safe-area-inset-bottom))!important;
-   margin-bottom:calc(100dvh + env(safe-area-inset-bottom))!important;
-   scroll-margin-bottom:calc(100dvh + env(safe-area-inset-bottom));
+   /* Solo lo spazio necessario per non coprire il pulsante finale con la dock. */
+   margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
+   scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
  }
 }
 @media(min-width:761px){
@@ -26057,9 +26056,6 @@ function ux254OpenManual(){
   const manual=document.getElementById("ux24-manual-card");
   if(!manual)return;
   document.body.classList.add("ux-manual-open");
-  requestAnimationFrame(()=>{
-    manual.scrollIntoView({behavior:"smooth",block:"start"});
-  });
 }
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
