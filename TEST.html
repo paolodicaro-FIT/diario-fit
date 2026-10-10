@@ -8565,20 +8565,10 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 @media(max-width:760px){
  #progress-target-modal .modal-content{width:min(94vw,760px);max-height:90vh;overflow:auto}
 
- /* Il modulo libero può arrivare fino in fondo, oltre la dock fissa. */
- body.ux-manual-open #ux24-manual-card{
-   /* Solo lo spazio necessario per non coprire il pulsante finale con la dock. */
-   margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
+ /* Nella pagina dedicata il modulo può scorrere interamente sopra la dock. */
+ body.ux24-add-mode #ux24-manual-host #ux24-manual-card{
+   margin:0 0 calc(132px + env(safe-area-inset-bottom))!important;
    scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
-   /* Distacco normale tra le due sezioni. */
-   margin-top:10px!important;
- }
-
- /* Il modulo viene temporaneamente prima della scheda rapida:
-    rendiamo esplicita la scheda successiva invece dello storico. */
- body.ux-manual-open #ux23-original-add-card{
-   display:block!important;
-   margin-top:10px!important;
  }
 }
 @media(min-width:761px){
@@ -26063,17 +26053,12 @@ function ux24CloseAdd(){
 }
 function ux254OpenManual(){
   const manual=document.getElementById("ux24-manual-card");
-  const quickCard=document.getElementById("ux23-original-add-card");
   if(!manual)return;
 
-  /* Sul telefono il modulo diventa la sezione successiva da compilare:
-     lo spostiamo prima dell'inserimento rapido, così ha spazio reale per lo scroll. */
-  if(quickCard && manual.nextElementSibling!==quickCard){
-    quickCard.parentNode.insertBefore(manual,quickCard);
-  }
-
-  document.body.classList.add("ux-manual-open");
-  requestAnimationFrame(()=>manual.scrollIntoView({behavior:"smooth",block:"start"}));
+  ux24Prepare();
+  ux24Move(manual,"ux24-manual-host");
+  document.body.classList.add("ux24-add-mode");
+  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:"smooth"}));
 }
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
