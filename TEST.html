@@ -8570,6 +8570,8 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
    /* Solo lo spazio necessario per non coprire il pulsante finale con la dock. */
    margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
    scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
+   /* Il modulo segue la scheda rapida con il normale distacco visivo. */
+   margin-top:10px!important;
  }
 }
 @media(min-width:761px){
@@ -26056,6 +26058,7 @@ function ux254OpenManual(){
   const manual=document.getElementById("ux24-manual-card");
   if(!manual)return;
   document.body.classList.add("ux-manual-open");
+  requestAnimationFrame(()=>manual.scrollIntoView({behavior:"smooth",block:"nearest"}));
 }
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
