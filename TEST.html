@@ -8567,8 +8567,10 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 
  /* Il modulo libero può arrivare fino in fondo, oltre la dock fissa. */
  body.ux-manual-open #ux24-manual-card{
-   margin-bottom:calc(132px + env(safe-area-inset-bottom))!important;
-   scroll-margin-bottom:calc(132px + env(safe-area-inset-bottom));
+   /* Spazio dopo il modulo: consente a scrollIntoView di allinearlo in alto. */
+   margin-bottom:calc(100vh + env(safe-area-inset-bottom))!important;
+   margin-bottom:calc(100dvh + env(safe-area-inset-bottom))!important;
+   scroll-margin-bottom:calc(100dvh + env(safe-area-inset-bottom));
  }
 }
 @media(min-width:761px){
