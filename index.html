@@ -9254,7 +9254,78 @@ html[data-theme="light"] .missing-today-legend {
   #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.88rem;line-height:1.48}
 }
 </style>
-</head>
+
+<style id="diariofit-activity-smartwatch">
+/* Attività smartwatch — dato giornaliero, esplicito e modificabile */
+.ux2-activity{
+  width:min(100%,230px);
+  padding:9px 10px;
+  border:1px solid rgba(167,139,250,.52);
+  border-radius:13px;
+  background:linear-gradient(135deg,rgba(88,58,151,.48),rgba(31,55,94,.62));
+  color:#f5f3ff;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(74,55,140,.15);
+}
+.ux2-activity span,.ux2-activity small{display:block}
+.ux2-activity span{font-size:.68rem;font-weight:800;color:#ddd6fe}
+.ux2-activity strong{display:block;margin:3px 0 1px;font-size:.95rem}
+.ux2-activity small{font-size:.59rem;color:#c4b5fd}
+.activity-modal-content{max-width:480px}
+.activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
+.activity-modal-intro strong{color:var(--text)}
+.activity-input-label{display:block;margin-bottom:6px;font-weight:800}
+.activity-input-row{display:flex;align-items:center;gap:9px}
+.activity-input-row input{flex:1;min-width:0}
+.activity-input-row span{color:var(--muted);font-weight:800}
+.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}
+.activity-modal-actions{display:flex;gap:9px;margin-top:14px}
+.activity-modal-actions .btn{flex:1}
+.activity-status-row{margin-top:3px;padding:9px 10px;border:1px solid rgba(167,139,250,.22);border-radius:12px;background:rgba(167,139,250,.07)}
+.activity-status-row strong{display:block;font-size:.8rem}
+.activity-status-row small{display:block;margin-top:2px;color:var(--muted);font-size:.7rem;line-height:1.25}
+.activity-status-row button{margin-top:7px;padding:0;border:0;background:none;color:#c4b5fd;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer}
+@media(max-width:760px){
+  .ux2-activity{grid-column:1 / -1;width:100%;padding:8px 10px}
+  .ux2-activity span,.ux2-activity small{display:inline}
+  .ux2-activity strong{display:inline;margin:0 4px;font-size:.86rem}
+}
+</style>
+
+
+<style id="diariofit-activity-status-entry">
+.missing-today-activity-btn{
+  width:100%;display:flex;align-items:center;gap:10px;margin-top:8px;padding:10px 11px;
+  border:1px solid rgba(167,139,250,.34);border-radius:12px;
+  background:linear-gradient(135deg,rgba(94,65,156,.22),rgba(47,71,119,.20));
+  color:var(--text);text-align:left;cursor:pointer;
+}
+.missing-today-activity-btn>span:first-child{font-size:1.2rem}
+.missing-today-activity-btn>span:nth-child(2){flex:1;min-width:0}
+.missing-today-activity-btn strong,.missing-today-activity-btn small{display:block}
+.missing-today-activity-btn strong{font-size:.78rem}.missing-today-activity-btn small{margin-top:2px;color:var(--muted);font-size:.65rem}
+.missing-today-activity-btn>b{color:#c4b5fd;font-size:1.25rem}
+</style>
+
+
+<style id="diariofit-dual-calorie-rings">
+/* Due anelli: il verde/gradiente è sempre il target base; il viola compare solo per l'attività. */
+.ux2-ring-wrap{position:relative;width:230px;height:230px;margin:auto}
+.ux2-activity-ring{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:transparent;transition:background .3s ease}
+.ux2-activity-ring.is-active{background:conic-gradient(#a78bfa calc(var(--activity-p,0)*1%),#253b55 0);box-shadow:0 0 22px rgba(167,139,250,.22)}
+.ux2-ring{position:relative!important;width:calc(100% - 18px)!important;height:calc(100% - 18px)!important;margin:9px!important;z-index:1;transition:background .3s ease,box-shadow .3s ease}
+.ux2-goal{display:flex!important;flex-direction:column;gap:7px}
+.ux2-goal-base,.ux2-goal-activity{display:block}
+.ux2-goal-activity{padding-top:6px;border-top:1px solid rgba(167,139,250,.42);color:#ddd6fe}
+.ux2-goal-activity b{color:#ede9fe!important}
+@media(max-width:760px){
+ .ux2-ring-wrap{width:190px;height:190px}
+ .ux2-ring{width:calc(100% - 16px)!important;height:calc(100% - 16px)!important;margin:8px!important}
+ .ux2-goal{gap:6px}
+ .ux2-goal-activity{padding-top:5px}
+}
+</style></head>
 
 
 <body>
@@ -9435,16 +9506,23 @@ html[data-theme="light"] .missing-today-legend {
   <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
   <main id="ux2-home" aria-label="Oggi">
     <section class="ux2-calorie-zone">
-      <div class="ux2-ring" id="ux2-ring">
-        <div class="ux2-ring-content">
-          <div class="ux2-flame">🔥</div>
-          <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
-          <div class="ux2-kcal-unit">kcal</div>
-          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
-          <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+      <div class="ux2-ring-wrap">
+        <div class="ux2-activity-ring" id="ux2-activity-ring" aria-label="Anello attività">
+          <div class="ux2-ring" id="ux2-ring" aria-label="Anello target base">
+            <div class="ux2-ring-content">
+              <div class="ux2-flame">🔥</div>
+              <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
+              <div class="ux2-kcal-unit">kcal</div>
+              <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
+              <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+      <div class="ux2-goal">
+        <div class="ux2-goal-base">🎯<small>Target base</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+        <div class="ux2-goal-activity" id="ux2-goal-activity" hidden>⌚<small>Con attività</small><b id="ux2-activity-target-kcal">—</b><small>kcal</small></div>
+      </div>
     </section>
 
     <section class="ux2-macros">
@@ -10765,6 +10843,18 @@ html[data-theme="light"] .missing-today-legend {
       <div id="missing-water"></div>
 
     </div>
+
+    <button
+      type="button"
+      class="missing-today-activity-btn"
+      onclick="openActivityModal()"
+    >
+      <span>⌚</span>
+      <span><strong>Passi e attività smartwatch</strong><small>Registra i passi e le calorie attive di oggi</small></span>
+      <b>›</b>
+    </button>
+
+    <p class="activity-modal-note">Fino a <strong>6.000 passi</strong> non viene aggiunta una stima di calorie extra: questa attività è già considerata nel target di DiarioFIT. La stima si attiva solo per i passi oltre questa soglia.</p>
 
     <details class="missing-today-legend" id="missing-today-legend">
       <summary>ⓘ Come leggere le barre</summary>
@@ -13188,6 +13278,36 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
   <div class="day-planner-body"><div class="day-planner-summary" id="day-planner-summary"></div><section class="day-planner-block"><h4>1. Alimenti disponibili</h4><p>Puoi usare i tuoi alimenti, i rapidi e i preset. Aggiungi solo ciò che hai o prevedi di mangiare oggi.</p><input id="day-planner-food-search" class="day-planner-search" type="search" placeholder="Cerca: pasta, tonno, yogurt…" oninput="renderDayPlannerFoodSearch()" autocomplete="off"><div class="day-planner-food-results" id="day-planner-food-results"></div><div class="day-planner-chips" id="day-planner-selected-foods"></div></section><section class="day-planner-block"><h4>2. Pasti ancora da fare</h4><p>La selezione iniziale segue l'orario; puoi correggerla liberamente.</p><div class="day-planner-slots" id="day-planner-slots"></div><label class="day-planner-workout"><input id="day-planner-workout" type="checkbox"> 🏋️ Oggi mi alleno: dai priorità a una quota proteica e carboidrati intorno all'allenamento.</label></section><div class="day-planner-actions"><button type="button" class="day-planner-primary" onclick="generateDayPlannerPlan()">✨ Crea proposta</button><button type="button" class="day-planner-secondary" onclick="saveDayPlannerDraft()">Salva bozza</button></div><section class="day-planner-result" id="day-planner-result" aria-live="polite"></section></div>
  </section>
 </div>
+
+<!-- =====================================================
+     MODAL ATTIVITÀ SMARTWATCH
+===================================================== -->
+<div class="modal-overlay" id="activity-modal">
+  <div class="modal-content activity-modal-content">
+    <div class="modal-header">
+      <h3>⌚ Attività di oggi</h3>
+      <button class="modal-close" type="button" onclick="closeActivityModal()">✕</button>
+    </div>
+    <p class="activity-modal-intro">
+      Inserisci le <strong>calorie attive</strong> riportate da smartwatch o app Salute:
+      sono le calorie attribuite al movimento, non il totale bruciato nella giornata.
+    </p>
+    <label class="activity-input-label" for="activity-active-kcal">Calorie attive / extra di oggi</label>
+    <div class="activity-input-row">
+      <input id="activity-active-kcal" type="number" inputmode="numeric" min="0" max="5000" step="1" placeholder="es. 420">
+      <span>kcal</span>
+    </div>
+    <p class="activity-modal-note">
+      DiarioFIT le mostra separatamente e non aumenta automaticamente il tuo target:
+      il target comprende già la tua attività abituale. Usa questo dato come riferimento per le giornate più attive.
+    </p>
+    <div class="activity-modal-actions">
+      <button type="button" class="btn" onclick="clearActivityCalories()">Azzera</button>
+      <button type="button" class="btn primary" onclick="saveActivityCalories()">Salva attività</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>`);
   printWindow.document.close();
@@ -13524,6 +13644,8 @@ let userSettings = {};
 let historyLogs;
 let log;
 let currentDiaryTargetSnapshot = null;
+/* Attività del giorno: valore volontario inserito dall'utente dallo smartwatch. */
+let currentDiaryActivity = { activeKcal: 0, updatedAt: null };
 let quickAddItems;
 
 let selectedFoodValue = "";
@@ -13603,6 +13725,10 @@ async function loadUserDiaryFromBackend(dateKey) {
     typeof data.summary.targetSnapshot === "object"
       ? { ...data.summary.targetSnapshot }
       : null;
+
+  currentDiaryActivity = normalizeDiaryActivity(
+    data.summary?.activity
+  );
 
   // Un giorno marcato come chiuso resta comunque consultabile:
   // `closed` e un metadato di stato, non deve mai svuotare il diario caricato.
@@ -13690,6 +13816,14 @@ async function saveUserDiaryToBackend(
     sugar: round1(computedSummary.sugar) + "g",
     water: Math.round(computedSummary.water) + "ml"
   };
+
+  // L'attività è giornaliera, non un'impostazione permanente.
+  // Viene aggiunta solo nel salvataggio della giornata aperta.
+  if (dateKey === getLocalISODate()) {
+    completeSummary.activity = normalizeDiaryActivity(
+      currentDiaryActivity
+    );
+  }
 
   const storedSnapshot =
     incomingSummary.targetSnapshot &&
@@ -23552,6 +23686,7 @@ function openMissingTodayModal() {
   );
 
 
+
   document.getElementById(
     "missing-today-modal"
   ).style.display = "flex";
@@ -25924,6 +26059,70 @@ window.addEventListener("resize",()=>{
    DIARIOFIT UX BETA V2.2 — BRIDGE ALLA LOGICA ESISTENTE
    La nuova Home legge direttamente log + TARGETS.
 ========================================================= */
+
+/* =========================================================
+   ATTIVITÀ SMARTWATCH — calorie attive giornaliere
+========================================================= */
+function normalizeDiaryActivity(activity) {
+  const raw = Number(
+    activity && typeof activity === "object"
+      ? activity.activeKcal
+      : activity
+  );
+  return {
+    activeKcal: Number.isFinite(raw)
+      ? Math.max(0, Math.min(5000, Math.round(raw)))
+      : 0,
+    updatedAt:
+      activity && typeof activity === "object" && activity.updatedAt
+        ? activity.updatedAt
+        : null
+  };
+}
+function getDiaryActiveCalories() {
+  return normalizeDiaryActivity(currentDiaryActivity).activeKcal;
+}
+function openActivityModal() {
+  const modal = document.getElementById("activity-modal");
+  const input = document.getElementById("activity-active-kcal");
+  if (!modal || !input) return;
+  input.value = getDiaryActiveCalories() || "";
+  modal.style.display = "flex";
+  window.setTimeout(() => input.focus(), 60);
+}
+function closeActivityModal() {
+  const modal = document.getElementById("activity-modal");
+  if (modal) modal.style.display = "none";
+}
+async function saveActivityCalories() {
+  if (!ensureDiaryWriteAccess()) return;
+  const input = document.getElementById("activity-active-kcal");
+  const raw = String(input?.value ?? "").trim().replace(",", ".");
+  const value = raw === "" ? 0 : Number(raw);
+  if (!Number.isFinite(value) || value < 0 || value > 5000) {
+    alert("Inserisci un valore tra 0 e 5.000 kcal.");
+    return;
+  }
+  currentDiaryActivity = {
+    activeKcal: Math.round(value),
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    await saveUserDiaryToBackend();
+    updateDashboard();
+    ux2SyncHome();
+    closeActivityModal();
+  } catch (error) {
+    console.error("Errore salvataggio attività:", error);
+    alert("Non sono riuscito a salvare l'attività. Riprova.");
+  }
+}
+async function clearActivityCalories() {
+  const input = document.getElementById("activity-active-kcal");
+  if (input) input.value = "";
+  await saveActivityCalories();
+}
+
 function ux2Pct(v,t){
   return Number(t)>0 ? Math.max(0,Math.min(100,(Number(v)||0)/Number(t)*100)) : 0;
 }
@@ -25983,6 +26182,10 @@ function ux2SyncHome(){
   ux2Put("ux2-fat-target",TARGETS.fat);
   ux2Put("ux2-sugar-target",TARGETS.sugar);
   ux2Put("ux2-water-target",TARGETS.water);
+
+  const activeKcal = getDiaryActiveCalories();
+  ux2Put("ux2-activity-kcal", activeKcal ? "＋ " + activeKcal + " kcal" : "＋ Inserisci");
+  ux2Put("ux2-activity-note", activeKcal ? "calorie attive registrate oggi" : "calorie attive · facoltativo");
 
   const kp=Math.round(ux2Pct(t.kcal,TARGETS.kcal));
   ux2Put("ux2-kcal-percent",kp+"%");
@@ -26798,6 +27001,112 @@ function dfaiPrepareManualEntry(){
   console.error("DiarioFIT AI Bridge:",err);
   alert("⚠️ Il risultato AI ricevuto non è valido.");
  }
+})();
+</script>
+
+
+<!-- DiarioFIT: bridge indipendente per attività smartwatch (fuori dagli script legacy) -->
+
+<style id="diariofit-activity-smartwatch-live">
+#activity-modal{z-index:10050}.activity-modal-content{max-width:500px}
+.activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
+.activity-meaning{margin:0 0 12px;padding:10px 11px;border:1px solid rgba(56,189,248,.25);border-radius:12px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(167,139,250,.07));font-size:.74rem;line-height:1.35}
+.activity-meaning>strong{display:block;margin-bottom:5px;color:#dff5ff;font-size:.79rem}
+.activity-meaning p{margin:5px 0;color:#c6d8e1}.activity-meaning b{color:#fff}
+.activity-ring-legend{display:grid;gap:4px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.10);color:#dce8ff;font-size:.68rem}
+.activity-dot{display:inline-block;width:8px;height:8px;margin:0 5px 0 1px;border-radius:50%}.activity-dot.base{background:linear-gradient(135deg,#22d3ee,#22c55e)}.activity-dot.extra{background:#a78bfa}
+.activity-input-label{display:block;margin:12px 0 6px;font-weight:800}.activity-input-row{display:flex;align-items:center;gap:9px}.activity-input-row input{flex:1;min-width:0}.activity-input-row span{color:var(--muted);font-weight:800}
+.activity-steps-chart{margin-top:14px;padding:10px;border:1px solid rgba(56,189,248,.20);border-radius:12px;background:rgba(56,189,248,.055)}
+.activity-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.activity-chart-head strong{font-size:.78rem}.activity-chart-head span{color:#c4b5fd;font-size:.73rem;font-weight:850}
+.activity-chart-track{position:relative;height:10px;margin:10px 0 5px;border-radius:999px;background:rgba(148,163,184,.22);overflow:visible}.activity-chart-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#22d3ee,#a78bfa);transition:width .25s ease}.activity-chart-baseline{position:absolute;left:60%;top:-4px;bottom:-4px;width:2px;background:#fbbf24;box-shadow:0 0 7px rgba(251,191,36,.65)}.activity-chart-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:.61rem}
+.activity-preview{margin:10px 0 0;padding:9px 10px;border-radius:9px;background:rgba(167,139,250,.09);color:#e9e4ff;font-size:.75rem;line-height:1.35}.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}.activity-modal-actions{display:flex;gap:9px;margin-top:14px}.activity-modal-actions .btn{flex:1}
+</style>
+<div class="modal-overlay" id="activity-modal" aria-hidden="true">
+  <div class="modal-content activity-modal-content" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title">
+    <div class="modal-header"><h3 id="activity-modal-title">⌚ Attività di oggi</h3><button class="modal-close" type="button" onclick="closeActivityModal()">✕</button></div>
+    <p class="activity-modal-intro">Inserisci i <strong>passi</strong> e, se disponibile, le <strong>calorie attive</strong> riportate da smartwatch o app Salute.</p>
+    <div class="activity-meaning">
+      <strong>Come leggere il risultato</strong>
+      <p>🎯 Il <b>target base</b> non cambia: è il tuo riferimento alimentare normale.</p>
+      <p>⌚ Se superi i 6.000 passi, DiarioFIT calcola un <b>margine extra</b> per il movimento in più. Non è un obbligo di mangiare di più: è un margine disponibile nelle giornate più attive.</p>
+      <div class="activity-ring-legend">
+        <span><i class="activity-dot base"></i>Anello interno: target base</span>
+        <span><i class="activity-dot extra"></i>Anello esterno: target con attività</span>
+      </div>
+    </div>
+    <label class="activity-input-label" for="activity-steps">Passi di oggi</label>
+    <div class="activity-input-row"><input id="activity-steps" type="number" inputmode="numeric" min="0" max="100000" step="1" placeholder="es. 8400" oninput="updateActivityPreview()"><span>passi</span></div>
+    <label class="activity-input-label" for="activity-active-kcal">Calorie attive rilevate <small style="font-weight:500;color:var(--muted)">(facoltative)</small></label>
+    <div class="activity-input-row"><input id="activity-active-kcal" type="number" inputmode="numeric" min="0" max="5000" step="1" placeholder="es. 420" oninput="updateActivityPreview()"><span>kcal</span></div>
+    <div class="activity-steps-chart"><div class="activity-chart-head"><strong>Passi e attività extra</strong><span id="activity-extra-kcal">—</span></div><div class="activity-chart-track"><i id="activity-chart-fill" class="activity-chart-fill"></i><b class="activity-chart-baseline" aria-label="Soglia 6000 passi"></b></div><div class="activity-chart-scale"><span>0</span><span>6.000 inclusi</span><span>10.000</span></div><div id="activity-preview" class="activity-preview">Inserisci i passi per calcolare l'attività extra.</div></div>
+    <p class="activity-modal-note">I primi <strong>6.000 passi</strong> sono considerati attività quotidiana già inclusa nel target. Oltre, DiarioFIT aggiunge una stima prudente di circa <strong>40 kcal ogni 1.000 passi</strong> al target del giorno.</p>
+    <div class="activity-modal-actions"><button type="button" class="btn" onclick="clearActivityCalories()">Azzera</button><button type="button" class="btn primary" onclick="saveActivityCalories()">Salva attività</button></div>
+  </div>
+</div>
+<script id="diariofit-activity-smartwatch-live">
+(function(){
+  const apiBase="https://diario-fit-api.paolodicaro-3d.workers.dev", baseSteps=6000, kcalPerStep=.04;
+  const localDate=()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())};
+  const key=()=> "diariofit_activity_"+localDate();
+  const clean=(v,max)=>Math.max(0,Math.min(max,Math.round(Number(v)||0)));
+  const read=()=>{try{const v=JSON.parse(localStorage.getItem(key()));if(v&&typeof v==="object")return{steps:clean(v.steps,100000),activeKcal:clean(v.activeKcal,5000)}}catch(_){}return{steps:0,activeKcal:clean(localStorage.getItem(key()),5000)}};
+  const extra=d=>Math.round(Math.max(0,d.steps-baseSteps)*kcalPerStep);
+  const write=d=>localStorage.setItem(key(),JSON.stringify({...d,extraKcal:extra(d),updatedAt:new Date().toISOString()}));
+  const fmt=n=>Number(n||0).toLocaleString("it-IT");
+  const repaintHome=()=>{
+    const d=read(),credit=extra(d),goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),baseRing=document.getElementById("ux2-ring"),activityRing=document.getElementById("ux2-activity-ring"),percent=document.getElementById("ux2-kcal-percent"),activityGoal=document.getElementById("ux2-goal-activity"),activityTarget=document.getElementById("ux2-activity-target-kcal");
+    // Target base: non viene mai sostituito dall'attività.
+    const storedBase=Number(goal?.dataset.baseKcal||target?.dataset.baseKcal)||0;
+    const displayedGoal=Number(String(goal?.textContent||"").replace(/[^0-9]/g,""))||0;
+    const displayedTarget=Number(String(target?.textContent||"").replace(/[^0-9]/g,""))||0;
+    const base=storedBase>=500?storedBase:(displayedGoal>=500?displayedGoal:(displayedTarget>=500?displayedTarget:0));
+    if(base<500)return;
+    if(goal)goal.dataset.baseKcal=String(base);
+    if(target)target.dataset.baseKcal=String(base);
+    if(goal&&goal.textContent!==String(base))goal.textContent=String(base);
+    if(target&&target.textContent!==String(base))target.textContent=String(base);
+    const eaten=Number(document.getElementById("ux2-kcal-now")?.textContent.replace(/[^0-9]/g,""))||0;
+    const basePct=Math.max(0,Math.min(100,Math.round(eaten/base*100)));
+    const activityTargetValue=base+credit;
+    const activityPct=Math.max(0,Math.min(100,Math.round(eaten/activityTargetValue*100)));
+    const baseGradient=basePct<75?["#38bdf8","#22d3ee"]:basePct<=110?["#22d3ee","#22c55e"]:["#f59e0b","#ef4444"];
+    if(baseRing){baseRing.style.setProperty("--p",basePct);baseRing.style.background="conic-gradient("+baseGradient[0]+" 0%,"+baseGradient[1]+" "+basePct+"%,#35596a "+basePct+"%,#35596a 100%)";}
+    if(percent)percent.textContent=basePct+"%";
+    if(activityRing){activityRing.classList.toggle("is-active",credit>0);activityRing.style.setProperty("--activity-p",activityPct);}
+    if(activityGoal)activityGoal.hidden=credit<=0;
+    if(activityTarget)activityTarget.textContent=String(activityTargetValue);
+  };
+  const refreshPreview=()=>{
+    const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
+    if(fill)fill.style.width=Math.min(100,steps/10000*100)+"%";
+    if(out)out.textContent=steps?("+"+credit+" kcal stimate"):"—";
+    if(preview)preview.textContent=!steps?"Inserisci i passi per calcolare l'attività extra.":steps<=baseSteps?fmt(steps)+" passi: fino a 6.000 passi non viene aggiunta una stima di calorie extra; attività quotidiana già inclusa nel target.":fmt(steps)+" passi: "+fmt(steps-baseSteps)+" oltre la soglia · +"+credit+" kcal stimate per il target di oggi."+(activeKcal?" Orologio: "+activeKcal+" kcal attive.":"");
+  };
+  const token=()=>localStorage.getItem("diario_backend_token");
+  async function sync(d){
+    const t=token();if(!t)return;const headers={"Authorization":"Bearer "+t,"Content-Type":"application/json"},date=localDate();
+    const got=await fetch(apiBase+"/api/user/diary?date="+encodeURIComponent(date),{headers,cache:"no-store"}),data=await got.json();if(!got.ok||!data.ok)throw new Error(data.error||"ACTIVITY_LOAD_FAILED");
+    const saved=await fetch(apiBase+"/api/user/diary",{method:"PUT",headers,body:JSON.stringify({date,log:Array.isArray(data.log)?data.log:[],summary:{...(data.summary||{}),activity:{...d,baselineSteps:baseSteps,extraKcal:extra(d),updatedAt:new Date().toISOString()}}})}),result=await saved.json();if(!saved.ok||!result.ok)throw new Error(result.error||"ACTIVITY_SAVE_FAILED");
+  }
+  window.updateActivityPreview=refreshPreview;
+  window.openActivityModal=function(){const m=document.getElementById("activity-modal"),d=read(),steps=document.getElementById("activity-steps"),active=document.getElementById("activity-active-kcal");if(!m||!steps||!active)return;steps.value=d.steps||"";active.value=d.activeKcal||"";refreshPreview();m.style.display="flex";m.setAttribute("aria-hidden","false");setTimeout(()=>steps.focus(),50)};
+  window.closeActivityModal=function(){const m=document.getElementById("activity-modal");if(m){m.style.display="none";m.setAttribute("aria-hidden","true")}};
+  window.saveActivityCalories=async function(){const d={steps:clean(document.getElementById("activity-steps")?.value,100000),activeKcal:clean(document.getElementById("activity-active-kcal")?.value,5000)};write(d);repaintHome();try{await sync(d);window.closeActivityModal()}catch(e){console.error("Attività smartwatch non sincronizzata:",e);alert("Valore salvato sul dispositivo, ma non ancora sincronizzato al diario. Riprova quando la connessione è disponibile.");window.closeActivityModal()}};
+  window.clearActivityCalories=async function(){const s=document.getElementById("activity-steps"),a=document.getElementById("activity-active-kcal");if(s)s.value="";if(a)a.value="";await window.saveActivityCalories()};
+  // Il dashboard scrive prima singoli valori e poi completa la Home:
+  // il ricalcolo viene rinviato di un attimo, così percentuale e anello
+  // leggono insieme calorie introdotte e target effettivo.
+  let homeRefreshTimer=null;
+  const scheduleHomeRepaint=()=>{
+    clearTimeout(homeRefreshTimer);
+    homeRefreshTimer=setTimeout(repaintHome,90);
+  };
+  repaintHome();
+  window.addEventListener("load",()=>{scheduleHomeRepaint();setTimeout(repaintHome,320)});
+  const homeTargets=[document.getElementById("ux2-goal-kcal"),document.getElementById("ux2-kcal-target"),document.getElementById("ux2-kcal-now")].filter(Boolean);
+  if(homeTargets.length&&window.MutationObserver){
+    new MutationObserver(scheduleHomeRepaint).observe(document.getElementById("ux2-home")||document.body,{childList:true,characterData:true,subtree:true});
+  }
 })();
 </script>
 
