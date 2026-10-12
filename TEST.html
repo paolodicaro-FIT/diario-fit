@@ -10817,7 +10817,6 @@ html[data-theme="light"] .missing-today-legend {
       <div id="missing-carb"></div>
       <div id="missing-sugar"></div>
       <div id="missing-water"></div>
-      <div id="missing-activity"></div>
 
     </div>
 
@@ -10830,6 +10829,8 @@ html[data-theme="light"] .missing-today-legend {
       <span><strong>Passi e attività smartwatch</strong><small>Registra i passi e le calorie attive di oggi</small></span>
       <b>›</b>
     </button>
+
+    <p class="activity-modal-note">Fino a <strong>6.000 passi</strong> non viene aggiunta una stima di calorie extra: questa attività è già considerata nel target di DiarioFIT. La stima si attiva solo per i passi oltre questa soglia.</p>
 
     <details class="missing-today-legend" id="missing-today-legend">
       <summary>ⓘ Come leggere le barre</summary>
@@ -23660,13 +23661,6 @@ function openMissingTodayModal() {
     "water"
   );
 
-  const activeKcal = getDiaryActiveCalories();
-  const activityRow = document.getElementById("missing-activity");
-  if (activityRow) {
-    activityRow.innerHTML = activeKcal
-      ? '<div class="activity-status-row"><strong>⌚ Attività smartwatch · ' + activeKcal + ' kcal attive</strong><small>Dato registrato separatamente: non modifica automaticamente il target alimentare.</small><button type="button" onclick="closeMissingTodayModal();openActivityModal()">Modifica attività</button></div>'
-      : '<div class="activity-status-row"><strong>⌚ Attività smartwatch</strong><small>Puoi registrare facoltativamente le calorie attive del tuo orologio.</small><button type="button" onclick="closeMissingTodayModal();openActivityModal()">＋ Inserisci calorie attive</button></div>';
-  }
 
 
   document.getElementById(
@@ -27037,7 +27031,7 @@ function dfaiPrepareManualEntry(){
     const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
     if(fill)fill.style.width=Math.min(100,steps/10000*100)+"%";
     if(out)out.textContent=steps?("+"+credit+" kcal stimate"):"—";
-    if(preview)preview.textContent=!steps?"Inserisci i passi per calcolare l'attività extra.":steps<=baseSteps?fmt(steps)+" passi: attività quotidiana già inclusa nel target; nessun credito aggiuntivo.":fmt(steps)+" passi: "+fmt(steps-baseSteps)+" oltre la soglia · +"+credit+" kcal stimate per il target di oggi."+(activeKcal?" Orologio: "+activeKcal+" kcal attive.":"");
+    if(preview)preview.textContent=!steps?"Inserisci i passi per calcolare l'attività extra.":steps<=baseSteps?fmt(steps)+" passi: fino a 6.000 passi non viene aggiunta una stima di calorie extra; attività quotidiana già inclusa nel target.":fmt(steps)+" passi: "+fmt(steps-baseSteps)+" oltre la soglia · +"+credit+" kcal stimate per il target di oggi."+(activeKcal?" Orologio: "+activeKcal+" kcal attive.":"");
   };
   const token=()=>localStorage.getItem("diario_backend_token");
   async function sync(d){
