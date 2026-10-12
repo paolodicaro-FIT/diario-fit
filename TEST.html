@@ -27088,8 +27088,21 @@ function dfaiPrepareManualEntry(){
     const got=await fetch(apiBase+"/api/user/diary?date="+encodeURIComponent(date),{headers,cache:"no-store"}),data=await got.json();if(!got.ok||!data.ok)throw new Error(data.error||"ACTIVITY_LOAD_FAILED");
     const saved=await fetch(apiBase+"/api/user/diary",{method:"PUT",headers,body:JSON.stringify({date,log:Array.isArray(data.log)?data.log:[],summary:{...(data.summary||{}),activity:{...d,baselineSteps:baseSteps,extraKcal:extra(d),updatedAt:new Date().toISOString()}}})}),result=await saved.json();if(!saved.ok||!result.ok)throw new Error(result.error||"ACTIVITY_SAVE_FAILED");
   }
+  // Un altro dispositivo deve leggere il riepilogo della giornata dal server:
+  // localStorage resta solo una cache immediata, non la fonte definitiva.
+  async function hydrateActivityFromServer(){
+    const t=token();if(!t)return false;
+    try{
+      const res=await fetch(apiBase+"/api/user/diary?date="+encodeURIComponent(localDate()),{headers:{"Authorization":"Bearer "+t},cache:"no-store"});
+      const data=await res.json();
+      const activity=data?.summary?.activity;
+      if(!res.ok||!data?.ok||!activity||typeof activity!=="object")return false;
+      const remote={steps:clean(activity.steps,100000),activeKcal:clean(activity.activeKcal,5000)};
+      write(remote);repaintHome();return true;
+    }catch(error){console.warn("Attività smartwatch non letta dal server:",error);return false}
+  }
   window.updateActivityPreview=refreshPreview;
-  window.openActivityModal=function(){const m=document.getElementById("activity-modal"),d=read(),steps=document.getElementById("activity-steps"),active=document.getElementById("activity-active-kcal");if(!m||!steps||!active)return;steps.value=d.steps||"";active.value=d.activeKcal||"";refreshPreview();m.style.display="flex";m.setAttribute("aria-hidden","false");setTimeout(()=>steps.focus(),50)};
+  window.openActivityModal=async function(){await hydrateActivityFromServer();const m=document.getElementById("activity-modal"),d=read(),steps=document.getElementById("activity-steps"),active=document.getElementById("activity-active-kcal");if(!m||!steps||!active)return;steps.value=d.steps||"";active.value=d.activeKcal||"";refreshPreview();m.style.display="flex";m.setAttribute("aria-hidden","false");setTimeout(()=>steps.focus(),50)};
   window.closeActivityModal=function(){const m=document.getElementById("activity-modal");if(m){m.style.display="none";m.setAttribute("aria-hidden","true")}};
   window.saveActivityCalories=async function(){const d={steps:clean(document.getElementById("activity-steps")?.value,100000),activeKcal:clean(document.getElementById("activity-active-kcal")?.value,5000)};write(d);repaintHome();try{await sync(d);window.closeActivityModal()}catch(e){console.error("Attività smartwatch non sincronizzata:",e);alert("Valore salvato sul dispositivo, ma non ancora sincronizzato al diario. Riprova quando la connessione è disponibile.");window.closeActivityModal()}};
   window.clearActivityCalories=async function(){const s=document.getElementById("activity-steps"),a=document.getElementById("activity-active-kcal");if(s)s.value="";if(a)a.value="";await window.saveActivityCalories()};
@@ -27102,7 +27115,11 @@ function dfaiPrepareManualEntry(){
     homeRefreshTimer=setTimeout(repaintHome,90);
   };
   repaintHome();
-  window.addEventListener("load",()=>{scheduleHomeRepaint();setTimeout(repaintHome,320)});
+  // Rilegge il server dopo il ripristino della sessione, così PC e cellulare
+  // convergono sullo stesso dato anche senza aprire subito la modal.
+  setTimeout(hydrateActivityFromServer,350);
+  setTimeout(hydrateActivityFromServer,1600);
+  window.addEventListener("load",()=>{scheduleHomeRepaint();setTimeout(repaintHome,320);setTimeout(hydrateActivityFromServer,700)});
   const homeTargets=[document.getElementById("ux2-goal-kcal"),document.getElementById("ux2-kcal-target"),document.getElementById("ux2-kcal-now")].filter(Boolean);
   if(homeTargets.length&&window.MutationObserver){
     new MutationObserver(scheduleHomeRepaint).observe(document.getElementById("ux2-home")||document.body,{childList:true,characterData:true,subtree:true});
