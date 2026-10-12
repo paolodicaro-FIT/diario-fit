@@ -27019,14 +27019,20 @@ function dfaiPrepareManualEntry(){
     const d=read(),credit=extra(d),goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),ring=document.getElementById("ux2-ring"),percent=document.getElementById("ux2-kcal-percent");
     // Il valore base viene fissato una sola volta; il dashboard principale
     // può ridisegnarsi dopo il salvataggio, ma non deve cancellare il credito passi.
-    const visibleBase=Number((goal?.dataset.baseKcal||target?.dataset.baseKcal||goal?.textContent||target?.textContent||"").replace(/[^0-9]/g,""))||0;
-    if(goal&&!goal.dataset.baseKcal)goal.dataset.baseKcal=String(visibleBase);
-    if(target&&!target.dataset.baseKcal)target.dataset.baseKcal=String(visibleBase);
-    const base=Number(goal?.dataset.baseKcal||target?.dataset.baseKcal)||0,adjusted=base+credit;
-    if(base&&goal&&goal.textContent!==String(adjusted))goal.textContent=String(adjusted);
-    if(base&&target&&target.textContent!==String(adjusted))target.textContent=String(adjusted);
+    // All'avvio i campi Home possono ancora contenere “—”: non usarlo mai
+    // come target base, altrimenti poche kcal di credito farebbero apparire 100%.
+    const storedBase=Number(goal?.dataset.baseKcal||target?.dataset.baseKcal)||0;
+    const displayedGoal=Number(String(goal?.textContent||"").replace(/[^0-9]/g,""))||0;
+    const displayedTarget=Number(String(target?.textContent||"").replace(/[^0-9]/g,""))||0;
+    const base=storedBase>=500 ? storedBase : (displayedGoal>=500 ? displayedGoal : (displayedTarget>=500 ? displayedTarget : 0));
+    if(base<500) return; // aspetta il vero target caricato dal dashboard
+    if(goal)goal.dataset.baseKcal=String(base);
+    if(target)target.dataset.baseKcal=String(base);
+    const adjusted=base+credit;
+    if(goal&&goal.textContent!==String(adjusted))goal.textContent=String(adjusted);
+    if(target&&target.textContent!==String(adjusted))target.textContent=String(adjusted);
     const eaten=Number(document.getElementById("ux2-kcal-now")?.textContent.replace(/[^0-9]/g,""))||0;
-    const pct=adjusted?Math.max(0,Math.min(100,Math.round(eaten/adjusted*100))):0;
+    const pct=Math.max(0,Math.min(100,Math.round(eaten/adjusted*100)));
     if(ring)ring.style.setProperty("--p",pct);
     if(percent)percent.textContent=pct+"%";
   };
