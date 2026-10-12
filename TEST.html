@@ -26966,5 +26966,76 @@ function dfaiPrepareManualEntry(){
 })();
 </script>
 
+
+<!-- DiarioFIT: bridge indipendente per attività smartwatch (fuori dagli script legacy) -->
+<style id="diariofit-activity-smartwatch-live">
+#activity-modal{z-index:10050}
+.activity-modal-content{max-width:480px}
+.activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
+.activity-input-label{display:block;margin-bottom:6px;font-weight:800}
+.activity-input-row{display:flex;align-items:center;gap:9px}
+.activity-input-row input{flex:1;min-width:0}
+.activity-input-row span{color:var(--muted);font-weight:800}
+.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}
+.activity-modal-actions{display:flex;gap:9px;margin-top:14px}.activity-modal-actions .btn{flex:1}
+</style>
+<div class="modal-overlay" id="activity-modal" aria-hidden="true">
+  <div class="modal-content activity-modal-content" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title">
+    <div class="modal-header">
+      <h3 id="activity-modal-title">⌚ Attività di oggi</h3>
+      <button class="modal-close" type="button" onclick="closeActivityModal()">✕</button>
+    </div>
+    <p class="activity-modal-intro">Inserisci le <strong>calorie attive</strong> riportate da smartwatch o app Salute: sono quelle attribuite al movimento, non il totale bruciato nella giornata.</p>
+    <label class="activity-input-label" for="activity-active-kcal">Calorie attive / extra di oggi</label>
+    <div class="activity-input-row"><input id="activity-active-kcal" type="number" inputmode="numeric" min="0" max="5000" step="1" placeholder="es. 420"><span>kcal</span></div>
+    <p class="activity-modal-note">DiarioFIT le conserva separatamente e non aumenta automaticamente il target: il target include già la tua attività abituale.</p>
+    <div class="activity-modal-actions"><button type="button" class="btn" onclick="clearActivityCalories()">Azzera</button><button type="button" class="btn primary" onclick="saveActivityCalories()">Salva attività</button></div>
+  </div>
+</div>
+<script id="diariofit-activity-smartwatch-live">
+(function(){
+  const apiBase="https://diario-fit-api.paolodicaro-3d.workers.dev";
+  const localDate=()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())};
+  const key=()=> "diariofit_activity_"+localDate();
+  const clean=v=>Math.max(0,Math.min(5000,Math.round(Number(v)||0)));
+  const get=()=>clean(localStorage.getItem(key()));
+  const set=v=>localStorage.setItem(key(),String(clean(v)));
+  const paint=()=>{
+    const v=get(), label=document.getElementById("ux2-activity-kcal"), note=document.getElementById("ux2-activity-note");
+    if(label) label.textContent=v ? "＋ "+v+" kcal" : "＋ Inserisci";
+    if(note) note.textContent=v ? "calorie attive registrate oggi" : "calorie attive · facoltativo";
+  };
+  const token=()=>localStorage.getItem("diario_backend_token");
+  async function sync(value){
+    const t=token(); if(!t) return;
+    const headers={"Authorization":"Bearer "+t,"Content-Type":"application/json"};
+    const date=localDate();
+    const getRes=await fetch(apiBase+"/api/user/diary?date="+encodeURIComponent(date),{headers,cache:"no-store"});
+    const data=await getRes.json();
+    if(!getRes.ok || !data.ok) throw new Error(data.error||"ACTIVITY_LOAD_FAILED");
+    const putRes=await fetch(apiBase+"/api/user/diary",{method:"PUT",headers,body:JSON.stringify({date,log:Array.isArray(data.log)?data.log:[],summary:{...(data.summary||{}),activity:{activeKcal:value,updatedAt:new Date().toISOString()}}})});
+    const saved=await putRes.json();
+    if(!putRes.ok || !saved.ok) throw new Error(saved.error||"ACTIVITY_SAVE_FAILED");
+  }
+  window.openActivityModal=function(){
+    const m=document.getElementById("activity-modal"), input=document.getElementById("activity-active-kcal");
+    if(!m||!input) return;
+    input.value=get()||"";m.style.display="flex";m.setAttribute("aria-hidden","false");
+    setTimeout(()=>input.focus(),50);
+  };
+  window.closeActivityModal=function(){const m=document.getElementById("activity-modal");if(m){m.style.display="none";m.setAttribute("aria-hidden","true")}};
+  window.saveActivityCalories=async function(){
+    const input=document.getElementById("activity-active-kcal"), raw=String(input?.value??"").trim().replace(",",".");
+    const number=raw===""?0:Number(raw);
+    if(!Number.isFinite(number)||number<0||number>5000){alert("Inserisci un valore tra 0 e 5.000 kcal.");return}
+    const value=clean(number);set(value);paint();
+    try{await sync(value);window.closeActivityModal()}catch(error){console.error("Attività smartwatch non sincronizzata:",error);alert("Valore salvato sul dispositivo, ma non ancora sincronizzato al diario. Riprova quando la connessione è disponibile.");window.closeActivityModal()}
+  };
+  window.clearActivityCalories=async function(){const input=document.getElementById("activity-active-kcal");if(input)input.value="";await window.saveActivityCalories()};
+  paint();
+  window.addEventListener("load",paint);
+})();
+</script>
+
 </body>
 </html>
