@@ -27053,16 +27053,19 @@ function dfaiPrepareManualEntry(){
   window.closeActivityModal=function(){const m=document.getElementById("activity-modal");if(m){m.style.display="none";m.setAttribute("aria-hidden","true")}};
   window.saveActivityCalories=async function(){const d={steps:clean(document.getElementById("activity-steps")?.value,100000),activeKcal:clean(document.getElementById("activity-active-kcal")?.value,5000)};write(d);repaintHome();try{await sync(d);window.closeActivityModal()}catch(e){console.error("Attività smartwatch non sincronizzata:",e);alert("Valore salvato sul dispositivo, ma non ancora sincronizzato al diario. Riprova quando la connessione è disponibile.");window.closeActivityModal()}};
   window.clearActivityCalories=async function(){const s=document.getElementById("activity-steps"),a=document.getElementById("activity-active-kcal");if(s)s.value="";if(a)a.value="";await window.saveActivityCalories()};
-  repaintHome();window.addEventListener("load",repaintHome);
-  // Il dashboard aggiorna spesso i testi dopo le azioni sul diario:
-  // osserviamo solo quei campi e riapplichiamo il credito attività.
-  const homeTargets=[document.getElementById("ux2-goal-kcal"),document.getElementById("ux2-kcal-target"),document.getElementById("ux2-kcal-now")].filter(Boolean);
+  // Il dashboard scrive prima singoli valori e poi completa la Home:
+  // il ricalcolo viene rinviato di un attimo, così percentuale e anello
+  // leggono insieme calorie introdotte e target effettivo.
   let homeRefreshTimer=null;
+  const scheduleHomeRepaint=()=>{
+    clearTimeout(homeRefreshTimer);
+    homeRefreshTimer=setTimeout(repaintHome,90);
+  };
+  repaintHome();
+  window.addEventListener("load",()=>{scheduleHomeRepaint();setTimeout(repaintHome,320)});
+  const homeTargets=[document.getElementById("ux2-goal-kcal"),document.getElementById("ux2-kcal-target"),document.getElementById("ux2-kcal-now")].filter(Boolean);
   if(homeTargets.length&&window.MutationObserver){
-    new MutationObserver(()=>{
-      clearTimeout(homeRefreshTimer);
-      homeRefreshTimer=setTimeout(repaintHome,0);
-    }).observe(document.getElementById("ux2-home")||document.body,{childList:true,characterData:true,subtree:true});
+    new MutationObserver(scheduleHomeRepaint).observe(document.getElementById("ux2-home")||document.body,{childList:true,characterData:true,subtree:true});
   }
 })();
 </script>
