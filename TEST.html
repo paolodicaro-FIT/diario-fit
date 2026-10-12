@@ -27016,16 +27016,19 @@ function dfaiPrepareManualEntry(){
   const write=d=>localStorage.setItem(key(),JSON.stringify({...d,extraKcal:extra(d),updatedAt:new Date().toISOString()}));
   const fmt=n=>Number(n||0).toLocaleString("it-IT");
   const repaintHome=()=>{
-    const d=read(), credit=extra(d),label=document.getElementById("ux2-activity-kcal"),note=document.getElementById("ux2-activity-note");
-    if(label)label.textContent=d.steps?fmt(d.steps)+" passi · +"+credit+" kcal":d.activeKcal?"＋ "+d.activeKcal+" kcal":"＋ Inserisci";
-    if(note)note.textContent=d.steps?(credit?"credito oltre 6.000 passi":"attività base inclusa nel target"):"passi e calorie attive · facoltativo";
-    const goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),ring=document.getElementById("ux2-ring");
-    if(goal&&!goal.dataset.baseKcal)goal.dataset.baseKcal=goal.textContent.replace(/[^0-9]/g,"");
-    const base=Number(goal?.dataset.baseKcal)||0, adjusted=base+credit;
-    if(base&&goal)goal.textContent=adjusted;
-    if(base&&target)target.textContent=adjusted;
+    const d=read(),credit=extra(d),goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),ring=document.getElementById("ux2-ring"),percent=document.getElementById("ux2-kcal-percent");
+    // Il valore base viene fissato una sola volta; il dashboard principale
+    // può ridisegnarsi dopo il salvataggio, ma non deve cancellare il credito passi.
+    const visibleBase=Number((goal?.dataset.baseKcal||target?.dataset.baseKcal||goal?.textContent||target?.textContent||"").replace(/[^0-9]/g,""))||0;
+    if(goal&&!goal.dataset.baseKcal)goal.dataset.baseKcal=String(visibleBase);
+    if(target&&!target.dataset.baseKcal)target.dataset.baseKcal=String(visibleBase);
+    const base=Number(goal?.dataset.baseKcal||target?.dataset.baseKcal)||0,adjusted=base+credit;
+    if(base&&goal&&goal.textContent!==String(adjusted))goal.textContent=String(adjusted);
+    if(base&&target&&target.textContent!==String(adjusted))target.textContent=String(adjusted);
     const eaten=Number(document.getElementById("ux2-kcal-now")?.textContent.replace(/[^0-9]/g,""))||0;
-    if(ring&&adjusted)ring.style.setProperty("--p",Math.max(0,Math.min(100,Math.round(eaten/adjusted*100))));
+    const pct=adjusted?Math.max(0,Math.min(100,Math.round(eaten/adjusted*100))):0;
+    if(ring)ring.style.setProperty("--p",pct);
+    if(percent)percent.textContent=pct+"%";
   };
   const refreshPreview=()=>{
     const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
@@ -27045,6 +27048,16 @@ function dfaiPrepareManualEntry(){
   window.saveActivityCalories=async function(){const d={steps:clean(document.getElementById("activity-steps")?.value,100000),activeKcal:clean(document.getElementById("activity-active-kcal")?.value,5000)};write(d);repaintHome();try{await sync(d);window.closeActivityModal()}catch(e){console.error("Attività smartwatch non sincronizzata:",e);alert("Valore salvato sul dispositivo, ma non ancora sincronizzato al diario. Riprova quando la connessione è disponibile.");window.closeActivityModal()}};
   window.clearActivityCalories=async function(){const s=document.getElementById("activity-steps"),a=document.getElementById("activity-active-kcal");if(s)s.value="";if(a)a.value="";await window.saveActivityCalories()};
   repaintHome();window.addEventListener("load",repaintHome);
+  // Il dashboard aggiorna spesso i testi dopo le azioni sul diario:
+  // osserviamo solo quei campi e riapplichiamo il credito attività.
+  const homeTargets=[document.getElementById("ux2-goal-kcal"),document.getElementById("ux2-kcal-target"),document.getElementById("ux2-kcal-now")].filter(Boolean);
+  let homeRefreshTimer=null;
+  if(homeTargets.length&&window.MutationObserver){
+    new MutationObserver(()=>{
+      clearTimeout(homeRefreshTimer);
+      homeRefreshTimer=setTimeout(repaintHome,0);
+    }).observe(document.getElementById("ux2-home")||document.body,{childList:true,characterData:true,subtree:true});
+  }
 })();
 </script>
 
