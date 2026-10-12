@@ -9254,6 +9254,45 @@ html[data-theme="light"] .missing-today-legend {
   #bodycomp-photo-guide-modal[data-guide="cm"] .bodycomp-photo-guide-mobile-copy p:last-child{margin:0;color:#e4f4ff;font-size:.88rem;line-height:1.48}
 }
 </style>
+
+<style id="diariofit-activity-smartwatch">
+/* Attività smartwatch — dato giornaliero, esplicito e modificabile */
+.ux2-activity{
+  width:min(100%,230px);
+  padding:9px 10px;
+  border:1px solid rgba(167,139,250,.52);
+  border-radius:13px;
+  background:linear-gradient(135deg,rgba(88,58,151,.48),rgba(31,55,94,.62));
+  color:#f5f3ff;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(74,55,140,.15);
+}
+.ux2-activity span,.ux2-activity small{display:block}
+.ux2-activity span{font-size:.68rem;font-weight:800;color:#ddd6fe}
+.ux2-activity strong{display:block;margin:3px 0 1px;font-size:.95rem}
+.ux2-activity small{font-size:.59rem;color:#c4b5fd}
+.activity-modal-content{max-width:480px}
+.activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
+.activity-modal-intro strong{color:var(--text)}
+.activity-input-label{display:block;margin-bottom:6px;font-weight:800}
+.activity-input-row{display:flex;align-items:center;gap:9px}
+.activity-input-row input{flex:1;min-width:0}
+.activity-input-row span{color:var(--muted);font-weight:800}
+.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}
+.activity-modal-actions{display:flex;gap:9px;margin-top:14px}
+.activity-modal-actions .btn{flex:1}
+.activity-status-row{margin-top:3px;padding:9px 10px;border:1px solid rgba(167,139,250,.22);border-radius:12px;background:rgba(167,139,250,.07)}
+.activity-status-row strong{display:block;font-size:.8rem}
+.activity-status-row small{display:block;margin-top:2px;color:var(--muted);font-size:.7rem;line-height:1.25}
+.activity-status-row button{margin-top:7px;padding:0;border:0;background:none;color:#c4b5fd;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer}
+@media(max-width:760px){
+  .ux2-activity{grid-column:1 / -1;width:100%;padding:8px 10px}
+  .ux2-activity span,.ux2-activity small{display:inline}
+  .ux2-activity strong{display:inline;margin:0 4px;font-size:.86rem}
+}
+</style>
+
 </head>
 
 
@@ -9445,6 +9484,11 @@ html[data-theme="light"] .missing-today-legend {
         </div>
       </div>
       <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+      <button type="button" class="ux2-activity" onclick="openActivityModal()" aria-label="Inserisci calorie attive dello smartwatch">
+        <span>⌚ Attività smartwatch</span>
+        <strong id="ux2-activity-kcal">＋ Inserisci</strong>
+        <small id="ux2-activity-note">calorie attive · facoltativo</small>
+      </button>
     </section>
 
     <section class="ux2-macros">
@@ -10763,6 +10807,7 @@ html[data-theme="light"] .missing-today-legend {
       <div id="missing-carb"></div>
       <div id="missing-sugar"></div>
       <div id="missing-water"></div>
+      <div id="missing-activity"></div>
 
     </div>
 
@@ -13188,6 +13233,36 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
   <div class="day-planner-body"><div class="day-planner-summary" id="day-planner-summary"></div><section class="day-planner-block"><h4>1. Alimenti disponibili</h4><p>Puoi usare i tuoi alimenti, i rapidi e i preset. Aggiungi solo ciò che hai o prevedi di mangiare oggi.</p><input id="day-planner-food-search" class="day-planner-search" type="search" placeholder="Cerca: pasta, tonno, yogurt…" oninput="renderDayPlannerFoodSearch()" autocomplete="off"><div class="day-planner-food-results" id="day-planner-food-results"></div><div class="day-planner-chips" id="day-planner-selected-foods"></div></section><section class="day-planner-block"><h4>2. Pasti ancora da fare</h4><p>La selezione iniziale segue l'orario; puoi correggerla liberamente.</p><div class="day-planner-slots" id="day-planner-slots"></div><label class="day-planner-workout"><input id="day-planner-workout" type="checkbox"> 🏋️ Oggi mi alleno: dai priorità a una quota proteica e carboidrati intorno all'allenamento.</label></section><div class="day-planner-actions"><button type="button" class="day-planner-primary" onclick="generateDayPlannerPlan()">✨ Crea proposta</button><button type="button" class="day-planner-secondary" onclick="saveDayPlannerDraft()">Salva bozza</button></div><section class="day-planner-result" id="day-planner-result" aria-live="polite"></section></div>
  </section>
 </div>
+
+<!-- =====================================================
+     MODAL ATTIVITÀ SMARTWATCH
+===================================================== -->
+<div class="modal-overlay" id="activity-modal">
+  <div class="modal-content activity-modal-content">
+    <div class="modal-header">
+      <h3>⌚ Attività di oggi</h3>
+      <button class="modal-close" type="button" onclick="closeActivityModal()">✕</button>
+    </div>
+    <p class="activity-modal-intro">
+      Inserisci le <strong>calorie attive</strong> riportate da smartwatch o app Salute:
+      sono le calorie attribuite al movimento, non il totale bruciato nella giornata.
+    </p>
+    <label class="activity-input-label" for="activity-active-kcal">Calorie attive / extra di oggi</label>
+    <div class="activity-input-row">
+      <input id="activity-active-kcal" type="number" inputmode="numeric" min="0" max="5000" step="1" placeholder="es. 420">
+      <span>kcal</span>
+    </div>
+    <p class="activity-modal-note">
+      DiarioFIT le mostra separatamente e non aumenta automaticamente il tuo target:
+      il target comprende già la tua attività abituale. Usa questo dato come riferimento per le giornate più attive.
+    </p>
+    <div class="activity-modal-actions">
+      <button type="button" class="btn" onclick="clearActivityCalories()">Azzera</button>
+      <button type="button" class="btn primary" onclick="saveActivityCalories()">Salva attività</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>`);
   printWindow.document.close();
@@ -13524,6 +13599,8 @@ let userSettings = {};
 let historyLogs;
 let log;
 let currentDiaryTargetSnapshot = null;
+/* Attività del giorno: valore volontario inserito dall'utente dallo smartwatch. */
+let currentDiaryActivity = { activeKcal: 0, updatedAt: null };
 let quickAddItems;
 
 let selectedFoodValue = "";
@@ -13603,6 +13680,10 @@ async function loadUserDiaryFromBackend(dateKey) {
     typeof data.summary.targetSnapshot === "object"
       ? { ...data.summary.targetSnapshot }
       : null;
+
+  currentDiaryActivity = normalizeDiaryActivity(
+    data.summary?.activity
+  );
 
   // Un giorno marcato come chiuso resta comunque consultabile:
   // `closed` e un metadato di stato, non deve mai svuotare il diario caricato.
@@ -13690,6 +13771,14 @@ async function saveUserDiaryToBackend(
     sugar: round1(computedSummary.sugar) + "g",
     water: Math.round(computedSummary.water) + "ml"
   };
+
+  // L'attività è giornaliera, non un'impostazione permanente.
+  // Viene aggiunta solo nel salvataggio della giornata aperta.
+  if (dateKey === getLocalISODate()) {
+    completeSummary.activity = normalizeDiaryActivity(
+      currentDiaryActivity
+    );
+  }
 
   const storedSnapshot =
     incomingSummary.targetSnapshot &&
@@ -23551,6 +23640,14 @@ function openMissingTodayModal() {
     "water"
   );
 
+  const activeKcal = getDiaryActiveCalories();
+  const activityRow = document.getElementById("missing-activity");
+  if (activityRow) {
+    activityRow.innerHTML = activeKcal
+      ? '<div class="activity-status-row"><strong>⌚ Attività smartwatch · ' + activeKcal + ' kcal attive</strong><small>Dato registrato separatamente: non modifica automaticamente il target alimentare.</small><button type="button" onclick="closeMissingTodayModal();openActivityModal()">Modifica attività</button></div>'
+      : '<div class="activity-status-row"><strong>⌚ Attività smartwatch</strong><small>Puoi registrare facoltativamente le calorie attive del tuo orologio.</small><button type="button" onclick="closeMissingTodayModal();openActivityModal()">＋ Inserisci calorie attive</button></div>';
+  }
+
 
   document.getElementById(
     "missing-today-modal"
@@ -25924,6 +26021,70 @@ window.addEventListener("resize",()=>{
    DIARIOFIT UX BETA V2.2 — BRIDGE ALLA LOGICA ESISTENTE
    La nuova Home legge direttamente log + TARGETS.
 ========================================================= */
+
+/* =========================================================
+   ATTIVITÀ SMARTWATCH — calorie attive giornaliere
+========================================================= */
+function normalizeDiaryActivity(activity) {
+  const raw = Number(
+    activity && typeof activity === "object"
+      ? activity.activeKcal
+      : activity
+  );
+  return {
+    activeKcal: Number.isFinite(raw)
+      ? Math.max(0, Math.min(5000, Math.round(raw)))
+      : 0,
+    updatedAt:
+      activity && typeof activity === "object" && activity.updatedAt
+        ? activity.updatedAt
+        : null
+  };
+}
+function getDiaryActiveCalories() {
+  return normalizeDiaryActivity(currentDiaryActivity).activeKcal;
+}
+function openActivityModal() {
+  const modal = document.getElementById("activity-modal");
+  const input = document.getElementById("activity-active-kcal");
+  if (!modal || !input) return;
+  input.value = getDiaryActiveCalories() || "";
+  modal.style.display = "flex";
+  window.setTimeout(() => input.focus(), 60);
+}
+function closeActivityModal() {
+  const modal = document.getElementById("activity-modal");
+  if (modal) modal.style.display = "none";
+}
+async function saveActivityCalories() {
+  if (!ensureDiaryWriteAccess()) return;
+  const input = document.getElementById("activity-active-kcal");
+  const raw = String(input?.value ?? "").trim().replace(",", ".");
+  const value = raw === "" ? 0 : Number(raw);
+  if (!Number.isFinite(value) || value < 0 || value > 5000) {
+    alert("Inserisci un valore tra 0 e 5.000 kcal.");
+    return;
+  }
+  currentDiaryActivity = {
+    activeKcal: Math.round(value),
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    await saveUserDiaryToBackend();
+    updateDashboard();
+    ux2SyncHome();
+    closeActivityModal();
+  } catch (error) {
+    console.error("Errore salvataggio attività:", error);
+    alert("Non sono riuscito a salvare l'attività. Riprova.");
+  }
+}
+async function clearActivityCalories() {
+  const input = document.getElementById("activity-active-kcal");
+  if (input) input.value = "";
+  await saveActivityCalories();
+}
+
 function ux2Pct(v,t){
   return Number(t)>0 ? Math.max(0,Math.min(100,(Number(v)||0)/Number(t)*100)) : 0;
 }
@@ -25983,6 +26144,10 @@ function ux2SyncHome(){
   ux2Put("ux2-fat-target",TARGETS.fat);
   ux2Put("ux2-sugar-target",TARGETS.sugar);
   ux2Put("ux2-water-target",TARGETS.water);
+
+  const activeKcal = getDiaryActiveCalories();
+  ux2Put("ux2-activity-kcal", activeKcal ? "＋ " + activeKcal + " kcal" : "＋ Inserisci");
+  ux2Put("ux2-activity-note", activeKcal ? "calorie attive registrate oggi" : "calorie attive · facoltativo");
 
   const kp=Math.round(ux2Pct(t.kcal,TARGETS.kcal));
   ux2Put("ux2-kcal-percent",kp+"%");
