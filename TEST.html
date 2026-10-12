@@ -27010,6 +27010,11 @@ function dfaiPrepareManualEntry(){
 <style id="diariofit-activity-smartwatch-live">
 #activity-modal{z-index:10050}.activity-modal-content{max-width:500px}
 .activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
+.activity-meaning{margin:0 0 12px;padding:10px 11px;border:1px solid rgba(56,189,248,.25);border-radius:12px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(167,139,250,.07));font-size:.74rem;line-height:1.35}
+.activity-meaning>strong{display:block;margin-bottom:5px;color:#dff5ff;font-size:.79rem}
+.activity-meaning p{margin:5px 0;color:#c6d8e1}.activity-meaning b{color:#fff}
+.activity-ring-legend{display:grid;gap:4px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.10);color:#dce8ff;font-size:.68rem}
+.activity-dot{display:inline-block;width:8px;height:8px;margin:0 5px 0 1px;border-radius:50%}.activity-dot.base{background:linear-gradient(135deg,#22d3ee,#22c55e)}.activity-dot.extra{background:#a78bfa}
 .activity-input-label{display:block;margin:12px 0 6px;font-weight:800}.activity-input-row{display:flex;align-items:center;gap:9px}.activity-input-row input{flex:1;min-width:0}.activity-input-row span{color:var(--muted);font-weight:800}
 .activity-steps-chart{margin-top:14px;padding:10px;border:1px solid rgba(56,189,248,.20);border-radius:12px;background:rgba(56,189,248,.055)}
 .activity-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.activity-chart-head strong{font-size:.78rem}.activity-chart-head span{color:#c4b5fd;font-size:.73rem;font-weight:850}
@@ -27020,6 +27025,15 @@ function dfaiPrepareManualEntry(){
   <div class="modal-content activity-modal-content" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title">
     <div class="modal-header"><h3 id="activity-modal-title">⌚ Attività di oggi</h3><button class="modal-close" type="button" onclick="closeActivityModal()">✕</button></div>
     <p class="activity-modal-intro">Inserisci i <strong>passi</strong> e, se disponibile, le <strong>calorie attive</strong> riportate da smartwatch o app Salute.</p>
+    <div class="activity-meaning">
+      <strong>Come leggere il risultato</strong>
+      <p>🎯 Il <b>target base</b> non cambia: è il tuo riferimento alimentare normale.</p>
+      <p>⌚ Se superi i 6.000 passi, DiarioFIT calcola un <b>margine extra</b> per il movimento in più. Non è un obbligo di mangiare di più: è un margine disponibile nelle giornate più attive.</p>
+      <div class="activity-ring-legend">
+        <span><i class="activity-dot base"></i>Anello interno: target base</span>
+        <span><i class="activity-dot extra"></i>Anello esterno: target con attività</span>
+      </div>
+    </div>
     <label class="activity-input-label" for="activity-steps">Passi di oggi</label>
     <div class="activity-input-row"><input id="activity-steps" type="number" inputmode="numeric" min="0" max="100000" step="1" placeholder="es. 8400" oninput="updateActivityPreview()"><span>passi</span></div>
     <label class="activity-input-label" for="activity-active-kcal">Calorie attive rilevate <small style="font-weight:500;color:var(--muted)">(facoltative)</small></label>
