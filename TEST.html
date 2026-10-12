@@ -9293,6 +9293,21 @@ html[data-theme="light"] .missing-today-legend {
 }
 </style>
 
+
+<style id="diariofit-activity-status-entry">
+.missing-today-activity-btn{
+  width:100%;display:flex;align-items:center;gap:10px;margin-top:8px;padding:10px 11px;
+  border:1px solid rgba(167,139,250,.34);border-radius:12px;
+  background:linear-gradient(135deg,rgba(94,65,156,.22),rgba(47,71,119,.20));
+  color:var(--text);text-align:left;cursor:pointer;
+}
+.missing-today-activity-btn>span:first-child{font-size:1.2rem}
+.missing-today-activity-btn>span:nth-child(2){flex:1;min-width:0}
+.missing-today-activity-btn strong,.missing-today-activity-btn small{display:block}
+.missing-today-activity-btn strong{font-size:.78rem}.missing-today-activity-btn small{margin-top:2px;color:var(--muted);font-size:.65rem}
+.missing-today-activity-btn>b{color:#c4b5fd;font-size:1.25rem}
+</style>
+
 </head>
 
 
@@ -9484,11 +9499,6 @@ html[data-theme="light"] .missing-today-legend {
         </div>
       </div>
       <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
-      <button type="button" class="ux2-activity" onclick="openActivityModal()" aria-label="Inserisci calorie attive dello smartwatch">
-        <span>⌚ Attività smartwatch</span>
-        <strong id="ux2-activity-kcal">＋ Inserisci</strong>
-        <small id="ux2-activity-note">calorie attive · facoltativo</small>
-      </button>
     </section>
 
     <section class="ux2-macros">
@@ -10810,6 +10820,16 @@ html[data-theme="light"] .missing-today-legend {
       <div id="missing-activity"></div>
 
     </div>
+
+    <button
+      type="button"
+      class="missing-today-activity-btn"
+      onclick="openActivityModal()"
+    >
+      <span>⌚</span>
+      <span><strong>Passi e attività smartwatch</strong><small>Registra i passi e le calorie attive di oggi</small></span>
+      <b>›</b>
+    </button>
 
     <details class="missing-today-legend" id="missing-today-legend">
       <summary>ⓘ Come leggere le barre</summary>
