@@ -9308,7 +9308,24 @@ html[data-theme="light"] .missing-today-legend {
 .missing-today-activity-btn>b{color:#c4b5fd;font-size:1.25rem}
 </style>
 
-</head>
+
+<style id="diariofit-dual-calorie-rings">
+/* Due anelli: il verde/gradiente è sempre il target base; il viola compare solo per l'attività. */
+.ux2-ring-wrap{position:relative;width:230px;height:230px;margin:auto}
+.ux2-activity-ring{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:transparent;transition:background .3s ease}
+.ux2-activity-ring.is-active{background:conic-gradient(#a78bfa calc(var(--activity-p,0)*1%),#253b55 0);box-shadow:0 0 22px rgba(167,139,250,.22)}
+.ux2-ring{position:relative!important;width:calc(100% - 18px)!important;height:calc(100% - 18px)!important;margin:9px!important;z-index:1;transition:background .3s ease,box-shadow .3s ease}
+.ux2-goal{display:flex!important;flex-direction:column;gap:7px}
+.ux2-goal-base,.ux2-goal-activity{display:block}
+.ux2-goal-activity{padding-top:6px;border-top:1px solid rgba(167,139,250,.42);color:#ddd6fe}
+.ux2-goal-activity b{color:#ede9fe!important}
+@media(max-width:760px){
+ .ux2-ring-wrap{width:190px;height:190px}
+ .ux2-ring{width:calc(100% - 16px)!important;height:calc(100% - 16px)!important;margin:8px!important}
+ .ux2-goal{gap:6px}
+ .ux2-goal-activity{padding-top:5px}
+}
+</style></head>
 
 
 <body>
@@ -9489,16 +9506,23 @@ html[data-theme="light"] .missing-today-legend {
   <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
   <main id="ux2-home" aria-label="Oggi">
     <section class="ux2-calorie-zone">
-      <div class="ux2-ring" id="ux2-ring">
-        <div class="ux2-ring-content">
-          <div class="ux2-flame">🔥</div>
-          <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
-          <div class="ux2-kcal-unit">kcal</div>
-          <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
-          <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+      <div class="ux2-ring-wrap">
+        <div class="ux2-activity-ring" id="ux2-activity-ring" aria-label="Anello attività">
+          <div class="ux2-ring" id="ux2-ring" aria-label="Anello target base">
+            <div class="ux2-ring-content">
+              <div class="ux2-flame">🔥</div>
+              <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
+              <div class="ux2-kcal-unit">kcal</div>
+              <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
+              <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="ux2-goal">🎯<small>Obiettivo</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+      <div class="ux2-goal">
+        <div class="ux2-goal-base">🎯<small>Target base</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
+        <div class="ux2-goal-activity" id="ux2-goal-activity" hidden>⌚<small>Con attività</small><b id="ux2-activity-target-kcal">—</b><small>kcal</small></div>
+      </div>
     </section>
 
     <section class="ux2-macros">
@@ -27016,25 +27040,27 @@ function dfaiPrepareManualEntry(){
   const write=d=>localStorage.setItem(key(),JSON.stringify({...d,extraKcal:extra(d),updatedAt:new Date().toISOString()}));
   const fmt=n=>Number(n||0).toLocaleString("it-IT");
   const repaintHome=()=>{
-    const d=read(),credit=extra(d),goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),ring=document.getElementById("ux2-ring"),percent=document.getElementById("ux2-kcal-percent");
-    // Il valore base viene fissato una sola volta; il dashboard principale
-    // può ridisegnarsi dopo il salvataggio, ma non deve cancellare il credito passi.
-    // All'avvio i campi Home possono ancora contenere “—”: non usarlo mai
-    // come target base, altrimenti poche kcal di credito farebbero apparire 100%.
+    const d=read(),credit=extra(d),goal=document.getElementById("ux2-goal-kcal"),target=document.getElementById("ux2-kcal-target"),baseRing=document.getElementById("ux2-ring"),activityRing=document.getElementById("ux2-activity-ring"),percent=document.getElementById("ux2-kcal-percent"),activityGoal=document.getElementById("ux2-goal-activity"),activityTarget=document.getElementById("ux2-activity-target-kcal");
+    // Target base: non viene mai sostituito dall'attività.
     const storedBase=Number(goal?.dataset.baseKcal||target?.dataset.baseKcal)||0;
     const displayedGoal=Number(String(goal?.textContent||"").replace(/[^0-9]/g,""))||0;
     const displayedTarget=Number(String(target?.textContent||"").replace(/[^0-9]/g,""))||0;
-    const base=storedBase>=500 ? storedBase : (displayedGoal>=500 ? displayedGoal : (displayedTarget>=500 ? displayedTarget : 0));
-    if(base<500) return; // aspetta il vero target caricato dal dashboard
+    const base=storedBase>=500?storedBase:(displayedGoal>=500?displayedGoal:(displayedTarget>=500?displayedTarget:0));
+    if(base<500)return;
     if(goal)goal.dataset.baseKcal=String(base);
     if(target)target.dataset.baseKcal=String(base);
-    const adjusted=base+credit;
-    if(goal&&goal.textContent!==String(adjusted))goal.textContent=String(adjusted);
-    if(target&&target.textContent!==String(adjusted))target.textContent=String(adjusted);
+    if(goal&&goal.textContent!==String(base))goal.textContent=String(base);
+    if(target&&target.textContent!==String(base))target.textContent=String(base);
     const eaten=Number(document.getElementById("ux2-kcal-now")?.textContent.replace(/[^0-9]/g,""))||0;
-    const pct=Math.max(0,Math.min(100,Math.round(eaten/adjusted*100)));
-    if(ring)ring.style.setProperty("--p",pct);
-    if(percent)percent.textContent=pct+"%";
+    const basePct=Math.max(0,Math.min(100,Math.round(eaten/base*100)));
+    const activityTargetValue=base+credit;
+    const activityPct=Math.max(0,Math.min(100,Math.round(eaten/activityTargetValue*100)));
+    const baseGradient=basePct<75?["#38bdf8","#22d3ee"]:basePct<=110?["#22d3ee","#22c55e"]:["#f59e0b","#ef4444"];
+    if(baseRing){baseRing.style.setProperty("--p",basePct);baseRing.style.background="conic-gradient("+baseGradient[0]+" 0%,"+baseGradient[1]+" "+basePct+"%,#35596a "+basePct+"%,#35596a 100%)";}
+    if(percent)percent.textContent=basePct+"%";
+    if(activityRing){activityRing.classList.toggle("is-active",credit>0);activityRing.style.setProperty("--activity-p",activityPct);}
+    if(activityGoal)activityGoal.hidden=credit<=0;
+    if(activityTarget)activityTarget.textContent=String(activityTargetValue);
   };
   const refreshPreview=()=>{
     const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
