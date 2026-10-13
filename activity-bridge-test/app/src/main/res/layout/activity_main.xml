@@ -1,0 +1,10 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp" android:orientation="vertical">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⌚ DiarioFIT Activity Bridge" android:textStyle="bold" android:textSize="24sp"/>
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="TEST · Legge passi e calorie attive da Health Connect e li invia alla pagina TEST di DiarioFIT." android:textSize="16sp"/>
+<TextView android:id="@+id/status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:padding="16dp" android:text="Controllo Health Connect…" android:textSize="16sp"/>
+<Button android:id="@+id/importButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="Leggi da Health Connect"/>
+<Button android:id="@+id/sendButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:enabled="false" android:text="Invia a DiarioFIT TEST"/>
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="La lettura avviene soltanto quando premi il pulsante. Non vengono letti pasti, peso, sonno o altri dati." android:textSize="14sp"/>
+</LinearLayout>
+</ScrollView>
