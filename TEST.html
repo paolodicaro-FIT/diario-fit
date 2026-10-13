@@ -27101,6 +27101,31 @@ function dfaiPrepareManualEntry(){
       write(remote);repaintHome();return true;
     }catch(error){console.warn("Attività smartwatch non letta dal server:",error);return false}
   }
+  // Importazione esplicita dal companion Android Activity Bridge TEST.
+  // Il companion apre questa pagina soltanto dopo un tap dell'utente e passa
+  // i due valori letti da Health Connect; il salvataggio resta nel suo account.
+  async function importFromActivityBridge(){
+    const params=new URLSearchParams(location.search);
+    if(params.get("dfBridge")!=="healthconnect")return;
+    const steps=clean(params.get("steps"),100000);
+    const activeKcal=clean(params.get("activeKcal"),5000);
+    const cleanUrl=location.pathname+(location.hash||"");
+    if(!token()){
+      history.replaceState({},document.title,cleanUrl);
+      alert("Apri prima TEST di DiarioFIT ed effettua l'accesso: poi riprova dall'Activity Bridge.");
+      return;
+    }
+    const d={steps,activeKcal};
+    write(d);repaintHome();
+    try{
+      await sync(d);
+      history.replaceState({},document.title,cleanUrl);
+      alert("Attività importata da Health Connect: "+fmt(steps)+" passi · "+fmt(activeKcal)+" kcal attive.");
+    }catch(error){
+      console.error("Importazione Activity Bridge non sincronizzata:",error);
+      alert("Dati letti, ma non ancora sincronizzati. Controlla la connessione e riprova dall'Activity Bridge.");
+    }
+  }
   window.updateActivityPreview=refreshPreview;
   window.openActivityModal=async function(){await hydrateActivityFromServer();const m=document.getElementById("activity-modal"),d=read(),steps=document.getElementById("activity-steps"),active=document.getElementById("activity-active-kcal");if(!m||!steps||!active)return;steps.value=d.steps||"";active.value=d.activeKcal||"";refreshPreview();m.style.display="flex";m.setAttribute("aria-hidden","false");setTimeout(()=>steps.focus(),50)};
   window.closeActivityModal=function(){const m=document.getElementById("activity-modal");if(m){m.style.display="none";m.setAttribute("aria-hidden","true")}};
@@ -27115,6 +27140,7 @@ function dfaiPrepareManualEntry(){
     homeRefreshTimer=setTimeout(repaintHome,90);
   };
   repaintHome();
+  setTimeout(importFromActivityBridge,500);
   // Rilegge il server dopo il ripristino della sessione, così PC e cellulare
   // convergono sullo stesso dato anche senza aprire subito la modal.
   setTimeout(hydrateActivityFromServer,350);
