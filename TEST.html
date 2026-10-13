@@ -27140,6 +27140,7 @@ function dfaiPrepareManualEntry(){
     homeRefreshTimer=setTimeout(repaintHome,90);
   };
   repaintHome();
+  setTimeout(importFromActivityBridge,500);
   // Rilegge il server dopo il ripristino della sessione, così PC e cellulare
   // convergono sullo stesso dato anche senza aprire subito la modal.
   setTimeout(hydrateActivityFromServer,350);
