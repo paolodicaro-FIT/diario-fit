@@ -1,0 +1,26 @@
+name: Build Activity Bridge TEST
+on:
+  push:
+    branches: [activity-bridge-test]
+    paths: ['activity-bridge-test/**', '.github/workflows/build-activity-bridge-test.yml']
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: activity-bridge-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - run: gradle :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DiarioFIT-Activity-Bridge-TEST-apk
+          path: activity-bridge-test/app/build/outputs/apk/debug/app-debug.apk
