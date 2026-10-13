@@ -12560,6 +12560,7 @@ html[data-theme="light"] .missing-today-legend {
     </div>
 
 
+    <button type="button" class="btn primary" style="margin-bottom:14px" onclick="toggleHelpModal();dfStartOpen()">👋 Primi passi con DiarioFIT</button>
     <section class="help2-hero">
 
       <div class="help2-hero-logo-wrap">
@@ -13307,6 +13308,109 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
     </div>
   </div>
 </div>
+
+
+<!-- Primo utilizzo DiarioFIT · TEST -->
+<style>
+#df-start-modal{z-index:10060}
+.df-start-content{max-width:480px;width:100%;max-height:90dvh;overflow:auto}
+.df-start-content p{font-size:1rem;line-height:1.55;color:var(--subtext)}
+.df-start-progress{display:flex;gap:8px;margin:16px 0}
+.df-start-progress span{height:5px;flex:1;border-radius:8px;background:var(--border)}
+.df-start-progress span.active{background:linear-gradient(90deg,var(--accent),var(--green))}
+.df-start-box{background:var(--card-2);padding:16px;border:1px solid var(--border);border-radius:14px;margin:16px 0}
+.df-start-box h4{margin:0 0 10px;font-size:1.15rem}
+.df-start-box p{margin:8px 0}
+.df-start-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.df-start-actions button{flex:1;min-height:46px}
+.df-start-content button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+<div id="df-start-modal" class="modal-overlay" style="display:none" aria-hidden="true">
+<section class="modal-content df-start-content" role="dialog" aria-modal="true" aria-labelledby="df-start-title" tabindex="-1">
+<div class="modal-header"><h3 id="df-start-title">👋 Benvenuto in DiarioFIT</h3><button type="button" class="modal-close" aria-label="Chiudi la guida" onclick="dfStartClose()">✕</button></div>
+<p>Semplice oggi. Completo quando serve.<br>Quattro piccoli passi per iniziare.</p>
+<div class="df-start-progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<div id="df-start-body" aria-live="polite"></div>
+<p id="df-start-error" role="alert" style="color:var(--red)"></p>
+<div class="df-start-actions"><button id="df-start-back" type="button" class="btn" onclick="dfStartBack()">Indietro</button><button id="df-start-next" type="button" class="btn primary" onclick="dfStartNext()">Avanti</button></div>
+<button type="button" class="mini-btn" style="margin-top:14px" onclick="dfStartClose()">Continua più tardi</button>
+</section></div>
+<script id="df-first-use">
+let dfStartStep=0,dfStartTargetPending=false,dfStartFocus=null;
+const dfStartPages=[
+ ['🎯 1. Imposta i tuoi target','I target sono i tuoi riferimenti giornalieri per calorie, proteine, carboidrati, grassi e acqua. Gli zuccheri sono un limite da tenere sotto controllo, non una quantità da raggiungere.','Usa il calcolatore con i tuoi dati e il tuo obiettivo, oppure inserisci i valori che hai già. Potrai modificarli in seguito.'],
+ ['🍽️ 2. Registra quello che mangi','Da “Aggiungi alimento” cerca un alimento oppure inserisci i valori manualmente. Controlla la quantità: i valori devono riferirsi alla porzione che mangi.','Nell’anteprima puoi correggere nome e quantità; poi scegli il pasto e conferma. Se usi “Analizza foto pasto”, controlla sempre la stima, soprattutto olio e condimenti.'],
+ ['💧 3. Guarda come procede oggi','Registra anche l’acqua bevuta. Nella Home trovi quanto hai assunto e il confronto con i tuoi target.','Il riepilogo mostra ciò che hai registrato fino a quel momento. Se pianifichi la giornata, gli alimenti entreranno nel diario solo quando confermi di averli mangiati.'],
+ ['📈 4. Segui i tuoi progressi','Nella sezione Progressi puoi registrare il peso e osservare come cambia nel tempo. Misure e pliche sono facoltative.','Per partire bastano target, alimenti e acqua. Puoi esplorare le altre funzioni con calma e riaprire questi passaggi dalla Guida.']
+];
+function dfStartRender(){
+ const page=dfStartPages[dfStartStep],body=document.getElementById('df-start-body');
+ body.innerHTML='<div class="df-start-box"><h4>'+page[0]+'</h4><p>'+page[1]+'</p><p>'+page[2]+'</p></div>';
+ if(dfStartStep===0){
+  const actions=document.createElement('div');actions.className='df-start-actions';
+  actions.innerHTML='<button type="button" class="btn primary" onclick="dfStartTargets(false)">Calcola i target</button><button type="button" class="btn" onclick="dfStartTargets(true)">Inserisci i miei target</button>';
+  body.appendChild(actions);
+  const note=document.createElement('p');note.textContent=userSettings?.targetCalculationMeta?'✓ Hai già configurato i target. Puoi mantenerli e proseguire.':'Prima di proseguire, configura e salva i tuoi target.';body.appendChild(note);
+ }
+ document.querySelectorAll('.df-start-progress span').forEach((e,i)=>e.classList.toggle('active',i<=dfStartStep));
+ document.getElementById('df-start-back').hidden=dfStartStep===0;
+ const next=document.getElementById('df-start-next');next.textContent=dfStartStep===3?'Inizia a usare DiarioFIT':'Avanti';next.disabled=dfStartStep===0&&!userSettings?.targetCalculationMeta;
+ document.getElementById('df-start-error').textContent='';
+}
+function dfStartOpen(step=0){
+ dfStartFocus=document.activeElement;dfStartStep=step;dfStartRender();
+ const m=document.getElementById('df-start-modal');m.style.display='flex';m.setAttribute('aria-hidden','false');m.querySelector('section').focus();
+}
+function dfStartClose(){
+ const m=document.getElementById('df-start-modal');m.style.display='none';m.setAttribute('aria-hidden','true');
+ if(dfStartFocus?.isConnected)dfStartFocus.focus();
+}
+function dfStartBack(){if(dfStartStep>0){dfStartStep--;dfStartRender()}}
+async function dfStartNext(){
+ if(dfStartStep===0&&!userSettings?.targetCalculationMeta)return;
+ if(dfStartStep<3){dfStartStep++;dfStartRender();return}
+ const b=document.getElementById('df-start-next');b.disabled=true;
+ const previous=userSettings.firstUseGuide;
+ userSettings={...userSettings,firstUseGuide:{version:1,completedAt:new Date().toISOString()}};
+ try{await saveUserSettingsToBackend();dfStartClose()}
+ catch(error){userSettings.firstUseGuide=previous;document.getElementById('df-start-error').textContent='Non riesco a salvare il completamento. Controlla la connessione e riprova.'}
+ finally{b.disabled=false}
+}
+function dfStartTargets(manual){
+ dfStartClose();dfStartTargetPending=true;
+ if(manual){openTargetsFromStats();const inputs=document.getElementById('target-inputs');if(inputs.style.display!=='block')toggleTargetInputs()}
+ else{toggleCalculatorModal()}
+}
+function dfStartMaybeOpen(){
+ if(!currentUser||userSettings?.firstUseGuide?.completedAt)return;
+ // Nessun tutorial automatico per chi ha già usato il diario.
+ if(userSettings?.targetCalculationMeta||log.length||Object.values(historyLogs||{}).some(day=>day?.log?.length))return;
+ dfStartOpen();
+}
+for(const name of ['saveCustomTargets','calculateAndApplyTargets']){
+ const original=window[name];
+ window[name]=async function(){
+  const before=userSettings?.targetCalculationMeta;
+  const result=await original.apply(this,arguments);
+  if(dfStartTargetPending&&userSettings?.targetCalculationMeta!==before){
+   dfStartTargetPending=false;
+   const calculator=document.getElementById('calculator-modal');if(calculator)calculator.style.display='none';
+   if(document.getElementById('progress-target-modal')?.style.display==='flex')closeTargetsFromProgress(false);
+   returnToProgressTarget=false;
+   dfStartOpen(1);
+  }
+  return result;
+ };
+}
+document.getElementById('df-start-modal').addEventListener('keydown',event=>{
+ if(event.key!=='Tab')return;
+ const focusable=[...event.currentTarget.querySelectorAll('button')].filter(e=>!e.disabled&&!e.hidden);
+ const first=focusable[0],last=focusable[focusable.length-1];
+ if(event.shiftKey&&(document.activeElement===first||document.activeElement.tagName==='SECTION')){event.preventDefault();last.focus()}
+ else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+});
+document.getElementById('df-start-modal').addEventListener('click',event=>{if(event.target===event.currentTarget)dfStartClose()});
+</script>
 
 </body>
 </html>`);
@@ -16334,6 +16438,7 @@ async function initApp() {
 
   updateDashboard();
   hideAppLoading();
+  if (typeof dfStartMaybeOpen === "function") dfStartMaybeOpen();
 
 }
 
