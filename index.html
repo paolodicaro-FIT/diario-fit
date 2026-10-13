@@ -9310,15 +9310,17 @@ html[data-theme="light"] .missing-today-legend {
 
 
 <style id="diariofit-dual-calorie-rings">
-/* Due anelli: il verde/gradiente è sempre il target base; il viola compare solo per l'attività. */
+/* Due anelli: il verde/gradiente è sempre il target base; l’ambra compare solo per l’attività. */
 .ux2-ring-wrap{position:relative;width:230px;height:230px;margin:auto}
 .ux2-activity-ring{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:transparent;transition:background .3s ease}
-.ux2-activity-ring.is-active{background:conic-gradient(#a78bfa calc(var(--activity-p,0)*1%),#253b55 0);box-shadow:0 0 22px rgba(167,139,250,.22)}
+.ux2-activity-ring.is-active{background:#243b40;box-shadow:0 0 7px rgba(45,212,191,.65),0 0 20px rgba(20,184,166,.38),0 0 38px rgba(20,184,166,.18)}
+.ux2-activity-ring.is-active::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,#0e7490 calc(100% - 9px),#2dd4bf calc(100% - 4.5px),#0e7490 100%);-webkit-mask-image:conic-gradient(#000 0% calc(var(--activity-p,0)*1%),transparent 0%);mask-image:conic-gradient(#000 0% calc(var(--activity-p,0)*1%),transparent 0%)}
+@media(max-width:760px){.ux2-activity-ring.is-active::before{background:radial-gradient(closest-side,#0e7490 calc(100% - 8px),#2dd4bf calc(100% - 4px),#0e7490 100%)}}
 .ux2-ring{position:relative!important;width:calc(100% - 18px)!important;height:calc(100% - 18px)!important;margin:9px!important;z-index:1;transition:background .3s ease,box-shadow .3s ease}
 .ux2-goal{display:flex!important;flex-direction:column;gap:7px}
 .ux2-goal-base,.ux2-goal-activity{display:block}
-.ux2-goal-activity{padding-top:6px;border-top:1px solid rgba(167,139,250,.42);color:#ddd6fe}
-.ux2-goal-activity b{color:#ede9fe!important}
+.ux2-goal-activity{padding-top:6px;border-top:1px solid rgba(45,212,191,.42);color:#2dd4bf}
+.ux2-goal-activity b{color:#2dd4bf!important}
 @media(max-width:760px){
  .ux2-ring-wrap{width:190px;height:190px}
  .ux2-ring{width:calc(100% - 16px)!important;height:calc(100% - 16px)!important;margin:8px!important}
@@ -27012,16 +27014,16 @@ function dfaiPrepareManualEntry(){
 <style id="diariofit-activity-smartwatch-live">
 #activity-modal{z-index:10050}.activity-modal-content{max-width:500px}
 .activity-modal-intro,.activity-modal-note{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.45}
-.activity-meaning{margin:0 0 12px;padding:10px 11px;border:1px solid rgba(56,189,248,.25);border-radius:12px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(167,139,250,.07));font-size:.74rem;line-height:1.35}
+.activity-meaning{margin:0 0 12px;padding:10px 11px;border:1px solid rgba(56,189,248,.25);border-radius:12px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(255,159,28,.07));font-size:.74rem;line-height:1.35}
 .activity-meaning>strong{display:block;margin-bottom:5px;color:#dff5ff;font-size:.79rem}
 .activity-meaning p{margin:5px 0;color:#c6d8e1}.activity-meaning b{color:#fff}
 .activity-ring-legend{display:grid;gap:4px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.10);color:#dce8ff;font-size:.68rem}
-.activity-dot{display:inline-block;width:8px;height:8px;margin:0 5px 0 1px;border-radius:50%}.activity-dot.base{background:linear-gradient(135deg,#22d3ee,#22c55e)}.activity-dot.extra{background:#a78bfa}
+.activity-dot{display:inline-block;width:8px;height:8px;margin:0 5px 0 1px;border-radius:50%}.activity-dot.base{background:linear-gradient(135deg,#22d3ee,#22c55e)}.activity-dot.extra{background:radial-gradient(circle,#2dd4bf,#0e7490)}
 .activity-input-label{display:block;margin:12px 0 6px;font-weight:800}.activity-input-row{display:flex;align-items:center;gap:9px}.activity-input-row input{flex:1;min-width:0}.activity-input-row span{color:var(--muted);font-weight:800}
 .activity-steps-chart{margin-top:14px;padding:10px;border:1px solid rgba(56,189,248,.20);border-radius:12px;background:rgba(56,189,248,.055)}
-.activity-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.activity-chart-head strong{font-size:.78rem}.activity-chart-head span{color:#c4b5fd;font-size:.73rem;font-weight:850}
-.activity-chart-track{position:relative;height:10px;margin:10px 0 5px;border-radius:999px;background:rgba(148,163,184,.22);overflow:visible}.activity-chart-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#22d3ee,#a78bfa);transition:width .25s ease}.activity-chart-baseline{position:absolute;left:60%;top:-4px;bottom:-4px;width:2px;background:#fbbf24;box-shadow:0 0 7px rgba(251,191,36,.65)}.activity-chart-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:.61rem}
-.activity-preview{margin:10px 0 0;padding:9px 10px;border-radius:9px;background:rgba(167,139,250,.09);color:#e9e4ff;font-size:.75rem;line-height:1.35}.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}.activity-modal-actions{display:flex;gap:9px;margin-top:14px}.activity-modal-actions .btn{flex:1}
+.activity-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.activity-chart-head strong{font-size:.78rem}.activity-chart-head span{color:var(--accent-light);font-size:.73rem;font-weight:850}
+.activity-chart-track{position:relative;height:10px;margin:10px 0 5px;border-radius:999px;background:rgba(148,163,184,.22);overflow:visible}.activity-chart-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#22d3ee,#ff9f1c);transition:width .25s ease}.activity-chart-baseline{position:absolute;left:60%;top:-4px;bottom:-4px;width:2px;background:#fbbf24;box-shadow:0 0 7px rgba(251,191,36,.65)}.activity-chart-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:.61rem}
+.activity-preview{margin:10px 0 0;padding:9px 10px;border-radius:9px;background:rgba(255,159,28,.09);color:var(--text);font-size:.75rem;line-height:1.35}.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #ff9f1c;border-radius:8px;background:rgba(255,159,28,.08);font-size:.76rem}.activity-modal-actions{display:flex;gap:9px;margin-top:14px}.activity-modal-actions .btn{flex:1}
 
 /* Spiegazione attività: lettura comoda anche su smartphone e tema chiaro. */
 #activity-modal .activity-meaning p,#activity-modal .activity-modal-note{font-size:.94rem;line-height:1.55;color:var(--text)}
