@@ -27169,6 +27169,8 @@ function dfaiPrepareManualEntry(){
 .df-start-box p{margin:8px 0}
 .df-start-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .df-start-actions button{flex:1;min-height:46px}
+.df-start-preference{display:flex;align-items:center;gap:10px;margin-top:18px;font-size:.95rem;cursor:pointer}
+.df-start-preference input{width:22px;min-height:22px;height:22px;flex:0 0 22px;accent-color:var(--accent)}
 .df-start-content button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 <div id="df-start-modal" class="modal-overlay" style="display:none" aria-hidden="true">
@@ -27179,7 +27181,9 @@ function dfaiPrepareManualEntry(){
 <div id="df-start-body" aria-live="polite"></div>
 <p id="df-start-error" role="alert" style="color:var(--red)"></p>
 <div class="df-start-actions"><button id="df-start-back" type="button" class="btn" onclick="dfStartBack()">Indietro</button><button id="df-start-next" type="button" class="btn primary" onclick="dfStartNext()">Avanti</button></div>
-<button type="button" class="mini-btn" style="margin-top:14px" onclick="dfStartClose()">Continua più tardi</button>
+<label class="df-start-preference" for="df-start-hide"><input id="df-start-hide" type="checkbox" onchange="dfStartSavePreference(this)"><span>Non mostrare più questa guida</span></label>
+<p id="df-start-preference-status" role="status" style="font-size:.85rem;margin:6px 0">Puoi sempre riaprirla dalla Guida.</p>
+<button type="button" class="mini-btn" style="margin-top:14px" onclick="dfStartClose()">Chiudi la guida</button>
 </section></div>
 <script id="df-first-use">
 let dfStartStep=0,dfStartTargetPending=false,dfStartFocus=null;
@@ -27205,6 +27209,7 @@ function dfStartRender(){
 }
 function dfStartOpen(step=0){
  dfStartFocus=document.activeElement;dfStartStep=step;dfStartRender();
+ document.getElementById('df-start-hide').checked=userSettings?.firstUseGuide?.hideOnAccess===true;
  const m=document.getElementById('df-start-modal');m.style.display='flex';m.setAttribute('aria-hidden','false');m.querySelector('section').focus();
 }
 function dfStartClose(){
@@ -27217,7 +27222,7 @@ async function dfStartNext(){
  if(dfStartStep<3){dfStartStep++;dfStartRender();return}
  const b=document.getElementById('df-start-next');b.disabled=true;
  const previous=userSettings.firstUseGuide;
- userSettings={...userSettings,firstUseGuide:{version:1,completedAt:new Date().toISOString()}};
+ userSettings={...userSettings,firstUseGuide:{...(previous||{}),version:1,completedAt:new Date().toISOString()}};
  try{await saveUserSettingsToBackend();dfStartClose()}
  catch(error){userSettings.firstUseGuide=previous;document.getElementById('df-start-error').textContent='Non riesco a salvare il completamento. Controlla la connessione e riprova.'}
  finally{b.disabled=false}
@@ -27227,10 +27232,24 @@ function dfStartTargets(manual){
  if(manual){openTargetsFromStats();const inputs=document.getElementById('target-inputs');if(inputs.style.display!=='block')toggleTargetInputs()}
  else{toggleCalculatorModal()}
 }
+async function dfStartSavePreference(checkbox){
+ const previous=userSettings.firstUseGuide;
+ const selected=checkbox.checked;
+ checkbox.disabled=true;
+ const status=document.getElementById('df-start-preference-status');
+ status.textContent='Salvataggio della preferenza…';
+ userSettings={...userSettings,firstUseGuide:{...(previous||{}),version:1,hideOnAccess:selected}};
+ try{
+  await saveUserSettingsToBackend();
+  status.textContent=selected?'La guida non si aprirà più automaticamente. Puoi riaprirla dalla Guida.':'La guida si aprirà ai prossimi accessi.';
+ }catch(error){
+  userSettings.firstUseGuide=previous;
+  checkbox.checked=previous?.hideOnAccess===true;
+  status.textContent='Preferenza non salvata. Controlla la connessione e riprova.';
+ }finally{checkbox.disabled=false}
+}
 function dfStartMaybeOpen(){
- if(!currentUser||userSettings?.firstUseGuide?.completedAt)return;
- // Nessun tutorial automatico per chi ha già usato il diario.
- if(userSettings?.targetCalculationMeta||log.length||Object.values(historyLogs||{}).some(day=>day?.log?.length))return;
+ if(!currentUser||userSettings?.firstUseGuide?.hideOnAccess===true)return;
  dfStartOpen();
 }
 for(const name of ['saveCustomTargets','calculateAndApplyTargets']){
@@ -27250,7 +27269,7 @@ for(const name of ['saveCustomTargets','calculateAndApplyTargets']){
 }
 document.getElementById('df-start-modal').addEventListener('keydown',event=>{
  if(event.key!=='Tab')return;
- const focusable=[...event.currentTarget.querySelectorAll('button')].filter(e=>!e.disabled&&!e.hidden);
+ const focusable=[...event.currentTarget.querySelectorAll('button,input')].filter(e=>!e.disabled&&!e.hidden);
  const first=focusable[0],last=focusable[focusable.length-1];
  if(event.shiftKey&&(document.activeElement===first||document.activeElement.tagName==='SECTION')){event.preventDefault();last.focus()}
  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
