@@ -27022,15 +27022,23 @@ function dfaiPrepareManualEntry(){
 .activity-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.activity-chart-head strong{font-size:.78rem}.activity-chart-head span{color:#c4b5fd;font-size:.73rem;font-weight:850}
 .activity-chart-track{position:relative;height:10px;margin:10px 0 5px;border-radius:999px;background:rgba(148,163,184,.22);overflow:visible}.activity-chart-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#22d3ee,#a78bfa);transition:width .25s ease}.activity-chart-baseline{position:absolute;left:60%;top:-4px;bottom:-4px;width:2px;background:#fbbf24;box-shadow:0 0 7px rgba(251,191,36,.65)}.activity-chart-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:.61rem}
 .activity-preview{margin:10px 0 0;padding:9px 10px;border-radius:9px;background:rgba(167,139,250,.09);color:#e9e4ff;font-size:.75rem;line-height:1.35}.activity-modal-note{margin:12px 0 0;padding:9px 10px;border-left:3px solid #a78bfa;border-radius:8px;background:rgba(167,139,250,.08);font-size:.76rem}.activity-modal-actions{display:flex;gap:9px;margin-top:14px}.activity-modal-actions .btn{flex:1}
+
+/* Spiegazione attività: lettura comoda anche su smartphone e tema chiaro. */
+#activity-modal .activity-meaning p,#activity-modal .activity-modal-note{font-size:.94rem;line-height:1.55;color:var(--text)}
+#activity-modal .activity-preview{font-size:.9rem;line-height:1.5;color:var(--text)}
+#activity-modal .activity-meaning strong{font-size:1rem}
 </style>
 <div class="modal-overlay" id="activity-modal" aria-hidden="true">
   <div class="modal-content activity-modal-content" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title">
     <div class="modal-header"><h3 id="activity-modal-title">⌚ Attività di oggi</h3><button class="modal-close" type="button" onclick="closeActivityModal()">✕</button></div>
     <p class="activity-modal-intro">Inserisci i <strong>passi</strong> e, se disponibile, le <strong>calorie attive</strong> riportate da smartwatch o app Salute.</p>
     <div class="activity-meaning">
-      <strong>Come leggere il risultato</strong>
-      <p>🎯 Il <b>target base</b> non cambia: è il tuo riferimento alimentare normale.</p>
-      <p>⌚ Se superi i 6.000 passi, DiarioFIT calcola un <b>margine extra</b> per il movimento in più. Non è un obbligo di mangiare di più: è un margine disponibile nelle giornate più attive.</p>
+      <strong>Perché aumenta il riferimento calorico?</strong>
+      <p>Quando cammini di più, il corpo usa energia per quel movimento. DiarioFIT stima una quota di questa energia e la mostra come <b>margine alimentare aggiuntivo per oggi</b>.</p>
+      <p>🎯 Il <b>target base resta invariato</b>: è il riferimento impostato per il tuo obiettivo e la tua attività abituale. Il valore <b>“Con attività”</b> è il target base più il margine stimato dai passi.</p>
+      <p><b>Come si calcola?</b> Fino a <b>6.000 passi, extra zero</b>. Oltre questa soglia, l’app aggiunge circa <b>40 kcal ogni 1.000 passi aggiuntivi</b>. La soglia di 6.000 è una convenzione di DiarioFIT per rappresentare il movimento quotidiano già incluso, non una soglia fisiologica o una misura della tua attività abituale.</p>
+      <p><b>Esempio:</b> target base <b>1.900 kcal</b>, passi <b>10.000</b>. I passi oltre la soglia sono <b>4.000</b>, quindi l’extra è <b>160 kcal</b>. La Home mostra <b>1.900 kcal</b> come base e <b>2.060 kcal “Con attività”</b>.</p>
+      <p><b>E se il mio obiettivo è dimagrire?</b> Il margine serve a tenere conto del movimento aggiuntivo, evitando di valutare una giornata molto attiva come una normale. Non è un obbligo di mangiare tutte le calorie extra e non garantisce da solo il mantenimento del deficit: il consumo reale può essere diverso dalla stima.</p>
       <div class="activity-ring-legend">
         <span><i class="activity-dot base"></i>Anello interno: target base</span>
         <span><i class="activity-dot extra"></i>Anello esterno: target con attività</span>
@@ -27041,7 +27049,8 @@ function dfaiPrepareManualEntry(){
     <label class="activity-input-label" for="activity-active-kcal">Calorie attive rilevate <small style="font-weight:500;color:var(--muted)">(facoltative)</small></label>
     <div class="activity-input-row"><input id="activity-active-kcal" type="number" inputmode="numeric" min="0" max="5000" step="1" placeholder="es. 420" oninput="updateActivityPreview()"><span>kcal</span></div>
     <div class="activity-steps-chart"><div class="activity-chart-head"><strong>Passi e attività extra</strong><span id="activity-extra-kcal">—</span></div><div class="activity-chart-track"><i id="activity-chart-fill" class="activity-chart-fill"></i><b class="activity-chart-baseline" aria-label="Soglia 6000 passi"></b></div><div class="activity-chart-scale"><span>0</span><span>6.000 inclusi</span><span>10.000</span></div><div id="activity-preview" class="activity-preview">Inserisci i passi per calcolare l'attività extra.</div></div>
-    <p class="activity-modal-note">I primi <strong>6.000 passi</strong> sono considerati attività quotidiana già inclusa nel target. Oltre, DiarioFIT aggiunge una stima prudente di circa <strong>40 kcal ogni 1.000 passi</strong> al target del giorno.</p>
+    <p class="activity-modal-note"><strong>Le kcal dello smartwatch si aggiungono ai passi?</strong> No. In questa versione il margine viene calcolato <strong>solo dai passi</strong>. Le calorie attive dell’orologio sono salvate come riferimento e <strong>non aumentano il target</strong>, anche se inserite da sole. Sommarle alla stima dei passi potrebbe contare due volte lo stesso movimento. Inserisci le calorie <strong>attive</strong>, non il consumo totale giornaliero.</p>
+    <p class="activity-modal-note">La stima dai passi non misura tutto il movimento: palestra e ciclismo, per esempio, possono consumare energia senza molti passi. Il coefficiente è fisso e non tiene conto di peso, velocità o pendenza. Se la tua attività abituale è già elevata e inclusa nel target base, il margine può sovrastimare l’extra.</p>
     <div class="activity-modal-actions"><button type="button" class="btn" onclick="clearActivityCalories()">Azzera</button><button type="button" class="btn primary" onclick="saveActivityCalories()">Salva attività</button></div>
   </div>
 </div>
@@ -27082,7 +27091,7 @@ function dfaiPrepareManualEntry(){
     const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
     if(fill)fill.style.width=Math.min(100,steps/10000*100)+"%";
     if(out)out.textContent=steps?("+"+credit+" kcal stimate"):"—";
-    if(preview)preview.textContent=!steps?"Inserisci i passi per calcolare l'attività extra.":steps<=baseSteps?fmt(steps)+" passi: fino a 6.000 passi non viene aggiunta una stima di calorie extra; attività quotidiana già inclusa nel target.":fmt(steps)+" passi: "+fmt(steps-baseSteps)+" oltre la soglia · +"+credit+" kcal stimate per il target di oggi."+(activeKcal?" Orologio: "+activeKcal+" kcal attive.":"");
+    if(preview)preview.textContent=!steps?"Inserisci i passi per calcolare l'attività extra.":steps<=baseSteps?fmt(steps)+" passi: fino a 6.000 passi non viene aggiunta una stima di calorie extra; attività quotidiana già inclusa nel target.":fmt(steps)+" passi: "+fmt(steps-baseSteps)+" oltre la soglia · +"+credit+" kcal stimate per il target di oggi."+(activeKcal?" Orologio: "+activeKcal+" kcal attive (solo riferimento, non sommate).":"");
   };
   const token=()=>localStorage.getItem("diario_backend_token");
   async function sync(d){
