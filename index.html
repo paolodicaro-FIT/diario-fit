@@ -26729,7 +26729,13 @@ function closeTargetsFromProgress(restoreStats=true){
  <section id="dfai-web-photo-card">
   <h3 id="dfai-web-photo-title">📷 Foto pasto</h3>
   <p>DiarioFIT invia la foto al motore AI del proprio backend, stima porzione e valori nutrizionali e ti mostra il risultato prima del normale salvataggio.</p>
-  <img id="dfai-web-photo-preview" alt="Anteprima foto del pasto">
+  <img id="dfai-web-photo-preview" alt="Prima foto del pasto">
+  <div class="dfai-second-controls">
+   <button type="button" id="dfai-second-add" onclick="dfaiChooseSecondPhoto()">+ Seconda foto (facoltativa)</button>
+   <small>Lo stesso pasto da un’altra angolazione: di lato aiuta a mostrare lo spessore.</small>
+   <input id="dfai-second-input" type="file" accept="image/*" hidden onchange="dfaiHandleSecondPhoto(event)">
+   <div id="dfai-second-area" hidden><img id="dfai-second-preview" alt="Seconda vista dello stesso pasto"><button type="button" onclick="dfaiRemoveSecondPhoto()">✕ Rimuovi seconda foto</button></div>
+  </div>
   <div class="dfai-web-status" id="dfai-web-photo-status">Foto pronta. Nessun dato è stato inserito nel diario.</div>
   <div class="dfai-actions">
    <button type="button" onclick="dfaiCloseWebPhoto()">✕ Annulla</button>
@@ -26764,6 +26770,66 @@ function closeTargetsFromProgress(restoreStats=true){
 <script id="diariofit-ai-bridge-v1">
 window.dfaiWebPhotoFile=null;
 window.dfaiWebPhotoUrl=null;
+
+window.dfaiSecondPhotoFile=null;
+window.dfaiSecondPhotoUrl=null;
+window.dfaiPhotoBusy=false;
+function dfaiRemoveSecondPhoto(){
+ if(window.dfaiPhotoBusy)return;
+ if(window.dfaiSecondPhotoUrl)URL.revokeObjectURL(window.dfaiSecondPhotoUrl);
+ window.dfaiSecondPhotoFile=null;window.dfaiSecondPhotoUrl=null;
+ const preview=document.getElementById("dfai-second-preview");preview.removeAttribute("src");
+ document.getElementById("dfai-second-area").hidden=true;
+ document.getElementById("dfai-second-add").textContent="+ Seconda foto (facoltativa)";
+ document.getElementById("dfai-second-input").value="";
+}
+function dfaiChooseSecondPhoto(){
+ if(window.dfaiPhotoBusy||!window.dfaiWebPhotoFile)return;
+ const input=document.getElementById("dfai-second-input");input.value="";input.click();
+}
+async function dfaiHandleSecondPhoto(event){
+ const file=event.target.files?.[0];if(!file||window.dfaiPhotoBusy)return;
+ const first=window.dfaiWebPhotoFile;
+ if(!first)return;
+ const status=document.getElementById("dfai-web-photo-status");
+ try{
+  if(!file.type.startsWith("image/"))throw new Error("Scegli una fotografia.");
+  const bitmap=await createImageBitmap(file);bitmap.close();
+  if(window.dfaiWebPhotoFile!==first||window.dfaiPhotoBusy)return;
+  dfaiRemoveSecondPhoto();
+  window.dfaiSecondPhotoFile=file;window.dfaiSecondPhotoUrl=URL.createObjectURL(file);
+  document.getElementById("dfai-second-preview").src=window.dfaiSecondPhotoUrl;
+  document.getElementById("dfai-second-area").hidden=false;
+  document.getElementById("dfai-second-add").textContent="↻ Cambia seconda foto";
+  status.textContent="Due foto pronte: verrà stimata una sola porzione.";
+ }catch(error){status.textContent="Seconda foto non caricata. Prova un’immagine JPEG o PNG."}
+}
+function dfaiSetPhotoBusy(busy){
+ window.dfaiPhotoBusy=busy;
+ document.querySelectorAll("#dfai-web-photo-card button,#dfai-second-input").forEach(el=>el.disabled=busy);
+}
+async function dfaiPreparePhotoInput(first,second){
+ if(!second)return first;
+ const bitmaps=[];
+ try{
+  bitmaps.push(await createImageBitmap(first));bitmaps.push(await createImageBitmap(second));
+  const canvas=document.createElement("canvas");canvas.width=1280;canvas.height=800;
+  const ctx=canvas.getContext("2d",{alpha:false});
+  ctx.fillStyle="#ffffff";ctx.fillRect(0,0,1280,800);
+  ctx.fillStyle="#111111";ctx.font="bold 26px sans-serif";
+  ctx.fillText("SAME MEAL / SAME PORTION - TWO VIEWS - DO NOT ADD",20,35);
+  bitmaps.forEach((bitmap,i)=>{
+   const left=i*640,availableWidth=616,availableHeight=714;
+   const scale=Math.min(availableWidth/bitmap.width,availableHeight/bitmap.height);
+   const width=bitmap.width*scale,height=bitmap.height*scale;
+   ctx.font="22px sans-serif";ctx.fillText("VIEW "+(i+1),left+20,67);
+   ctx.drawImage(bitmap,left+12+(availableWidth-width)/2,80+(availableHeight-height)/2,width,height);
+  });
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",.92));
+  if(!blob)throw new Error("IMAGE_TOO_LARGE");
+  return blob;
+ }finally{bitmaps.forEach(bitmap=>bitmap.close())}
+}
 function dfaiOpenWebPhoto(){
  const input=document.getElementById("dfai-web-photo-input");
  if(!input)return;
@@ -26772,6 +26838,8 @@ function dfaiOpenWebPhoto(){
 }
 function dfaiChooseAnotherWebPhoto(){dfaiCloseWebPhoto();dfaiOpenWebPhoto()}
 function dfaiCloseWebPhoto(){
+ if(window.dfaiPhotoBusy)return;
+ dfaiRemoveSecondPhoto();
  const o=document.getElementById("dfai-web-photo-overlay");if(o)o.style.display="none";
  if(window.dfaiWebPhotoUrl){URL.revokeObjectURL(window.dfaiWebPhotoUrl);window.dfaiWebPhotoUrl=null}
  window.dfaiWebPhotoFile=null;
@@ -26817,21 +26885,25 @@ function dfaiBlobToBase64(blob){
  });
 }
 async function dfaiAnalyzeWebPhotoCloud(){
+ if(window.dfaiPhotoBusy)return;
  const file=window.dfaiWebPhotoFile;
  const status=document.getElementById("dfai-web-photo-status");
  const btn=document.getElementById("dfai-cloud-analyze-btn");
  if(!file){if(status)status.textContent="Nessuna foto disponibile.";return}
  if(typeof apiFetch!=="function"){if(status)status.textContent="Backend DiarioFIT non disponibile.";return}
  try{
-  if(btn)btn.disabled=true;
-  if(status)status.textContent="Ottimizzo la foto…";
-  const blob=await dfaiCompressPhotoForCloud(file);
+  dfaiSetPhotoBusy(true);
+  const second=window.dfaiSecondPhotoFile;
+  const started=performance.now();
+  if(status)status.textContent=second?"Ottimizzo le due foto…":"Ottimizzo la foto…";
+  const input=await dfaiPreparePhotoInput(file,second);
+  const blob=await dfaiCompressPhotoForCloud(input);
   if(status)status.textContent="Analisi AI in corso…";
   const imageBase64=await dfaiBlobToBase64(blob);
   const data=await apiFetch("/api/ai/meal-photo",{
    method:"POST",
    body:JSON.stringify({
-    description:"",
+    description:second?"Le due fotografie affiancate rappresentano LO STESSO PASTO E LA STESSA PORZIONE da due angolazioni. Usa la seconda vista per stimare spessore e volume. NON sommare né raddoppiare le porzioni. Restituisci una sola stima con gli stessi campi nutrizionali.":"",
     imageBase64,
     imageMimeType:"image/jpeg"
    })
@@ -26843,6 +26915,8 @@ async function dfaiAnalyzeWebPhotoCloud(){
    Number.isFinite(Number(x.kcal_min))&&Number.isFinite(Number(x.kcal_max))&&Number(x.kcal_min)!==Number(x.kcal_max)
     ?("Intervallo stimato: "+x.kcal_min+"–"+x.kcal_max+" kcal"):""
   ].filter(Boolean).join(" · ");
+  console.info("DiarioFIT foto: ",{photoCount:second?2:1,uploadBytes:blob.size,elapsedMs:Math.round(performance.now()-started)});
+  dfaiSetPhotoBusy(false);
   dfaiCloseWebPhoto();
   dfaiShowResult({
    protocol:"diariofit-ai",
@@ -26876,7 +26950,7 @@ async function dfaiAnalyzeWebPhotoCloud(){
   };
   if(status)status.textContent="⚠️ "+(friendly[code]||("Analisi non riuscita: "+code));
  }finally{
-  if(btn)btn.disabled=false;
+  dfaiSetPhotoBusy(false);
  }
 }
 function dfaiExternalPrompt(){
@@ -26955,10 +27029,12 @@ async function dfaiShareWebPhotoToLocalAI(){
  }
 }
 function dfaiHandleWebPhoto(event){
+ if(window.dfaiPhotoBusy)return;
  const file=event&&event.target&&event.target.files?event.target.files[0]:null;
  if(!file)return;
  if(!String(file.type||"").startsWith("image/")){alert("Seleziona un'immagine valida.");return}
  if(window.dfaiWebPhotoUrl)URL.revokeObjectURL(window.dfaiWebPhotoUrl);
+ dfaiRemoveSecondPhoto();
  window.dfaiWebPhotoFile=file;
  window.dfaiWebPhotoUrl=URL.createObjectURL(file);
  const img=document.getElementById("dfai-web-photo-preview");
@@ -27322,5 +27398,14 @@ document.getElementById('df-start-modal').addEventListener('keydown',event=>{
 document.getElementById('df-start-modal').addEventListener('click',event=>{if(event.target===event.currentTarget)dfStartClose()});
 </script>
 
+<style id="dfai-second-photo-style">
+#dfai-web-photo-card{max-height:90dvh;overflow:auto}
+.dfai-second-controls{margin:12px 0}
+.dfai-second-controls button{min-height:44px;border:1px solid var(--border);border-radius:10px;background:var(--card-2);color:var(--text);padding:8px 12px;font:inherit;font-size:.85rem}
+.dfai-second-controls small{display:block;color:var(--subtext);font-size:.82rem;line-height:1.4;margin:7px 0}
+#dfai-second-area[hidden]{display:none}
+#dfai-second-preview{display:block;width:100%;height:130px;object-fit:contain;border-radius:10px;margin:8px 0;background:var(--card-2)}
+#dfai-web-photo-card button:disabled{opacity:.55;cursor:wait}
+</style>
 </body>
 </html>
