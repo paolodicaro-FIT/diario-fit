@@ -13590,7 +13590,7 @@ const DEFAULT_PRESET_FOODS = [
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:42 },
+  { emoji: "🥤", label: "Whey + Creat.", name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:42 },
   { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 202, pro: 41.5, fat: 0.9, carb: 7.2, sugar: 6.8, water: 0, weight:185 },
   { emoji: "⚡", label: "Integratori", name: "Integratori (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
   { emoji: "🏋️", label: "Whey 42g", name: "Shaker Whey (42g Whey + 300ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 300, weight:42 },
@@ -14041,7 +14041,7 @@ async function loadUserDataFromBackend() {
 
     // Migrazione Colazione Whey -> ProLabs reale con misurino Bulk (~43 g) e 450 ml H2O
     if (
-      item.label === "Colaz. Whey" &&
+      ["Colaz. Whey", "Whey + Creat."].includes(item.label) &&
       (
         (
           Number(item.kcal) === 200 &&
