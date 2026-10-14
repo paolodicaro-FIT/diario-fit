@@ -14073,6 +14073,14 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 1.5 &&
           Number(item.sugar) === 1.0 &&
           Number(item.weight || 0) === 43
+        ) ||
+        (
+          Number(item.kcal) === 150 &&
+          Number(item.pro) === 33.6 &&
+          Number(item.fat) === 1.1 &&
+          Number(item.carb) === 1.5 &&
+          Number(item.sugar) === 1.0 &&
+          Number(item.weight || 0) === 42
         )
       )
     ) {
