@@ -13590,7 +13590,7 @@ const DEFAULT_PRESET_FOODS = [
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (35g Whey + Creatina + 500ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 500, weight:35 },
+  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)", kcal: 154, pro: 34.4, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:43 },
   { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 202, pro: 41.5, fat: 0.9, carb: 7.2, sugar: 6.8, water: 0, weight:185 },
   { emoji: "⚡", label: "Integratori", name: "Integratori (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
   { emoji: "🏋️", label: "Whey 35g", name: "Shaker Whey (35g Whey + 300ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 300, weight:35 },
@@ -14039,7 +14039,7 @@ async function loadUserDataFromBackend() {
       };
     }
 
-    // Default precedenti: Colazione Whey -> riferimento reale 35 g
+    // Migrazione Colazione Whey -> ProLabs reale con misurino Bulk (~43 g) e 450 ml H2O
     if (
       item.label === "Colaz. Whey" &&
       (
@@ -14057,6 +14057,14 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 6 &&
           Number(item.sugar) === 3 &&
           Number(item.weight || 0) === 60
+        ) ||
+        (
+          Number(item.kcal) === 125 &&
+          Number(item.pro) === 28 &&
+          Number(item.fat) === 0.9 &&
+          Number(item.carb) === 1.2 &&
+          Number(item.sugar) === 0.8 &&
+          Number(item.weight || 0) === 35
         )
       )
     ) {
@@ -14064,14 +14072,14 @@ async function loadUserDataFromBackend() {
 
       return {
         ...item,
-        name: "Shaker Whey (35g Whey + Creatina + 500ml H2O)",
-        kcal: 125,
-        pro: 28,
-        fat: 0.9,
-        carb: 1.2,
-        sugar: 0.8,
-        water: 500,
-        weight: 35
+        name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)",
+        kcal: 154,
+        pro: 34.4,
+        fat: 1.1,
+        carb: 1.5,
+        sugar: 1.0,
+        water: 450,
+        weight: 43
       };
     }
 
