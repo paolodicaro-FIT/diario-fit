@@ -13590,10 +13590,10 @@ const DEFAULT_PRESET_FOODS = [
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)", kcal: 154, pro: 34.4, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:43 },
+  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:42 },
   { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 202, pro: 41.5, fat: 0.9, carb: 7.2, sugar: 6.8, water: 0, weight:185 },
   { emoji: "⚡", label: "Integratori", name: "Integratori (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
-  { emoji: "🏋️", label: "Whey 35g", name: "Shaker Whey (35g Whey + 300ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 300, weight:35 },
+  { emoji: "🏋️", label: "Whey 42g", name: "Shaker Whey (42g Whey + 300ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 300, weight:42 },
   { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 188, pro: 2, fat: 19, carb: 1.3, sugar: 1, water: 0, weight:25 },
   { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di formaggio magro (200g)", kcal: 230, pro: 19.4, fat: 14.2, carb: 6.4, sugar: 6.4, water: 0, weight:200 },
   { emoji: "🫐", label: "Mirtilli 250g", name: "Mirtilli freschi (250g)", kcal: 123, pro: 2.3, fat: 0.5, carb: 25.3, sugar: 25.3, water: 0, weight:250 },
@@ -14065,6 +14065,14 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 1.2 &&
           Number(item.sugar) === 0.8 &&
           Number(item.weight || 0) === 35
+        ) ||
+        (
+          Number(item.kcal) === 154 &&
+          Number(item.pro) === 34.4 &&
+          Number(item.fat) === 1.1 &&
+          Number(item.carb) === 1.5 &&
+          Number(item.sugar) === 1.0 &&
+          Number(item.weight || 0) === 43
         )
       )
     ) {
@@ -14072,14 +14080,14 @@ async function loadUserDataFromBackend() {
 
       return {
         ...item,
-        name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)",
-        kcal: 154,
-        pro: 34.4,
+        name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)",
+        kcal: 150,
+        pro: 33.6,
         fat: 1.1,
         carb: 1.5,
         sugar: 1.0,
         water: 450,
-        weight: 43
+        weight: 42
       };
     }
 
@@ -14119,9 +14127,9 @@ async function loadUserDataFromBackend() {
       };
     }
 
-    // Default precedenti: Post W.O. -> riferimento reale 35 g
+    // Migrazione Whey pomeridiana/Post W.O. -> misurino Bulk medio (~42 g)
     if (
-      item.label === "Post W.O." &&
+      ["Post W.O.", "Whey 35g", "Whey 42g"].includes(item.label) &&
       (
         (
           Number(item.kcal) === 100 &&
@@ -14137,6 +14145,14 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 3 &&
           Number(item.sugar) === 1.5 &&
           Number(item.weight || 0) === 30
+        ) ||
+        (
+          Number(item.kcal) === 125 &&
+          Number(item.pro) === 28 &&
+          Number(item.fat) === 0.9 &&
+          Number(item.carb) === 1.2 &&
+          Number(item.sugar) === 0.8 &&
+          Number(item.weight || 0) === 35
         )
       )
     ) {
@@ -14144,14 +14160,15 @@ async function loadUserDataFromBackend() {
 
       return {
         ...item,
-        name: "Shaker Post-Workout (35g Whey + 300ml H2O)",
-        kcal: 125,
-        pro: 28,
-        fat: 0.9,
-        carb: 1.2,
-        sugar: 0.8,
+        label: "Whey 42g",
+        name: "Shaker Whey (42g Whey + 300ml H2O)",
+        kcal: 150,
+        pro: 33.6,
+        fat: 1.1,
+        carb: 1.5,
+        sugar: 1.0,
         water: 300,
-        weight: 35
+        weight: 42
       };
     }
 
