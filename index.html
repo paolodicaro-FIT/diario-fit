@@ -10619,7 +10619,7 @@ function dfCalorieBarsRender(eaten,base,extra){
 
     </div>
 
-    <details class="sugar-editor"><summary>🍬 Origine degli zuccheri · facoltativa</summary><div id="sugar-food-edit"></div></details>
+    <details class="sugar-editor"><summary>🍬 Dettagli zuccheri · automatico</summary><div id="sugar-food-edit"></div></details>
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
@@ -27512,9 +27512,9 @@ document.getElementById('df-start-modal').addEventListener('click',event=>{if(ev
 <p><strong>Arancione · Liberi:</strong> zuccheri aggiunti, miele, sciroppi, succhi e concentrati di frutta, anche senza zuccheri aggiunti.</p>
 <p>Le barre mostrano la quota del totale registrato: non sono obiettivi da riempire. Gli zuccheri non determinati restano separati. Il verde distingue la categoria e non indica consumo illimitato.</p>
 <p>Per i soli liberi, riferimento OMS: meno del 10% dell’energia. Qui è calcolato sul target calorico base, senza extra passi. Il precedente target degli zuccheri totali resta conservato. Se mancano classificazioni, il confronto è incompleto.</p>
-<p>La foto e la dicitura “di cui zuccheri” non bastano a separare le categorie nei prodotti misti. Classifica soltanto quando conosci alimento, ingredienti o ricetta. Una modifica della ricetta richiede una nuova verifica.</p>
+<p>Il totale non cambia: vengono ripartiti solo gli zuccheri registrati, non tutti i carboidrati. La foto e la dicitura “di cui zuccheri” non bastano a separare le categorie nei prodotti misti. DiarioFIT classifica automaticamente gli alimenti semplici riconosciuti; per pane, crackers, dolci e prodotti misti senza ingredienti l’origine può restare incerta. Nessun intervento è obbligatorio. Correggi soltanto quando conosci alimento, ingredienti o ricetta. Una modifica della ricetta richiede una nuova verifica.</p>
 <p><a href="https://www.who.int/news/item/04-03-2015-who-calls-on-countries-to-reduce-sugars-intake-among-adults-and-children" target="_blank" rel="noopener">Fonte: OMS · zuccheri liberi</a></p>
-<h4>Alimenti di oggi · modifica solo l’origine</h4><div id="sugar-origin-list"></div><p id="sugar-origin-status" role="status"></p>
+<h4>Alimenti di oggi · dettagli e correzioni facoltative</h4><div id="sugar-origin-list"></div><p id="sugar-origin-status" role="status"></p>
 </section></div>
 <script id="sugar-origin-v1-script">
 
@@ -27530,14 +27530,51 @@ async function sugarVerifyRemote(date,items){
 }
 
 /* Origine zuccheri V1: sugar resta la fonte del totale; quote senza inferenze. */
+
+/* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
+function sugarAutomatic(item){
+ const name=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ const n=name.replace(/[^a-z0-9%+]+/g," ").trim();
+ const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
+ // Prima le esclusioni: una parola di frutta o latte non basta per una ricetta mista.
+ if(/\b(senza zuccheri|senza zucchero|zero zuccheri)\b/.test(n)&&/\b(dolce|torta|biscott|cioccol|bevanda)\w*/.test(n))return null;
+ const mixed=/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|yogurt alla|yogurt al|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*)\b|\+/.test(n.replace(/\bcon buccia\b/g,""));
+ if(!mixed&&/^(zucchero(?: bianco| di canna)?|miele|sciroppo (?:di acero|d acero|di agave|d agave)|succo (?:di |d )?|spremuta(?: di | d )?|coca cola|cola |fanta |sprite |aranciata |limonata )/.test(n))return make("free","zuccheri-liberi-espliciti");
+ if(mixed)return null;
+ if(/^(caramelle|caramella|zucchero filato|lecca lecca|gommose)\b/.test(n)&&!/\b(latte|crema|ripien\w*)\b/.test(n))return make("free","dolci-a-base-di-zucchero");
+ if(/\b(miele|sciropp\w*|zuccher\w*|succo|spremuta|confettur\w*|marmellat\w*)\b/.test(n)&&!/^latte senza lattosio\b/.test(n))return null;
+ if(/\b(latte|whey|proteine|cacao|cioccolat\w*|biscott\w*|tort\w*|crostata|gelato|budino|barrett\w*|cereali|crackers?|cracker|pane|panino|pizza|pinsa|focaccia)\b/.test(n)){
+  if(/^latte (?:(?:intero|parzialmente scremato|parz scremato|scremato|senza lattosio|vaccino)\b|\d)|^latte$/.test(n))return make("natural","latte-semplice");
+  if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+  // Prodotti composti: senza ingredienti non si inventano percentuali.
+  return null;
+ }
+ if(/^(mirtill[io]|fragol[ae]|lampon[ie]|mor[ae]|mel[ae]|per[ae]|banan[ae]|aranc[iea]+|mandarin[io]|clementin[ae]|kiwi|pesche?|pesc[ah]e?|albicocc[ah]e?|prugn[ae]|susin[ae]|ciliegi[ae]|uva|anguria|cocomero|melon[ei]|ananas|mango|papaya|pompelm[io]|limon[ie]|rib[ei]s|ribes|fich[io]|cach[io]|melogran[io]|avocado|pomodor[io]|carot[ae]|zucchin[ae]|melanzan[ae]|broccol[io]|spinaci|lattuga|finocch[io]|peperon[ie]|cetriol[io]|cavolfior[ei]|fagiolini|piselli|patat[ae]|noci|noc[ie]|mandorl[ae]|nocciol[ae]|pistacchi|anacardi)\b/.test(n)){
+  if(/\b(succo|spremuta|essiccat\w*|disidratat\w*|zuccherat\w*|caramellat\w*|dolc[ie]|chips)\b/.test(n))return null;
+  return make("natural","alimento-intero");
+ }
+ if(/^(pasta (?:di semola|integrale|secca)|spaghetti (?:di semola|integrali|secchi)|riso (?:bianco|integrale|basmati|crudo|bollito)|fiocchi d avena|avena semplice)\b/.test(n))return make("natural","cereale-semplice");
+ if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+ return null;
+}
+function sugarResolve(item){
+ const saved=sugarValidSplit(item?.sugarSplit);
+ if(saved?.source==="user")return saved;
+ return sugarAutomatic(item);
+}
+function sugarEditorAutomatic(prefix,total){
+ const name=prefix==="sugar-preview"?document.getElementById("quick-preview-name")?.value:prefix==="sugar-food-edit"?document.getElementById("edit-food-name")?.value:(log||[])[Number(prefix.replace("sugar-log-",""))]?.name;
+ return sugarAutomatic({name,sugar:total});
+}
+
 function sugarValidSplit(value){
  if(!value||value.version!==1)return null;
  const n=Number(value.naturalShare),f=Number(value.freeShare);
  if(!Number.isFinite(n)||!Number.isFinite(f)||n<0||f<0||n+f>1+1e-9)return null;
- return {version:1,naturalShare:n,freeShare:f,source:"user"};
+ return {version:1,naturalShare:n,freeShare:f,source:value.source==="auto"?"auto":"user",...(value.rule?{rule:String(value.rule)}:{})};
 }
 function sugarParts(item){
- const total=Math.max(0,Number(item?.sugar)||0),split=sugarValidSplit(item?.sugarSplit);
+ const total=Math.max(0,Number(item?.sugar)||0),split=sugarResolve(item);
  const natural=split?total*split.naturalShare:0,free=split?Math.min(total-natural,total*split.freeShare):0;
  return {total,natural,free,unknown:Math.max(0,total-natural-free)};
 }
@@ -27561,17 +27598,17 @@ function sugarHomeRender(){
   if(label)label.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="natural"?"Naturali non liberi: ":"Liberi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
- const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Da classificare: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
+ const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Origine incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-sugar-free-reference");
  const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
  if(note)note.textContent="Liberi: rif. < "+sugarFmt(reference)+" g"+(t.unknown>=.05?" · dati incompleti":"");
 }
 function sugarEditorHTML(prefix){
- return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="unknown">Non determinata / non so</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>Non sai distinguerli? Lasciali non determinati. Frutta intera e latte senza aggiunte: non liberi. Miele, sciroppi e succhi: liberi. Le quote seguono le variazioni di porzione.</small>';
+ return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="auto">Automatico (consigliato)</option><option value="unknown">Lascia non determinati</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>DiarioFIT riconosce gli alimenti semplici e distingue i casi incerti. Non serve compilare nulla. Puoi correggere qui solo se necessario.</small>';
 }
 function sugarEditorSet(prefix,item){
  const p=sugarParts(item),split=sugarValidSplit(item?.sugarSplit),mode=document.getElementById(prefix+"-mode");if(!mode)return;
- mode.value=!split?"unknown":split.naturalShare===1?"natural":split.freeShare===1?"free":"mixed";
+ mode.value=!split||split.source==="auto"?"auto":split.naturalShare===1?"natural":split.freeShare===1?"free":split.naturalShare===0&&split.freeShare===0?"unknown":"mixed";
  document.getElementById(prefix+"-natural").value=Number(p.natural.toFixed(3));
  document.getElementById(prefix+"-free").value=Number(p.free.toFixed(3));
  sugarEditorChange(prefix);
@@ -27579,8 +27616,9 @@ function sugarEditorSet(prefix,item){
 }
 function sugarEditorChange(prefix){const mixed=document.getElementById(prefix+"-mixed");if(mixed)mixed.hidden=document.getElementById(prefix+"-mode").value!=="mixed"}
 function sugarEditorRead(prefix,total){
- const mode=document.getElementById(prefix+"-mode")?.value||"unknown";
- if(mode==="unknown")return null;
+ const mode=document.getElementById(prefix+"-mode")?.value||"auto";
+ if(mode==="auto")return sugarEditorAutomatic(prefix,total);
+ if(mode==="unknown")return {version:1,naturalShare:0,freeShare:0,source:"user"};
  if(mode==="natural")return {version:1,naturalShare:1,freeShare:0,source:"user"};
  if(mode==="free")return {version:1,naturalShare:0,freeShare:1,source:"user"};
  const n=Number(document.getElementById(prefix+"-natural").value),f=Number(document.getElementById(prefix+"-free").value);
