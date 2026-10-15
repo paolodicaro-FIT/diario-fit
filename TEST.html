@@ -9327,7 +9327,50 @@ html[data-theme="light"] .missing-today-legend {
  .ux2-goal{gap:6px}
  .ux2-goal-activity{padding-top:5px}
 }
-</style></head>
+</style>
+<style id="diariofit-calorie-bars-test">
+#ux2-home .calorie-panel{display:block;min-height:0;align-self:start;padding:14px 16px;gap:0;border:1px solid rgba(56,189,248,.32);border-radius:16px;background:linear-gradient(135deg,#103744,#0b2935);box-shadow:0 5px 20px rgba(0,0,0,.12)}
+.calorie-panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calorie-eyebrow{font-size:.78rem;color:#b7cbd3;font-weight:700}
+.calorie-amount{display:flex;align-items:baseline;gap:7px;color:#fff}
+.calorie-amount strong{font-size:2.1rem;font-weight:900;line-height:1.15}
+.calorie-amount>span{font-size:.85rem;color:#b7cbd3}
+.calorie-panel-tag{font-size:.65rem;letter-spacing:.08em;color:#59e6a3;border:1px solid rgba(45,221,126,.28);border-radius:99px;padding:5px 9px}
+.calorie-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:.77rem;color:#d7e9ef;margin-bottom:6px}
+.calorie-row>span:last-child{white-space:nowrap}
+.calorie-row strong{color:#5be9be}
+.calorie-track{height:12px;border-radius:99px;background:#294c59;box-shadow:inset 0 2px 4px rgba(0,0,0,.2)}
+.calorie-track i{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#38bdf8,#22c55e);box-shadow:0 0 7px rgba(34,211,238,.45),0 0 15px rgba(34,197,94,.2);transition:width .35s ease}
+.calorie-activity{margin-top:13px}
+.calorie-activity[hidden]{display:none!important}
+.calorie-track.activity i{background:linear-gradient(0deg,#0e7490 0%,#2dd4bf 50%,#0e7490 100%);box-shadow:0 0 7px rgba(45,212,191,.55),0 0 17px rgba(20,184,166,.25)}
+.calorie-activity .calorie-row strong{color:#2dd4bf}
+.calorie-extra{font-size:.65rem;line-height:1.3;color:#aac4cc;margin-top:7px}
+@media(max-width:600px){
+ #ux2-home .calorie-panel{padding:11px 12px;margin:4px 0 8px}
+ .calorie-panel-head{margin-bottom:8px}
+ .calorie-amount strong{font-size:1.9rem}
+ .calorie-row{font-size:.75rem}
+ .calorie-activity{margin-top:11px}
+ .calorie-track{height:11px}
+}
+@media(prefers-reduced-motion:reduce){.calorie-track i{transition:none}}
+</style>
+<script id="diariofit-calorie-bars-script">
+function dfCalorieBarsRender(eaten,base,extra){
+ const setText=(id,value)=>{const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value};
+ const raw=base>0?Math.round(eaten/base*100):0;
+ const colors=raw<75?["#38bdf8","#22d3ee"]:raw<=110?["#22d3ee","#22c55e"]:["#f59e0b","#ef4444"];
+ for(const [kind,target] of [["base",base],["activity",base+extra]]){
+  const pct=target>0?Math.round(eaten/target*100):0,fill=document.getElementById("calorie-"+kind+"-fill"),track=document.getElementById("calorie-"+kind+"-track");
+  if(fill){fill.style.width=Math.max(0,Math.min(100,pct))+"%";if(kind==="base")fill.style.background="linear-gradient(90deg,"+colors[0]+","+colors[1]+")"}
+  if(track){track.setAttribute("aria-valuenow",String(Math.max(0,Math.min(100,pct))));track.setAttribute("aria-valuetext",eaten+" kcal su "+target+" kcal, "+pct+" per cento")}
+  setText("calorie-"+kind+"-percent",pct+"%");
+ }
+ setText("calorie-extra-note","Margine attività: +"+extra+" kcal · stesse calorie assunte");
+}
+</script>
+</head>
 
 
 <body>
@@ -9507,25 +9550,17 @@ html[data-theme="light"] .missing-today-legend {
   ></div>
   <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
   <main id="ux2-home" aria-label="Oggi">
-    <section class="ux2-calorie-zone">
-      <div class="ux2-ring-wrap">
-        <div class="ux2-activity-ring" id="ux2-activity-ring" aria-label="Anello attività">
-          <div class="ux2-ring" id="ux2-ring" aria-label="Anello target base">
-            <div class="ux2-ring-content">
-              <div class="ux2-flame">🔥</div>
-              <div class="ux2-kcal-now" id="ux2-kcal-now">0</div>
-              <div class="ux2-kcal-unit">kcal</div>
-              <div class="ux2-kcal-of">di <span id="ux2-kcal-target">—</span></div>
-              <div class="ux2-percent" id="ux2-kcal-percent">0%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ux2-goal">
-        <div class="ux2-goal-base">🎯<small>Target base</small><b id="ux2-goal-kcal">—</b><small>kcal</small></div>
-        <div class="ux2-goal-activity" id="ux2-goal-activity" hidden>⌚<small>Con attività</small><b id="ux2-activity-target-kcal">—</b><small>kcal</small></div>
-      </div>
-    </section>
+    <section class="ux2-calorie-zone calorie-panel" aria-label="Calorie di oggi">
+ <div class="calorie-panel-head"><div><span class="calorie-eyebrow">🔥 Calorie assunte oggi</span><div class="calorie-amount"><strong id="ux2-kcal-now">0</strong><span>kcal</span></div></div><span class="calorie-panel-tag">OGGI</span></div>
+ <div class="calorie-row"><span>🎯 Target base</span><span><b id="ux2-goal-kcal">—</b> kcal · <strong id="calorie-base-percent">0%</strong></span></div>
+ <div class="calorie-track" id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="calorie-base-fill"></i></div>
+ <div id="ux2-goal-activity" class="calorie-activity" hidden>
+  <div class="calorie-row"><span>⌚ Con attività</span><span><b id="ux2-activity-target-kcal">—</b> kcal · <strong id="calorie-activity-percent">0%</strong></span></div>
+  <div class="calorie-track activity" id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="calorie-activity-fill"></i></div>
+  <div class="calorie-extra" id="calorie-extra-note"></div>
+ </div>
+ <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
+</section>
 
     <section class="ux2-macros">
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
@@ -27194,10 +27229,11 @@ function dfaiPrepareManualEntry(){
     const activityPct=Math.max(0,Math.min(100,Math.round(eaten/activityTargetValue*100)));
     const baseGradient=basePct<75?["#38bdf8","#22d3ee"]:basePct<=110?["#22d3ee","#22c55e"]:["#f59e0b","#ef4444"];
     if(baseRing){baseRing.style.setProperty("--p",basePct);baseRing.style.background="conic-gradient("+baseGradient[0]+" 0%,"+baseGradient[1]+" "+basePct+"%,#35596a "+basePct+"%,#35596a 100%)";}
-    if(percent)percent.textContent=basePct+"%";
+    if(percent&&percent.textContent!==basePct+"%")percent.textContent=basePct+"%";
     if(activityRing){activityRing.classList.toggle("is-active",credit>0);activityRing.style.setProperty("--activity-p",activityPct);}
     if(activityGoal)activityGoal.hidden=credit<=0;
-    if(activityTarget)activityTarget.textContent=String(activityTargetValue);
+    if(activityTarget&&activityTarget.textContent!==String(activityTargetValue))activityTarget.textContent=String(activityTargetValue);
+    dfCalorieBarsRender(eaten,base,credit);
   };
   const refreshPreview=()=>{
     const steps=clean(document.getElementById("activity-steps")?.value,100000),activeKcal=clean(document.getElementById("activity-active-kcal")?.value,5000),d={steps,activeKcal},credit=extra(d),fill=document.getElementById("activity-chart-fill"),out=document.getElementById("activity-extra-kcal"),preview=document.getElementById("activity-preview");
