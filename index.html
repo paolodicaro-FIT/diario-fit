@@ -26594,7 +26594,7 @@ function closeTargetsFromProgress(restoreStats=true){
   <div class="dfai-second-controls">
    <button type="button" id="dfai-second-add" onclick="dfaiChooseSecondPhoto()">+ Seconda foto (facoltativa)</button>
    <small>Lo stesso pasto da un’altra angolazione: di lato aiuta a mostrare lo spessore.</small>
-   <input id="dfai-second-input" type="file" accept="image/*" hidden onchange="dfaiHandleSecondPhoto(event)">
+   <input id="dfai-second-input" type="file" accept="image/*" capture="environment" hidden onchange="dfaiHandleSecondPhoto(event)">
    <div id="dfai-second-area" hidden><img id="dfai-second-preview" alt="Seconda vista dello stesso pasto"><button type="button" onclick="dfaiRemoveSecondPhoto()">✕ Rimuovi seconda foto</button></div>
   </div>
   <div class="dfai-web-status" id="dfai-web-photo-status">Foto pronta. Nessun dato è stato inserito nel diario.</div>
