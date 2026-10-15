@@ -9464,12 +9464,7 @@ function dfCalorieBarsRender(eaten,base,extra){
         </span>
       </button>
 
-      <div
-        id="account-access-badge"
-        class="account-access-badge"
-        style="display:none;"
-        title=""
-      ></div>
+
 
       <div class="header-subtitle-row">
 
@@ -9570,7 +9565,7 @@ function dfCalorieBarsRender(eaten,base,extra){
     <section class="ux2-macros">
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">—</span> g</small></div>
+      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div>
       <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><small id="ux2-sugar-free-reference"></small></div>
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
@@ -14415,126 +14410,27 @@ function startAccountAccessTimer() {
 
 
 function renderAccountAccessBadge() {
-
-  const badge =
-    document.getElementById(
-      "account-access-badge"
-    );
-
-  if (!badge || !currentUser) {
-    return;
-  }
-
-  badge.classList.remove(
-    "is-lifetime",
-    "is-trial",
-    "is-expired"
-  );
-
-  const isWeekly =
-    currentUser.access_plan === "weekly";
-
-  if (!isWeekly) {
-
-    badge.innerHTML =
-      '<img src="badge-vitalizio-ui-transparent.png" alt="VITALIZIO" class="account-lifetime-image">';
-
-    badge.classList.add(
-      "is-lifetime"
-    );
-
-    badge.title =
-      "Accesso senza scadenza";
-
-    badge.style.display =
-      "inline-flex";
-
-    return;
-  }
-
-  const expiryMs =
-    currentUser.access_expires_at
-      ? Date.parse(
-          currentUser.access_expires_at
-        )
-      : NaN;
-
-  if (
-    !Number.isFinite(expiryMs) ||
-    expiryMs <= getAccountNowMs()
-  ) {
-
-    badge.textContent =
-      "🔒 ACCESSO SCADUTO";
-
-    badge.classList.add(
-      "is-expired"
-    );
-
-    badge.title =
-      Number.isFinite(expiryMs)
-        ? "Scaduto il " +
-          new Date(expiryMs).toLocaleString(
-            "it-IT",
-            {
-              dateStyle: "short",
-              timeStyle: "short"
-            }
-          )
-        : "Scadenza account non valida";
-
-    badge.style.display =
-      "inline-flex";
-
-    return;
-  }
-
-  const remainingMs =
-    expiryMs - getAccountNowMs();
-
-  const totalMinutes =
-    Math.max(
-      0,
-      Math.floor(
-        remainingMs / 60000
-      )
-    );
-
-  const days =
-    Math.floor(
-      totalMinutes / 1440
-    );
-
-  const hours =
-    Math.floor(
-      (totalMinutes % 1440) / 60
-    );
-
-  const minutes =
-    totalMinutes % 60;
-
-  badge.textContent =
-    "⏳ PROVA · " +
-    days + "g " +
-    hours + "h " +
-    minutes + "m";
-
-  badge.classList.add(
-    "is-trial"
-  );
-
-  badge.title =
-    "Scadenza: " +
-    new Date(expiryMs).toLocaleString(
-      "it-IT",
-      {
-        dateStyle: "short",
-        timeStyle: "short"
-      }
-    );
-
-  badge.style.display =
-    "inline-flex";
+ const badge=document.getElementById("account-access-badge");
+ if(!badge)return;
+ badge.classList.remove("is-lifetime","is-trial","is-expired");
+ badge.replaceChildren();
+ if(!currentUser){badge.style.display="none";return}
+ const plan=String(currentUser.access_plan||"").toLowerCase();
+ const label=plan==="lifetime"?"Vitalizio":plan==="weekly"?"Settimanale":plan==="monthly"?"Mensile":"Piano non disponibile";
+ badge.style.display="inline-flex";
+ if(plan==="lifetime"){
+  badge.textContent="♾️ "+label;badge.title="Accesso senza scadenza";badge.classList.add("is-lifetime");return;
+ }
+ if(plan!=="weekly"&&plan!=="monthly"){badge.textContent=label;badge.title="";return}
+ const expiry=Date.parse(currentUser.access_expires_at||"");
+ if(!Number.isFinite(expiry)){badge.textContent=label+" · scadenza non disponibile";badge.title="";return}
+ const date=new Date(expiry).toLocaleString("it-IT",{dateStyle:"short",timeStyle:"short"});
+ const remaining=expiry-getAccountNowMs();
+ badge.classList.add(remaining<=0?"is-expired":"is-trial");
+ badge.textContent=label+(remaining<=0?" · scaduto":" · attivo");
+ badge.title=(remaining<=0?"Scaduto il ":"Scadenza: ")+date;
+ const detail=document.createElement("small");detail.textContent=(remaining<=0?"Scaduto il ":"Scade il ")+date;
+ badge.appendChild(detail);
 }
 
 
@@ -26309,6 +26205,7 @@ function ux2SyncHome(){
   });
 
   sugarHomeRender();
+  fatHomeRender();
   ux2SyncDiary();
 }
 function ux2SyncDiary(){
@@ -26665,7 +26562,13 @@ function closeTargetsFromProgress(restoreStats=true){
       <div><small>DIARIO FIT</small><h2 id="ux25-more-title">Altro</h2></div>
       <button type="button" class="ux25-more-close" onclick="ux25CloseMore()" aria-label="Chiudi">✕</button>
     </div>
-    <p class="ux25-more-intro">Informazioni e guida all'uso di DiarioFIT.</p>
+    <p class="ux25-more-intro">Il tuo account, informazioni e guida all'uso.</p>
+    <section class="ux25-more-card account-plan-card" aria-labelledby="account-plan-title">
+      <span class="ux25-more-icon" aria-hidden="true">💳</span>
+      <div><strong id="account-plan-title">Stato dell’abbonamento</strong>
+        <div id="account-access-badge" class="account-access-badge" style="display:none;" title="" role="status"></div>
+      </div>
+    </section>
     <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
       <span class="ux25-more-icon">ℹ️</span>
       <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
@@ -27533,28 +27436,19 @@ async function sugarVerifyRemote(date,items){
 
 /* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
 function sugarAutomatic(item){
- const name=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
- const n=name.replace(/[^a-z0-9%+]+/g," ").trim();
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
- // Prima le esclusioni: una parola di frutta o latte non basta per una ricetta mista.
- if(/\b(senza zuccheri|senza zucchero|zero zuccheri)\b/.test(n)&&/\b(dolce|torta|biscott|cioccol|bevanda)\w*/.test(n))return null;
- const mixed=/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|yogurt alla|yogurt al|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*)\b|\+/.test(n.replace(/\bcon buccia\b/g,""));
- if(!mixed&&/^(zucchero(?: bianco| di canna)?|miele|sciroppo (?:di acero|d acero|di agave|d agave)|succo (?:di |d )?|spremuta(?: di | d )?|coca cola|cola |fanta |sprite |aranciata |limonata )/.test(n))return make("free","zuccheri-liberi-espliciti");
- if(mixed)return null;
- if(/^(caramelle|caramella|zucchero filato|lecca lecca|gommose)\b/.test(n)&&!/\b(latte|crema|ripien\w*)\b/.test(n))return make("free","dolci-a-base-di-zucchero");
- if(/\b(miele|sciropp\w*|zuccher\w*|succo|spremuta|confettur\w*|marmellat\w*)\b/.test(n)&&!/^latte senza lattosio\b/.test(n))return null;
- if(/\b(latte|whey|proteine|cacao|cioccolat\w*|biscott\w*|tort\w*|crostata|gelato|budino|barrett\w*|cereali|crackers?|cracker|pane|panino|pizza|pinsa|focaccia)\b/.test(n)){
-  if(/^latte (?:(?:intero|parzialmente scremato|parz scremato|scremato|senza lattosio|vaccino)\b|\d)|^latte$/.test(n))return make("natural","latte-semplice");
-  if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
-  // Prodotti composti: senza ingredienti non si inventano percentuali.
-  return null;
- }
- if(/^(mirtill[io]|fragol[ae]|lampon[ie]|mor[ae]|mel[ae]|per[ae]|banan[ae]|aranc[iea]+|mandarin[io]|clementin[ae]|kiwi|pesche?|pesc[ah]e?|albicocc[ah]e?|prugn[ae]|susin[ae]|ciliegi[ae]|uva|anguria|cocomero|melon[ei]|ananas|mango|papaya|pompelm[io]|limon[ie]|rib[ei]s|ribes|fich[io]|cach[io]|melogran[io]|avocado|pomodor[io]|carot[ae]|zucchin[ae]|melanzan[ae]|broccol[io]|spinaci|lattuga|finocch[io]|peperon[ie]|cetriol[io]|cavolfior[ei]|fagiolini|piselli|patat[ae]|noci|noc[ie]|mandorl[ae]|nocciol[ae]|pistacchi|anacardi)\b/.test(n)){
-  if(/\b(succo|spremuta|essiccat\w*|disidratat\w*|zuccherat\w*|caramellat\w*|dolc[ie]|chips)\b/.test(n))return null;
-  return make("natural","alimento-intero");
- }
- if(/^(pasta (?:di semola|integrale|secca)|spaghetti (?:di semola|integrali|secchi)|riso (?:bianco|integrale|basmati|crudo|bollito)|fiocchi d avena|avena semplice)\b/.test(n))return make("natural","cereale-semplice");
- if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+ // Nessuna conversione dei carboidrati: si ripartisce esclusivamente item.sugar.
+ const simple=n.replace(/\b\d+(?: \d+)?\s*(?:g|gr|ml|kg)\b/g," ").replace(/\b(?:senza zuccheri aggiunti|senza zucchero aggiunto|senza lattosio|con buccia|senza buccia|al naturale|in acqua|in salamoia|non zuccherato|non zuccherata)\b/g," ")
+ .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
+ if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
+ if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*|caramellat\w*|dolcificat\w*|zuccherat\w*)\b|\+/.test(simple))return null;
+ if(/^(?:latte(?: vaccino)?(?: parzialmente scremato| parz scremato| scremato)?|yogurt(?: greco)?(?: bianco| naturale)?(?: 0%| 2%| 5%)?|kefir(?: bianco| naturale)?|ricotta(?: vaccina| di vacca| di pecora)?|mozzarella(?: vaccina| di vacca| di bufala)?|fiocchi di (?:latte|formaggio)(?: magro)?|parmigiano(?: reggiano)?(?: dop)?|grana padano(?: dop)?)$/.test(simple))return make("natural","latticino-semplice");
+ if(/^(?:mela|mele|pera|pere|banana|banane|arancia|arance|mandarino|mandarini|clementina|clementine|kiwi|pesca|pesche|nettarina|nettarine|albicocca|albicocche|prugna|prugne|susina|susine|ciliegia|ciliegie|uva|uvetta|uva passa|anguria|cocomero|melone|ananas|mango|papaya|pompelmo|limone|limoni|fragola|fragole|mirtillo|mirtilli|lampone|lamponi|mora|more|ribes|fico|fichi|dattero|datteri|cachi|melograno|avocado|cocco|pomodoro|pomodori(?: da insalata)?|carota|carote|zucchina|zucchine|melanzana|melanzane|broccolo|broccoli|spinaci|lattuga|finocchio|finocchi|peperone|peperoni|cetriolo|cetrioli|cavolfiore|cavolo|cavoli|verza|bietola|bietole|cicoria|radicchio|rucola|sedano|cipolla|cipolle|aglio|porro|porri|asparagi|carciofi|funghi|zucca|barbabietola|rapa|rape|patata|patate|patate dolci|fagiolini|piselli|ceci|fagioli(?: borlotti| cannellini)?|lenticchie|fave|soia|lupini|noci(?: pecan| del brasile| di macadamia)?|macadamia|mandorle|nocciole|pistacchi|anacardi|arachidi|pinoli|castagne|semi di (?:lino|chia|zucca|girasole|sesamo))$/.test(simple))return make("natural","vegetale-intero");
+ if(/^(?:pasta(?: di semola| integrale| di semola integrale| di grano duro)?|spaghetti(?: di semola| integrali)?|riso(?: bianco| brillato| bianco brillato| integrale| basmati| venere| rosso)?|avena|fiocchi d avena|farro(?: perlato)?|orzo(?: perlato)?|quinoa|miglio|grano saraceno|cous cous|couscous|bulgur|mais|polenta|farina(?: di grano| di frumento| integrale| di mais| di riso)?)$/.test(simple))return make("natural","cereale-semplice");
+ // Nei prodotti composti la dichiarazione esplicita esclude aggiunte, non miele/succo.
+ if(/\bsenza zuccheri aggiunti\b/.test(n)&&/^(?:pane|crackers?|fette biscottate)\b/.test(n)&&!/\b(miele|sciroppo|succo|concentrato|malto|frutta)\b/.test(n))return make("natural","prodotto-senza-aggiunte-esplicite");
  return null;
 }
 function sugarResolve(item){
@@ -27787,5 +27681,154 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 .calorie-progress-arrow{pointer-events:none;filter:drop-shadow(0 0 3px rgba(224,255,247,.95)) drop-shadow(0 0 7px rgba(34,211,238,.8))}
 .calorie-progress-arrow path{fill:#eafff6;stroke:#22d3a6;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .calorie-progress-arrow.extra path{fill:#e6fffd;stroke:#2dd4bf}
-</style><style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style></body>
+</style><style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style>
+<style id="fat-composition-v1">
+.fat-macro .sugar-line{display:flex;justify-content:space-between;gap:4px;font-size:.65rem;line-height:1.3;margin-top:6px;text-align:left}
+.fat-macro .sugar-line strong{white-space:nowrap}
+.fat-macro>small{display:block;font-size:.59rem;line-height:1.35;margin-top:4px}
+#fat-origin-modal .modal-content{max-width:520px;max-height:90dvh;overflow:auto}
+#fat-origin-modal p{font-size:.9rem;line-height:1.5}
+.fat-source-row{border-bottom:1px solid var(--border);padding:10px 0;font-size:.85rem}
+.fat-source-row p{margin:5px 0}
+@media(max-width:600px){
+ #ux2-home .ux2-macros{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ #ux2-home .ux2-macro:not(.sugar-macro):not(.fat-macro){grid-column:span 2}
+ #ux2-home .ux2-macro.fat-macro,#ux2-home .ux2-macro.sugar-macro{display:block;grid-column:span 3;order:1;min-height:0;padding:7px 9px!important;text-align:left}
+ #ux2-home .fat-macro>.ico,#ux2-home .sugar-macro>.ico{display:none}
+ #ux2-home .fat-macro>b,#ux2-home .sugar-macro>b{display:inline-flex;gap:3px;align-items:baseline;justify-content:flex-start;margin:0;font-size:1.1rem!important}
+ #ux2-home .fat-macro>b small,#ux2-home .sugar-macro>b small{display:inline;font-size:.65rem}
+ #ux2-home .fat-macro>label,#ux2-home .sugar-macro>label{display:block;font-size:.65rem!important;line-height:1.1}
+ #ux2-home .fat-macro>.sugar-line,#ux2-home .sugar-macro>.sugar-line{font-size:.67rem;line-height:1.2;margin-top:3px}
+ #ux2-home .fat-macro>.sugar-track,#ux2-home .sugar-macro>.sugar-track{height:5px;margin:3px 0}
+ #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{text-align:left;font-size:.58rem!important;line-height:1.2;margin-top:4px}
+}
+</style>
+<div id="fat-origin-modal" class="modal-overlay"><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fat-origin-title">
+<div class="modal-header"><h3 id="fat-origin-title">🥑 Composizione dei grassi</h3><button type="button" class="modal-close" aria-label="Chiudi" onclick="document.getElementById('fat-origin-modal').style.display='none'">✕</button></div>
+<p><strong>Verde: insaturi</strong> (monoinsaturi e polinsaturi). <strong>Arancione: saturi.</strong> Uno stesso alimento può contenere entrambi: macadamia ed EVO non diventano “tutti insaturi”, la pancetta non diventa “tutta satura”.</p>
+<p>DiarioFIT riconosce automaticamente gli alimenti semplici presenti nel catalogo dei profili CREA e applica le proporzioni ai grassi già registrati. Le quantità sono stime medie, non misure del prodotto specifico. Il totale dei grassi, le calorie e gli altri nutrienti non cambiano.</p>
+<p>Le barre indicano quote del totale: non sono obiettivi da riempire né un invito a consumare grassi senza limite. La quota incerta comprende alimenti senza profilo e residui non attribuiti; non viene considerata automaticamente insatura e non identifica i grassi trans.</p>
+<p>Piatti misti, prodotti non riconosciuti e fotografie senza ingredienti sufficienti restano incerti. Anche i pasti salvati vengono ripartiti solo per gli ingredienti riconoscibili. Nessun campo aggiuntivo obbligatorio.</p>
+<p>Fonte: <a href="https://www.alimentinutrizione.it/presentazione-dati" target="_blank" rel="noopener">CREA, Tabelle di composizione, dicembre 2019</a>. I profili sono espressi in percentuale dei lipidi. Se i valori pubblicati superano complessivamente il 100%, le quote vengono ridotte proporzionalmente per conservare il totale.</p>
+<h4>Dettaglio degli alimenti di oggi</h4><div id="fat-origin-list"></div>
+</section></div>
+<script id="fat-composition-v1-script">
+/* Profili medi CREA, dicembre 2019. Percentuali di lipidi: fonte presentazione-dati.
+   Somme >100 per arrotondamenti: normalizzate; somme <100: residuo non attribuito. */
+function fatAutomaticProfile(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return null;
+
+ // Profili medi specifici CREA: riconoscimento completo, mai per una parola in una ricetta.
+ const catalog=[["nocciol[ae]",6.49,75.85,8.11,"008550"],["noci pecan",11.29,47.05,41.41,"008580"],["pistacchi",10.64,69.16,20.21,"008600"],["anacardi",20.47,61.4,18.19,"008610"],["avocado",11.28,83.36,6.59,"007490"],["olio (?:di )?(?:semi di )?girasole",11.91,35.35,53.2,"009650"],["olio (?:di )?(?:semi di )?arachid[ei]",19.41,52.57,27.9,"009610"],["salmone affumicato",28.03,43.43,29.04,"122410"],["salmone",28.13,43.56,28.88,"122400"],["(?:sgombro|maccarello)",28.5,45.1,26.86,"123000"],["(?:uovo|uova)(?: di gallina)?(?: intero| intere)?",45.55,37.07,18.1,"181100"],["parmigiano(?: reggiano)?(?: dop)?",65.98,31.35,2.81,"166000"],["(?:petto (?:di )?pollo|pollo petto)",37.2,28.27,34.23,"106500"],["(?:petto (?:di )?tacchino|fesa (?:di )?tacchino|tacchino fesa)",37.25,30.39,33.33,"106850"],["(?:lonza|lombo)(?: di maiale)?",35.01,37.36,28.57,"105210"],["prosciutto crudo(?: nazionale)?",33.7,44.2,12.9,"110535"],["bresaola(?: della valtellina)?(?: igp)?",33,31.6,16,"110020"],["speck(?: alto adige| dell alto adige)?(?: igp)?",33,41.7,16.1,"110800"]];
+ const food=n.replace(/^prosciutto crudo/,"prosciutto_crudo").replace(/\b\d+\s*(?:g|gr|grammi)\b/g," ").replace(/\b(?:crudo|cruda|crudi|crude|fresco|fresca|freschi|fresche|naturali|al naturale|sgusciate|sgusciati|intero|intere)\b/g," ").replace(/\s+/g," ").trim();
+ for(const [pattern,sat,mono,poly,code] of catalog){
+  if(new RegExp("^(?:"+pattern+")$").test(food.replace("prosciutto_crudo","prosciutto crudo"))){
+   const divisor=Math.max(100,sat+mono+poly);
+   return {version:1,saturatedShare:sat/divisor,unsaturatedShare:(mono+poly)/divisor,source:"CREA",code};
+  }
+ }
+ let p=null;
+ if(/^(?:noci |noce |noc[ie] di )?macadamia\b/.test(n))p=[16.52,81.20,1.38,"008620"];
+ else if(/^(?:olio (?:extravergine|extra vergine)(?: di oliva)?|olio evo|evo)\b/.test(n))p=[15.32,77.27,7.97,"009210"];
+ else if(/^olio (?:di oliva|d oliva)\b/.test(n))p=[16.34,75.28,8.94,"009200"];
+ else if(/^mandorl[ae]\b/.test(n))p=[8.38,72.04,19.82,"008540"];
+ else if(/^noci(?: secche| sgusciate| naturali)?(?:\s+\d|\s*$)/.test(n))p=[9.97,17.08,72.81,"008570"];
+ else if(/^burro(?:\s+\d|\s*$)/.test(n))p=[64.99,31.6,3.66,"190010"];
+ else if(/^pancetta tesa\b/.test(n))p=[36.38,47.66,16.58,"110310"];
+ else if(/^pancetta magretta\b/.test(n))p=[39.44,49.98,11.05,"110300"];
+ else if(/^pancetta arrotolata\b/.test(n))p=[31.2,46.8,12,"110320"];
+ if(!p)return null;
+ if(/\b(caramellat\w*|zuccherat\w*|cioccolat\w*|aromatizzat\w*|margarin\w*)\b/.test(n))return null;
+ const divisor=Math.max(100,p[0]+p[1]+p[2]);
+ return {version:1,saturatedShare:p[0]/divisor,unsaturatedShare:(p[1]+p[2])/divisor,source:"CREA",code:p[3]};
+}
+function fatParts(item){
+ const total=Math.max(0,Number(item?.fat)||0),profile=fatAutomaticProfile(item);
+ const saturated=profile?total*profile.saturatedShare:0,unsaturated=profile?Math.min(total-saturated,total*profile.unsaturatedShare):0;
+ return {total,saturated,unsaturated,unknown:Math.max(0,total-saturated-unsaturated),profile};
+}
+function fatHomeRender(){
+ if(typeof log==="undefined")return;
+ const t=(log||[]).reduce((a,item)=>{const p=fatParts(item);for(const k of Object.keys(a))a[k]+=p[k];return a},{total:0,saturated:0,unsaturated:0,unknown:0});
+ for(const [kind,id] of [["unsaturated","ux2-fat-unsaturated"],["saturated","ux2-fat-saturated"]]){
+  const el=document.getElementById(id),bar=document.getElementById(id+"-bar");
+  if(el)el.textContent=sugarFmt(t[kind])+" g";
+  if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="unsaturated"?"Insaturi: ":"Saturi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
+ }
+ const unknown=document.getElementById("ux2-fat-unknown");if(unknown){unknown.textContent="Quota incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
+ const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Ripartizione stimata · CREA";
+}
+function fatHelpOpen(){
+ const modal=document.getElementById("fat-origin-modal"),list=document.getElementById("fat-origin-list");list.replaceChildren();
+ (log||[]).filter(x=>Number(x.fat)>0).forEach(item=>{
+  const p=fatParts(item),row=document.createElement("div");row.className="fat-source-row";
+  const title=document.createElement("strong");title.textContent=item.name;row.appendChild(title);
+  const detail=document.createElement("p");detail.textContent=p.profile?"Stima: "+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
+  if(p.profile){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
+  list.appendChild(row);
+ });
+ modal.style.display="flex";modal.querySelector(".modal-close").focus();
+}
+</script>
+
+<style id="home-mobile-fit-v2">
+@media(max-width:600px){
+ body:not(.ux24-add-mode):not(.ux23-add-mode) .header-container{min-height:0!important;padding:5px 8px!important;margin-bottom:3px!important;row-gap:3px!important}
+ .header-container .account-access-badge{margin:2px 0!important}
+ #display-date{padding:5px 8px!important;margin:2px 0 5px!important}
+ #ux2-home .calorie-cockpit-content{padding:19px 28px 19px}
+ #ux2-home .calorie-cockpit .calorie-amount{margin:3px 0 6px}
+ #ux2-home .calorie-cockpit .calorie-amount strong{font-size:2.1rem}
+ #ux2-home .calorie-target-pill{padding-top:5px}
+ #ux2-home .ux2-macros{gap:5px!important;margin-bottom:6px}
+ #ux2-home .ux2-macro:not(.sugar-macro):not(.fat-macro){padding:4px 3px!important}
+ #ux2-home .ux2-macro.fat-macro,#ux2-home .ux2-macro.sugar-macro{padding:5px 8px!important}
+ #ux2-home .fat-macro>b,#ux2-home .sugar-macro>b{font-size:1rem!important}
+ #ux2-home .fat-macro>label,#ux2-home .sugar-macro>label{display:inline;font-size:.62rem!important;margin-left:4px}
+ #ux2-home .fat-macro>.sugar-line,#ux2-home .sugar-macro>.sugar-line{font-size:.64rem;margin-top:2px}
+ #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{font-size:.57rem!important;margin-top:2px}
+ #ux2-home .ux2-primary-actions{margin-top:4px;gap:6px}
+ #ux2-home .ux2-primary-actions button{min-height:44px!important;font-size:.78rem!important}
+}
+@media(max-width:600px) and (max-height:740px){
+ #ux2-home .calorie-cockpit-content{padding:15px 27px 16px}
+ #ux2-home .calorie-cockpit .calorie-amount strong{font-size:1.9rem}
+}
+</style>
+<style id="account-plan-in-more">
+.account-plan-card{cursor:default}
+.account-plan-card>div{min-width:0}
+.account-plan-card #account-access-badge{flex-direction:column;align-items:flex-start;gap:4px;margin:7px 0 0;padding:5px 8px;white-space:normal;font-size:.85rem}
+.account-plan-card #account-access-badge.is-lifetime{color:#5eead4;padding:0}
+.account-plan-card #account-access-badge small{display:block;font-size:.73rem;font-weight:500;line-height:1.4}
+</style>
+
+<style id="composition-card-alignment-v2">
+@media(max-width:600px){
+ #ux2-home .ux2-macro.fat-macro,#ux2-home .ux2-macro.sugar-macro{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:24px 28px auto 5px auto 5px auto auto;
+  align-content:start;align-items:center;column-gap:0;row-gap:2px;text-align:left
+ }
+ #ux2-home .ux2-macro.fat-macro>b,#ux2-home .ux2-macro.sugar-macro>b{
+  grid-column:1!important;grid-row:1!important;display:flex!important;
+  justify-content:flex-start!important;align-items:baseline;gap:3px;
+  margin:0!important;padding:0;font-size:1.1rem!important;line-height:1.1
+ }
+ #ux2-home .ux2-macro.fat-macro>label,#ux2-home .ux2-macro.sugar-macro>label{
+  grid-column:1!important;grid-row:2!important;display:flex!important;
+  justify-content:flex-start;align-items:center;gap:4px;
+  margin:0!important;padding:0;font-size:.64rem!important;font-weight:700;line-height:1.1
+ }
+ #ux2-home .ux2-macro.fat-macro>.sugar-line,#ux2-home .ux2-macro.sugar-macro>.sugar-line,
+ #ux2-home .ux2-macro.fat-macro>.sugar-track,#ux2-home .ux2-macro.sugar-macro>.sugar-track,
+ #ux2-home .ux2-macro.fat-macro>small,#ux2-home .ux2-macro.sugar-macro>small{
+  grid-column:1!important;grid-row:auto!important;margin:0!important
+ }
+ #ux2-home .ux2-macro.fat-macro>.sugar-info,#ux2-home .ux2-macro.sugar-macro>.sugar-info{margin:0}
+ #ux2-home .ux2-macro.fat-macro>[hidden],#ux2-home .ux2-macro.sugar-macro>[hidden]{display:none!important}
+}
+</style>
+</body>
 </html>
