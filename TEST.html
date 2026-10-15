@@ -9330,6 +9330,19 @@ html[data-theme="light"] .missing-today-legend {
 </style>
 
 <script id="diariofit-calorie-bars-script">
+
+function dfCaloriePositionArrow(trace,arrow,pct){
+ if(!trace||!arrow)return;
+ const fraction=Math.max(0,Math.min(100,pct))/100;
+ if(!fraction){arrow.style.display="none";return}
+ try{
+  const length=trace.getTotalLength();if(!(length>0)){arrow.style.display="none";return}
+  const at=length*fraction,point=trace.getPointAtLength(at),before=trace.getPointAtLength(Math.max(0,at-.5)),after=trace.getPointAtLength(Math.min(length,at+.5));
+  const angle=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
+  arrow.setAttribute("transform","translate("+point.x.toFixed(3)+" "+point.y.toFixed(3)+") rotate("+angle.toFixed(3)+")");arrow.style.display="";
+ }catch(error){arrow.style.display="none"}
+}
+
 function dfCalorieBarsRender(eaten,base,extra){
  const setText=(id,value)=>{const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value};
  const raw=base>0?Math.round(eaten/base*100):0;
@@ -9340,6 +9353,7 @@ function dfCalorieBarsRender(eaten,base,extra){
   if(track){track.setAttribute("aria-valuenow",String(Math.max(0,Math.min(100,pct))));track.setAttribute("aria-valuetext",eaten+" kcal su "+target+" kcal, "+pct+" per cento")}
   const trace=document.getElementById("calorie-"+kind+"-trace");
   if(trace){trace.setAttribute("stroke-dasharray",Math.max(0,Math.min(100,pct))+" 100");trace.style.opacity=pct>0?"1":"0"}
+  dfCaloriePositionArrow(trace,document.getElementById("calorie-"+kind+"-arrow"),pct);
   if(kind==="activity"&&track)track.hidden=extra<=0;
   setText("calorie-"+kind+"-percent",pct+"%");
  }
@@ -9534,7 +9548,8 @@ function dfCalorieBarsRender(eaten,base,extra){
  <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient></defs>
  <rect class="calorie-frame-track" x="9" y="9" width="382" height="162" rx="28"/>
  <rect id="calorie-base-trace" class="calorie-frame-trace base" x="9" y="9" width="382" height="162" rx="28" pathLength="100" stroke-dasharray="0 100"/>
- <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-trace" class="calorie-frame-trace extra" x="19" y="19" width="362" height="142" rx="21" pathLength="100" stroke-dasharray="0 100"/></g>
+ <g id="calorie-base-arrow" class="calorie-progress-arrow base" style="display:none"><path d="M -10 -6 L 1 0 L -10 6 L -6 0 Z"/></g>
+ <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-trace" class="calorie-frame-trace extra" x="19" y="19" width="362" height="142" rx="21" pathLength="100" stroke-dasharray="0 100"/><g id="calorie-activity-arrow" class="calorie-progress-arrow extra" style="display:none"><path d="M -9 -5 L 1 0 L -9 5 L -5 0 Z"/></g></g>
  </svg>
  <div class="calorie-cockpit-content">
  <div class="calorie-cockpit-eyebrow"><span class="calorie-live-dot"></span> ENERGIA DI OGGI</div>
@@ -27695,5 +27710,14 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 @media(max-width:600px){#ux2-home .calorie-cockpit{margin:4px 0 9px}.calorie-cockpit-content{padding:28px 31px 26px}.calorie-cockpit .calorie-amount strong{font-size:2.35rem}}
 @media(prefers-reduced-motion:reduce){.calorie-frame-trace{transition:none}}
 </style>
-</body>
+<style id="diariofit-calorie-arrow-test">
+.calorie-frame-track{stroke:#102c37;stroke-width:8}
+.calorie-frame-track.inner{stroke:#102c32;stroke-width:5.5}
+.calorie-frame-trace{stroke-width:8;transition:none}
+.calorie-frame-trace.base{filter:drop-shadow(0 0 3px rgba(34,211,238,.8)) drop-shadow(0 0 7px rgba(34,197,94,.25))}
+.calorie-frame-trace.extra{stroke-width:5.5;filter:drop-shadow(0 0 4px rgba(45,212,191,.8))}
+.calorie-progress-arrow{pointer-events:none;filter:drop-shadow(0 0 3px rgba(224,255,247,.95)) drop-shadow(0 0 7px rgba(34,211,238,.8))}
+.calorie-progress-arrow path{fill:#eafff6;stroke:#22d3a6;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.calorie-progress-arrow.extra path{fill:#e6fffd;stroke:#2dd4bf}
+</style></body>
 </html>
