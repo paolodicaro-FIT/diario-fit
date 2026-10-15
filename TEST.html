@@ -27534,28 +27534,19 @@ async function sugarVerifyRemote(date,items){
 
 /* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
 function sugarAutomatic(item){
- const name=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
- const n=name.replace(/[^a-z0-9%+]+/g," ").trim();
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
- // Prima le esclusioni: una parola di frutta o latte non basta per una ricetta mista.
- if(/\b(senza zuccheri|senza zucchero|zero zuccheri)\b/.test(n)&&/\b(dolce|torta|biscott|cioccol|bevanda)\w*/.test(n))return null;
- const mixed=/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|yogurt alla|yogurt al|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*)\b|\+/.test(n.replace(/\bcon buccia\b/g,""));
- if(!mixed&&/^(zucchero(?: bianco| di canna)?|miele|sciroppo (?:di acero|d acero|di agave|d agave)|succo (?:di |d )?|spremuta(?: di | d )?|coca cola|cola |fanta |sprite |aranciata |limonata )/.test(n))return make("free","zuccheri-liberi-espliciti");
- if(mixed)return null;
- if(/^(caramelle|caramella|zucchero filato|lecca lecca|gommose)\b/.test(n)&&!/\b(latte|crema|ripien\w*)\b/.test(n))return make("free","dolci-a-base-di-zucchero");
- if(/\b(miele|sciropp\w*|zuccher\w*|succo|spremuta|confettur\w*|marmellat\w*)\b/.test(n)&&!/^latte senza lattosio\b/.test(n))return null;
- if(/\b(latte|whey|proteine|cacao|cioccolat\w*|biscott\w*|tort\w*|crostata|gelato|budino|barrett\w*|cereali|crackers?|cracker|pane|panino|pizza|pinsa|focaccia)\b/.test(n)){
-  if(/^latte (?:(?:intero|parzialmente scremato|parz scremato|scremato|senza lattosio|vaccino)\b|\d)|^latte$/.test(n))return make("natural","latte-semplice");
-  if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
-  // Prodotti composti: senza ingredienti non si inventano percentuali.
-  return null;
- }
- if(/^(mirtill[io]|fragol[ae]|lampon[ie]|mor[ae]|mel[ae]|per[ae]|banan[ae]|aranc[iea]+|mandarin[io]|clementin[ae]|kiwi|pesche?|pesc[ah]e?|albicocc[ah]e?|prugn[ae]|susin[ae]|ciliegi[ae]|uva|anguria|cocomero|melon[ei]|ananas|mango|papaya|pompelm[io]|limon[ie]|rib[ei]s|ribes|fich[io]|cach[io]|melogran[io]|avocado|pomodor[io]|carot[ae]|zucchin[ae]|melanzan[ae]|broccol[io]|spinaci|lattuga|finocch[io]|peperon[ie]|cetriol[io]|cavolfior[ei]|fagiolini|piselli|patat[ae]|noci|noc[ie]|mandorl[ae]|nocciol[ae]|pistacchi|anacardi)\b/.test(n)){
-  if(/\b(succo|spremuta|essiccat\w*|disidratat\w*|zuccherat\w*|caramellat\w*|dolc[ie]|chips)\b/.test(n))return null;
-  return make("natural","alimento-intero");
- }
- if(/^(pasta (?:di semola|integrale|secca)|spaghetti (?:di semola|integrali|secchi)|riso (?:bianco|integrale|basmati|crudo|bollito)|fiocchi d avena|avena semplice)\b/.test(n))return make("natural","cereale-semplice");
- if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+ // Nessuna conversione dei carboidrati: si ripartisce esclusivamente item.sugar.
+ const simple=n.replace(/\b\d+(?: \d+)?\s*(?:g|gr|ml|kg)\b/g," ").replace(/\b(?:senza zuccheri aggiunti|senza zucchero aggiunto|senza lattosio|con buccia|senza buccia|al naturale|in acqua|in salamoia|non zuccherato|non zuccherata)\b/g," ")
+ .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
+ if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
+ if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*|caramellat\w*|dolcificat\w*|zuccherat\w*)\b|\+/.test(simple))return null;
+ if(/^(?:latte(?: vaccino)?(?: parzialmente scremato| parz scremato| scremato)?|yogurt(?: greco)?(?: bianco| naturale)?(?: 0%| 2%| 5%)?|kefir(?: bianco| naturale)?|ricotta(?: vaccina| di vacca| di pecora)?|mozzarella(?: vaccina| di vacca| di bufala)?|fiocchi di (?:latte|formaggio)(?: magro)?|parmigiano(?: reggiano)?(?: dop)?|grana padano(?: dop)?)$/.test(simple))return make("natural","latticino-semplice");
+ if(/^(?:mela|mele|pera|pere|banana|banane|arancia|arance|mandarino|mandarini|clementina|clementine|kiwi|pesca|pesche|nettarina|nettarine|albicocca|albicocche|prugna|prugne|susina|susine|ciliegia|ciliegie|uva|uvetta|uva passa|anguria|cocomero|melone|ananas|mango|papaya|pompelmo|limone|limoni|fragola|fragole|mirtillo|mirtilli|lampone|lamponi|mora|more|ribes|fico|fichi|dattero|datteri|cachi|melograno|avocado|cocco|pomodoro|pomodori(?: da insalata)?|carota|carote|zucchina|zucchine|melanzana|melanzane|broccolo|broccoli|spinaci|lattuga|finocchio|finocchi|peperone|peperoni|cetriolo|cetrioli|cavolfiore|cavolo|cavoli|verza|bietola|bietole|cicoria|radicchio|rucola|sedano|cipolla|cipolle|aglio|porro|porri|asparagi|carciofi|funghi|zucca|barbabietola|rapa|rape|patata|patate|patate dolci|fagiolini|piselli|ceci|fagioli(?: borlotti| cannellini)?|lenticchie|fave|soia|lupini|noci(?: pecan| del brasile| di macadamia)?|macadamia|mandorle|nocciole|pistacchi|anacardi|arachidi|pinoli|castagne|semi di (?:lino|chia|zucca|girasole|sesamo))$/.test(simple))return make("natural","vegetale-intero");
+ if(/^(?:pasta(?: di semola| integrale| di semola integrale| di grano duro)?|spaghetti(?: di semola| integrali)?|riso(?: bianco| brillato| bianco brillato| integrale| basmati| venere| rosso)?|avena|fiocchi d avena|farro(?: perlato)?|orzo(?: perlato)?|quinoa|miglio|grano saraceno|cous cous|couscous|bulgur|mais|polenta|farina(?: di grano| di frumento| integrale| di mais| di riso)?)$/.test(simple))return make("natural","cereale-semplice");
+ // Nei prodotti composti la dichiarazione esplicita esclude aggiunte, non miele/succo.
+ if(/\bsenza zuccheri aggiunti\b/.test(n)&&/^(?:pane|crackers?|fette biscottate)\b/.test(n)&&!/\b(miele|sciroppo|succo|concentrato|malto|frutta)\b/.test(n))return make("natural","prodotto-senza-aggiunte-esplicite");
  return null;
 }
 function sugarResolve(item){
@@ -27825,6 +27816,16 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 function fatAutomaticProfile(item){
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return null;
+
+ // Profili medi specifici CREA: riconoscimento completo, mai per una parola in una ricetta.
+ const catalog=[["nocciol[ae]",6.49,75.85,8.11,"008550"],["noci pecan",11.29,47.05,41.41,"008580"],["pistacchi",10.64,69.16,20.21,"008600"],["anacardi",20.47,61.4,18.19,"008610"],["avocado",11.28,83.36,6.59,"007490"],["olio (?:di )?(?:semi di )?girasole",11.91,35.35,53.2,"009650"],["olio (?:di )?(?:semi di )?arachid[ei]",19.41,52.57,27.9,"009610"],["salmone affumicato",28.03,43.43,29.04,"122410"],["salmone",28.13,43.56,28.88,"122400"],["(?:sgombro|maccarello)",28.5,45.1,26.86,"123000"],["(?:uovo|uova)(?: di gallina)?(?: intero| intere)?",45.55,37.07,18.1,"181100"],["parmigiano(?: reggiano)?(?: dop)?",65.98,31.35,2.81,"166000"],["(?:petto (?:di )?pollo|pollo petto)",37.2,28.27,34.23,"106500"],["(?:petto (?:di )?tacchino|fesa (?:di )?tacchino|tacchino fesa)",37.25,30.39,33.33,"106850"],["(?:lonza|lombo)(?: di maiale)?",35.01,37.36,28.57,"105210"],["prosciutto crudo(?: nazionale)?",33.7,44.2,12.9,"110535"],["bresaola(?: della valtellina)?(?: igp)?",33,31.6,16,"110020"],["speck(?: alto adige| dell alto adige)?(?: igp)?",33,41.7,16.1,"110800"]];
+ const food=n.replace(/^prosciutto crudo/,"prosciutto_crudo").replace(/\b\d+\s*(?:g|gr|grammi)\b/g," ").replace(/\b(?:crudo|cruda|crudi|crude|fresco|fresca|freschi|fresche|naturali|al naturale|sgusciate|sgusciati|intero|intere)\b/g," ").replace(/\s+/g," ").trim();
+ for(const [pattern,sat,mono,poly,code] of catalog){
+  if(new RegExp("^(?:"+pattern+")$").test(food.replace("prosciutto_crudo","prosciutto crudo"))){
+   const divisor=Math.max(100,sat+mono+poly);
+   return {version:1,saturatedShare:sat/divisor,unsaturatedShare:(mono+poly)/divisor,source:"CREA",code};
+  }
+ }
  let p=null;
  if(/^(?:noci |noce |noc[ie] di )?macadamia\b/.test(n))p=[16.52,81.20,1.38,"008620"];
  else if(/^(?:olio (?:extravergine|extra vergine)(?: di oliva)?|olio evo|evo)\b/.test(n))p=[15.32,77.27,7.97,"009210"];
