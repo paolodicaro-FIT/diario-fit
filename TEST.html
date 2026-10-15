@@ -9531,7 +9531,7 @@ html[data-theme="light"] .missing-today-legend {
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">—</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri</label><div class="ux2-track"><i id="ux2-sugar-bar"></i></div><small>limite <span id="ux2-sugar-target">—</span> g</small></div>
+      <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><small id="ux2-sugar-free-reference"></small></div>
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
 
@@ -10579,6 +10579,7 @@ html[data-theme="light"] .missing-today-legend {
 
     </div>
 
+    <details class="sugar-editor"><summary>🍬 Origine degli zuccheri · facoltativa</summary><div id="sugar-food-edit"></div></details>
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
@@ -10643,6 +10644,7 @@ html[data-theme="light"] .missing-today-legend {
       <label>⚖️ Peso (g)<input type="number" id="quick-preview-weight" onchange="syncQuickPreviewWeight(this.value)" min="0" step="1"></label>
       <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" oninput="syncQuickPreviewField('water', this.value)" min="0" step="1"></label>
     </div>
+    <details class="sugar-editor"><summary>🍬 Origine degli zuccheri · facoltativa</summary><div id="sugar-preview"></div></details>
     <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
       <div id="quick-preview-destination-title" style="font-size:.72rem; font-weight:850; color:var(--text); margin-bottom:7px;">Dove vuoi salvare questo alimento?</div>
       <button id="quick-preview-save-option" type="button" class="save-food-btn" style="margin-top:0; background:var(--card-2); color:var(--text); border:1px solid rgba(255,159,28,.35);" onclick="confirmQuickDiaryPreview('saved')">⭐ Salva nei Miei alimenti</button>
@@ -13736,7 +13738,7 @@ async function loadUserDiaryFromBackend(dateKey) {
   // Un giorno marcato come chiuso resta comunque consultabile:
   // `closed` e un metadato di stato, non deve mai svuotare il diario caricato.
   log = Array.isArray(data.log)
-    ? data.log.map(item => ({
+    ? sugarHydrateLog(data.log,data.summary).map(item => ({
         ...item,
         sugar:
           item.sugar ?? 0
@@ -13880,6 +13882,7 @@ async function saveUserDiaryToBackend(
         log: Array.isArray(log) ? log : [],
         summary: {
           ...completeSummary,
+          sugarOriginsV1:sugarDayMetadata(log),
           targetSnapshot
         }
       })
@@ -13894,6 +13897,7 @@ async function saveUserDiaryToBackend(
 
 async function saveUserSettingsToBackend() {
 
+  sugarSaveCatalog();
   userSettings = {
     ...(userSettings && typeof userSettings === "object"
       ? userSettings
@@ -13941,7 +13945,7 @@ async function loadUserHistoryFromBackend() {
         historyLogs[day.date] = {
           date: day.date,
           log: Array.isArray(day.log)
-            ? day.log.map(item => ({
+            ? sugarHydrateLog(day.log,day.summary).map(item => ({
                 ...item,
                 sugar:
                   item.sugar ?? 0
@@ -14016,6 +14020,7 @@ async function loadUserDataFromBackend() {
           Number(item.weight) || 0
       }));
 
+  sugarRestoreCatalog();
   let quickItemsUpdated = false;
 
   quickAddItems = quickAddItems.map(item => {
@@ -16313,6 +16318,7 @@ async function initApp() {
 
 
 
+  sugarRestoreCatalog();
   updateTargetDisplays();
 
   renderFoodPickerModal();
@@ -20482,7 +20488,7 @@ function renderFoodPickerModal(filterText = "") {
           `</span>`;
 
         item.querySelector(".saved-food-name").onclick = () =>
-          selectFoodOption(val, label);
+          selectFoodOption(val, label, isCustom?food:null);
       } else {
         item.type = "button";
 
@@ -20490,7 +20496,7 @@ function renderFoodPickerModal(filterText = "") {
           `<span>${escapeHTML(label)}</span>` +
           `<small style="color:var(--accent); font-weight:700;">${kcalVal} kcal</small>`;
 
-        item.onclick = () => selectFoodOption(val, label);
+        item.onclick = () => selectFoodOption(val, label, isCustom?food:null);
       }
 
       list.appendChild(item);
@@ -20559,6 +20565,7 @@ function editSavedFood(index) {
     Number(food.weight) > 0 ? Number(food.weight) : "";
   document.getElementById("edit-food-water").value = food.water ?? 0;
 
+  sugarEditorSet("sugar-food-edit",food);
   document.getElementById("edit-food-modal").style.display = "flex";
 }
 
@@ -20624,8 +20631,11 @@ async function saveEditedFood() {
     return;
   }
 
+  let sugarSplit;
+  try{sugarSplit=sugarEditorRead("sugar-food-edit",sugar)}catch(error){alert(error.message);return}
   savedFoods[editingSavedFoodIndex] = {
     ...food,
+    sugarSplit,
     name,
     kcal,
     pro,
@@ -20663,7 +20673,7 @@ async function deleteSavedFood(index) {
   alert("Alimento eliminato.");
 }
 
-function selectFoodOption(value, label) {
+function selectFoodOption(value, label, originFood=null) {
 
   const pickerMode =
     document.getElementById("food-picker-modal")
@@ -20696,6 +20706,7 @@ function selectFoodOption(value, label) {
       fat: parseFloat(parts[3] || 0) || 0,
       carb: parseFloat(parts[4] || 0) || 0,
       sugar,
+      sugarSplit:sugarValidSplit(originFood?.sugarSplit),
       waterMl: parseFloat(parts[waterIndex] || 0) || 0,
       weight: parts.length >= 8 ? parseFloat(parts[7] || 0) || 0 : 0,
       multiplier: 1
@@ -20707,6 +20718,7 @@ function selectFoodOption(value, label) {
     return;
   }
 
+  window.sugarSelectedFood=originFood;
   selectedFoodValue = value;
   selectedFoodDisplayText = label;
   document.getElementById("selected-food-label").innerText = label;
@@ -20762,6 +20774,7 @@ function useSavedMeal(index) {
           fat: Number(item.fat) || 0,
           carb: Number(item.carb) || 0,
           sugar: Number(item.sugar) || 0,
+          sugarSplit:sugarValidSplit(item.sugarSplit),
           waterMl: Number(item.waterMl) || 0,
           weight: Number(item.weight) || 0,
           multiplier:
@@ -20859,6 +20872,7 @@ async function addSavedMealToDiary(mealCategory) {
       fat: Math.round((Number(item.fat)||0) * mult * ratios.fat * 10) / 10,
       carb: Math.round((Number(item.carb)||0) * mult * ratios.carb * 10) / 10,
       sugar: Math.round((Number(item.sugar)||0) * mult * ratios.sugar * 10) / 10,
+      sugarSplit:sugarValidSplit(item.sugarSplit),
       waterMl: Math.round((Number(item.waterMl)||0) * mult * ratios.water),
       weight: Math.round((Number(item.weight)||0) * mult * ratios.weight)
     });
@@ -20920,6 +20934,7 @@ function editSavedMeal(index) {
           fat: Number(item.fat) || 0,
           carb: Number(item.carb) || 0,
           sugar: Number(item.sugar) || 0,
+          sugarSplit:sugarValidSplit(item.sugarSplit),
           waterMl: Number(item.waterMl) || 0,
           weight: Number(item.weight) || 0,
           multiplier:
@@ -20988,6 +21003,7 @@ async function saveSavedMeal() {
         fat: Number(item.fat) || 0,
         carb: Number(item.carb) || 0,
         sugar: Number(item.sugar) || 0,
+          sugarSplit:sugarValidSplit(item.sugarSplit),
         waterMl: Number(item.waterMl) || 0,
         weight: Number(item.weight) || 0,
         multiplier:
@@ -21980,6 +21996,7 @@ async function saveQuickCustomization() {
           fat: Number(food.fat) || 0,
           carb: Number(food.carb) || 0,
           sugar: Number(food.sugar) || 0,
+          sugarSplit:sugarValidSplit(food.sugarSplit),
           water: Number(food.water) || 0,
           weight: Number(food.weight) || 0
         });
@@ -22139,7 +22156,8 @@ function renderQuickGrid() {
           item.carb,
           item.sugar || 0,
           item.water || 0,
-          item.weight || 0
+          item.weight || 0,
+          item.sugarSplit
         );
     }
 
@@ -22189,12 +22207,13 @@ function applyUserDisplayName() {
 
 let quickDiaryPreviewPending = null;
 
-function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0) {
+function addQuick(name, kcal, pro, fat, carb, sugar = 0, waterMl = 0, weight = 0, sugarSplit=null) {
   if (!ensureDiaryWriteAccess()) return;
   quickDiaryPreviewPending = {
     name,
     meal: "",
     source: "quick",
+    sugarSplit:sugarValidSplit(sugarSplit),
     baseName: name,
     baseValues: { kcal:Number(kcal)||0, pro:Number(pro)||0, fat:Number(fat)||0, carb:Number(carb)||0, sugar:Number(sugar)||0, waterMl:Number(waterMl)||0, weight:Number(weight)||0 },
     multiplier: 1,
@@ -22338,6 +22357,7 @@ async function saveQuickPreviewToMyFoods(values) {
     fat: Math.round(values.fat * 10) / 10,
     carb: Math.round(values.carb * 10) / 10,
     sugar: Math.round(values.sugar * 10) / 10,
+    sugarSplit:sugarValidSplit(quickDiaryPreviewPending.sugarSplit),
     water: Math.round(values.waterMl),
     weight: Math.round(values.weight)
   };
@@ -22372,6 +22392,7 @@ async function confirmQuickDiaryPreview(destination) {
   quickDiaryPreviewPending.name = editedName;
   if (Number(quickDiaryPreviewPending.multiplier) === 1) quickDiaryPreviewPending.baseName = editedName;
   const values = captureQuickPreviewFields();
+  try{quickDiaryPreviewPending.sugarSplit=sugarEditorRead("sugar-preview",values?.sugar||0)}catch(error){alert(error.message);return}
   if (!values) {
     alert("Controlla i valori dell’anteprima: devono essere numeri uguali o maggiori di zero.");
     return;
@@ -22386,12 +22407,14 @@ async function confirmQuickDiaryPreview(destination) {
     return;
   }
 
+  if(quickDiaryPreviewPending.originFood){quickDiaryPreviewPending.originFood.sugarSplit=sugarValidSplit(quickDiaryPreviewPending.sugarSplit);await saveUserSettingsToBackend()}
   quickDiaryPreviewPending.meal = destination;
   log.push({
     id:Date.now(), time:getCurrentTimeStr(), meal:destination,
     name:quickDiaryPreviewPending.name,
     kcal:Math.round(values.kcal), pro:Math.round(values.pro*10)/10, fat:Math.round(values.fat*10)/10,
     carb:Math.round(values.carb*10)/10, sugar:Math.round(values.sugar*10)/10,
+    sugarSplit:sugarValidSplit(quickDiaryPreviewPending.sugarSplit),
     waterMl:Math.round(values.waterMl), weight:Math.round(values.weight)
   });
 
@@ -22498,6 +22521,8 @@ async function addFromSelect() {
     name,
     meal,
     source: "foodSelect",
+    sugarSplit:sugarValidSplit(window.sugarSelectedFood?.sugarSplit),
+    originFood:window.sugarSelectedFood,
     resetFoodSelection: true,
     baseName,
     baseValues: {
@@ -22575,7 +22600,7 @@ let dayPlannerState=null;
 const DAY_PLANNER_SLOT_WEIGHTS={"Colazione":.24,"Snack / Integrazione":.10,"Pranzo":.33,"Merenda":.12,"Cena":.31};
 const dpNum=v=>Number.isFinite(Number(v))?Number(v):0;
 const dpRound=v=>Math.round((dpNum(v)+Number.EPSILON)*10)/10;
-function dpFood(f){return {catalogId:String(f?.catalogId||""),name:String(f?.name||"Alimento"),kcal:dpNum(f?.kcal),pro:dpNum(f?.pro),fat:dpNum(f?.fat),carb:dpNum(f?.carb),sugar:dpNum(f?.sugar),waterMl:dpNum(f?.waterMl??f?.water),weight:dpNum(f?.weight)}}
+function dpFood(f){return {catalogId:String(f?.catalogId||""),name:String(f?.name||"Alimento"),kcal:dpNum(f?.kcal),pro:dpNum(f?.pro),fat:dpNum(f?.fat),carb:dpNum(f?.carb),sugar:dpNum(f?.sugar),sugarSplit:sugarValidSplit(f?.sugarSplit),waterMl:dpNum(f?.waterMl??f?.water),weight:dpNum(f?.weight)}}
 function getDayPlannerCatalog(){const presets=Array.isArray(DEFAULT_PRESET_FOODS)?DEFAULT_PRESET_FOODS.map((f,i)=>{const v=String(f?.value||"").split("|");return dpFood({catalogId:"preset-"+i,name:f?.label||v[0],kcal:v[1],pro:v[2],fat:v[3],carb:v[4],sugar:v[5],waterMl:v[6],weight:getPresetFoodWeight(f)})}):[];const mine=Array.isArray(savedFoods)?savedFoods.map((f,i)=>dpFood({...f,catalogId:"saved-"+i,waterMl:f?.water})):[];const quick=Array.isArray(quickAddItems)?quickAddItems.filter(f=>!f?.isWater).map((f,i)=>dpFood({...f,catalogId:"quick-"+i,name:f?.name||f?.label,waterMl:f?.water})):[];return [...mine,...quick,...presets].filter(f=>f.name&&f.kcal>=0)}
 function dpSlots(){const h=new Date().getHours();return h<9?["Colazione","Snack / Integrazione","Pranzo","Merenda","Cena"]:h<13?["Pranzo","Merenda","Cena"]:h<17?["Merenda","Cena"]:["Cena"]}
 function dpState(){const date=getLocalISODate();if(dayPlannerState?.date===date)return dayPlannerState;const old=userSettings?.dayPlanner;dayPlannerState=old?.date===date?{date,foods:Array.isArray(old.foods)?old.foods.map(dpFood):[],slots:old.slots?.length?old.slots:dpSlots(),workout:!!old.workout,plan:Array.isArray(old.plan)?old.plan:[]}:{date,foods:[],slots:dpSlots(),workout:false,plan:[]};return dayPlannerState}
@@ -22598,12 +22623,12 @@ function renderDayPlannerPlan(){const s=dpState(),el=document.getElementById("da
 async function updateDayPlannerItemMultiplier(i,j,v){const s=dpState(),x=s.plan?.[i]?.items?.[j],m=dpNum(v);if(!x||![.5,1,1.5,2].includes(m))return;x.multiplier=m;userSettings={...(userSettings||{}),dayPlanner:s};await saveUserSettingsToBackend();renderDayPlannerPlan()}
 async function removeDayPlannerItem(i,j){const s=dpState(),m=s.plan?.[i];if(!m||m.confirmed)return;m.items.splice(j,1);userSettings={...(userSettings||{}),dayPlanner:s};await saveUserSettingsToBackend();renderDayPlannerPlan()}
 async function removeDayPlannerMeal(i){const s=dpState(),m=s.plan?.[i];if(!m||m.confirmed)return;s.plan.splice(i,1);userSettings={...(userSettings||{}),dayPlanner:s};await saveUserSettingsToBackend();renderDayPlannerPlan()}
-async function confirmDayPlannerMeal(i){if(!ensureDiaryWriteAccess())return;const s=dpState(),m=s.plan?.[i];if(!m||m.confirmed||!m.items?.length)return;if(!confirm(`Registrare nel diario il pasto “${m.meal}”? Potrai comunque modificare o eliminare ogni voce dal diario.`))return;const stamp=Date.now();m.items.forEach((x,j)=>{const q=dpNum(x.multiplier)||1;log.push({id:stamp+j,time:getCurrentTimeStr(),meal:m.meal,name:q===1?x.name:`${x.name} (${dpPortion(q)})`,kcal:Math.round(x.kcal*q),pro:dpRound(x.pro*q),fat:dpRound(x.fat*q),carb:dpRound(x.carb*q),sugar:dpRound(x.sugar*q),waterMl:Math.round(x.waterMl*q),weight:Math.round(x.weight*q)})});m.confirmed=true;await saveAndRender();userSettings={...(userSettings||{}),dayPlanner:s};await saveUserSettingsToBackend();dpSummary();renderDayPlannerPlan()}
+async function confirmDayPlannerMeal(i){if(!ensureDiaryWriteAccess())return;const s=dpState(),m=s.plan?.[i];if(!m||m.confirmed||!m.items?.length)return;if(!confirm(`Registrare nel diario il pasto “${m.meal}”? Potrai comunque modificare o eliminare ogni voce dal diario.`))return;const stamp=Date.now();m.items.forEach((x,j)=>{const q=dpNum(x.multiplier)||1;log.push({id:stamp+j,time:getCurrentTimeStr(),meal:m.meal,name:q===1?x.name:`${x.name} (${dpPortion(q)})`,kcal:Math.round(x.kcal*q),pro:dpRound(x.pro*q),fat:dpRound(x.fat*q),carb:dpRound(x.carb*q),sugar:dpRound(x.sugar*q),sugarSplit:sugarValidSplit(x.sugarSplit),waterMl:Math.round(x.waterMl*q),weight:Math.round(x.weight*q)})});m.confirmed=true;await saveAndRender();userSettings={...(userSettings||{}),dayPlanner:s};await saveUserSettingsToBackend();dpSummary();renderDayPlannerPlan()}
 
 /* PROGRAMMA OGGI — V2: timeline pianificata, mai diario automatico */
 let dayTimelineState=null;
 const dp2Num=v=>Number.isFinite(Number(v))?Number(v):0;
-const dp2Food=f=>({catalogId:String(f?.catalogId||""),name:String(f?.name||"Alimento"),kcal:dp2Num(f?.kcal),pro:dp2Num(f?.pro),fat:dp2Num(f?.fat),carb:dp2Num(f?.carb),sugar:dp2Num(f?.sugar),waterMl:dp2Num(f?.waterMl??f?.water),weight:dp2Num(f?.weight)});
+const dp2Food=f=>({catalogId:String(f?.catalogId||""),name:String(f?.name||"Alimento"),kcal:dp2Num(f?.kcal),pro:dp2Num(f?.pro),fat:dp2Num(f?.fat),carb:dp2Num(f?.carb),sugar:dp2Num(f?.sugar),sugarSplit:sugarValidSplit(f?.sugarSplit),waterMl:dp2Num(f?.waterMl??f?.water),weight:dp2Num(f?.weight)});
 function dp2Catalog(){const presets=Array.isArray(DEFAULT_PRESET_FOODS)?DEFAULT_PRESET_FOODS.map((f,i)=>{const v=String(f?.value||"").split("|");return dp2Food({catalogId:"preset-"+i,name:f?.label||v[0],kcal:v[1],pro:v[2],fat:v[3],carb:v[4],sugar:v[5],waterMl:v[6],weight:getPresetFoodWeight(f)})}):[],mine=Array.isArray(savedFoods)?savedFoods.map((f,i)=>dp2Food({...f,catalogId:"saved-"+i,waterMl:f?.water})):[],quick=Array.isArray(quickAddItems)?quickAddItems.filter(f=>!f?.isWater).map((f,i)=>dp2Food({...f,catalogId:"quick-"+i,name:f?.name||f?.label,waterMl:f?.water})):[];return [...mine,...quick,...presets].filter(f=>f.name&&f.kcal>=0)}
 function dp2State(){const date=getLocalISODate(),old=userSettings?.dayTimelinePlanner;if(dayTimelineState?.date===date)return dayTimelineState;const defaultShift=new Date().getHours()>=14&&new Date().getHours()<22?"second":"first";dayTimelineState=old?.date===date?{date,foods:(old.foods||[]).map(dp2Food),entries:old.entries||[],workout:!!old.workout,shift:old.shift||defaultShift,customStart:old.customStart||"06:00",customEnd:old.customEnd||"14:00"}:{date,foods:[],entries:[],workout:false,shift:defaultShift,customStart:"06:00",customEnd:"14:00"};return dayTimelineState}
 function dp2Save(){userSettings={...(userSettings||{}),dayTimelinePlanner:dayTimelineState};return saveUserSettingsToBackend()}
@@ -22629,7 +22654,7 @@ async function dp2Quantity(id,quantity){const e=dp2State().entries.find(x=>x.id=
 async function dp2Change(id,catalogId){const s=dp2State(),e=s.entries.find(x=>x.id===id),f=s.foods.find(x=>x.catalogId===catalogId);if(!e||!f||e.done)return;e.food=dp2Food(f);e.multiplier=1;await dp2Save();renderDp2Timeline()}
 async function dp2Lock(id){const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;e.locked=!e.locked;await dp2Save();renderDp2Timeline()}
 async function dp2Delete(id){const s=dp2State(),e=s.entries.find(x=>x.id===id);if(!e||e.done)return;s.entries=s.entries.filter(x=>x.id!==id);await dp2Save();renderDp2Timeline()}
-async function dp2Confirm(id){if(!ensureDiaryWriteAccess())return;const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;const f=e.food,q=e.multiplier||1;addQuick(f.name,f.kcal,f.pro,f.fat,f.carb,f.sugar,f.waterMl,f.weight);setQuickPreviewMultiplier(q);quickDiaryPreviewPending.plannerEntryId=id;quickDiaryPreviewPending.source="planner";const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");if(saveOption)saveOption.style.display="none";if(destinationTitle)destinationTitle.textContent="In quale pasto hai mangiato questo alimento?"}
+async function dp2Confirm(id){if(!ensureDiaryWriteAccess())return;const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;const f=e.food,q=e.multiplier||1;addQuick(f.name,f.kcal,f.pro,f.fat,f.carb,f.sugar,f.waterMl,f.weight,f.sugarSplit);setQuickPreviewMultiplier(q);quickDiaryPreviewPending.plannerEntryId=id;quickDiaryPreviewPending.source="planner";const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");if(saveOption)saveOption.style.display="none";if(destinationTitle)destinationTitle.textContent="In quale pasto hai mangiato questo alimento?"}
 
 /* =========================================================
    DELETE
@@ -26217,6 +26242,7 @@ function ux2SyncHome(){
     e.style.setProperty("--ux2-progress-gradient",ux2BarGradient(kind,v,target));
   });
 
+  sugarHomeRender();
   ux2SyncDiary();
 }
 function ux2SyncDiary(){
@@ -27381,5 +27407,158 @@ document.getElementById('df-start-modal').addEventListener('click',event=>{if(ev
 #dfai-second-preview{display:block;width:100%;height:130px;object-fit:contain;border-radius:10px;margin:8px 0;background:var(--card-2)}
 #dfai-web-photo-card button:disabled{opacity:.55;cursor:wait}
 </style>
+
+<style id="sugar-origin-v1">
+.sugar-macro .sugar-line{display:flex;justify-content:space-between;gap:4px;font-size:.65rem;line-height:1.3;margin-top:6px;text-align:left}
+.sugar-macro .sugar-line strong{white-space:nowrap}
+.sugar-track{height:5px;background:var(--border);border-radius:10px;overflow:hidden;margin:3px 0}
+.sugar-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4ade80,#22c55e);transition:width .25s}
+.sugar-track.free i{background:linear-gradient(90deg,#fbbf24,#ff9f1c)}
+.sugar-macro>small{display:block;font-size:.59rem;line-height:1.35;margin-top:4px}
+.sugar-info{border:0;background:transparent;color:var(--accent);padding:3px 5px;min-width:26px;min-height:26px}
+.sugar-editor{margin:12px 0;font-size:.85rem;line-height:1.45;text-align:left}
+.sugar-editor summary{cursor:pointer;color:var(--accent);padding:8px 0}
+.sugar-editor label{display:block;margin:8px 0 5px}
+.sugar-editor small{display:block;color:var(--subtext);line-height:1.45;margin:8px 0}
+.sugar-mixed{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sugar-mixed[hidden]{display:none}
+.sugar-origin-row{padding:10px 0;border-bottom:1px solid var(--border)}
+#sugar-origin-modal .modal-content{max-width:520px;max-height:90dvh;overflow:auto}
+#sugar-origin-modal p{font-size:.9rem;line-height:1.5}
+
+@media(max-width:600px){
+ #ux2-home .ux2-macros{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ .sugar-macro{grid-column:1/-1;order:1;display:grid;grid-template-columns:80px 1fr;column-gap:12px;padding:10px 12px!important}
+ .sugar-macro>.ico{display:none}
+ .sugar-macro>b{grid-column:1;grid-row:1/4;align-self:center;font-size:1.15rem!important}
+ .sugar-macro>label{grid-column:1;grid-row:4;font-size:.64rem!important;align-self:center}
+ .sugar-macro>.sugar-line,.sugar-macro>.sugar-track{grid-column:2}
+ .sugar-macro>.sugar-line{font-size:.77rem;margin-top:2px}
+ .sugar-macro>.sugar-track{height:6px;margin:3px 0 5px}
+ .sugar-macro>small{grid-column:1/-1;text-align:right;font-size:.68rem!important}
+}
+</style>
+<div id="sugar-origin-modal" class="modal-overlay">
+<section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="sugar-origin-title">
+<div class="modal-header"><h3 id="sugar-origin-title">🍬 Da dove arrivano gli zuccheri?</h3><button type="button" class="modal-close" aria-label="Chiudi" onclick="document.getElementById('sugar-origin-modal').style.display='none'">✕</button></div>
+<p><strong>Verde · Naturali non liberi:</strong> zuccheri della frutta intera, delle verdure e quelli naturalmente presenti nel latte e nello yogurt bianco senza aggiunte.</p>
+<p><strong>Arancione · Liberi:</strong> zuccheri aggiunti, miele, sciroppi, succhi e concentrati di frutta, anche senza zuccheri aggiunti.</p>
+<p>Le barre mostrano la quota del totale registrato: non sono obiettivi da riempire. Gli zuccheri non determinati restano separati. Il verde distingue la categoria e non indica consumo illimitato.</p>
+<p>Per i soli liberi, riferimento OMS: meno del 10% dell’energia. Qui è calcolato sul target calorico base, senza extra passi. Il precedente target degli zuccheri totali resta conservato. Se mancano classificazioni, il confronto è incompleto.</p>
+<p>La foto e la dicitura “di cui zuccheri” non bastano a separare le categorie nei prodotti misti. Classifica soltanto quando conosci alimento, ingredienti o ricetta. Una modifica della ricetta richiede una nuova verifica.</p>
+<p><a href="https://www.who.int/news/item/04-03-2015-who-calls-on-countries-to-reduce-sugars-intake-among-adults-and-children" target="_blank" rel="noopener">Fonte: OMS · zuccheri liberi</a></p>
+<h4>Alimenti di oggi · modifica solo l’origine</h4><div id="sugar-origin-list"></div><p id="sugar-origin-status" role="status"></p>
+</section></div>
+<script id="sugar-origin-v1-script">
+
+async function sugarVerifyRemote(date,items){
+ const expected=sugarDayMetadata(items);
+ if(!Object.keys(expected).length)return true;
+ const remote=await apiFetch("/api/user/diary?date="+encodeURIComponent(date));
+ const actual=sugarHydrateLog(Array.isArray(remote.log)?remote.log:[],remote.summary);
+ return Object.entries(expected).every(([id,split])=>{
+  const found=actual.find(x=>String(x.id)===id),value=sugarValidSplit(found?.sugarSplit);
+  return value&&Math.abs(value.naturalShare-split.naturalShare)<1e-8&&Math.abs(value.freeShare-split.freeShare)<1e-8;
+ });
+}
+
+/* Origine zuccheri V1: sugar resta la fonte del totale; quote senza inferenze. */
+function sugarValidSplit(value){
+ if(!value||value.version!==1)return null;
+ const n=Number(value.naturalShare),f=Number(value.freeShare);
+ if(!Number.isFinite(n)||!Number.isFinite(f)||n<0||f<0||n+f>1+1e-9)return null;
+ return {version:1,naturalShare:n,freeShare:f,source:"user"};
+}
+function sugarParts(item){
+ const total=Math.max(0,Number(item?.sugar)||0),split=sugarValidSplit(item?.sugarSplit);
+ const natural=split?total*split.naturalShare:0,free=split?Math.min(total-natural,total*split.freeShare):0;
+ return {total,natural,free,unknown:Math.max(0,total-natural-free)};
+}
+function sugarFoodKey(food){return JSON.stringify(["name","kcal","pro","fat","carb","sugar","weight"].map(k=>k==="name"?String(food?.[k]||""):Number(food?.[k])||0))}
+function sugarSaveCatalog(){
+ const entries=[...(Array.isArray(savedFoods)?savedFoods:[]),...(Array.isArray(quickAddItems)?quickAddItems:[])];
+ userSettings.sugarCatalogV1=Object.fromEntries(entries.filter(f=>sugarValidSplit(f.sugarSplit)).map(f=>[sugarFoodKey(f),sugarValidSplit(f.sugarSplit)]));
+}
+function sugarRestoreCatalog(){
+ const map=userSettings?.sugarCatalogV1||{};
+ for(const food of [...(savedFoods||[]),...(quickAddItems||[])])food.sugarSplit=sugarValidSplit(map[sugarFoodKey(food)]||food.sugarSplit);
+}
+function sugarDayMetadata(items){return Object.fromEntries((items||[]).filter(x=>sugarValidSplit(x.sugarSplit)).map(x=>[String(x.id),sugarValidSplit(x.sugarSplit)]))}
+function sugarHydrateLog(items,summary){return (items||[]).map(x=>({...x,sugarSplit:sugarValidSplit(summary?.sugarOriginsV1?.[String(x.id)]||x.sugarSplit)}))}
+function sugarFmt(n){return Number(n||0).toLocaleString("it-IT",{maximumFractionDigits:1})}
+function sugarHomeRender(){
+ if(typeof log==="undefined")return;
+ const t=(log||[]).reduce((a,x)=>{const p=sugarParts(x);for(const k of Object.keys(a))a[k]+=p[k];return a},{total:0,natural:0,free:0,unknown:0});
+ for(const [kind,id] of [["natural","ux2-sugar-natural"],["free","ux2-sugar-free"]]){
+  const label=document.getElementById(id),bar=document.getElementById(id+"-bar");
+  if(label)label.textContent=sugarFmt(t[kind])+" g";
+  if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="natural"?"Naturali non liberi: ":"Liberi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
+ }
+ const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Da classificare: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
+ const note=document.getElementById("ux2-sugar-free-reference");
+ const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
+ if(note)note.textContent="Liberi: rif. < "+sugarFmt(reference)+" g"+(t.unknown>=.05?" · dati incompleti":"");
+}
+function sugarEditorHTML(prefix){
+ return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="unknown">Non determinata / non so</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>Non sai distinguerli? Lasciali non determinati. Frutta intera e latte senza aggiunte: non liberi. Miele, sciroppi e succhi: liberi. Le quote seguono le variazioni di porzione.</small>';
+}
+function sugarEditorSet(prefix,item){
+ const p=sugarParts(item),split=sugarValidSplit(item?.sugarSplit),mode=document.getElementById(prefix+"-mode");if(!mode)return;
+ mode.value=!split?"unknown":split.naturalShare===1?"natural":split.freeShare===1?"free":"mixed";
+ document.getElementById(prefix+"-natural").value=Number(p.natural.toFixed(3));
+ document.getElementById(prefix+"-free").value=Number(p.free.toFixed(3));
+ sugarEditorChange(prefix);
+ const host=document.getElementById(prefix);if(host)host.dataset.total=String(p.total);
+}
+function sugarEditorChange(prefix){const mixed=document.getElementById(prefix+"-mixed");if(mixed)mixed.hidden=document.getElementById(prefix+"-mode").value!=="mixed"}
+function sugarEditorRead(prefix,total){
+ const mode=document.getElementById(prefix+"-mode")?.value||"unknown";
+ if(mode==="unknown")return null;
+ if(mode==="natural")return {version:1,naturalShare:1,freeShare:0,source:"user"};
+ if(mode==="free")return {version:1,naturalShare:0,freeShare:1,source:"user"};
+ const n=Number(document.getElementById(prefix+"-natural").value),f=Number(document.getElementById(prefix+"-free").value);
+ if(!Number.isFinite(n)||!Number.isFinite(f)||n<0||f<0||n+f>total+0.001)throw new Error("Le quote devono essere positive o zero e non superare gli zuccheri totali.");
+ return total>0?{version:1,naturalShare:Math.min(n,total)/total,freeShare:Math.min(f,Math.max(0,total-n))/total,source:"user"}:null;
+}
+function sugarPreviewInit(){
+ if(!quickDiaryPreviewPending)return;
+ sugarEditorSet("sugar-preview",{sugar:Number(document.getElementById("quick-preview-sugar").value)||0,sugarSplit:quickDiaryPreviewPending.sugarSplit});
+}
+function sugarPreviewRefresh(){
+ if(!quickDiaryPreviewPending)return;
+ const host=document.getElementById("sugar-preview");if(!host)return;
+ const old=Number(host.dataset.total)||0,total=Number(document.getElementById("quick-preview-sugar").value)||0;
+ if(old!==total&&document.getElementById("sugar-preview-mode").value==="mixed"){
+  for(const k of ["natural","free"]){const el=document.getElementById("sugar-preview-"+k);el.value=old>0?Number((Number(el.value)*total/old).toFixed(3)):0}
+ }
+ host.dataset.total=String(total);
+}
+function sugarHelpOpen(){
+ const modal=document.getElementById("sugar-origin-modal"),list=document.getElementById("sugar-origin-list");list.innerHTML="";
+ (log||[]).forEach((item,index)=>{
+  if(!(Number(item.sugar)>0))return;
+  const row=document.createElement("details");row.className="sugar-origin-row";
+  const summary=document.createElement("summary");summary.textContent=item.name+" · "+sugarFmt(item.sugar)+" g";row.appendChild(summary);
+  const editor=document.createElement("div");editor.id="sugar-log-"+index;editor.className="sugar-editor";editor.innerHTML=sugarEditorHTML(editor.id);row.appendChild(editor);
+  const button=document.createElement("button");button.type="button";button.className="btn";button.textContent="Salva origine";button.onclick=async()=>{
+   const before=item.sugarSplit;const msg=document.getElementById("sugar-origin-status");
+   try{const value=sugarEditorRead(editor.id,Number(item.sugar)||0);button.disabled=true;item.sugarSplit=value;await saveAndRender();try{const verified=await sugarVerifyRemote(getLocalISODate(),log);msg.textContent=verified?"Origine salvata e riletta dal server. Valori nutrizionali invariati.":"I valori nutrizionali sono salvati, ma il server non conserva l’origine: la sincronizzazione delle categorie richiede un aggiornamento."}catch(error){msg.textContent="Origine inviata al server. Non riesco a verificarne la rilettura: controlla la connessione."}}
+   catch(error){item.sugarSplit=before;msg.textContent=error.message||"Salvataggio non riuscito."}finally{button.disabled=false}
+  };row.appendChild(button);list.appendChild(row);sugarEditorSet(editor.id,item);
+ });
+ if(!list.children.length)list.textContent="Nessun alimento con zuccheri registrato oggi.";
+ document.getElementById("sugar-origin-status").textContent="";
+ modal.style.display="flex";modal.querySelector(".modal-close").focus();
+}
+
+document.getElementById("sugar-preview").innerHTML=sugarEditorHTML("sugar-preview");
+document.getElementById("sugar-food-edit").innerHTML=sugarEditorHTML("sugar-food-edit");
+for(const name of ["addQuick","addCustom","addFromSelect","dfaiPrepareManualEntry"]){
+ const original=window[name];window[name]=function(){const result=original.apply(this,arguments);if(result&&typeof result.then==="function")return result.then(value=>{sugarPreviewInit();return value});sugarPreviewInit();return result};
+}
+for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQuickPreviewField"]){
+ const original=window[name];window[name]=function(){const result=original.apply(this,arguments);sugarPreviewRefresh();return result};
+}
+</script>
 </body>
 </html>
