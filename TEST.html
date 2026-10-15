@@ -9338,8 +9338,14 @@ function dfCalorieBarsRender(eaten,base,extra){
   const pct=target>0?Math.round(eaten/target*100):0,fill=document.getElementById("calorie-"+kind+"-fill"),track=document.getElementById("calorie-"+kind+"-track");
   if(fill){fill.style.width=Math.max(0,Math.min(100,pct))+"%";if(kind==="base")fill.style.background="linear-gradient(90deg,"+colors[0]+","+colors[1]+")"}
   if(track){track.setAttribute("aria-valuenow",String(Math.max(0,Math.min(100,pct))));track.setAttribute("aria-valuetext",eaten+" kcal su "+target+" kcal, "+pct+" per cento")}
+  const trace=document.getElementById("calorie-"+kind+"-trace");
+  if(trace){trace.setAttribute("stroke-dasharray",Math.max(0,Math.min(100,pct))+" 100");trace.style.opacity=pct>0?"1":"0"}
+  if(kind==="activity"&&track)track.hidden=extra<=0;
   setText("calorie-"+kind+"-percent",pct+"%");
  }
+ const frame=document.getElementById("calorie-activity-frame");if(frame)frame.style.display=extra>0?"":"none";
+ const stopA=document.getElementById("calorie-frame-stop-a"),stopB=document.getElementById("calorie-frame-stop-b");
+ if(stopA)stopA.setAttribute("stop-color",colors[0]);if(stopB)stopB.setAttribute("stop-color",colors[1]);
  setText("calorie-extra-note","Margine attività: +"+extra+" kcal · stesse calorie assunte");
 }
 </script>
@@ -9523,15 +9529,22 @@ function dfCalorieBarsRender(eaten,base,extra){
   ></div>
   <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
   <main id="ux2-home" aria-label="Oggi">
-    <section class="ux2-calorie-zone calorie-panel" aria-label="Calorie di oggi">
- <div class="calorie-panel-head"><div><span class="calorie-eyebrow">🔥 Calorie assunte oggi</span><div class="calorie-amount"><strong id="ux2-kcal-now">0</strong><span>kcal</span></div></div><span class="calorie-panel-tag">OGGI</span></div>
- <div class="calorie-row"><span>🎯 Target base</span><span><b id="ux2-goal-kcal">—</b> kcal · <strong id="calorie-base-percent">0%</strong></span></div>
- <div class="calorie-track" id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="calorie-base-fill"></i></div>
- <div id="ux2-goal-activity" class="calorie-activity" hidden>
-  <div class="calorie-row"><span>⌚ Con attività</span><span><b id="ux2-activity-target-kcal">—</b> kcal · <strong id="calorie-activity-percent">0%</strong></span></div>
-  <div class="calorie-track activity" id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="calorie-activity-fill"></i></div>
-  <div class="calorie-extra" id="calorie-extra-note"></div>
+    <section class="ux2-calorie-zone calorie-panel calorie-cockpit" aria-label="Calorie di oggi">
+ <svg class="calorie-frame" viewBox="0 0 400 180" preserveAspectRatio="none" aria-hidden="true">
+ <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient></defs>
+ <rect class="calorie-frame-track" x="9" y="9" width="382" height="162" rx="28"/>
+ <rect id="calorie-base-trace" class="calorie-frame-trace base" x="9" y="9" width="382" height="162" rx="28" pathLength="100" stroke-dasharray="0 100"/>
+ <g id="calorie-activity-frame" hidden><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-trace" class="calorie-frame-trace extra" x="19" y="19" width="362" height="142" rx="21" pathLength="100" stroke-dasharray="0 100"/></g>
+ </svg>
+ <div class="calorie-cockpit-content">
+ <div class="calorie-cockpit-eyebrow"><span class="calorie-live-dot"></span> ENERGIA DI OGGI</div>
+ <div class="calorie-amount"><span class="calorie-cockpit-flame">🔥</span><strong id="ux2-kcal-now">0</strong><span>kcal</span></div>
+ <div class="calorie-cockpit-targets">
+  <div class="calorie-target-pill"><span class="calorie-target-label">TARGET BASE <strong id="calorie-base-percent">0%</strong></span><span class="calorie-target-value"><b id="ux2-goal-kcal">—</b> <small>kcal</small></span></div>
+  <div id="ux2-goal-activity" class="calorie-target-pill calorie-activity" hidden><span class="calorie-target-label">CON ATTIVITÀ <strong id="calorie-activity-percent">0%</strong></span><span class="calorie-target-value"><b id="ux2-activity-target-kcal">—</b> <small>kcal</small></span></div>
  </div>
+ </div>
+ <div class="calorie-screen-reader"><div id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div><span id="calorie-extra-note"></span></div>
  <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
 </section>
 
@@ -27653,6 +27666,34 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
  .calorie-track{height:11px}
 }
 @media(prefers-reduced-motion:reduce){.calorie-track i{transition:none}}
+</style>
+
+<style id="diariofit-calorie-cockpit-test">
+#ux2-home .calorie-panel.calorie-cockpit{position:relative;isolation:isolate;padding:0!important;border:0;border-radius:29px;background:radial-gradient(ellipse at 50% 0%,rgba(25,128,148,.22),transparent 65%),linear-gradient(135deg,#0d303c,#071f2a);box-shadow:0 8px 24px rgba(0,0,0,.2),inset 0 0 30px rgba(34,211,238,.035);overflow:visible}
+.calorie-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.calorie-frame-track{fill:none;stroke:#214854;stroke-width:6;vector-effect:non-scaling-stroke}
+.calorie-frame-track.inner{stroke:#193f48;stroke-width:3}
+.calorie-frame-trace{fill:none;stroke-width:6;stroke-linecap:round;vector-effect:non-scaling-stroke;transition:stroke-dasharray .5s ease;opacity:0}
+.calorie-frame-trace.base{stroke:url(#calorie-frame-base-gradient);filter:drop-shadow(0 0 4px rgba(34,211,238,.6))}
+.calorie-frame-trace.extra{stroke:url(#calorie-frame-activity-gradient);stroke-width:3.5;filter:drop-shadow(0 0 4px rgba(45,212,191,.7))}
+.calorie-cockpit-content{position:relative;z-index:1;padding:29px 33px 28px}
+.calorie-cockpit-eyebrow{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.6rem;letter-spacing:.16em;font-weight:800;color:#a0c4cb}
+.calorie-live-dot{width:5px;height:5px;border-radius:50%;background:#5eead4;box-shadow:0 0 8px #2dd4bf}
+.calorie-cockpit .calorie-amount{justify-content:center;margin:4px 0 9px;gap:7px}
+.calorie-cockpit .calorie-amount strong{font-size:2.6rem;letter-spacing:-.04em;line-height:1.05;text-shadow:0 0 20px rgba(94,234,212,.12)}
+.calorie-cockpit .calorie-amount>span{font-size:.75rem}
+.calorie-cockpit .calorie-amount>.calorie-cockpit-flame{font-size:1.3rem;align-self:center;margin-right:2px;filter:drop-shadow(0 0 9px rgba(255,159,28,.3))}
+.calorie-cockpit-targets{display:flex;gap:9px}
+.calorie-target-pill{flex:1;min-width:0;border-top:1px solid rgba(117,203,217,.17);padding-top:7px}
+.calorie-target-label{display:flex;justify-content:space-between;align-items:center;gap:4px;color:#a6c8cf;font-size:.56rem;letter-spacing:.03em;font-weight:700}
+.calorie-target-label strong{color:#67e8c1;font-size:.68rem}
+.calorie-target-value{display:block;color:#e7f6f7;font-size:1rem;margin-top:2px;font-weight:800}
+.calorie-target-value small{font-size:.61rem;color:#8eafb8;font-weight:500}
+.calorie-cockpit .calorie-activity{margin:0}
+.calorie-cockpit .calorie-activity .calorie-target-label strong,.calorie-cockpit .calorie-activity .calorie-target-value{color:#5eead4}
+.calorie-screen-reader{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:600px){#ux2-home .calorie-cockpit{margin:4px 0 9px}.calorie-cockpit-content{padding:28px 31px 26px}.calorie-cockpit .calorie-amount strong{font-size:2.35rem}}
+@media(prefers-reduced-motion:reduce){.calorie-frame-trace{transition:none}}
 </style>
 </body>
 </html>
