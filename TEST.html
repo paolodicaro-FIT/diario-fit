@@ -9570,7 +9570,7 @@ function dfCalorieBarsRender(eaten,base,extra){
     <section class="ux2-macros">
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
-      <div class="ux2-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi</label><div class="ux2-track"><i id="ux2-fat-bar"></i></div><small>di <span id="ux2-fat-target">—</span> g</small></div>
+      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div>
       <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><small id="ux2-sugar-free-reference"></small></div>
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
@@ -10619,7 +10619,7 @@ function dfCalorieBarsRender(eaten,base,extra){
 
     </div>
 
-    <details class="sugar-editor"><summary>🍬 Origine degli zuccheri · facoltativa</summary><div id="sugar-food-edit"></div></details>
+    <details class="sugar-editor"><summary>🍬 Dettagli zuccheri · automatico</summary><div id="sugar-food-edit"></div></details>
     <div style="display:flex; gap:10px; margin-top:14px;">
 
       <button
@@ -13632,10 +13632,10 @@ const DEFAULT_PRESET_FOODS = [
 
 
 const DEFAULT_QUICK_ITEMS = [
-  { emoji: "🥤", label: "Colaz. Whey", name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)", kcal: 154, pro: 34.4, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:43 },
+  { emoji: "🥤", label: "Whey + Creat.", name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 450, weight:42 },
   { emoji: "🥣", label: "Yogurt & Whey", name: "Yogurt Greco 0% (150g) + Whey (35g)", kcal: 202, pro: 41.5, fat: 0.9, carb: 7.2, sugar: 6.8, water: 0, weight:185 },
   { emoji: "⚡", label: "Integratori", name: "Integratori (Citrullina + Beta-Alanina + Betaina + 500ml H2O)", kcal: 0, pro: 0, fat: 0, carb: 0, sugar: 0, water: 500 },
-  { emoji: "🏋️", label: "Whey 35g", name: "Shaker Whey (35g Whey + 300ml H2O)", kcal: 125, pro: 28, fat: 0.9, carb: 1.2, sugar: 0.8, water: 300, weight:35 },
+  { emoji: "🏋️", label: "Whey 42g", name: "Shaker Whey (42g Whey + 300ml H2O)", kcal: 150, pro: 33.6, fat: 1.1, carb: 1.5, sugar: 1.0, water: 300, weight:42 },
   { emoji: "🌰", label: "10 Macadamia", name: "Noci Macadamia (10 pz / ~25g)", kcal: 188, pro: 2, fat: 19, carb: 1.3, sugar: 1, water: 0, weight:25 },
   { emoji: "🧀", label: "Fiocchi 200g", name: "Fiocchi di formaggio magro (200g)", kcal: 230, pro: 19.4, fat: 14.2, carb: 6.4, sugar: 6.4, water: 0, weight:200 },
   { emoji: "🫐", label: "Mirtilli 250g", name: "Mirtilli freschi (250g)", kcal: 123, pro: 2.3, fat: 0.5, carb: 25.3, sugar: 25.3, water: 0, weight:250 },
@@ -14086,7 +14086,7 @@ async function loadUserDataFromBackend() {
 
     // Migrazione Colazione Whey -> ProLabs reale con misurino Bulk (~43 g) e 450 ml H2O
     if (
-      item.label === "Colaz. Whey" &&
+      ["Colaz. Whey", "Whey + Creat."].includes(item.label) &&
       (
         (
           Number(item.kcal) === 200 &&
@@ -14110,6 +14110,22 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 1.2 &&
           Number(item.sugar) === 0.8 &&
           Number(item.weight || 0) === 35
+        ) ||
+        (
+          Number(item.kcal) === 154 &&
+          Number(item.pro) === 34.4 &&
+          Number(item.fat) === 1.1 &&
+          Number(item.carb) === 1.5 &&
+          Number(item.sugar) === 1.0 &&
+          Number(item.weight || 0) === 43
+        ) ||
+        (
+          Number(item.kcal) === 150 &&
+          Number(item.pro) === 33.6 &&
+          Number(item.fat) === 1.1 &&
+          Number(item.carb) === 1.5 &&
+          Number(item.sugar) === 1.0 &&
+          Number(item.weight || 0) === 42
         )
       )
     ) {
@@ -14117,14 +14133,15 @@ async function loadUserDataFromBackend() {
 
       return {
         ...item,
-        name: "Shaker Whey (43g Whey + Creatina + 450ml H2O)",
-        kcal: 154,
-        pro: 34.4,
+        label: "Whey + Creat.",
+        name: "Shaker Whey (42g Whey + Creatina + 450ml H2O)",
+        kcal: 150,
+        pro: 33.6,
         fat: 1.1,
         carb: 1.5,
         sugar: 1.0,
         water: 450,
-        weight: 43
+        weight: 42
       };
     }
 
@@ -14164,9 +14181,9 @@ async function loadUserDataFromBackend() {
       };
     }
 
-    // Default precedenti: Post W.O. -> riferimento reale 35 g
+    // Migrazione Whey pomeridiana/Post W.O. -> misurino Bulk medio (~42 g)
     if (
-      item.label === "Post W.O." &&
+      ["Post W.O.", "Whey 35g", "Whey 42g"].includes(item.label) &&
       (
         (
           Number(item.kcal) === 100 &&
@@ -14182,6 +14199,14 @@ async function loadUserDataFromBackend() {
           Number(item.carb) === 3 &&
           Number(item.sugar) === 1.5 &&
           Number(item.weight || 0) === 30
+        ) ||
+        (
+          Number(item.kcal) === 125 &&
+          Number(item.pro) === 28 &&
+          Number(item.fat) === 0.9 &&
+          Number(item.carb) === 1.2 &&
+          Number(item.sugar) === 0.8 &&
+          Number(item.weight || 0) === 35
         )
       )
     ) {
@@ -14189,14 +14214,15 @@ async function loadUserDataFromBackend() {
 
       return {
         ...item,
-        name: "Shaker Post-Workout (35g Whey + 300ml H2O)",
-        kcal: 125,
-        pro: 28,
-        fat: 0.9,
-        carb: 1.2,
-        sugar: 0.8,
+        label: "Whey 42g",
+        name: "Shaker Whey (42g Whey + 300ml H2O)",
+        kcal: 150,
+        pro: 33.6,
+        fat: 1.1,
+        carb: 1.5,
+        sugar: 1.0,
         water: 300,
-        weight: 35
+        weight: 42
       };
     }
 
@@ -26283,6 +26309,7 @@ function ux2SyncHome(){
   });
 
   sugarHomeRender();
+  fatHomeRender();
   ux2SyncDiary();
 }
 function ux2SyncDiary(){
@@ -27486,9 +27513,9 @@ document.getElementById('df-start-modal').addEventListener('click',event=>{if(ev
 <p><strong>Arancione · Liberi:</strong> zuccheri aggiunti, miele, sciroppi, succhi e concentrati di frutta, anche senza zuccheri aggiunti.</p>
 <p>Le barre mostrano la quota del totale registrato: non sono obiettivi da riempire. Gli zuccheri non determinati restano separati. Il verde distingue la categoria e non indica consumo illimitato.</p>
 <p>Per i soli liberi, riferimento OMS: meno del 10% dell’energia. Qui è calcolato sul target calorico base, senza extra passi. Il precedente target degli zuccheri totali resta conservato. Se mancano classificazioni, il confronto è incompleto.</p>
-<p>La foto e la dicitura “di cui zuccheri” non bastano a separare le categorie nei prodotti misti. Classifica soltanto quando conosci alimento, ingredienti o ricetta. Una modifica della ricetta richiede una nuova verifica.</p>
+<p>Il totale non cambia: vengono ripartiti solo gli zuccheri registrati, non tutti i carboidrati. La foto e la dicitura “di cui zuccheri” non bastano a separare le categorie nei prodotti misti. DiarioFIT classifica automaticamente gli alimenti semplici riconosciuti; per pane, crackers, dolci e prodotti misti senza ingredienti l’origine può restare incerta. Nessun intervento è obbligatorio. Correggi soltanto quando conosci alimento, ingredienti o ricetta. Una modifica della ricetta richiede una nuova verifica.</p>
 <p><a href="https://www.who.int/news/item/04-03-2015-who-calls-on-countries-to-reduce-sugars-intake-among-adults-and-children" target="_blank" rel="noopener">Fonte: OMS · zuccheri liberi</a></p>
-<h4>Alimenti di oggi · modifica solo l’origine</h4><div id="sugar-origin-list"></div><p id="sugar-origin-status" role="status"></p>
+<h4>Alimenti di oggi · dettagli e correzioni facoltative</h4><div id="sugar-origin-list"></div><p id="sugar-origin-status" role="status"></p>
 </section></div>
 <script id="sugar-origin-v1-script">
 
@@ -27504,14 +27531,51 @@ async function sugarVerifyRemote(date,items){
 }
 
 /* Origine zuccheri V1: sugar resta la fonte del totale; quote senza inferenze. */
+
+/* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
+function sugarAutomatic(item){
+ const name=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ const n=name.replace(/[^a-z0-9%+]+/g," ").trim();
+ const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
+ // Prima le esclusioni: una parola di frutta o latte non basta per una ricetta mista.
+ if(/\b(senza zuccheri|senza zucchero|zero zuccheri)\b/.test(n)&&/\b(dolce|torta|biscott|cioccol|bevanda)\w*/.test(n))return null;
+ const mixed=/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|yogurt alla|yogurt al|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*)\b|\+/.test(n.replace(/\bcon buccia\b/g,""));
+ if(!mixed&&/^(zucchero(?: bianco| di canna)?|miele|sciroppo (?:di acero|d acero|di agave|d agave)|succo (?:di |d )?|spremuta(?: di | d )?|coca cola|cola |fanta |sprite |aranciata |limonata )/.test(n))return make("free","zuccheri-liberi-espliciti");
+ if(mixed)return null;
+ if(/^(caramelle|caramella|zucchero filato|lecca lecca|gommose)\b/.test(n)&&!/\b(latte|crema|ripien\w*)\b/.test(n))return make("free","dolci-a-base-di-zucchero");
+ if(/\b(miele|sciropp\w*|zuccher\w*|succo|spremuta|confettur\w*|marmellat\w*)\b/.test(n)&&!/^latte senza lattosio\b/.test(n))return null;
+ if(/\b(latte|whey|proteine|cacao|cioccolat\w*|biscott\w*|tort\w*|crostata|gelato|budino|barrett\w*|cereali|crackers?|cracker|pane|panino|pizza|pinsa|focaccia)\b/.test(n)){
+  if(/^latte (?:(?:intero|parzialmente scremato|parz scremato|scremato|senza lattosio|vaccino)\b|\d)|^latte$/.test(n))return make("natural","latte-semplice");
+  if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+  // Prodotti composti: senza ingredienti non si inventano percentuali.
+  return null;
+ }
+ if(/^(mirtill[io]|fragol[ae]|lampon[ie]|mor[ae]|mel[ae]|per[ae]|banan[ae]|aranc[iea]+|mandarin[io]|clementin[ae]|kiwi|pesche?|pesc[ah]e?|albicocc[ah]e?|prugn[ae]|susin[ae]|ciliegi[ae]|uva|anguria|cocomero|melon[ei]|ananas|mango|papaya|pompelm[io]|limon[ie]|rib[ei]s|ribes|fich[io]|cach[io]|melogran[io]|avocado|pomodor[io]|carot[ae]|zucchin[ae]|melanzan[ae]|broccol[io]|spinaci|lattuga|finocch[io]|peperon[ie]|cetriol[io]|cavolfior[ei]|fagiolini|piselli|patat[ae]|noci|noc[ie]|mandorl[ae]|nocciol[ae]|pistacchi|anacardi)\b/.test(n)){
+  if(/\b(succo|spremuta|essiccat\w*|disidratat\w*|zuccherat\w*|caramellat\w*|dolc[ie]|chips)\b/.test(n))return null;
+  return make("natural","alimento-intero");
+ }
+ if(/^(pasta (?:di semola|integrale|secca)|spaghetti (?:di semola|integrali|secchi)|riso (?:bianco|integrale|basmati|crudo|bollito)|fiocchi d avena|avena semplice)\b/.test(n))return make("natural","cereale-semplice");
+ if(/^yogurt (?:greco (?:0%|2%|bianco)|bianco|naturale)(?=\s|$)/.test(n)&&! /\b(zuccherat\w*|vaniglia|frutta|miele)\b/.test(n))return make("natural","yogurt-bianco");
+ return null;
+}
+function sugarResolve(item){
+ const saved=sugarValidSplit(item?.sugarSplit);
+ if(saved?.source==="user")return saved;
+ return sugarAutomatic(item);
+}
+function sugarEditorAutomatic(prefix,total){
+ const name=prefix==="sugar-preview"?document.getElementById("quick-preview-name")?.value:prefix==="sugar-food-edit"?document.getElementById("edit-food-name")?.value:(log||[])[Number(prefix.replace("sugar-log-",""))]?.name;
+ return sugarAutomatic({name,sugar:total});
+}
+
 function sugarValidSplit(value){
  if(!value||value.version!==1)return null;
  const n=Number(value.naturalShare),f=Number(value.freeShare);
  if(!Number.isFinite(n)||!Number.isFinite(f)||n<0||f<0||n+f>1+1e-9)return null;
- return {version:1,naturalShare:n,freeShare:f,source:"user"};
+ return {version:1,naturalShare:n,freeShare:f,source:value.source==="auto"?"auto":"user",...(value.rule?{rule:String(value.rule)}:{})};
 }
 function sugarParts(item){
- const total=Math.max(0,Number(item?.sugar)||0),split=sugarValidSplit(item?.sugarSplit);
+ const total=Math.max(0,Number(item?.sugar)||0),split=sugarResolve(item);
  const natural=split?total*split.naturalShare:0,free=split?Math.min(total-natural,total*split.freeShare):0;
  return {total,natural,free,unknown:Math.max(0,total-natural-free)};
 }
@@ -27535,17 +27599,17 @@ function sugarHomeRender(){
   if(label)label.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="natural"?"Naturali non liberi: ":"Liberi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
- const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Da classificare: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
+ const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Origine incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-sugar-free-reference");
  const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
  if(note)note.textContent="Liberi: rif. < "+sugarFmt(reference)+" g"+(t.unknown>=.05?" · dati incompleti":"");
 }
 function sugarEditorHTML(prefix){
- return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="unknown">Non determinata / non so</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>Non sai distinguerli? Lasciali non determinati. Frutta intera e latte senza aggiunte: non liberi. Miele, sciroppi e succhi: liberi. Le quote seguono le variazioni di porzione.</small>';
+ return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="auto">Automatico (consigliato)</option><option value="unknown">Lascia non determinati</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>DiarioFIT riconosce gli alimenti semplici e distingue i casi incerti. Non serve compilare nulla. Puoi correggere qui solo se necessario.</small>';
 }
 function sugarEditorSet(prefix,item){
  const p=sugarParts(item),split=sugarValidSplit(item?.sugarSplit),mode=document.getElementById(prefix+"-mode");if(!mode)return;
- mode.value=!split?"unknown":split.naturalShare===1?"natural":split.freeShare===1?"free":"mixed";
+ mode.value=!split||split.source==="auto"?"auto":split.naturalShare===1?"natural":split.freeShare===1?"free":split.naturalShare===0&&split.freeShare===0?"unknown":"mixed";
  document.getElementById(prefix+"-natural").value=Number(p.natural.toFixed(3));
  document.getElementById(prefix+"-free").value=Number(p.free.toFixed(3));
  sugarEditorChange(prefix);
@@ -27553,8 +27617,9 @@ function sugarEditorSet(prefix,item){
 }
 function sugarEditorChange(prefix){const mixed=document.getElementById(prefix+"-mixed");if(mixed)mixed.hidden=document.getElementById(prefix+"-mode").value!=="mixed"}
 function sugarEditorRead(prefix,total){
- const mode=document.getElementById(prefix+"-mode")?.value||"unknown";
- if(mode==="unknown")return null;
+ const mode=document.getElementById(prefix+"-mode")?.value||"auto";
+ if(mode==="auto")return sugarEditorAutomatic(prefix,total);
+ if(mode==="unknown")return {version:1,naturalShare:0,freeShare:0,source:"user"};
  if(mode==="natural")return {version:1,naturalShare:1,freeShare:0,source:"user"};
  if(mode==="free")return {version:1,naturalShare:0,freeShare:1,source:"user"};
  const n=Number(document.getElementById(prefix+"-natural").value),f=Number(document.getElementById(prefix+"-free").value);
@@ -27723,5 +27788,85 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 .calorie-progress-arrow{pointer-events:none;filter:drop-shadow(0 0 3px rgba(224,255,247,.95)) drop-shadow(0 0 7px rgba(34,211,238,.8))}
 .calorie-progress-arrow path{fill:#eafff6;stroke:#22d3a6;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .calorie-progress-arrow.extra path{fill:#e6fffd;stroke:#2dd4bf}
-</style><style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style></body>
+</style><style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style>
+<style id="fat-composition-v1">
+.fat-macro .sugar-line{display:flex;justify-content:space-between;gap:4px;font-size:.65rem;line-height:1.3;margin-top:6px;text-align:left}
+.fat-macro .sugar-line strong{white-space:nowrap}
+.fat-macro>small{display:block;font-size:.59rem;line-height:1.35;margin-top:4px}
+#fat-origin-modal .modal-content{max-width:520px;max-height:90dvh;overflow:auto}
+#fat-origin-modal p{font-size:.9rem;line-height:1.5}
+.fat-source-row{border-bottom:1px solid var(--border);padding:10px 0;font-size:.85rem}
+.fat-source-row p{margin:5px 0}
+@media(max-width:600px){
+ #ux2-home .ux2-macros{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ #ux2-home .ux2-macro:not(.sugar-macro):not(.fat-macro){grid-column:span 2}
+ #ux2-home .ux2-macro.fat-macro,#ux2-home .ux2-macro.sugar-macro{display:block;grid-column:span 3;order:1;min-height:0;padding:7px 9px!important;text-align:left}
+ #ux2-home .fat-macro>.ico,#ux2-home .sugar-macro>.ico{display:none}
+ #ux2-home .fat-macro>b,#ux2-home .sugar-macro>b{display:inline-flex;gap:3px;align-items:baseline;justify-content:flex-start;margin:0;font-size:1.1rem!important}
+ #ux2-home .fat-macro>b small,#ux2-home .sugar-macro>b small{display:inline;font-size:.65rem}
+ #ux2-home .fat-macro>label,#ux2-home .sugar-macro>label{display:block;font-size:.65rem!important;line-height:1.1}
+ #ux2-home .fat-macro>.sugar-line,#ux2-home .sugar-macro>.sugar-line{font-size:.67rem;line-height:1.2;margin-top:3px}
+ #ux2-home .fat-macro>.sugar-track,#ux2-home .sugar-macro>.sugar-track{height:5px;margin:3px 0}
+ #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{text-align:left;font-size:.58rem!important;line-height:1.2;margin-top:4px}
+}
+</style>
+<div id="fat-origin-modal" class="modal-overlay"><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fat-origin-title">
+<div class="modal-header"><h3 id="fat-origin-title">🥑 Composizione dei grassi</h3><button type="button" class="modal-close" aria-label="Chiudi" onclick="document.getElementById('fat-origin-modal').style.display='none'">✕</button></div>
+<p><strong>Verde: insaturi</strong> (monoinsaturi e polinsaturi). <strong>Arancione: saturi.</strong> Uno stesso alimento può contenere entrambi: macadamia ed EVO non diventano “tutti insaturi”, la pancetta non diventa “tutta satura”.</p>
+<p>DiarioFIT riconosce automaticamente gli alimenti semplici presenti nel catalogo dei profili CREA e applica le proporzioni ai grassi già registrati. Le quantità sono stime medie, non misure del prodotto specifico. Il totale dei grassi, le calorie e gli altri nutrienti non cambiano.</p>
+<p>Le barre indicano quote del totale: non sono obiettivi da riempire né un invito a consumare grassi senza limite. La quota incerta comprende alimenti senza profilo e residui non attribuiti; non viene considerata automaticamente insatura e non identifica i grassi trans.</p>
+<p>Piatti misti, prodotti non riconosciuti e fotografie senza ingredienti sufficienti restano incerti. Anche i pasti salvati vengono ripartiti solo per gli ingredienti riconoscibili. Nessun campo aggiuntivo obbligatorio.</p>
+<p>Fonte: <a href="https://www.alimentinutrizione.it/presentazione-dati" target="_blank" rel="noopener">CREA, Tabelle di composizione, dicembre 2019</a>. I profili sono espressi in percentuale dei lipidi. Se i valori pubblicati superano complessivamente il 100%, le quote vengono ridotte proporzionalmente per conservare il totale.</p>
+<h4>Dettaglio degli alimenti di oggi</h4><div id="fat-origin-list"></div>
+</section></div>
+<script id="fat-composition-v1-script">
+/* Profili medi CREA, dicembre 2019. Percentuali di lipidi: fonte presentazione-dati.
+   Somme >100 per arrotondamenti: normalizzate; somme <100: residuo non attribuito. */
+function fatAutomaticProfile(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return null;
+ let p=null;
+ if(/^(?:noci |noce |noc[ie] di )?macadamia\b/.test(n))p=[16.52,81.20,1.38,"008620"];
+ else if(/^(?:olio (?:extravergine|extra vergine)(?: di oliva)?|olio evo|evo)\b/.test(n))p=[15.32,77.27,7.97,"009210"];
+ else if(/^olio (?:di oliva|d oliva)\b/.test(n))p=[16.34,75.28,8.94,"009200"];
+ else if(/^mandorl[ae]\b/.test(n))p=[8.38,72.04,19.82,"008540"];
+ else if(/^noci(?: secche| sgusciate| naturali)?(?:\s+\d|\s*$)/.test(n))p=[9.97,17.08,72.81,"008570"];
+ else if(/^burro(?:\s+\d|\s*$)/.test(n))p=[64.99,31.6,3.66,"190010"];
+ else if(/^pancetta tesa\b/.test(n))p=[36.38,47.66,16.58,"110310"];
+ else if(/^pancetta magretta\b/.test(n))p=[39.44,49.98,11.05,"110300"];
+ else if(/^pancetta arrotolata\b/.test(n))p=[31.2,46.8,12,"110320"];
+ if(!p)return null;
+ if(/\b(caramellat\w*|zuccherat\w*|cioccolat\w*|aromatizzat\w*|margarin\w*)\b/.test(n))return null;
+ const divisor=Math.max(100,p[0]+p[1]+p[2]);
+ return {version:1,saturatedShare:p[0]/divisor,unsaturatedShare:(p[1]+p[2])/divisor,source:"CREA",code:p[3]};
+}
+function fatParts(item){
+ const total=Math.max(0,Number(item?.fat)||0),profile=fatAutomaticProfile(item);
+ const saturated=profile?total*profile.saturatedShare:0,unsaturated=profile?Math.min(total-saturated,total*profile.unsaturatedShare):0;
+ return {total,saturated,unsaturated,unknown:Math.max(0,total-saturated-unsaturated),profile};
+}
+function fatHomeRender(){
+ if(typeof log==="undefined")return;
+ const t=(log||[]).reduce((a,item)=>{const p=fatParts(item);for(const k of Object.keys(a))a[k]+=p[k];return a},{total:0,saturated:0,unsaturated:0,unknown:0});
+ for(const [kind,id] of [["unsaturated","ux2-fat-unsaturated"],["saturated","ux2-fat-saturated"]]){
+  const el=document.getElementById(id),bar=document.getElementById(id+"-bar");
+  if(el)el.textContent=sugarFmt(t[kind])+" g";
+  if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="unsaturated"?"Insaturi: ":"Saturi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
+ }
+ const unknown=document.getElementById("ux2-fat-unknown");if(unknown){unknown.textContent="Quota incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
+ const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Ripartizione stimata · CREA";
+}
+function fatHelpOpen(){
+ const modal=document.getElementById("fat-origin-modal"),list=document.getElementById("fat-origin-list");list.replaceChildren();
+ (log||[]).filter(x=>Number(x.fat)>0).forEach(item=>{
+  const p=fatParts(item),row=document.createElement("div");row.className="fat-source-row";
+  const title=document.createElement("strong");title.textContent=item.name;row.appendChild(title);
+  const detail=document.createElement("p");detail.textContent=p.profile?"Stima: "+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
+  if(p.profile){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
+  list.appendChild(row);
+ });
+ modal.style.display="flex";modal.querySelector(".modal-close").focus();
+}
+</script>
+</body>
 </html>
