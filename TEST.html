@@ -27869,5 +27869,30 @@ function fatHelpOpen(){
  modal.style.display="flex";modal.querySelector(".modal-close").focus();
 }
 </script>
+
+<style id="home-mobile-fit-v2">
+@media(max-width:600px){
+ body:not(.ux24-add-mode):not(.ux23-add-mode) .header-container{min-height:0!important;padding:5px 8px!important;margin-bottom:3px!important;row-gap:3px!important}
+ .header-container .account-access-badge{margin:2px 0!important}
+ #display-date{padding:5px 8px!important;margin:2px 0 5px!important}
+ #ux2-home .calorie-cockpit-content{padding:19px 28px 19px}
+ #ux2-home .calorie-cockpit .calorie-amount{margin:3px 0 6px}
+ #ux2-home .calorie-cockpit .calorie-amount strong{font-size:2.1rem}
+ #ux2-home .calorie-target-pill{padding-top:5px}
+ #ux2-home .ux2-macros{gap:5px!important;margin-bottom:6px}
+ #ux2-home .ux2-macro:not(.sugar-macro):not(.fat-macro){padding:4px 3px!important}
+ #ux2-home .ux2-macro.fat-macro,#ux2-home .ux2-macro.sugar-macro{padding:5px 8px!important}
+ #ux2-home .fat-macro>b,#ux2-home .sugar-macro>b{font-size:1rem!important}
+ #ux2-home .fat-macro>label,#ux2-home .sugar-macro>label{display:inline;font-size:.62rem!important;margin-left:4px}
+ #ux2-home .fat-macro>.sugar-line,#ux2-home .sugar-macro>.sugar-line{font-size:.64rem;margin-top:2px}
+ #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{font-size:.57rem!important;margin-top:2px}
+ #ux2-home .ux2-primary-actions{margin-top:4px;gap:6px}
+ #ux2-home .ux2-primary-actions button{min-height:44px!important;font-size:.78rem!important}
+}
+@media(max-width:600px) and (max-height:740px){
+ #ux2-home .calorie-cockpit-content{padding:15px 27px 16px}
+ #ux2-home .calorie-cockpit .calorie-amount strong{font-size:1.9rem}
+}
+</style>
 </body>
 </html>
