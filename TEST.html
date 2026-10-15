@@ -9539,6 +9539,8 @@ function dfCalorieBarsRender(eaten,base,extra){
   <div
     class="current-date"
     id="display-date"
+    hidden
+    aria-hidden="true"
   ></div>
   <!-- DIARIOFIT UX BETA V2: HOME VISUALE -->
   <main id="ux2-home" aria-label="Oggi">
@@ -27721,5 +27723,6 @@ function fatHelpOpen(){
  #ux2-home .ux2-macro.fat-macro>[hidden],#ux2-home .ux2-macro.sugar-macro>[hidden]{display:none!important}
 }
 </style>
+<style id="home-without-date">#display-date{display:none!important}</style>
 </body>
 </html>
