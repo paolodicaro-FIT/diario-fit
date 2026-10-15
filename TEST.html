@@ -9331,33 +9331,37 @@ html[data-theme="light"] .missing-today-legend {
 
 <script id="diariofit-calorie-bars-script">
 
-function dfCaloriePositionArrow(trace,arrow,pct){
- if(!trace||!arrow)return;
+function dfCalorieDrawProgress(trace,pct){
+ if(!trace)return;
  const fraction=Math.max(0,Math.min(100,pct))/100;
- if(!fraction){arrow.style.display="none";return}
+ if(!fraction){trace.style.opacity="0";return}
+ const geometry=document.getElementById(trace.id.replace("-trace","-geometry"));
+ if(!geometry)return;
  try{
-  const length=trace.getTotalLength();if(!(length>0)){arrow.style.display="none";return}
-  const at=length*fraction,point=trace.getPointAtLength(at),before=trace.getPointAtLength(Math.max(0,at-.5)),after=trace.getPointAtLength(Math.min(length,at+.5));
-  const angle=Math.atan2(after.y-before.y,after.x-before.x)*180/Math.PI;
-  arrow.setAttribute("transform","translate("+point.x.toFixed(3)+" "+point.y.toFixed(3)+") rotate("+angle.toFixed(3)+")");arrow.style.display="";
- }catch(error){arrow.style.display="none"}
+  const length=geometry.getTotalLength(),at=length*fraction;if(!(length>0))return;
+  const steps=Math.max(2,Math.ceil(at/2)),points=[];
+  for(let i=0;i<=steps;i++){const point=geometry.getPointAtLength(at*i/steps);points.push((i?"L":"M")+point.x.toFixed(3)+" "+point.y.toFixed(3))}
+  const path=points.join(" ");if(trace.getAttribute("d")!==path)trace.setAttribute("d",path);
+  trace.style.opacity="1";
+ }catch(error){trace.style.opacity="0"}
 }
 
 function dfCalorieBarsRender(eaten,base,extra){
  const setText=(id,value)=>{const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value};
  const raw=base>0?Math.round(eaten/base*100):0;
  const colors=raw<75?["#38bdf8","#22d3ee"]:raw<=110?["#22d3ee","#22c55e"]:["#f59e0b","#ef4444"];
+ const frame=document.getElementById("calorie-activity-frame");if(frame)frame.style.display=extra>0?"":"none";
  for(const [kind,target] of [["base",base],["activity",base+extra]]){
   const pct=target>0?Math.round(eaten/target*100):0,fill=document.getElementById("calorie-"+kind+"-fill"),track=document.getElementById("calorie-"+kind+"-track");
   if(fill){fill.style.width=Math.max(0,Math.min(100,pct))+"%";if(kind==="base")fill.style.background="linear-gradient(90deg,"+colors[0]+","+colors[1]+")"}
   if(track){track.setAttribute("aria-valuenow",String(Math.max(0,Math.min(100,pct))));track.setAttribute("aria-valuetext",eaten+" kcal su "+target+" kcal, "+pct+" per cento")}
   const trace=document.getElementById("calorie-"+kind+"-trace");
-  if(trace){trace.setAttribute("stroke-dasharray",Math.max(0,Math.min(100,pct))+" 100");trace.style.opacity=pct>0?"1":"0"}
-  dfCaloriePositionArrow(trace,document.getElementById("calorie-"+kind+"-arrow"),pct);
+  
+  dfCalorieDrawProgress(trace,pct);
   if(kind==="activity"&&track)track.hidden=extra<=0;
   setText("calorie-"+kind+"-percent",pct+"%");
  }
- const frame=document.getElementById("calorie-activity-frame");if(frame)frame.style.display=extra>0?"":"none";
+
  const stopA=document.getElementById("calorie-frame-stop-a"),stopB=document.getElementById("calorie-frame-stop-b");
  if(stopA)stopA.setAttribute("stop-color",colors[0]);if(stopB)stopB.setAttribute("stop-color",colors[1]);
  setText("calorie-extra-note","Margine attività: +"+extra+" kcal · stesse calorie assunte");
@@ -9545,11 +9549,11 @@ function dfCalorieBarsRender(eaten,base,extra){
   <main id="ux2-home" aria-label="Oggi">
     <section class="ux2-calorie-zone calorie-panel calorie-cockpit" aria-label="Calorie di oggi">
  <svg class="calorie-frame" viewBox="0 0 400 180" preserveAspectRatio="none" aria-hidden="true">
- <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient></defs>
+ <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient><marker id="calorie-base-tip" markerUnits="userSpaceOnUse" markerWidth="23" markerHeight="22" viewBox="-19 -11 23 22" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -17 -9 L 0 0 L -17 9 L -11 0 Z" fill="#effff8" stroke="#22d3a6" stroke-width="1.2" stroke-linejoin="round"/></marker><marker id="calorie-activity-tip" markerUnits="userSpaceOnUse" markerWidth="21" markerHeight="20" viewBox="-17 -10 21 20" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -15 -8 L 0 0 L -15 8 L -10 0 Z" fill="#eaffff" stroke="#2dd4bf" stroke-width="1.1" stroke-linejoin="round"/></marker></defs>
  <rect class="calorie-frame-track" x="9" y="9" width="382" height="162" rx="28"/>
- <rect id="calorie-base-trace" class="calorie-frame-trace base" x="9" y="9" width="382" height="162" rx="28" pathLength="100" stroke-dasharray="0 100"/>
- <g id="calorie-base-arrow" class="calorie-progress-arrow base" style="display:none"><path d="M -10 -6 L 1 0 L -10 6 L -6 0 Z"/></g>
- <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-trace" class="calorie-frame-trace extra" x="19" y="19" width="362" height="142" rx="21" pathLength="100" stroke-dasharray="0 100"/><g id="calorie-activity-arrow" class="calorie-progress-arrow extra" style="display:none"><path d="M -9 -5 L 1 0 L -9 5 L -5 0 Z"/></g></g>
+ <rect id="calorie-base-geometry" x="9" y="9" width="382" height="162" rx="28" fill="none" stroke="none"/><path id="calorie-base-trace" class="calorie-frame-trace base" marker-end="url(#calorie-base-tip)" d="M 37 9"/>
+ 
+ <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-geometry" x="19" y="19" width="362" height="142" rx="21" fill="none" stroke="none"/><path id="calorie-activity-trace" class="calorie-frame-trace extra" marker-end="url(#calorie-activity-tip)" d="M 40 19"/></g>
  </svg>
  <div class="calorie-cockpit-content">
  <div class="calorie-cockpit-eyebrow"><span class="calorie-live-dot"></span> ENERGIA DI OGGI</div>
@@ -27719,5 +27723,5 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 .calorie-progress-arrow{pointer-events:none;filter:drop-shadow(0 0 3px rgba(224,255,247,.95)) drop-shadow(0 0 7px rgba(34,211,238,.8))}
 .calorie-progress-arrow path{fill:#eafff6;stroke:#22d3a6;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .calorie-progress-arrow.extra path{fill:#e6fffd;stroke:#2dd4bf}
-</style></body>
+</style><style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style></body>
 </html>
