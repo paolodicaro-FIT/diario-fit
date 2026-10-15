@@ -9464,12 +9464,7 @@ function dfCalorieBarsRender(eaten,base,extra){
         </span>
       </button>
 
-      <div
-        id="account-access-badge"
-        class="account-access-badge"
-        style="display:none;"
-        title=""
-      ></div>
+
 
       <div class="header-subtitle-row">
 
@@ -14415,126 +14410,27 @@ function startAccountAccessTimer() {
 
 
 function renderAccountAccessBadge() {
-
-  const badge =
-    document.getElementById(
-      "account-access-badge"
-    );
-
-  if (!badge || !currentUser) {
-    return;
-  }
-
-  badge.classList.remove(
-    "is-lifetime",
-    "is-trial",
-    "is-expired"
-  );
-
-  const isWeekly =
-    currentUser.access_plan === "weekly";
-
-  if (!isWeekly) {
-
-    badge.innerHTML =
-      '<img src="badge-vitalizio-ui-transparent.png" alt="VITALIZIO" class="account-lifetime-image">';
-
-    badge.classList.add(
-      "is-lifetime"
-    );
-
-    badge.title =
-      "Accesso senza scadenza";
-
-    badge.style.display =
-      "inline-flex";
-
-    return;
-  }
-
-  const expiryMs =
-    currentUser.access_expires_at
-      ? Date.parse(
-          currentUser.access_expires_at
-        )
-      : NaN;
-
-  if (
-    !Number.isFinite(expiryMs) ||
-    expiryMs <= getAccountNowMs()
-  ) {
-
-    badge.textContent =
-      "🔒 ACCESSO SCADUTO";
-
-    badge.classList.add(
-      "is-expired"
-    );
-
-    badge.title =
-      Number.isFinite(expiryMs)
-        ? "Scaduto il " +
-          new Date(expiryMs).toLocaleString(
-            "it-IT",
-            {
-              dateStyle: "short",
-              timeStyle: "short"
-            }
-          )
-        : "Scadenza account non valida";
-
-    badge.style.display =
-      "inline-flex";
-
-    return;
-  }
-
-  const remainingMs =
-    expiryMs - getAccountNowMs();
-
-  const totalMinutes =
-    Math.max(
-      0,
-      Math.floor(
-        remainingMs / 60000
-      )
-    );
-
-  const days =
-    Math.floor(
-      totalMinutes / 1440
-    );
-
-  const hours =
-    Math.floor(
-      (totalMinutes % 1440) / 60
-    );
-
-  const minutes =
-    totalMinutes % 60;
-
-  badge.textContent =
-    "⏳ PROVA · " +
-    days + "g " +
-    hours + "h " +
-    minutes + "m";
-
-  badge.classList.add(
-    "is-trial"
-  );
-
-  badge.title =
-    "Scadenza: " +
-    new Date(expiryMs).toLocaleString(
-      "it-IT",
-      {
-        dateStyle: "short",
-        timeStyle: "short"
-      }
-    );
-
-  badge.style.display =
-    "inline-flex";
+ const badge=document.getElementById("account-access-badge");
+ if(!badge)return;
+ badge.classList.remove("is-lifetime","is-trial","is-expired");
+ badge.replaceChildren();
+ if(!currentUser){badge.style.display="none";return}
+ const plan=String(currentUser.access_plan||"").toLowerCase();
+ const label=plan==="lifetime"?"Vitalizio":plan==="weekly"?"Settimanale":plan==="monthly"?"Mensile":"Piano non disponibile";
+ badge.style.display="inline-flex";
+ if(plan==="lifetime"){
+  badge.textContent="♾️ "+label;badge.title="Accesso senza scadenza";badge.classList.add("is-lifetime");return;
+ }
+ if(plan!=="weekly"&&plan!=="monthly"){badge.textContent=label;badge.title="";return}
+ const expiry=Date.parse(currentUser.access_expires_at||"");
+ if(!Number.isFinite(expiry)){badge.textContent=label+" · scadenza non disponibile";badge.title="";return}
+ const date=new Date(expiry).toLocaleString("it-IT",{dateStyle:"short",timeStyle:"short"});
+ const remaining=expiry-getAccountNowMs();
+ badge.classList.add(remaining<=0?"is-expired":"is-trial");
+ badge.textContent=label+(remaining<=0?" · scaduto":" · attivo");
+ badge.title=(remaining<=0?"Scaduto il ":"Scadenza: ")+date;
+ const detail=document.createElement("small");detail.textContent=(remaining<=0?"Scaduto il ":"Scade il ")+date;
+ badge.appendChild(detail);
 }
 
 
@@ -26666,7 +26562,13 @@ function closeTargetsFromProgress(restoreStats=true){
       <div><small>DIARIO FIT</small><h2 id="ux25-more-title">Altro</h2></div>
       <button type="button" class="ux25-more-close" onclick="ux25CloseMore()" aria-label="Chiudi">✕</button>
     </div>
-    <p class="ux25-more-intro">Informazioni e guida all'uso di DiarioFIT.</p>
+    <p class="ux25-more-intro">Il tuo account, informazioni e guida all'uso.</p>
+    <section class="ux25-more-card account-plan-card" aria-labelledby="account-plan-title">
+      <span class="ux25-more-icon" aria-hidden="true">💳</span>
+      <div><strong id="account-plan-title">Stato dell’abbonamento</strong>
+        <div id="account-access-badge" class="account-access-badge" style="display:none;" title="" role="status"></div>
+      </div>
+    </section>
     <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
       <span class="ux25-more-icon">ℹ️</span>
       <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
@@ -27893,6 +27795,13 @@ function fatHelpOpen(){
  #ux2-home .calorie-cockpit-content{padding:15px 27px 16px}
  #ux2-home .calorie-cockpit .calorie-amount strong{font-size:1.9rem}
 }
+</style>
+<style id="account-plan-in-more">
+.account-plan-card{cursor:default}
+.account-plan-card>div{min-width:0}
+.account-plan-card #account-access-badge{flex-direction:column;align-items:flex-start;gap:4px;margin:7px 0 0;padding:5px 8px;white-space:normal;font-size:.85rem}
+.account-plan-card #account-access-badge.is-lifetime{color:#5eead4;padding:0}
+.account-plan-card #account-access-badge small{display:block;font-size:.73rem;font-weight:500;line-height:1.4}
 </style>
 </body>
 </html>
