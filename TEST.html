@@ -27821,8 +27821,8 @@ function fatHelpOpen(){
 </style>
 <!-- DiarioFIT TEST — Consiglio alimentare contestuale V1 -->
 <style>
-.df-quick-advice-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:8px}
-.df-quick-advice-actions .ux2-status-btn{width:100%!important;margin-top:0!important;min-width:0;white-space:normal;line-height:1.25;min-height:48px}
+.df-quick-advice-actions{display:grid!important;grid-column:1 / -1!important;grid-row:auto!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px;margin-top:8px;width:100%;align-items:stretch}
+.df-quick-advice-actions > .ux2-status-btn{display:block!important;visibility:visible!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;margin:0!important;min-width:0;white-space:normal;line-height:1.25;min-height:48px}
 #df-food-advice-modal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.76);align-items:center;justify-content:center;padding:12px}
 #df-food-advice-modal.df-open{display:flex}
 .df-food-advice-panel{width:min(560px,100%);max-height:90dvh;overflow:auto;border-radius:18px;border:1px solid #286577;background:#0a202d;color:#e8f7fc;padding:18px;box-shadow:0 15px 45px #0009}
