@@ -27625,12 +27625,12 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 /* TEST: filigrana discreta esclusivamente nel riquadro calorie della Home. */
 #ux2-home .calorie-panel.calorie-cockpit::before {
   content:""; position:absolute; inset:8px; border-radius:23px; pointer-events:none; z-index:0;
-  background:linear-gradient(110deg,rgba(7,31,42,.1),rgba(15,111,148,.11) 60%,rgba(7,31,42,.05)),url("DiarioFITGLASS.png") no-repeat 91% 48% / auto 88%;
-  opacity:.085;
+  background:url("DiarioFITGLASS.png") no-repeat 91% 48% / auto 88%;
+  opacity:.20;
 }
 #ux2-home .calorie-panel.calorie-cockpit::after {
   content:""; position:absolute; inset:8px; border-radius:23px; pointer-events:none; z-index:0;
-  background:radial-gradient(ellipse at 80% 45%,rgba(34,211,238,.095),transparent 60%);
+  background:radial-gradient(ellipse at 79% 45%,rgba(34,211,238,.18),transparent 68%),linear-gradient(115deg,rgba(8,45,70,.08),rgba(20,124,170,.15) 58%,rgba(8,45,70,.05));
 }
 </style>
 <style id="diariofit-calorie-arrow-test">
