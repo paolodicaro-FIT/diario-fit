@@ -27619,6 +27619,18 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 @media(max-width:600px){#ux2-home .calorie-cockpit{margin:4px 0 9px}.calorie-cockpit-content{padding:28px 31px 26px}.calorie-cockpit .calorie-amount strong{font-size:2.35rem}}
 @media(prefers-reduced-motion:reduce){.calorie-frame-trace{transition:none}}
 </style>
+<style id="diariofit-calorie-watermark">
+/* TEST: filigrana discreta esclusivamente nel riquadro calorie della Home. */
+#ux2-home .calorie-panel.calorie-cockpit::before {
+  content:""; position:absolute; inset:8px; border-radius:23px; pointer-events:none; z-index:0;
+  background:url("DiarioFITGLASS.png") no-repeat 91% 48% / auto 88%;
+  opacity:.20;
+}
+#ux2-home .calorie-panel.calorie-cockpit::after {
+  content:""; position:absolute; inset:8px; border-radius:23px; pointer-events:none; z-index:0;
+  background:radial-gradient(ellipse at 79% 45%,rgba(34,211,238,.18),transparent 68%),linear-gradient(115deg,rgba(8,45,70,.08),rgba(20,124,170,.15) 58%,rgba(8,45,70,.05));
+}
+</style>
 <style id="diariofit-calorie-arrow-test">
 .calorie-frame-track{stroke:#102c37;stroke-width:8}
 .calorie-frame-track.inner{stroke:#102c32;stroke-width:5.5}
