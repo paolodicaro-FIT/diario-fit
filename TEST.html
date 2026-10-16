@@ -27871,6 +27871,15 @@ function fatHelpOpen(){
 .df-food-advice-controls button{padding:10px 14px;border-radius:10px;border:1px solid #34788a;background:#134255;color:white;cursor:pointer}
 .df-food-advice-controls button.df-main{background:#10bd7c;color:#06291f;font-weight:700}
 @media(max-width:370px){.df-quick-advice-actions{gap:6px}.df-quick-advice-actions .ux2-status-btn{font-size:.75rem!important;padding:8px 5px!important}}
+/* Selezione a schede: il controllo resta accessibile ma non visibile */
+#df-food-advice-modal .df-food-advice-options label{position:relative;padding-left:12px!important}
+#df-food-advice-modal .df-food-advice-options input[type=checkbox]{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;pointer-events:none!important}
+#df-food-advice-modal .df-food-advice-options label::before{content:"＋";display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:50%;border:1px solid #568d9d;color:#b8d6de;background:#0a2b38;font-weight:700;font-size:19px}
+#df-food-advice-modal .df-food-advice-options label:has(input:checked)::before{content:"✓";background:#12d38b;color:#042c20;border-color:#12d38b;font-size:17px}
+#df-food-advice-modal .df-food-advice-options label:has(input:focus-visible){outline:2px solid #bdfde6;outline-offset:2px}
+#df-food-advice-modal .df-food-advice-options label:has(input:checked){background:#104d40!important;border-color:#12d38b!important}
+#df-food-catalog-search{flex:1 1 180px;min-width:0;width:100%;background:#091d28;color:white;border:1px solid #397488;border-radius:9px;padding:11px;font-size:16px}
+#df-food-catalog-select{font-size:16px}
 </style>
 <div id="df-food-advice-modal" role="dialog" aria-modal="true" aria-labelledby="df-food-advice-title" onclick="if(event.target===this)dfCloseFoodAdvice()">
   <div class="df-food-advice-panel">
@@ -27881,6 +27890,7 @@ function fatHelpOpen(){
     <div id="df-food-advice-status"></div>
     <p style="margin-bottom:6px"><strong>Quali alimenti hai disponibili?</strong></p>
     <div class="df-food-advice-options" id="df-food-advice-options"></div>
+    <div class="df-food-advice-edit"><input id="df-food-catalog-search" type="search" placeholder="🔎 Cerca alimento (anche parte del nome)..." aria-label="Filtra alimenti" oninput="dfPopulateAdviceCatalog()"></div>
     <div class="df-food-advice-edit"><select id="df-food-catalog-select" aria-label="Scegli un alimento dal catalogo" style="flex:1 1 220px;min-width:0;background:#0c2c3a;color:#eaf9fc;border:1px solid #397488;border-radius:9px;padding:12px"><option value="">Scegli un alimento dal catalogo…</option></select><button type="button" onclick="dfAddSelectedCatalogFood()">＋ Aggiungi</button></div>
     <div id="df-food-advice-editor" class="df-food-advice-editor" hidden></div>
     <div class="df-food-advice-controls">
@@ -27993,14 +28003,21 @@ function dfCatalogFoods(){
 }
 window.dfPopulateAdviceCatalog=function(){
  const sel=document.getElementById('df-food-catalog-select');if(!sel)return;
- const catalog=dfCatalogFoods();sel.innerHTML='<option value="">Scegli un alimento dal catalogo…</option>';
+ const query=(document.getElementById('df-food-catalog-search')?.value||'').trim().toLocaleLowerCase('it');
+ const previous=sel.value;
+ const catalog=dfCatalogFoods();sel.innerHTML='';
+ const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent=query?'Seleziona tra i risultati…':'Scegli un alimento dal catalogo…';sel.appendChild(placeholder);
+ let count=0;
  const groups=['I miei alimenti','Rapidi','Catalogo DiarioFIT'];
  groups.forEach(group=>{
-  const entries=catalog.filter(f=>f.source===group);if(!entries.length)return;
+  const entries=catalog.filter(f=>f.source===group&&(!query||f.label.toLocaleLowerCase('it').includes(query)));
+  if(!entries.length)return;
   const optgroup=document.createElement('optgroup');optgroup.label=group;
-  entries.forEach(f=>{const option=document.createElement('option');option.value=f.id;option.textContent=f.label;optgroup.appendChild(option)});
+  entries.forEach(f=>{const option=document.createElement('option');option.value=f.id;option.textContent=f.label;optgroup.appendChild(option);count++});
   sel.appendChild(optgroup);
  });
+ if(previous&&[...sel.options].some(o=>o.value===previous))sel.value=previous;
+ if(!count){placeholder.textContent='Nessun alimento trovato';}
 };
 window.dfAddSelectedCatalogFood=function(){
  const sel=document.getElementById('df-food-catalog-select');if(!sel.value)return alert('Seleziona un alimento dalla tendina.');
@@ -28015,12 +28032,12 @@ window.dfSelectAdviceCatalogFood=function(id){
   foods.push({...food});const old=archive.findIndex(a=>a.id===food.id);if(old>=0)archive[old]={...food};else archive.push({...food});
   persist();renderOptions();const checkbox=[...document.querySelectorAll('#df-food-advice-options input')].find(x=>x.value===food.id);if(checkbox)checkbox.checked=true;
  }
- const selector=document.getElementById('df-food-catalog-select');if(selector)selector.value='';
+ const selector=document.getElementById('df-food-catalog-select');if(selector)selector.value='';document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();
  dfRenderFoodAdvice(false);
 };
 window.dfOpenFoodAdvice=function(){
  const modal=document.getElementById('df-food-advice-modal');
- renderOptions();dfPopulateAdviceCatalog();modal.classList.add('df-open');dfRenderFoodAdvice(false);
+ renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();modal.classList.add('df-open');dfRenderFoodAdvice(false);
 };
 window.dfCloseFoodAdvice=function(){document.getElementById('df-food-advice-modal').classList.remove('df-open')};
 window.dfRenderFoodAdvice=function(next){
