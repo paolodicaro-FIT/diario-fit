@@ -27897,6 +27897,7 @@ function fatHelpOpen(){
       <button type="button" onclick="dfRenderFoodAdvice(true)">↻ Altra proposta</button>
       <button type="button" class="df-main" onclick="dfRenderFoodAdvice(false)">✨ Consigliami</button>
     </div>
+    <div id="df-food-advice-appetite" class="df-food-advice-results" hidden><strong>Hai già raggiunto il target calorico.</strong><p>Hai comunque fame e desideri un piccolo spuntino?</p><div class="df-food-advice-controls"><button type="button" onclick="dfDeclineAdviceSnack()">No, sono sazio</button><button type="button" class="df-main" onclick="dfAcceptAdviceSnack()">Sì, proponimi qualcosa</button></div></div>
     <div id="df-food-advice-result" class="df-food-advice-results" aria-live="polite">Seleziona gli alimenti disponibili e premi «Consigliami».</div>
     <p style="font-size:.78rem;color:#acc6ce;margin-bottom:0">Stime indicative. Nessun alimento viene registrato automaticamente. Verifica sempre le porzioni e i valori delle tue etichette.</p>
   </div>
@@ -27925,6 +27926,8 @@ try{
 }catch(e){}
 foods.forEach(f=>{if(!archive.some(a=>a.id===f.id))archive.push({...f})});
 let variant=0;
+let snackConfirmed=false;
+let previousAdviceSignature='';
 function esc(t){return String(t).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function persist(){try{localStorage.setItem(storageKey,JSON.stringify(foods));localStorage.setItem(archiveKey,JSON.stringify(archive))}catch(e){}}
 function renderOptions(){
@@ -28035,9 +28038,11 @@ window.dfSelectAdviceCatalogFood=function(id){
  const selector=document.getElementById('df-food-catalog-select');if(selector)selector.value='';document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();
  dfRenderFoodAdvice(false);
 };
+window.dfAcceptAdviceSnack=function(){snackConfirmed=true;dfRenderFoodAdvice(false)};
+window.dfDeclineAdviceSnack=function(){snackConfirmed=false;document.getElementById('df-food-advice-appetite').hidden=true;document.getElementById('df-food-advice-result').textContent='Va bene così: non è necessario mangiare altro per completare i macro.'};
 window.dfOpenFoodAdvice=function(){
  const modal=document.getElementById('df-food-advice-modal');
- renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();modal.classList.add('df-open');dfRenderFoodAdvice(false);
+ renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();snackConfirmed=false;previousAdviceSignature='';variant=0;modal.classList.add('df-open');dfRenderFoodAdvice(false);
 };
 window.dfCloseFoodAdvice=function(){document.getElementById('df-food-advice-modal').classList.remove('df-open')};
 window.dfRenderFoodAdvice=function(next){
@@ -28053,6 +28058,13 @@ window.dfRenderFoodAdvice=function(next){
  if(selected.some(f=>f.g<=0||f.k<=0)){out.textContent='Completa prima i valori nutrizionali degli alimenti selezionati (✎).';return}
  if(!t.kcal){out.textContent='Configura prima i tuoi target in DiarioFIT.';return}
  const targetReached=remaining.k<80;
+ const appetite=document.getElementById('df-food-advice-appetite');
+ if(targetReached&&!snackConfirmed){
+  appetite.hidden=false;
+  out.textContent='Il target calorico è già raggiunto. Nessuna proposta necessaria finché non scegli di ricevere uno spuntino facoltativo.';
+  return;
+ }
+ appetite.hidden=true;
  // Anche a target raggiunto: proposta facoltativa, non incentivo a mangiare.
  const adviceBudget=targetReached?150:Math.min(remaining.k,650);
  // Ricerca deterministica di combinazioni pratiche; porzioni in unità standard.
@@ -28074,7 +28086,20 @@ window.dfRenderFoodAdvice=function(next){
  }
  visit(0,[],0,0,0,0);
  candidate.sort((a,b)=>a.score-b.score);
- const best=candidate[Math.min(variant%Math.min(4,candidate.length),candidate.length-1)];
+ // Evita alternative fittizie: prima cambia gli alimenti, poi eventualmente le quantità.
+ const signatures=new Set();
+ const distinct=candidate.filter(c=>{
+  const sig=c.arr.map(a=>a.food.id).sort().join('|');
+  if(signatures.has(sig))return false;
+  signatures.add(sig);return true;
+ });
+ const choice=next?distinct.find(c=>c.arr.map(a=>a.food.id).sort().join('|')!==previousAdviceSignature):distinct[0];
+ const best=choice||distinct[0];
+ if(next&&!choice){
+  out.innerHTML='<strong>Nessuna alternativa diversa disponibile.</strong><p>Con gli alimenti selezionati posso cambiare soltanto la quantità, non la combinazione. Aggiungi altri alimenti per ricevere proposte differenti.</p>';
+  return;
+ }
+ if(best)previousAdviceSignature=best.arr.map(a=>a.food.id).sort().join('|');
  if(!best){out.textContent='Non ho trovato una combinazione pratica con questi alimenti.';return}
  out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>';
 };
