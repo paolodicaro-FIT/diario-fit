@@ -27882,7 +27882,9 @@ function fatHelpOpen(){
     <p style="margin-bottom:6px"><strong>Quali alimenti hai disponibili?</strong></p>
     <div class="df-food-advice-options" id="df-food-advice-options"></div>
     <div class="df-food-advice-edit"><input class="df-add-name" id="df-food-add-name" type="text" placeholder="Nuovo alimento..." maxlength="70"><button type="button" onclick="dfAddAdviceFood()">＋ Nuovo</button></div>
-    <div class="df-food-advice-edit"><button type="button" onclick="dfToggleAdviceArchive()">📚 Recupera alimenti</button><button type="button" onclick="dfRestoreAdviceDefaults()">↺ Ripristina iniziali</button></div>
+    <div class="df-food-advice-edit"><button type="button" onclick="dfToggleAdviceArchive()">📚 Recupera alimenti</button><button type="button" onclick="dfRestoreAdviceDefaults()">↺ Aggiorna archivio</button></div>
+    <div class="df-food-advice-edit"><input id="df-food-catalog-search" class="df-add-name" type="search" placeholder="Cerca in tutti gli alimenti DiarioFIT..." oninput="dfSearchAdviceCatalog()" /><button type="button" onclick="dfSearchAdviceCatalog()">🔎 Cerca</button></div>
+    <div id="df-food-catalog-results" class="df-food-advice-editor" hidden></div>
     <div id="df-food-advice-archive" class="df-food-advice-editor" hidden><strong>Alimenti disponibili nell'archivio</strong><p style="font-size:.8rem;margin:6px 0">Tocca un alimento per riportarlo tra i disponibili.</p><div id="df-food-advice-archive-items"></div></div>
     <div id="df-food-advice-editor" class="df-food-advice-editor" hidden></div>
     <div class="df-food-advice-controls">
@@ -27907,8 +27909,8 @@ const defaults=[
 ];
 const storageKey='df_food_advice_catalog_test_v2';
 const archiveKey='df_food_advice_archive_test_v3';
-let foods=defaults.map(x=>({...x}));
-let archive=defaults.map(x=>({...x}));
+let foods=[];
+let archive=[];
 try{
  const saved=JSON.parse(localStorage.getItem(storageKey));
  if(Array.isArray(saved)&&saved.length<=80&&saved.every(f=>f&&typeof f.label==='string'))foods=saved;
@@ -27954,8 +27956,9 @@ window.dfRestoreAdviceFood=function(id){
  foods.push({...f});persist();renderOptions();dfRenderAdviceArchive();
 };
 window.dfRestoreAdviceDefaults=function(){
- defaults.forEach(f=>{if(!archive.some(a=>a.id===f.id))archive.push({...f});if(!foods.some(a=>a.id===f.id))foods.push({...archive.find(a=>a.id===f.id)})});
- persist();renderOptions();dfRenderAdviceArchive();
+ dfCatalogFoods().forEach(f=>{if(!archive.some(a=>a.id===f.id))archive.push({...f})});
+ persist();dfRenderAdviceArchive();
+ document.getElementById('df-food-catalog-search').focus();
 };
 window.dfEditAdviceFood=function(id){
  const f=foods.find(x=>x.id===id);if(!f)return;
@@ -27971,6 +27974,48 @@ window.dfSaveAdviceFood=function(){
  const next={label};for(const key of ['g','k','p','c','f']){const el=editor.querySelector('[data-field="'+key+'"]');if(el.value.trim()===''||!Number.isFinite(Number(el.value))||Number(el.value)<0||Number(el.value)>10000)return alert('Controlla i valori nutrizionali.');next[key]=Number(el.value)}
  if(next.g<=0)return alert('La porzione deve essere maggiore di zero.');
  Object.assign(f,next);const archived=archive.find(x=>x.id===f.id);if(archived)Object.assign(archived,next);persist();renderOptions();dfRenderAdviceArchive();editor.hidden=true;
+};
+
+function dfCatalogFoods(){
+ const entries=[];
+ if(typeof DEFAULT_PRESET_FOODS!=='undefined'&&Array.isArray(DEFAULT_PRESET_FOODS)){
+  DEFAULT_PRESET_FOODS.forEach((f,i)=>{
+   const p=String(f.value||'').split('|'),w=Number(f.weight)||100;
+   entries.push({id:'preset_'+i,label:String(f.label||p[0]||'Alimento'),g:w,k:Number(p[1])||0,p:Number(p[2])||0,f:Number(p[3])||0,c:Number(p[4])||0,source:'Catalogo DiarioFIT'});
+  });
+ }
+ if(typeof savedFoods!=='undefined'&&Array.isArray(savedFoods)){
+  savedFoods.forEach((f,i)=>entries.push({id:'saved_'+i,label:String(f.name||'Alimento personale'),g:Number(f.weight)||100,k:Number(f.kcal)||0,p:Number(f.pro)||0,f:Number(f.fat)||0,c:Number(f.carb)||0,source:'I miei alimenti'}));
+ }
+ if(typeof quickAddItems!=='undefined'&&Array.isArray(quickAddItems)){
+  quickAddItems.filter(f=>f&&!f.isWater&&!f.isEmpty&&f.quickType!=='savedMeal').forEach((f,i)=>{
+   if(!f.name&&!f.label)return;
+   entries.push({id:'quick_'+i,label:String(f.label||f.name),g:Number(f.weight)||100,k:Number(f.kcal)||0,p:Number(f.pro)||0,f:Number(f.fat)||0,c:Number(f.carb)||0,source:'Rapidi'});
+  });
+ }
+ return entries;
+}
+window.dfSearchAdviceCatalog=function(){
+ const query=document.getElementById('df-food-catalog-search').value.trim().toLocaleLowerCase('it');
+ const panel=document.getElementById('df-food-catalog-results');
+ if(!query){panel.hidden=true;panel.innerHTML='';return}
+ const matches=dfCatalogFoods().filter(f=>f.label.toLocaleLowerCase('it').includes(query)).slice(0,45);
+ panel.hidden=false;
+ panel.innerHTML='<strong>Risultati catalogo ('+matches.length+(matches.length===45?'+':'')+')</strong>'+ (matches.length?matches.map(f=>'<button type="button" data-catalog="'+esc(f.id)+'" style="display:block;width:100%;text-align:left;margin:7px 0;padding:10px;background:#164657;color:white;border:1px solid #34788a;border-radius:9px;cursor:pointer"><strong>＋ '+esc(f.label)+'</strong><small style="display:block;color:#a9c8d1">'+esc(f.source)+' · '+f.g+' g · '+Math.round(f.k)+' kcal</small></button>').join(''):'<p>Nessun alimento trovato.</p>');
+ panel.querySelectorAll('[data-catalog]').forEach(b=>b.addEventListener('click',()=>dfSelectAdviceCatalogFood(b.dataset.catalog)));
+};
+window.dfSelectAdviceCatalogFood=function(id){
+ const food=dfCatalogFoods().find(f=>f.id===id);if(!food)return;
+ const existing=foods.find(f=>f.id===food.id);
+ if(existing){const checkbox=[...document.querySelectorAll('#df-food-advice-options input')].find(x=>x.value===food.id);if(checkbox)checkbox.checked=true;}
+ else{
+  if(foods.length>=80)return alert('Massimo 80 alimenti disponibili.');
+  foods.push({...food});const old=archive.findIndex(a=>a.id===food.id);if(old>=0)archive[old]={...food};else archive.push({...food});
+  persist();renderOptions();const checkbox=[...document.querySelectorAll('#df-food-advice-options input')].find(x=>x.value===food.id);if(checkbox)checkbox.checked=true;
+ }
+ document.getElementById('df-food-catalog-results').hidden=true;
+ document.getElementById('df-food-catalog-search').value='';
+ dfRenderFoodAdvice(false);
 };
 window.dfOpenFoodAdvice=function(){
  const modal=document.getElementById('df-food-advice-modal');
