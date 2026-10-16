@@ -8625,6 +8625,16 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
   #info-modal .info2-logo-wrap::after,
   #help-modal .help2-hero-logo-wrap::after { font-size: 12px; right: -10%; bottom: 2%; }
 }
+
+/* DiarioFIT — barra di caricamento glow con freccia, progresso indeterminato. */
+#app-loading .loading-plate { display:none; }
+#app-loading .loading-progress { position:relative; width:min(320px,82vw); height:15px; border-radius:99px; overflow:visible; background:#152e45; border:1px solid #295779; box-shadow:inset 0 2px 6px rgba(0,0,0,.35),0 0 12px rgba(23,189,240,.16); }
+#app-loading .loading-progress-fill { position:absolute; top:1px; bottom:1px; left:0; width:38%; border-radius:99px; background:linear-gradient(90deg,#176aaf,#17bdf0,#9af8ff); box-shadow:0 0 11px #17bdf0,0 0 22px rgba(23,189,240,.55); animation:df-loading-slide 1.9s ease-in-out infinite alternate; }
+#app-loading .loading-progress-fill::after { content:""; position:absolute; right:-4px; top:50%; width:12px; height:12px; border-top:3px solid #c7fbff; border-right:3px solid #c7fbff; transform:translateY(-50%) rotate(45deg); filter:drop-shadow(0 0 4px #5deaff); }
+#app-loading .loading-text { margin-top:22px; }
+#app-loading .loading-signature { margin-top:12px; color:#ffd36b; font:italic 700 19px "Segoe Script","Brush Script MT",cursive; transform:rotate(-12deg); text-shadow:0 1px 2px #031022,0 0 8px rgba(247,165,42,.7); white-space:nowrap; }
+@keyframes df-loading-slide { from {width:12%;} to {width:94%;} }
+@media (prefers-reduced-motion:reduce) { #app-loading .loading-progress-fill {animation:none;width:65%;} }
 </style>
 
 <style>
@@ -9421,8 +9431,9 @@ function dfCalorieBarsRender(eaten,base,extra){
 ===================================================== -->
 
 <div id="app-loading" class="hidden">
-  <div class="loading-plate"></div>
+  <div class="loading-progress" role="progressbar" aria-label="Caricamento in corso"><div class="loading-progress-fill"></div></div>
   <div class="loading-text">Caricamento Diario FIT...</div>
+  <div class="loading-signature">by Paolo Di Caro</div>
 </div>
 
 <div id="login-overlay">
