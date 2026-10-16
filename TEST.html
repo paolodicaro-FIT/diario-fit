@@ -28052,21 +28052,23 @@ window.dfRenderFoodAdvice=function(next){
  if(!selected.length){out.textContent='Seleziona almeno un alimento disponibile per ottenere un consiglio.';return}
  if(selected.some(f=>f.g<=0||f.k<=0)){out.textContent='Completa prima i valori nutrizionali degli alimenti selezionati (✎).';return}
  if(!t.kcal){out.textContent='Configura prima i tuoi target in DiarioFIT.';return}
- if(remaining.k<80){out.textContent='Hai già raggiunto il tuo obiettivo calorico. Non serve mangiare per forza per colmare i singoli macro. Se hai fame, scegli una porzione adatta al tuo appetito; altrimenti puoi fermarti qui.';return}
+ const targetReached=remaining.k<80;
+ // Anche a target raggiunto: proposta facoltativa, non incentivo a mangiare.
+ const adviceBudget=targetReached?150:Math.min(remaining.k,650);
  // Ricerca deterministica di combinazioni pratiche; porzioni in unità standard.
- const targetK=Math.min(remaining.k,650);
+ const targetK=adviceBudget;
  const candidate=[];
  function visit(i,arr,k,p,f,c){
   if(i===selected.length){
    if(!arr.length)return;
    const overshoot=Math.max(0,k-targetK);
-   const score=Math.abs(k-targetK)*.6+overshoot*.7+Math.abs(p-Math.min(remaining.p,35))*3+Math.abs(c-Math.min(remaining.c,65))*1.2+Math.max(0,f-remaining.f)*4+(arr.length>4?25:0);
+   const score=targetReached?(Math.abs(k-targetK)+overshoot*2+Math.max(0,k-220)*4+Math.max(0,arr.length-2)*25):(Math.abs(k-targetK)*.6+overshoot*.7+Math.abs(p-Math.min(remaining.p,35))*3+Math.abs(c-Math.min(remaining.c,65))*1.2+Math.max(0,f-remaining.f)*4+(arr.length>4?25:0));
    candidate.push({arr:[...arr],k,p,f,c,score});return;
   }
   const food=selected[i];
   visit(i+1,arr,k,p,f,c);
   for(let n=1;n<=((food.id==='pane'||food.id==='gallette')?3:2);n++){
-   if(k+food.k*n>Math.max(850,targetK+220))break;
+   if(k+food.k*n>(targetReached?350:Math.max(850,targetK+220)))break;
    arr.push({food,n});visit(i+1,arr,k+food.k*n,p+food.p*n,f+food.f*n,c+food.c*n);arr.pop();
   }
  }
@@ -28074,7 +28076,7 @@ window.dfRenderFoodAdvice=function(next){
  candidate.sort((a,b)=>a.score-b.score);
  const best=candidate[Math.min(variant%Math.min(4,candidate.length),candidate.length-1)];
  if(!best){out.textContent='Non ho trovato una combinazione pratica con questi alimenti.';return}
- out.innerHTML='<strong>Proposta indicativa</strong><ul>'+best.arr.map(a=>'<li>'+a.food.label+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Suggerimento basato sui target residui e sugli alimenti selezionati, non una prescrizione. Se hai già mangiato o sei sazio, non è necessario raggiungere tutti i target.</p>';
+ out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>';
 };
 })();
 </script>
