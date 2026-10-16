@@ -8582,6 +8582,28 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
 /* Scelta allenamento — planner timeline */
 .planner-workout-row{display:flex;align-items:center;gap:11px;color:#e7f4ff;font-weight:800}.planner-workout-switch{display:grid;grid-template-columns:1fr 1fr;width:188px;min-height:38px;padding:3px;border:1px solid rgba(255,255,255,.28);border-radius:12px;background:#172232;box-shadow:0 4px 12px rgba(0,0,0,.22);cursor:pointer;color:#fff;font-size:.66rem;font-weight:950;letter-spacing:.015em;text-align:center}.planner-workout-switch span{display:flex;align-items:center;justify-content:center;min-height:30px;padding:0 8px;border-radius:9px;opacity:.5;transition:background .18s,opacity .18s,box-shadow .18s}.planner-workout-switch .dp2-off{background:rgba(184,51,79,.28);color:#ffdbe2}.planner-workout-switch .dp2-on{background:rgba(69,181,120,.18);color:#cdf9dc}.planner-workout-switch:not(.is-on) .dp2-off{opacity:1;background:#c93e5b;color:#fff;box-shadow:0 2px 7px rgba(0,0,0,.26)}.planner-workout-switch.is-on .dp2-on{opacity:1;background:#38a868;color:#fff;box-shadow:0 2px 7px rgba(0,0,0,.26)}.planner-toggle-note{display:block;margin-top:3px;color:#9eb0c4;font-size:.74rem;font-weight:500}@media(max-width:420px){.planner-workout-row{align-items:flex-start}.planner-workout-switch{width:174px;font-size:.61rem}}
 #quick-diary-preview-modal{z-index:5100}
+
+/* TEST ONLY — anteprima firma sul logo; non modifica il PNG originale. */
+#info-modal .info2-logo-wrap::after,
+#help-modal .help2-hero-logo-wrap::after {
+  content: "by Paolo Di Caro";
+  position: absolute;
+  right: -8%;
+  bottom: 4%;
+  z-index: 5;
+  color: #ffd36b;
+  font: italic 700 clamp(10px, 1.5vw, 17px) "Brush Script MT", "Segoe Script", cursive;
+  white-space: nowrap;
+  transform: rotate(-24deg);
+  transform-origin: right bottom;
+  text-shadow: 0 1px 2px #031022, 0 0 7px #f7a52a;
+  pointer-events: none;
+}
+#help-modal .help2-hero-logo-wrap { position: relative; }
+@media (max-width: 600px) {
+  #info-modal .info2-logo-wrap::after,
+  #help-modal .help2-hero-logo-wrap::after { font-size: 12px; right: -10%; bottom: 2%; }
+}
 </style>
 
 <style>
