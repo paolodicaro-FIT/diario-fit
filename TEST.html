@@ -9602,11 +9602,11 @@ function dfCalorieBarsRender(eaten,base,extra){
   <main id="ux2-home" aria-label="Oggi">
     <section class="ux2-calorie-zone calorie-panel calorie-cockpit" aria-label="Calorie di oggi">
  <svg class="calorie-frame" viewBox="0 0 400 180" preserveAspectRatio="none" aria-hidden="true">
- <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient><marker id="calorie-base-tip" markerUnits="userSpaceOnUse" markerWidth="23" markerHeight="22" viewBox="-19 -11 23 22" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -17 -9 L 0 0 L -17 9 L -11 0 Z" fill="#effff8" stroke="#22d3a6" stroke-width="1.2" stroke-linejoin="round"/></marker><marker id="calorie-activity-tip" markerUnits="userSpaceOnUse" markerWidth="21" markerHeight="20" viewBox="-17 -10 21 20" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -15 -8 L 0 0 L -15 8 L -10 0 Z" fill="#49f3b2" stroke="#e6fffd" stroke-width="1.5" stroke-linejoin="round"/></marker></defs>
+ <defs><linearGradient id="calorie-frame-base-gradient" x1="0%" y1="0%" x2="100%" y2="80%"><stop id="calorie-frame-stop-a" stop-color="#38bdf8"/><stop id="calorie-frame-stop-b" offset="100%" stop-color="#22c55e"/></linearGradient><linearGradient id="calorie-frame-activity-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop stop-color="#0e7490"/><stop offset="50%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient><marker id="calorie-base-tip" markerUnits="userSpaceOnUse" markerWidth="23" markerHeight="22" viewBox="-19 -11 23 22" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -17 -9 L 0 0 L -17 9 L -11 0 Z" fill="#effff8" stroke="#22d3a6" stroke-width="1.2" stroke-linejoin="round"/></marker><marker id="calorie-activity-tip" markerUnits="userSpaceOnUse" markerWidth="21" markerHeight="20" viewBox="-17 -10 21 20" refX="0" refY="0" orient="auto" overflow="visible"><path d="M -15 -8 L 0 0 L -15 8 L -10 0 Z" fill="#eaffff" stroke="#2dd4bf" stroke-width="1.1" stroke-linejoin="round"/></marker></defs>
  <rect class="calorie-frame-track" x="9" y="9" width="382" height="162" rx="28"/>
  <rect id="calorie-base-geometry" x="9" y="9" width="382" height="162" rx="28" fill="none" stroke="none"/><path id="calorie-base-trace" class="calorie-frame-trace base" marker-end="url(#calorie-base-tip)" d="M 37 9"/>
  
- <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="27" y="27" width="346" height="126" rx="19"/><rect id="calorie-activity-geometry" x="27" y="27" width="346" height="126" rx="19" fill="none" stroke="none"/><path id="calorie-activity-trace" class="calorie-frame-trace extra" marker-end="url(#calorie-activity-tip)" d="M 46 27"/></g>
+ <g id="calorie-activity-frame" style="display:none"><rect class="calorie-frame-track inner" x="19" y="19" width="362" height="142" rx="21"/><rect id="calorie-activity-geometry" x="19" y="19" width="362" height="142" rx="21" fill="none" stroke="none"/><path id="calorie-activity-trace" class="calorie-frame-trace extra" marker-end="url(#calorie-activity-tip)" d="M 40 19"/></g>
  </svg>
  <div class="calorie-cockpit-content">
  <div class="calorie-cockpit-eyebrow"><span class="calorie-live-dot"></span> ENERGIA DI OGGI</div>
@@ -27625,7 +27625,7 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 /* TEST: filigrana discreta esclusivamente nel riquadro calorie della Home. */
 #ux2-home .calorie-panel.calorie-cockpit::before {
   content:""; position:absolute; inset:8px; border-radius:23px; pointer-events:none; z-index:0;
-  background:url("DiarioFITGLASS.png") no-repeat 112% 44% / auto 78%;
+  background:url("DiarioFITGLASS.png") no-repeat 96% 48% / auto 88%;
   opacity:.20;
 }
 #ux2-home .calorie-panel.calorie-cockpit::after {
@@ -27642,10 +27642,6 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 .calorie-progress-arrow{pointer-events:none;filter:drop-shadow(0 0 3px rgba(224,255,247,.95)) drop-shadow(0 0 7px rgba(34,211,238,.8))}
 .calorie-progress-arrow path{fill:#eafff6;stroke:#22d3a6;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .calorie-progress-arrow.extra path{fill:#e6fffd;stroke:#2dd4bf}
-</style><style id="diariofit-double-arrow-clarity-test">
-/* TEST: doppia freccia più distinguibile, traccia attività interna distanziata. */
-#ux2-home .calorie-frame-trace.extra{stroke:#45e9ae;stroke-width:5.5;filter:drop-shadow(0 0 5px rgba(56,245,173,.95))}
-#ux2-home .calorie-frame-track.inner{stroke:#245d54;stroke-width:5}
 </style>
 <style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style>
 <style id="fat-composition-v1">
