@@ -9638,7 +9638,10 @@ function dfCalorieBarsRender(eaten,base,extra){
         onchange="dfaiHandleWebPhoto(event)"
       >
     </div>
-    <button class="ux2-status-btn" type="button" onclick="openMissingTodayModal()">💡 A che punto sono oggi?</button>
+    <div class="df-quick-advice-actions">
+      <button class="ux2-status-btn" type="button" onclick="openMissingTodayModal()">💡 A che punto sono oggi?</button>
+      <button class="ux2-status-btn" type="button" onclick="dfOpenFoodAdvice()">🍽️ Cosa mangio adesso?</button>
+    </div>
 <section class="ux2-diary-fold">
       <button id="ux2-diary-toggle" class="ux2-diary-toggle" type="button" onclick="ux2ToggleDiary()">
         <span>📖 &nbsp; Diario di oggi <small id="ux2-diary-count"></small></span><b id="ux2-diary-chevron">⌄</b>
@@ -27810,5 +27813,295 @@ function fatHelpOpen(){
  #ux2-home .calorie-cockpit .calorie-amount strong{font-size:2.15rem}
 }
 </style>
+<!-- DiarioFIT — Cosa mangio adesso? V1 -->
+<style>
+.df-quick-advice-actions{display:grid!important;grid-column:1 / -1!important;grid-row:auto!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px;margin-top:8px;width:100%;align-items:stretch}
+@media(min-width:761px){
+ #ux2-home .ux2-primary-actions{grid-column:2!important;grid-row:2!important}
+ #ux2-home .df-quick-advice-actions{grid-column:2!important;grid-row:3!important;margin-top:0!important}
+ #ux2-home .ux2-diary-fold{grid-column:1 / -1!important;grid-row:4!important}
+}
+@media(max-width:760px){
+ #ux2-home .df-quick-advice-actions{margin-top:7px!important}
+}
+.df-quick-advice-actions > .ux2-status-btn{display:block!important;visibility:visible!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;margin:0!important;min-width:0;white-space:normal;line-height:1.25;min-height:48px}
+#df-food-advice-modal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.76);align-items:center;justify-content:center;padding:12px}
+#df-food-advice-modal.df-open{display:flex}
+.df-food-advice-panel{width:min(560px,100%);max-height:90dvh;overflow:auto;border-radius:18px;border:1px solid #286577;background:#0a202d;color:#e8f7fc;padding:18px;box-shadow:0 15px 45px #0009}
+.df-food-advice-panel h3{margin:0 0 12px}
+.df-food-advice-panel p{line-height:1.45}
+.df-food-advice-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.df-food-advice-options label{background:#123645;padding:10px;border:1px solid #245367;border-radius:12px;display:flex;gap:10px;align-items:center;font-size:.92rem;cursor:pointer;min-height:48px}
+.df-food-advice-options label:has(input:checked){border-color:#17d98f;background:#114a40;box-shadow:inset 0 0 0 1px #17d98f55}
+.df-food-advice-options input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 23px;width:23px;height:23px;border-radius:8px;border:1.5px solid #72a9b5;background:#0a2836;margin:0;display:grid;place-items:center;cursor:pointer}
+.df-food-advice-options input[type=checkbox]:checked{background:#10d58b;border-color:#10d58b}
+.df-food-advice-options input[type=checkbox]:checked:after{content:"✓";color:#052e23;font-size:17px;font-weight:900}
+.df-food-advice-options input[type=checkbox]:focus-visible{outline:2px solid white;outline-offset:3px}
+.df-food-advice-edit{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
+.df-food-advice-edit input{background:#091d28;color:white;border:1px solid #397488;border-radius:9px;padding:9px;min-width:0}
+.df-food-advice-edit button{background:#155165;color:#e9ffff;border:1px solid #3c8191;border-radius:9px;padding:9px;cursor:pointer}
+.df-food-advice-edit .df-add-name{flex:1 1 180px}
+.df-food-advice-options .df-food-edit-btn{margin-left:auto;flex:0 0 auto;border:1px solid #396e79;background:#163f4c;color:#c9f6f1;border-radius:8px;padding:5px 8px;font-size:.78rem;cursor:pointer}
+.df-food-advice-options .df-food-remove-btn{border:0;background:transparent;color:#ffb8b8;cursor:pointer;padding:5px}
+.df-food-advice-editor{background:#123541;border:1px solid #34788a;border-radius:12px;padding:10px;margin:8px 0}
+.df-food-advice-editor .df-food-advice-edit input{flex:1 1 95px;width:95px}
+.df-food-advice-options .df-food-label-text{flex:1 1 auto;min-width:0;overflow-wrap:normal;word-break:normal;white-space:normal;line-height:1.3}
+.df-food-advice-options label{min-width:0;box-sizing:border-box;gap:8px!important}
+.df-food-advice-options .df-food-edit-btn{flex:0 0 34px!important;min-width:34px;padding:7px 5px!important}
+.df-food-advice-options .df-food-remove-btn{flex:0 0 28px!important;min-width:28px}
+@media(max-width:760px){
+ #df-food-advice-modal{padding:10px!important}
+ #df-food-advice-modal .df-food-advice-panel{width:100%;padding:15px;max-height:calc(100dvh - 34px)}
+ #df-food-advice-modal .df-food-advice-options{grid-template-columns:minmax(0,1fr)!important;gap:8px!important}
+ #df-food-advice-modal .df-food-advice-options label{display:flex!important;flex-direction:row!important;align-items:center!important;min-height:54px!important;padding:9px 10px!important;gap:10px!important}
+ #df-food-advice-modal .df-food-advice-options .df-food-label-text{flex:1 1 auto!important;min-width:0!important;width:auto!important;max-width:none!important;overflow-wrap:normal!important;word-break:normal!important;letter-spacing:normal!important;text-align:left!important}
+ #df-food-advice-modal .df-food-advice-options input[type=checkbox]{flex:0 0 23px!important;width:23px!important;height:23px!important}
+ #df-food-advice-modal .df-food-advice-options .df-food-edit-btn{margin-left:auto!important;flex:0 0 34px!important}
+ #df-food-advice-modal .df-food-advice-options .df-food-remove-btn{flex:0 0 28px!important}
+}
+
+.df-food-advice-results{background:#102f3b;border:1px solid #285969;border-radius:12px;padding:12px;margin-top:12px}
+.df-food-advice-controls{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.df-food-advice-controls button{padding:10px 14px;border-radius:10px;border:1px solid #34788a;background:#134255;color:white;cursor:pointer}
+.df-food-advice-controls button.df-main{background:#10bd7c;color:#06291f;font-weight:700}
+@media(max-width:370px){.df-quick-advice-actions{gap:6px}.df-quick-advice-actions .ux2-status-btn{font-size:.75rem!important;padding:8px 5px!important}}
+/* Selezione a schede: il controllo resta accessibile ma non visibile */
+#df-food-advice-modal .df-food-advice-options label{position:relative;padding-left:12px!important}
+#df-food-advice-modal .df-food-advice-options input[type=checkbox]{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;pointer-events:none!important}
+#df-food-advice-modal .df-food-advice-options label::before{content:"＋";display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:50%;border:1px solid #568d9d;color:#b8d6de;background:#0a2b38;font-weight:700;font-size:19px}
+#df-food-advice-modal .df-food-advice-options label:has(input:checked)::before{content:"✓";background:#12d38b;color:#042c20;border-color:#12d38b;font-size:17px}
+#df-food-advice-modal .df-food-advice-options label:has(input:focus-visible){outline:2px solid #bdfde6;outline-offset:2px}
+#df-food-advice-modal .df-food-advice-options label:has(input:checked){background:#104d40!important;border-color:#12d38b!important}
+#df-food-catalog-search{flex:1 1 180px;min-width:0;width:100%;background:#091d28;color:white;border:1px solid #397488;border-radius:9px;padding:11px;font-size:16px}
+#df-food-catalog-select{font-size:16px}
+</style>
+<div id="df-food-advice-modal" role="dialog" aria-modal="true" aria-labelledby="df-food-advice-title" onclick="if(event.target===this)dfCloseFoodAdvice()">
+  <div class="df-food-advice-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h3 id="df-food-advice-title">🍽️ Cosa mangio adesso?</h3>
+      <button type="button" onclick="dfCloseFoodAdvice()" aria-label="Chiudi" style="background:#193747;color:white;border:0;border-radius:9px;padding:8px 12px">✕</button>
+    </div>
+    <div id="df-food-advice-status"></div>
+    <p style="margin-bottom:6px"><strong>Quali alimenti hai disponibili?</strong></p>
+    <div class="df-food-advice-options" id="df-food-advice-options"></div>
+    <div class="df-food-advice-edit"><input id="df-food-catalog-search" type="search" placeholder="🔎 Cerca alimento (anche parte del nome)..." aria-label="Filtra alimenti" oninput="dfPopulateAdviceCatalog()"></div>
+    <div class="df-food-advice-edit"><select id="df-food-catalog-select" aria-label="Scegli un alimento dal catalogo" style="flex:1 1 220px;min-width:0;background:#0c2c3a;color:#eaf9fc;border:1px solid #397488;border-radius:9px;padding:12px"><option value="">Scegli un alimento dal catalogo…</option></select><button type="button" onclick="dfAddSelectedCatalogFood()">＋ Aggiungi</button></div>
+    <div id="df-food-advice-editor" class="df-food-advice-editor" hidden></div>
+    <div class="df-food-advice-controls">
+      <button id="df-food-advice-another" type="button" onclick="dfRenderFoodAdvice(true)" hidden>↻ Altra proposta</button>
+      <button type="button" class="df-main" onclick="dfRenderFoodAdvice(false)">✨ Consigliami</button>
+    </div>
+    <div id="df-food-advice-appetite" class="df-food-advice-results" hidden><strong>Hai già raggiunto il target calorico.</strong><p>Hai comunque fame e desideri un piccolo spuntino?</p><div class="df-food-advice-controls"><button type="button" onclick="dfDeclineAdviceSnack()">No, sono sazio</button><button type="button" class="df-main" onclick="dfAcceptAdviceSnack()">Sì, proponimi qualcosa</button></div></div>
+    <div id="df-food-advice-result" class="df-food-advice-results" aria-live="polite" hidden></div>
+    <p style="font-size:.78rem;color:#acc6ce;margin-bottom:0">Stime indicative. Nessun alimento viene registrato automaticamente. Verifica sempre le porzioni e i valori delle tue etichette.</p>
+  </div>
+</div>
+<script>
+(function(){
+const defaults=[
+{id:'pane',label:'Pane di segale',g:60,k:133,p:4.2,f:.8,c:25.8},
+{id:'uova',label:'Uova',g:55,k:78,p:6.5,f:5.3,c:.6},
+{id:'salmone',label:'Salmone al naturale',g:100,k:140,p:23,f:5,c:0},
+{id:'insalata',label:'Insalata',g:150,k:25,p:1.5,f:.3,c:4},
+{id:'fiocchi',label:'Fiocchi di latte',g:200,k:200,p:24,f:8,c:7},
+{id:'tonno',label:'Tonno al naturale',g:100,k:110,p:25,f:1,c:0},
+{id:'gallette',label:'Gallette di riso',g:24,k:90,p:1.8,f:.3,c:19.2},
+{id:'banana',label:'Banana',g:110,k:98,p:1.2,f:.4,c:25.1}
+];
+const storageKey='df_food_advice_catalog_test_v2';
+const archiveKey='df_food_advice_archive_test_v3';
+let foods=[];
+let archive=[];
+try{
+ const saved=JSON.parse(localStorage.getItem(storageKey));
+ if(Array.isArray(saved)&&saved.length<=80&&saved.every(f=>f&&typeof f.label==='string'))foods=saved;
+ const storedArchive=JSON.parse(localStorage.getItem(archiveKey));
+ if(Array.isArray(storedArchive)&&storedArchive.length<=160&&storedArchive.every(f=>f&&typeof f.label==='string'))archive=storedArchive;
+}catch(e){}
+foods.forEach(f=>{if(!archive.some(a=>a.id===f.id))archive.push({...f})});
+let variant=0;
+let snackConfirmed=false;
+let previousAdviceSignature='';
+function esc(t){return String(t).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function persist(){try{localStorage.setItem(storageKey,JSON.stringify(foods));localStorage.setItem(archiveKey,JSON.stringify(archive))}catch(e){}}
+function renderOptions(){
+ const opts=document.getElementById('df-food-advice-options');
+ const checked=new Set([...opts.querySelectorAll('input:checked')].map(x=>x.value));
+ opts.innerHTML=foods.map(f=>'<label><input type="checkbox" value="'+esc(f.id)+'" '+(checked.has(f.id)?'checked':'')+'><span class="df-food-label-text">'+esc(f.label)+'</span><button type="button" class="df-food-edit-btn" data-edit="'+esc(f.id)+'" aria-label="Modifica '+esc(f.label)+'">✎</button><button type="button" class="df-food-remove-btn" data-remove="'+esc(f.id)+'" aria-label="Rimuovi '+esc(f.label)+'">✕</button></label>').join('');
+ opts.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();dfEditAdviceFood(b.dataset.edit)}));
+ opts.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();dfRemoveAdviceFood(b.dataset.remove)}));
+}
+window.dfAddAdviceFood=function(){
+ const inp=document.getElementById('df-food-add-name'),name=inp.value.trim();
+ if(!name)return inp.focus();
+ if(foods.length>=80||archive.length>=160)return alert('Archivio alimenti pieno.');
+ const id='custom_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+ const fresh={id,label:name,g:100,k:0,p:0,f:0,c:0};foods.push(fresh);archive.push({...fresh});
+ inp.value='';persist();renderOptions();dfEditAdviceFood(id);
+};
+window.dfRemoveAdviceFood=function(id){
+ foods=foods.filter(f=>f.id!==id);persist();renderOptions();dfRenderAdviceArchive();
+ const editor=document.getElementById('df-food-advice-editor');editor.hidden=true;
+};
+window.dfToggleAdviceArchive=function(){
+ const panel=document.getElementById('df-food-advice-archive');
+ panel.hidden=!panel.hidden;if(!panel.hidden)dfRenderAdviceArchive();
+};
+window.dfRenderAdviceArchive=function(){
+ const container=document.getElementById('df-food-advice-archive-items');if(!container)return;
+ const inactive=archive.filter(a=>!foods.some(f=>f.id===a.id));
+ container.innerHTML=inactive.length?inactive.map(f=>'<button type="button" data-restore="'+esc(f.id)+'" style="display:block;width:100%;text-align:left;padding:11px;margin:6px 0;background:#164657;border:1px solid #34788a;border-radius:9px;color:white;cursor:pointer">＋ '+esc(f.label)+'</button>').join(''):'<p style="font-size:.85rem">Tutti gli alimenti dell’archivio sono già disponibili.</p>';
+ container.querySelectorAll('[data-restore]').forEach(btn=>btn.addEventListener('click',()=>dfRestoreAdviceFood(btn.dataset.restore)));
+};
+window.dfRestoreAdviceFood=function(id){
+ const f=archive.find(x=>x.id===id);if(!f||foods.some(x=>x.id===id))return;
+ if(foods.length>=80)return alert('Massimo 80 alimenti disponibili.');
+ foods.push({...f});persist();renderOptions();dfRenderAdviceArchive();
+};
+window.dfRestoreAdviceDefaults=function(){
+ dfCatalogFoods().forEach(f=>{if(!archive.some(a=>a.id===f.id))archive.push({...f})});
+ persist();dfRenderAdviceArchive();
+ document.getElementById('df-food-catalog-search').focus();
+};
+window.dfEditAdviceFood=function(id){
+ const f=foods.find(x=>x.id===id);if(!f)return;
+ const editor=document.getElementById('df-food-advice-editor');
+ editor.hidden=false;editor.dataset.id=id;
+ editor.innerHTML='<strong>Modifica alimento</strong><div class="df-food-advice-edit"><input data-field="label" aria-label="Nome" value="'+esc(f.label)+'" maxlength="70"></div><div class="df-food-advice-edit">'+[['g','Porzione g'],['k','kcal porzione'],['p','Proteine g'],['c','Carboidrati g'],['f','Grassi g']].map(([key,label])=>'<label style="flex:1 1 100px;font-size:.8rem">'+label+'<input data-field="'+key+'" type="number" min="0" max="10000" step="0.1" value="'+f[key]+'"></label>').join('')+'</div><div class="df-food-advice-controls"><button type="button" onclick="dfCancelAdviceEdit()">Annulla</button><button class="df-main" type="button" onclick="dfSaveAdviceFood()">Salva alimento</button></div>';
+ editor.scrollIntoView({block:'nearest',behavior:'smooth'});
+};
+window.dfCancelAdviceEdit=function(){document.getElementById('df-food-advice-editor').hidden=true};
+window.dfSaveAdviceFood=function(){
+ const editor=document.getElementById('df-food-advice-editor'),f=foods.find(x=>x.id===editor.dataset.id);if(!f)return;
+ const label=editor.querySelector('[data-field="label"]').value.trim();if(!label)return alert('Inserisci un nome.');
+ const next={label};for(const key of ['g','k','p','c','f']){const el=editor.querySelector('[data-field="'+key+'"]');if(el.value.trim()===''||!Number.isFinite(Number(el.value))||Number(el.value)<0||Number(el.value)>10000)return alert('Controlla i valori nutrizionali.');next[key]=Number(el.value)}
+ if(next.g<=0)return alert('La porzione deve essere maggiore di zero.');
+ Object.assign(f,next);const archived=archive.find(x=>x.id===f.id);if(archived)Object.assign(archived,next);persist();renderOptions();dfRenderAdviceArchive();editor.hidden=true;
+};
+
+function dfCatalogFoods(){
+ const entries=[];
+ if(typeof DEFAULT_PRESET_FOODS!=='undefined'&&Array.isArray(DEFAULT_PRESET_FOODS)){
+  DEFAULT_PRESET_FOODS.forEach((f,i)=>{
+   const p=String(f.value||'').split('|'),w=Number(f.weight)||100;
+   entries.push({id:'preset_'+i,label:String(f.label||p[0]||'Alimento'),g:w,k:Number(p[1])||0,p:Number(p[2])||0,f:Number(p[3])||0,c:Number(p[4])||0,source:'Catalogo DiarioFIT'});
+  });
+ }
+ if(typeof savedFoods!=='undefined'&&Array.isArray(savedFoods)){
+  savedFoods.forEach((f,i)=>entries.push({id:'saved_'+i,label:String(f.name||'Alimento personale'),g:Number(f.weight)||100,k:Number(f.kcal)||0,p:Number(f.pro)||0,f:Number(f.fat)||0,c:Number(f.carb)||0,source:'I miei alimenti'}));
+ }
+ if(typeof quickAddItems!=='undefined'&&Array.isArray(quickAddItems)){
+  quickAddItems.filter(f=>f&&!f.isWater&&!f.isEmpty&&f.quickType!=='savedMeal').forEach((f,i)=>{
+   if(!f.name&&!f.label)return;
+   entries.push({id:'quick_'+i,label:String(f.label||f.name),g:Number(f.weight)||100,k:Number(f.kcal)||0,p:Number(f.pro)||0,f:Number(f.fat)||0,c:Number(f.carb)||0,source:'Rapidi'});
+  });
+ }
+ return entries;
+}
+window.dfPopulateAdviceCatalog=function(){
+ const sel=document.getElementById('df-food-catalog-select');if(!sel)return;
+ const query=(document.getElementById('df-food-catalog-search')?.value||'').trim().toLocaleLowerCase('it');
+ const previous=sel.value;
+ const catalog=dfCatalogFoods();sel.innerHTML='';
+ const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent=query?'Seleziona tra i risultati…':'Scegli un alimento dal catalogo…';sel.appendChild(placeholder);
+ let count=0;
+ const groups=['I miei alimenti','Rapidi','Catalogo DiarioFIT'];
+ groups.forEach(group=>{
+  const entries=catalog.filter(f=>f.source===group&&(!query||f.label.toLocaleLowerCase('it').includes(query)));
+  if(!entries.length)return;
+  const optgroup=document.createElement('optgroup');optgroup.label=group;
+  entries.forEach(f=>{const option=document.createElement('option');option.value=f.id;option.textContent=f.label;optgroup.appendChild(option);count++});
+  sel.appendChild(optgroup);
+ });
+ if(previous&&[...sel.options].some(o=>o.value===previous))sel.value=previous;
+ if(!count){placeholder.textContent='Nessun alimento trovato';}
+};
+window.dfAddSelectedCatalogFood=function(){
+ const sel=document.getElementById('df-food-catalog-select');if(!sel.value)return alert('Seleziona un alimento dalla tendina.');
+ dfSelectAdviceCatalogFood(sel.value);sel.value='';
+};
+window.dfSelectAdviceCatalogFood=function(id){
+ const food=dfCatalogFoods().find(f=>f.id===id);if(!food)return;
+ const existing=foods.find(f=>f.id===food.id);
+ if(existing){const checkbox=[...document.querySelectorAll('#df-food-advice-options input')].find(x=>x.value===food.id);if(checkbox)checkbox.checked=true;}
+ else{
+  if(foods.length>=80)return alert('Massimo 80 alimenti disponibili.');
+  foods.push({...food});const old=archive.findIndex(a=>a.id===food.id);if(old>=0)archive[old]={...food};else archive.push({...food});
+  persist();renderOptions();const checkbox=[...document.querySelectorAll('#df-food-advice-options input')].find(x=>x.value===food.id);if(checkbox)checkbox.checked=true;
+ }
+ const selector=document.getElementById('df-food-catalog-select');if(selector)selector.value='';document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();
+ dfRenderFoodAdvice(false);
+};
+window.dfAcceptAdviceSnack=function(){snackConfirmed=true;dfRenderFoodAdvice(false)};
+window.dfDeclineAdviceSnack=function(){snackConfirmed=false;document.getElementById('df-food-advice-appetite').hidden=true;const result=document.getElementById('df-food-advice-result');result.hidden=false;result.textContent='Va bene così: non è necessario mangiare altro per completare i macro.';document.getElementById('df-food-advice-another').hidden=true};
+window.dfOpenFoodAdvice=function(){
+ const modal=document.getElementById('df-food-advice-modal');
+ renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();snackConfirmed=false;previousAdviceSignature='';variant=0;document.getElementById('df-food-advice-result').hidden=true;document.getElementById('df-food-advice-another').hidden=true;modal.classList.add('df-open');dfRenderFoodAdvice(false);
+};
+window.dfCloseFoodAdvice=function(){document.getElementById('df-food-advice-modal').classList.remove('df-open')};
+window.dfRenderFoodAdvice=function(next){
+ if(next)variant++;
+ const total=typeof ux2TotalsFromLog==='function'?ux2TotalsFromLog():{kcal:0,pro:0,fat:0,carb:0};
+ const t=(typeof TARGETS!=='undefined'&&TARGETS)?TARGETS:{kcal:0,pro:0,fat:0,carb:0};
+ const remaining={k:Math.max(0,(+t.kcal||0)-total.kcal),p:Math.max(0,(+t.pro||0)-total.pro),c:Math.max(0,(+t.carb||0)-total.carb),f:Math.max(0,(+t.fat||0)-total.fat)};
+ const fmt=n=>Math.round(n*10)/10;
+ document.getElementById('df-food-advice-status').textContent='Finora: '+total.kcal+' kcal · P '+fmt(total.pro)+' g · C '+fmt(total.carb)+' g · G '+fmt(total.fat)+' g. Mancano rispetto ai target: '+Math.round(remaining.k)+' kcal · P '+fmt(remaining.p)+' g · C '+fmt(remaining.c)+' g · G '+fmt(remaining.f)+' g.';
+ const selected=[...document.querySelectorAll('#df-food-advice-options input:checked')].map(x=>foods.find(f=>f.id===x.value)).filter(Boolean);
+ const out=document.getElementById('df-food-advice-result');
+ const another=document.getElementById('df-food-advice-another');
+ const appetite=document.getElementById('df-food-advice-appetite');
+ const showMessage=message=>{out.hidden=false;out.textContent=message;another.hidden=true;appetite.hidden=true};
+ if(!selected.length){showMessage('Seleziona almeno un alimento disponibile.');return}
+ if(selected.some(f=>f.g<=0||f.k<=0)){showMessage('Completa prima i valori nutrizionali degli alimenti selezionati (✎).');return}
+ if(!t.kcal){showMessage('Configura prima i tuoi target in DiarioFIT.');return}
+ const targetReached=remaining.k<80;
+ if(targetReached&&!snackConfirmed){
+  appetite.hidden=false;
+  out.hidden=true;another.hidden=true;
+  return;
+ }
+ appetite.hidden=true;
+ // Anche a target raggiunto: proposta facoltativa, non incentivo a mangiare.
+ const adviceBudget=targetReached?150:Math.min(remaining.k,650);
+ // Ricerca deterministica di combinazioni pratiche; porzioni in unità standard.
+ const targetK=adviceBudget;
+ const candidate=[];
+ function visit(i,arr,k,p,f,c){
+  if(i===selected.length){
+   if(!arr.length)return;
+   const overshoot=Math.max(0,k-targetK);
+   const score=targetReached?(Math.abs(k-targetK)+overshoot*2+Math.max(0,k-220)*4+Math.max(0,arr.length-2)*25):(Math.abs(k-targetK)*.6+overshoot*.7+Math.abs(p-Math.min(remaining.p,35))*3+Math.abs(c-Math.min(remaining.c,65))*1.2+Math.max(0,f-remaining.f)*4+(arr.length>4?25:0));
+   candidate.push({arr:[...arr],k,p,f,c,score});return;
+  }
+  const food=selected[i];
+  visit(i+1,arr,k,p,f,c);
+  for(let n=1;n<=((food.id==='pane'||food.id==='gallette')?3:2);n++){
+   if(k+food.k*n>(targetReached?350:Math.max(850,targetK+220)))break;
+   arr.push({food,n});visit(i+1,arr,k+food.k*n,p+food.p*n,f+food.f*n,c+food.c*n);arr.pop();
+  }
+ }
+ visit(0,[],0,0,0,0);
+ candidate.sort((a,b)=>a.score-b.score);
+ // Evita alternative fittizie: prima cambia gli alimenti, poi eventualmente le quantità.
+ const signatures=new Set();
+ const distinct=candidate.filter(c=>{
+  const sig=c.arr.map(a=>a.food.id).sort().join('|');
+  if(signatures.has(sig))return false;
+  signatures.add(sig);return true;
+ });
+ const choice=next?distinct.find(c=>c.arr.map(a=>a.food.id).sort().join('|')!==previousAdviceSignature):distinct[0];
+ const best=choice||distinct[0];
+ if(next&&!choice){
+  out.hidden=false;another.hidden=false;
+  out.innerHTML='<strong>Nessuna alternativa diversa disponibile.</strong><p>Con gli alimenti selezionati posso cambiare soltanto la quantità, non la combinazione. Aggiungi altri alimenti per ricevere proposte differenti.</p>';
+  return;
+ }
+ if(best)previousAdviceSignature=best.arr.map(a=>a.food.id).sort().join('|');
+ if(!best){showMessage('Non ho trovato una combinazione pratica con questi alimenti.');return}
+ out.hidden=false;another.hidden=distinct.length<2;
+ out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>';
+};
+})();
+</script>
 </body>
 </html>
