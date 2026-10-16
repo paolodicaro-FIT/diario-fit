@@ -8627,6 +8627,16 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
   #info-modal .info2-logo-wrap::after,
   #help-modal .help2-hero-logo-wrap::after { font-size: 12px; right: -10%; bottom: 2%; }
 }
+
+/* TEST — firma durante il caricamento, senza alterare lo spinner. */
+#app-loading .loading-signature {
+  margin-top: 12px;
+  color: #ffd36b;
+  font: italic 700 19px "Segoe Script", "Brush Script MT", cursive;
+  transform: rotate(-12deg);
+  text-shadow: 0 1px 2px #031022, 0 0 8px rgba(247,165,42,.7);
+  white-space: nowrap;
+}
 </style>
 
 <style>
@@ -9425,6 +9435,7 @@ function dfCalorieBarsRender(eaten,base,extra){
 <div id="app-loading" class="hidden">
   <div class="loading-plate"></div>
   <div class="loading-text">Caricamento Diario FIT...</div>
+  <div class="loading-signature">by Paolo Di Caro</div>
 </div>
 
 <div id="login-overlay">
