@@ -27822,6 +27822,14 @@ function fatHelpOpen(){
 <!-- DiarioFIT TEST — Consiglio alimentare contestuale V1 -->
 <style>
 .df-quick-advice-actions{display:grid!important;grid-column:1 / -1!important;grid-row:auto!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px;margin-top:8px;width:100%;align-items:stretch}
+@media(min-width:761px){
+ #ux2-home .ux2-primary-actions{grid-column:2!important;grid-row:2!important}
+ #ux2-home .df-quick-advice-actions{grid-column:2!important;grid-row:3!important;margin-top:0!important}
+ #ux2-home .ux2-diary-fold{grid-column:1 / -1!important;grid-row:4!important}
+}
+@media(max-width:760px){
+ #ux2-home .df-quick-advice-actions{margin-top:7px!important}
+}
 .df-quick-advice-actions > .ux2-status-btn{display:block!important;visibility:visible!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;margin:0!important;min-width:0;white-space:normal;line-height:1.25;min-height:48px}
 #df-food-advice-modal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.76);align-items:center;justify-content:center;padding:12px}
 #df-food-advice-modal.df-open{display:flex}
