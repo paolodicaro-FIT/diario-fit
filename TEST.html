@@ -12975,51 +12975,7 @@ function dfCalorieBarsRender(eaten,base,extra){
       </section>
 
 
-      <section class="help2-card help2-card-wide">
 
-        <div class="help2-card-title">
-          <span>🌗</span>
-          <h4>Tema</h4>
-        </div>
-
-        <p>
-          Puoi scegliere l'aspetto di Diario FIT.
-          Scuro e Chiaro impostano direttamente il tema;
-          Automatico segue la preferenza del dispositivo.
-        </p>
-
-        <div class="theme-selector">
-
-          <button
-            type="button"
-            class="theme-choice"
-            data-theme-choice="dark"
-            onclick="setThemePreference('dark')"
-          >
-            🌙 Scuro
-          </button>
-
-          <button
-            type="button"
-            class="theme-choice"
-            data-theme-choice="light"
-            onclick="setThemePreference('light')"
-          >
-            ☀️ Chiaro
-          </button>
-
-          <button
-            type="button"
-            class="theme-choice"
-            data-theme-choice="auto"
-            onclick="setThemePreference('auto')"
-          >
-            🔄 Automatico
-          </button>
-
-        </div>
-
-      </section>
 
 
     </div>
@@ -26506,6 +26462,14 @@ function closeTargetsFromProgress(restoreStats=true){
       <span class="ux25-more-icon" aria-hidden="true">💳</span>
       <div><strong id="account-plan-title">Stato dell’abbonamento</strong>
         <div id="account-access-badge" class="account-access-badge" style="display:none;" title="" role="status"></div>
+      </div>
+    </section>
+    <section class="ux25-more-card df-more-theme" style="display:block">
+      <div style="display:flex;align-items:center;gap:12px"><span class="ux25-more-icon">🌗</span><span><strong>Aspetto</strong><small>Scegli il tema di DiarioFIT.</small></span></div>
+      <div class="theme-selector" style="margin-top:12px">
+        <button type="button" class="theme-choice" data-theme-choice="dark" onclick="setThemePreference('dark')">🌙 Scuro</button>
+        <button type="button" class="theme-choice" data-theme-choice="light" onclick="setThemePreference('light')">☀️ Chiaro</button>
+        <button type="button" class="theme-choice" data-theme-choice="auto" onclick="setThemePreference('auto')">🔄 Automatico</button>
       </div>
     </section>
     <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
