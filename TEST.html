@@ -27905,6 +27905,10 @@ function fatHelpOpen(){
     <div class="df-food-advice-edit"><input id="df-food-catalog-search" type="search" placeholder="🔎 Cerca alimento (anche parte del nome)..." aria-label="Filtra alimenti" oninput="dfPopulateAdviceCatalog()"></div>
     <div class="df-food-advice-edit"><select id="df-food-catalog-select" aria-label="Scegli un alimento dal catalogo" style="flex:1 1 220px;min-width:0;background:#0c2c3a;color:#eaf9fc;border:1px solid #397488;border-radius:9px;padding:12px"><option value="">Scegli un alimento dal catalogo…</option></select><button type="button" onclick="dfAddSelectedCatalogFood()">＋ Aggiungi</button></div>
     <div id="df-food-advice-editor" class="df-food-advice-editor" hidden></div>
+    <div class="df-food-advice-edit" style="margin-top:14px;align-items:flex-end">
+      <label style="flex:1 1 145px;font-size:.82rem">Ora del consiglio<input id="df-advice-current-time" type="time" style="display:block;width:100%;margin-top:5px;font-size:16px" onchange="dfAdviceTimeChanged()"></label>
+      <label style="flex:1 1 145px;font-size:.82rem">Fine giornata<input id="df-advice-end-time" type="time" value="22:30" style="display:block;width:100%;margin-top:5px;font-size:16px" onchange="dfAdviceTimeChanged()"></label>
+    </div>
     <div class="df-food-advice-controls">
       <button id="df-food-advice-another" type="button" onclick="dfRenderFoodAdvice(true)" hidden>↻ Altra proposta</button>
       <button type="button" class="df-main" onclick="dfRenderFoodAdvice(false)">✨ Consigliami</button>
@@ -28052,9 +28056,28 @@ window.dfSelectAdviceCatalogFood=function(id){
 };
 window.dfAcceptAdviceSnack=function(){snackConfirmed=true;dfRenderFoodAdvice(false)};
 window.dfDeclineAdviceSnack=function(){snackConfirmed=false;document.getElementById('df-food-advice-appetite').hidden=true;const result=document.getElementById('df-food-advice-result');result.hidden=false;result.textContent='Va bene così: non è necessario mangiare altro per completare i macro.';document.getElementById('df-food-advice-another').hidden=true};
+function dfAdviceMinutes(value){const m=/^(\\d{2}):(\\d{2})$/.exec(value||'');return m?Number(m[1])*60+Number(m[2]):null}
+function dfAdviceTimePlan(best,targetReached){
+ const now=dfAdviceMinutes(document.getElementById('df-advice-current-time').value);
+ let end=dfAdviceMinutes(document.getElementById('df-advice-end-time').value);
+ if(now===null||end===null)return '<p>Inserisci orari validi per distribuire il pasto.</p>';
+ if(end<=now)return '<p>La fine giornata deve essere successiva all’orario attuale. Modifica gli orari per ottenere una distribuzione.</p>';
+ const available=end-now;
+ const format=minutes=>String(Math.floor(minutes/60)).padStart(2,'0')+':'+String(minutes%60).padStart(2,'0');
+ const heading='<p style="margin:12px 0 5px"><strong>🕒 Quando mangiare</strong> · '+Math.floor(available/60)+' h '+(available%60)+' min disponibili</p>';
+ if(targetReached)return heading+'<p>Se hai fame, piccolo spuntino facoltativo verso le '+format(now)+'. Nessun obbligo di mangiare ancora.</p>';
+ if(available<90)return heading+'<p>Fine giornata vicina: valuta un unico pasto leggero ora, solo se hai fame. Non occorre recuperare tutti i target.</p>';
+ if(available<240)return heading+'<p>Un pasto principale indicativamente alle '+format(Math.min(end-30,now+45))+'. Evita di concentrare forzatamente tutte le calorie residue.</p>';
+ const split=best.arr.length>=2;
+ if(!split)return heading+'<p>Hai tempo per più pasti, ma con un solo alimento selezionato non creo una suddivisione artificiale: consumalo quando preferisci.</p>';
+ const first=best.arr[0],rest=best.arr.slice(1);
+ const firstK=Math.round(first.food.k*first.n),restK=Math.round(best.k-firstK);
+ return heading+'<ol style="margin:6px 0;padding-left:22px"><li><strong>'+format(Math.min(end-150,now+45))+' · Spuntino</strong>: '+esc(first.food.label)+' '+(first.food.g*first.n)+' g ('+firstK+' kcal)</li><li><strong>'+format(Math.min(end-30,now+210))+' · Pasto successivo</strong>: '+rest.map(a=>esc(a.food.label)+' '+(a.food.g*a.n)+' g').join(', ')+' ('+restK+' kcal)</li></ol>';
+}
+window.dfAdviceTimeChanged=function(){if(!document.getElementById('df-food-advice-result').hidden)dfRenderFoodAdvice(false)};
 window.dfOpenFoodAdvice=function(){
  const modal=document.getElementById('df-food-advice-modal');
- renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();snackConfirmed=false;previousAdviceSignature='';variant=0;document.getElementById('df-food-advice-result').hidden=true;document.getElementById('df-food-advice-another').hidden=true;modal.classList.add('df-open');dfRenderFoodAdvice(false);
+ renderOptions();document.getElementById('df-food-catalog-search').value='';dfPopulateAdviceCatalog();document.getElementById('df-advice-current-time').value=new Date().toTimeString().slice(0,5);snackConfirmed=false;previousAdviceSignature='';variant=0;document.getElementById('df-food-advice-result').hidden=true;document.getElementById('df-food-advice-another').hidden=true;modal.classList.add('df-open');dfRenderFoodAdvice(false);
 };
 window.dfCloseFoodAdvice=function(){document.getElementById('df-food-advice-modal').classList.remove('df-open')};
 window.dfRenderFoodAdvice=function(next){
@@ -28117,7 +28140,7 @@ window.dfRenderFoodAdvice=function(next){
  if(best)previousAdviceSignature=best.arr.map(a=>a.food.id).sort().join('|');
  if(!best){showMessage('Non ho trovato una combinazione pratica con questi alimenti.');return}
  out.hidden=false;another.hidden=distinct.length<2;
- out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>';
+ out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>'+dfAdviceTimePlan(best,targetReached)>';
 };
 })();
 </script>
