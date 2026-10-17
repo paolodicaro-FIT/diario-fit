@@ -26467,6 +26467,7 @@ function closeTargetsFromProgress(restoreStats=true){
         <button type="button" class="theme-choice" data-theme-choice="auto" onclick="setThemePreference('auto')">🔄 Automatico</button>
       </div>
     </section>
+    <button type="button" class="ux25-more-card" onclick="dfEduOpen()"><span class="ux25-more-icon">🎯</span><span><strong>Obiettivi · Impara a mangiare</strong><small>Quattro percorsi, alimenti e falsi miti. Solo informazione, senza modificare i tuoi dati.</small></span><b>›</b></button>
     <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
       <span class="ux25-more-icon">ℹ️</span>
       <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
@@ -26485,6 +26486,39 @@ function closeTargetsFromProgress(restoreStats=true){
   </section>
 </div>
 
+<style id="df-edu-style">
+#df-edu-overlay{position:fixed;inset:0;z-index:9000;background:rgba(2,12,20,.8);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:16px}
+#df-edu-overlay.open{display:flex}
+#df-edu-panel{width:min(720px,100%);max-height:92dvh;overflow:auto;overscroll-behavior:contain;background:linear-gradient(155deg,#123a48,#091e2a);color:#eaf7fa;border:1px solid #37687a;border-radius:22px;padding:20px;box-shadow:0 24px 70px #0008}
+#df-edu-panel h2{font-size:1.45rem;margin:0}#df-edu-panel p{line-height:1.55;font-size:.91rem;color:#c7dce3}
+.df-edu-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.df-edu-close{border:1px solid #557786;background:#173e4d;color:white;border-radius:12px;padding:10px 14px;font-size:1.1rem}
+.df-edu-kicker{font-size:.7rem;color:#67e3b1;font-weight:850;letter-spacing:.1em}
+.df-edu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.df-edu-tile{border:1px solid #386477;border-radius:16px;background:#153847;color:white;padding:15px;text-align:left;min-height:105px;cursor:pointer}
+.df-edu-tile strong{display:block;font-size:1.03rem;margin-bottom:6px}.df-edu-tile small{color:#b3d0da;line-height:1.45}
+.df-edu-back{background:transparent;border:0;color:#72e6bc;font-weight:800;padding:12px 0;cursor:pointer}
+.df-edu-section{padding:14px 15px;margin:12px 0;border:1px solid #355e6c;background:#10303d;border-radius:15px}
+.df-edu-section h3{margin:0 0 8px;font-size:1rem;color:#8ce9c7}.df-edu-section p{margin:0}
+.df-edu-note{border-left:3px solid #68e0ae;padding:11px 14px;background:#164438;border-radius:8px;font-size:.89rem;line-height:1.5}
+.df-edu-illustration{font-size:2rem;margin-bottom:7px}.df-edu-ref{font-size:.75rem;color:#a8c7d0;line-height:1.6}
+.df-edu-ref a{color:#83d8ff}.df-edu-food{display:grid;grid-template-columns:112px minmax(0,1fr);column-gap:14px;align-items:center}
+.df-edu-food h3,.df-edu-food p{grid-column:2;min-width:0;overflow-wrap:break-word}
+.df-edu-food h3{align-self:end;margin:0 0 5px}
+.df-edu-food p{align-self:start}
+.df-edu-food .df-edu-photo{grid-column:1;grid-row:1 / span 2;width:112px;height:112px;border-radius:14px;object-fit:cover;background:#194454}
+@media(max-width:420px){.df-edu-food{grid-template-columns:84px minmax(0,1fr);gap:10px}.df-edu-food .df-edu-photo{width:84px;height:84px}}
+.df-edu-food .emoji{font-size:2.4rem;text-align:center}.df-edu-food h3{margin:0 0 4px;color:#fff;font-size:1rem}
+@media(max-width:520px){#df-edu-overlay{padding:0;align-items:flex-end}#df-edu-panel{max-height:96dvh;border-radius:24px 24px 0 0;padding:18px 15px calc(24px + env(safe-area-inset-bottom))}.df-edu-grid{gap:8px}.df-edu-tile{padding:12px;min-height:110px}}
+body[data-theme="light"] #df-edu-panel,html[data-theme="light"] #df-edu-panel{background:linear-gradient(155deg,#f3fbfc,#e8f3f6);color:#14333e}
+body[data-theme="light"] .df-edu-tile,html[data-theme="light"] .df-edu-tile,body[data-theme="light"] .df-edu-section,html[data-theme="light"] .df-edu-section{background:#fff;color:#183641}
+body[data-theme="light"] #df-edu-panel p,html[data-theme="light"] #df-edu-panel p,body[data-theme="light"] .df-edu-tile small,html[data-theme="light"] .df-edu-tile small{color:#41606b}
+</style>
+<div id="df-edu-overlay" aria-hidden="true" onclick="if(event.target===this)dfEduClose()">
+ <section id="df-edu-panel" role="dialog" aria-modal="true" aria-labelledby="df-edu-title">
+  <div class="df-edu-head"><div><div class="df-edu-kicker">DIARIOFIT · GUIDA ALIMENTARE</div><h2 id="df-edu-title">Obiettivi</h2></div><button type="button" class="df-edu-close" onclick="dfEduClose()" aria-label="Chiudi la guida">✕</button></div>
+  <div id="df-edu-content"></div>
+ </section>
+</div>
 <nav id="ux2-bottom-nav" aria-label="Navigazione principale">
  <button type="button" class="active"><span>🏠</span><small>Oggi</small></button>
  <button type="button" onclick="toggleStatsProgressModal()"><span>📊</span><small>Progressi</small></button>
@@ -28078,6 +28112,57 @@ window.dfRenderFoodAdvice=function(next){
  out.hidden=false;another.hidden=distinct.length<2;
  out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>'+dfAdviceTimePlan(best,targetReached);
 };
+})();
+</script>
+<style id="df-edu-polish">
+/* Guida obiettivi: gerarchia visiva, accessibilità e leggibilità */
+#df-edu-panel .df-edu-section{position:relative;padding:18px 19px 18px 21px;border-color:rgba(103,227,177,.24);background:linear-gradient(125deg,rgba(31,86,98,.47),rgba(14,47,61,.87));box-shadow:0 5px 15px rgba(0,0,0,.08);overflow:hidden}
+#df-edu-panel .df-edu-section::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;background:linear-gradient(#68e0ae,#38bdf8);border-radius:4px}
+#df-edu-panel .df-edu-section h3{display:flex;align-items:center;gap:9px;font-size:1.03rem;letter-spacing:.005em;margin-bottom:9px}
+#df-edu-panel .df-edu-section h3 .df-edu-heading-icon{display:inline-grid;place-items:center;flex:0 0 33px;height:33px;border-radius:10px;background:rgba(99,226,180,.12);font-size:1.13rem}
+#df-edu-panel .df-edu-section p{font-size:.93rem;line-height:1.68}
+#df-edu-panel .df-edu-hero{display:flex;align-items:center;gap:15px;padding:17px;margin:10px 0 17px;border:1px solid rgba(103,227,177,.28);border-radius:18px;background:linear-gradient(120deg,rgba(37,126,119,.3),rgba(23,76,102,.3))}
+#df-edu-panel .df-edu-hero-emoji{font-size:2.4rem;display:grid;place-items:center;flex:0 0 58px;width:58px;height:58px;border-radius:16px;background:rgba(103,227,177,.12)}
+#df-edu-panel .df-edu-hero strong{display:block;font-size:1rem;color:#eafff7;margin-bottom:4px}
+#df-edu-panel .df-edu-hero small{display:block;color:#b9dce0;line-height:1.45;font-size:.8rem}
+#df-edu-panel .df-edu-section.df-edu-food{display:grid}
+#df-edu-panel .df-edu-section.df-edu-food::before{display:none}
+#df-edu-panel .df-edu-section.df-edu-food h3{display:block}
+@media(max-width:520px){#df-edu-panel .df-edu-section{padding:15px 14px 15px 17px}#df-edu-panel .df-edu-hero{padding:13px;gap:10px}#df-edu-panel .df-edu-hero-emoji{width:48px;height:48px;flex-basis:48px;font-size:1.9rem}}
+body[data-theme="light"] #df-edu-panel .df-edu-section,html[data-theme="light"] #df-edu-panel .df-edu-section{background:linear-gradient(130deg,#fff,#eef9f8)}
+body[data-theme="light"] #df-edu-panel .df-edu-hero,html[data-theme="light"] #df-edu-panel .df-edu-hero{background:#e2f5f1}
+body[data-theme="light"] #df-edu-panel .df-edu-hero strong,html[data-theme="light"] #df-edu-panel .df-edu-hero strong{color:#143d3c}
+body[data-theme="light"] #df-edu-panel .df-edu-hero small,html[data-theme="light"] #df-edu-panel .df-edu-hero small{color:#41606b}
+</style>
+<script id="df-edu-script">
+/* Guida 100% informativa: nessuna lettura/scrittura di diario, target, storage o account. */
+(function(){
+const goals=[
+{icon:'🌱',name:'Dimagrimento',subtitle:'Ridurre il grasso, senza punizioni',what:'Dimagrire significa ridurre nel tempo le riserve di grasso corporeo. In genere serve un deficit energetico: assumere mediamente meno energia di quella consumata. Non serve eliminare pasta, pane o frutta.',how:'Punta a un deficit moderato e sostenibile, proteine adeguate, frutta, verdura, fibre e grassi di qualità. L’allenamento di forza aiuta a preservare i muscoli; il movimento quotidiano sostiene il percorso.',science:'La perdita di peso non è lineare: acqua, glicogeno e contenuto intestinale fanno oscillare la bilancia. Il deficit si valuta sulla tendenza di settimane, non sul singolo giorno.',myth:'«Una pizza annulla la dieta». Falso: un pasto non cancella mesi di abitudini. Può contribuire all’energia totale, ma non richiede digiuni o allenamenti compensatori.',practice:'Se esci con gli amici, goditi la serata e torna alla routine abituale dal pasto successivo. Non esistono alimenti moralmente buoni o cattivi.'},
+{icon:'🎯',name:'Definizione',subtitle:'Muscoli visibili, energia e ricomposizione',what:'La definizione descrive un aspetto: muscoli sufficientemente sviluppati e una quantità di grasso che permette di vederli. La ricomposizione è invece il processo di aumentare o preservare muscolo e ridurre grasso, anche a peso stabile.',how:'Allenamento di forza progressivo, proteine sufficienti, carboidrati per sostenere le sedute e recupero adeguato. A seconda del punto di partenza, può essere utile mangiare a mantenimento o in lieve deficit.',science:'La bilancia da sola non misura la ricomposizione: osserva nel tempo forza, circonferenze, recupero e andamento medio del peso. Non si può scegliere dove perdere grasso con esercizi localizzati.',myth:'«Per vedere gli addominali devo togliere tutti i carboidrati». Falso: pane, pasta e riso possono far parte di una dieta per la definizione; le quantità dipendono dal fabbisogno.',practice:'Un piatto abbondante di pasta non è una trasgressione: va contestualizzato nel resto della giornata e nell’attività fisica. Evita di inseguire sempre un peso più basso.'},
+{icon:'⚖️',name:'Mantenimento',subtitle:'Stabilità senza rigidità',what:'Mantenere significa che, mediamente, l’energia introdotta bilancia quella consumata. Il peso non resta identico ogni giorno: normali oscillazioni sono attese.',how:'Conserva pasti vari, attività fisica e abitudini sostenibili. Adatta le porzioni alla fame, al movimento e alla tendenza del peso nel tempo; non serve continuare una dieta restrittiva per sempre.',science:'Un aumento improvviso dopo un pasto salato o ricco di carboidrati può riflettere acqua e glicogeno, non soltanto tessuto adiposo. Conta la tendenza di più settimane.',myth:'«Se mangio di più dopo il dimagrimento riprendo subito tutto». Non necessariamente: il mantenimento richiede più energia di una fase in deficit, in misura individuale.',practice:'Pasti sociali, dolci e pizza possono convivere con la stabilità del peso. L’obiettivo è la regolarità flessibile, non la perfezione.'},
+{icon:'💪',name:'Massa',subtitle:'Costruire muscoli, non soltanto peso',what:'Aumentare massa muscolare significa stimolare la crescita con allenamento di resistenza e sostenere l’adattamento con nutrizione e riposo. Non equivale semplicemente a far salire la bilancia.',how:'Allena i muscoli con progressione graduale, recupera e assumi proteine ed energia sufficienti. Un piccolo surplus può aiutare, ma chi ricomincia o è poco allenato può progredire anche senza surplus.',science:'Il muscolo cresce nel tempo in risposta allo stimolo allenante e alla disponibilità di nutrienti. Un surplus eccessivo non accelera proporzionalmente la crescita muscolare e può aumentare il grasso.',myth:'«Più proteine e più calorie = più muscoli». Non automaticamente: esistono rendimenti decrescenti, e allenamento e recupero sono indispensabili.',practice:'Valuta i progressi in forza, tecnica e misure, non soltanto nel peso. I carboidrati sono alleati utili per sostenere l’intensità.'}
+];
+const foods=[
+['🍝','Pasta e pane','Non fanno ingrassare automaticamente. Sono fonti di carboidrati: la porzione dipende dal fabbisogno, dall’attività e dal resto della dieta.','https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=320&auto=format&fit=crop&q=75'],
+['🍕','Pizza e vita sociale','Una pizza con gli amici non cancella il percorso. Il peso del giorno dopo può salire anche per acqua, sale e contenuto intestinale.','https://images.unsplash.com/photo-1513104890138-7c749659a591?w=320&auto=format&fit=crop&q=75'],
+['🍌','Frutta e zuccheri','La frutta intera offre fibre, acqua e micronutrienti. Gli zuccheri intrinseci della frutta intera non sono equivalenti agli zuccheri liberi delle bevande zuccherate.','https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=320&auto=format&fit=crop&q=75'],
+['🫒','Olio EVO e frutta secca','Fonti utili di grassi prevalentemente insaturi, ma energeticamente dense: 10 g di olio forniscono circa 90 kcal.','https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=320&auto=format&fit=crop&q=75'],
+['🥚','Proteine','Carne, pesce, uova, latticini, legumi e tofu aiutano a coprire il fabbisogno. Contano quantità complessiva, varietà e allenamento.','https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=320&auto=format&fit=crop&q=75'],
+['🍚','Carboidrati prima dell’allenamento','A distanza di 2–4 ore può funzionare un pasto completo; più vicino all’attività può essere meglio uno spuntino piccolo e digeribile. Non è una regola rigida.','https://images.unsplash.com/photo-1512058564366-18510be2db19?w=320&auto=format&fit=crop&q=75']
+];
+const content=document.getElementById('df-edu-content'),title=document.getElementById('df-edu-title');
+function section(label,body){const e=document.createElement('section');e.className='df-edu-section';const h=document.createElement('h3');h.textContent=label;const p=document.createElement('p');p.textContent=body;e.append(h,p);return e;}
+function button(label,subtitle,icon,fn){const b=document.createElement('button');b.type='button';b.className='df-edu-tile';b.innerHTML='<div class="df-edu-illustration"></div><strong></strong><small></small>';b.children[0].textContent=icon;b.children[1].textContent=label;b.children[2].textContent=subtitle;b.addEventListener('click',fn);return b;}
+function back(){const b=document.createElement('button');b.type='button';b.className='df-edu-back';b.textContent='← Torna agli obiettivi';b.onclick=home;content.append(b);}
+function refs(){const d=document.createElement('div');d.className='df-edu-ref';d.innerHTML='Per approfondire: <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">OMS · Alimentazione sana</a> · <a href="https://www.crea.gov.it/web/alimenti-e-nutrizione/-/linee-guida-per-una-sana-alimentazione-2018" target="_blank" rel="noopener noreferrer">CREA · Linee guida</a> · <a href="https://www.acsm.org/" target="_blank" rel="noopener noreferrer">ACSM · Attività fisica</a>. Informazioni generali, non prescrizioni personalizzate.';content.append(d);}
+function note(){const d=document.createElement('div');d.className='df-edu-note';d.textContent='💚 Non devi essere perfetto. Un singolo pasto non definisce il tuo percorso: contano le abitudini nel tempo. Nessuna compensazione punitiva.';content.append(d);}
+function home(){title.textContent='Obiettivi';content.replaceChildren();const p=document.createElement('p');p.textContent='Capisci come funziona il tuo obiettivo. Questa guida è solo educativa: non consulta né modifica diario, calorie o target.';content.append(p);const grid=document.createElement('div');grid.className='df-edu-grid';goals.forEach((g,i)=>grid.append(button(g.name,g.subtitle,g.icon,()=>goal(i))));grid.append(button('Conosci ciò che mangi','Alimenti, falsi miti e scelte consapevoli','🥗',food));content.append(grid);note();refs();}
+function goal(i){const g=goals[i];title.textContent=g.name;content.replaceChildren();back();const hero=document.createElement('div');hero.className='df-edu-hero';const symbol=document.createElement('span');symbol.className='df-edu-hero-emoji';symbol.textContent=g.icon;const intro=document.createElement('div');const strong=document.createElement('strong');strong.textContent=g.subtitle;const small=document.createElement('small');small.textContent='Una guida pratica, senza estremismi e senza alimenti proibiti.';intro.append(strong,small);hero.append(symbol,intro);content.append(hero);[['🧭','Che cosa significa',g.what],['📈','Come si raggiunge',g.how],['🔬','Cosa dice la scienza',g.science],['💡','Falso mito da superare',g.myth],['💚','Nella vita di tutti i giorni',g.practice]].forEach(([icon,label,body])=>{const card=section(label,body);const heading=card.querySelector('h3');const badge=document.createElement('span');badge.className='df-edu-heading-icon';badge.textContent=icon;heading.prepend(badge);content.append(card);});note();refs();document.getElementById('df-edu-panel').scrollTop=0;}
+function food(){title.textContent='Conosci ciò che mangi';content.replaceChildren();back();const p=document.createElement('p');p.textContent='Non esistono cibi che da soli fanno dimagrire o ingrassare. Scopri come inserirli con equilibrio.';content.append(p);foods.forEach(([emoji,name,desc,src])=>{const e=section(name,desc);e.classList.add('df-edu-food');const img=document.createElement('img');img.className='df-edu-photo';img.src=src;img.alt=name;img.loading='lazy';img.onerror=function(){const i=document.createElement('div');i.className='emoji';i.textContent=emoji;i.style.gridColumn='1';i.style.gridRow='1 / span 2';img.replaceWith(i);};e.prepend(img);content.append(e);});note();refs();document.getElementById('df-edu-panel').scrollTop=0;}
+window.dfEduOpen=function(){if(typeof ux25CloseMore==='function')ux25CloseMore();home();const m=document.getElementById('df-edu-overlay');m.classList.add('open');m.setAttribute('aria-hidden','false');m.querySelector('.df-edu-close').focus();};
+window.dfEduClose=function(){const m=document.getElementById('df-edu-overlay');m.classList.remove('open');m.setAttribute('aria-hidden','true');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('df-edu-overlay').classList.contains('open'))dfEduClose();});
 })();
 </script>
 </body>
