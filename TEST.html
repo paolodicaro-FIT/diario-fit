@@ -28056,7 +28056,7 @@ window.dfSelectAdviceCatalogFood=function(id){
 };
 window.dfAcceptAdviceSnack=function(){snackConfirmed=true;dfRenderFoodAdvice(false)};
 window.dfDeclineAdviceSnack=function(){snackConfirmed=false;document.getElementById('df-food-advice-appetite').hidden=true;const result=document.getElementById('df-food-advice-result');result.hidden=false;result.textContent='Va bene così: non è necessario mangiare altro per completare i macro.';document.getElementById('df-food-advice-another').hidden=true};
-function dfAdviceMinutes(value){const m=/^(\\d{2}):(\\d{2})$/.exec(value||'');return m?Number(m[1])*60+Number(m[2]):null}
+function dfAdviceMinutes(value){const m=/^(\d{2}):(\d{2})$/.exec(value||'');return m?Number(m[1])*60+Number(m[2]):null}
 function dfAdviceTimePlan(best,targetReached){
  const now=dfAdviceMinutes(document.getElementById('df-advice-current-time').value);
  let end=dfAdviceMinutes(document.getElementById('df-advice-end-time').value);
@@ -28140,7 +28140,7 @@ window.dfRenderFoodAdvice=function(next){
  if(best)previousAdviceSignature=best.arr.map(a=>a.food.id).sort().join('|');
  if(!best){showMessage('Non ho trovato una combinazione pratica con questi alimenti.');return}
  out.hidden=false;another.hidden=distinct.length<2;
- out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>'+dfAdviceTimePlan(best,targetReached)>';
+ out.innerHTML=(targetReached?'<strong>✓ Target calorico già raggiunto</strong><p style="margin:7px 0">Non hai bisogno di mangiare per raggiungere i numeri. Se hai fame, ecco una piccola proposta facoltativa:</p>':'<strong>Proposta indicativa</strong>')+'<ul>'+best.arr.map(a=>'<li>'+esc(a.food.label)+': <strong>'+(a.food.g*a.n)+' g</strong></li>').join('')+'</ul><strong>'+Math.round(best.k)+' kcal</strong> · Proteine '+fmt(best.p)+' g · Carboidrati '+fmt(best.c)+' g · Grassi '+fmt(best.f)+' g<p style="font-size:.85rem;margin-bottom:0">Stima basata sugli alimenti selezionati. '+(targetReached?'Se sei sazio, puoi tranquillamente fermarti qui.':'Non è necessario raggiungere tutti i target al grammo.')+'</p>'+dfAdviceTimePlan(best,targetReached);
 };
 })();
 </script>
