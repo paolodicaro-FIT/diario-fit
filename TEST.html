@@ -28132,6 +28132,26 @@ window.dfRenderFoodAdvice=function(next){
 };
 })();
 </script>
+<style id="df-edu-polish">
+/* Guida obiettivi: gerarchia visiva, accessibilità e leggibilità */
+#df-edu-panel .df-edu-section{position:relative;padding:18px 19px 18px 21px;border-color:rgba(103,227,177,.24);background:linear-gradient(125deg,rgba(31,86,98,.47),rgba(14,47,61,.87));box-shadow:0 5px 15px rgba(0,0,0,.08);overflow:hidden}
+#df-edu-panel .df-edu-section::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;background:linear-gradient(#68e0ae,#38bdf8);border-radius:4px}
+#df-edu-panel .df-edu-section h3{display:flex;align-items:center;gap:9px;font-size:1.03rem;letter-spacing:.005em;margin-bottom:9px}
+#df-edu-panel .df-edu-section h3 .df-edu-heading-icon{display:inline-grid;place-items:center;flex:0 0 33px;height:33px;border-radius:10px;background:rgba(99,226,180,.12);font-size:1.13rem}
+#df-edu-panel .df-edu-section p{font-size:.93rem;line-height:1.68}
+#df-edu-panel .df-edu-hero{display:flex;align-items:center;gap:15px;padding:17px;margin:10px 0 17px;border:1px solid rgba(103,227,177,.28);border-radius:18px;background:linear-gradient(120deg,rgba(37,126,119,.3),rgba(23,76,102,.3))}
+#df-edu-panel .df-edu-hero-emoji{font-size:2.4rem;display:grid;place-items:center;flex:0 0 58px;width:58px;height:58px;border-radius:16px;background:rgba(103,227,177,.12)}
+#df-edu-panel .df-edu-hero strong{display:block;font-size:1rem;color:#eafff7;margin-bottom:4px}
+#df-edu-panel .df-edu-hero small{display:block;color:#b9dce0;line-height:1.45;font-size:.8rem}
+#df-edu-panel .df-edu-section.df-edu-food{display:grid}
+#df-edu-panel .df-edu-section.df-edu-food::before{display:none}
+#df-edu-panel .df-edu-section.df-edu-food h3{display:block}
+@media(max-width:520px){#df-edu-panel .df-edu-section{padding:15px 14px 15px 17px}#df-edu-panel .df-edu-hero{padding:13px;gap:10px}#df-edu-panel .df-edu-hero-emoji{width:48px;height:48px;flex-basis:48px;font-size:1.9rem}}
+body[data-theme="light"] #df-edu-panel .df-edu-section,html[data-theme="light"] #df-edu-panel .df-edu-section{background:linear-gradient(130deg,#fff,#eef9f8)}
+body[data-theme="light"] #df-edu-panel .df-edu-hero,html[data-theme="light"] #df-edu-panel .df-edu-hero{background:#e2f5f1}
+body[data-theme="light"] #df-edu-panel .df-edu-hero strong,html[data-theme="light"] #df-edu-panel .df-edu-hero strong{color:#143d3c}
+body[data-theme="light"] #df-edu-panel .df-edu-hero small,html[data-theme="light"] #df-edu-panel .df-edu-hero small{color:#41606b}
+</style>
 <script id="df-edu-script">
 /* Guida 100% informativa: nessuna lettura/scrittura di diario, target, storage o account. */
 (function(){
@@ -28156,7 +28176,7 @@ function back(){const b=document.createElement('button');b.type='button';b.class
 function refs(){const d=document.createElement('div');d.className='df-edu-ref';d.innerHTML='Per approfondire: <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">OMS · Alimentazione sana</a> · <a href="https://www.crea.gov.it/web/alimenti-e-nutrizione/-/linee-guida-per-una-sana-alimentazione-2018" target="_blank" rel="noopener noreferrer">CREA · Linee guida</a> · <a href="https://www.acsm.org/" target="_blank" rel="noopener noreferrer">ACSM · Attività fisica</a>. Informazioni generali, non prescrizioni personalizzate.';content.append(d);}
 function note(){const d=document.createElement('div');d.className='df-edu-note';d.textContent='💚 Non devi essere perfetto. Un singolo pasto non definisce il tuo percorso: contano le abitudini nel tempo. Nessuna compensazione punitiva.';content.append(d);}
 function home(){title.textContent='Obiettivi';content.replaceChildren();const p=document.createElement('p');p.textContent='Capisci come funziona il tuo obiettivo. Questa guida è solo educativa: non consulta né modifica diario, calorie o target.';content.append(p);const grid=document.createElement('div');grid.className='df-edu-grid';goals.forEach((g,i)=>grid.append(button(g.name,g.subtitle,g.icon,()=>goal(i))));grid.append(button('Conosci ciò che mangi','Alimenti, falsi miti e scelte consapevoli','🥗',food));content.append(grid);note();refs();}
-function goal(i){const g=goals[i];title.textContent=g.name;content.replaceChildren();back();content.append(section('Che cosa significa',g.what),section('Come si raggiunge',g.how),section('Cosa dice la scienza',g.science),section('Falso mito da superare',g.myth),section('Nella vita di tutti i giorni',g.practice));note();refs();document.getElementById('df-edu-panel').scrollTop=0;}
+function goal(i){const g=goals[i];title.textContent=g.name;content.replaceChildren();back();const hero=document.createElement('div');hero.className='df-edu-hero';const symbol=document.createElement('span');symbol.className='df-edu-hero-emoji';symbol.textContent=g.icon;const intro=document.createElement('div');const strong=document.createElement('strong');strong.textContent=g.subtitle;const small=document.createElement('small');small.textContent='Una guida pratica, senza estremismi e senza alimenti proibiti.';intro.append(strong,small);hero.append(symbol,intro);content.append(hero);[['🧭','Che cosa significa',g.what],['📈','Come si raggiunge',g.how],['🔬','Cosa dice la scienza',g.science],['💡','Falso mito da superare',g.myth],['💚','Nella vita di tutti i giorni',g.practice]].forEach(([icon,label,body])=>{const card=section(label,body);const heading=card.querySelector('h3');const badge=document.createElement('span');badge.className='df-edu-heading-icon';badge.textContent=icon;heading.prepend(badge);content.append(card);});note();refs();document.getElementById('df-edu-panel').scrollTop=0;}
 function food(){title.textContent='Conosci ciò che mangi';content.replaceChildren();back();const p=document.createElement('p');p.textContent='Non esistono cibi che da soli fanno dimagrire o ingrassare. Scopri come inserirli con equilibrio.';content.append(p);foods.forEach(([emoji,name,desc,src])=>{const e=section(name,desc);e.classList.add('df-edu-food');const img=document.createElement('img');img.className='df-edu-photo';img.src=src;img.alt=name;img.loading='lazy';img.onerror=function(){const i=document.createElement('div');i.className='emoji';i.textContent=emoji;i.style.gridColumn='1';i.style.gridRow='1 / span 2';img.replaceWith(i);};e.prepend(img);content.append(e);});note();refs();document.getElementById('df-edu-panel').scrollTop=0;}
 window.dfEduOpen=function(){if(typeof ux25CloseMore==='function')ux25CloseMore();home();const m=document.getElementById('df-edu-overlay');m.classList.add('open');m.setAttribute('aria-hidden','false');m.querySelector('.df-edu-close').focus();};
 window.dfEduClose=function(){const m=document.getElementById('df-edu-overlay');m.classList.remove('open');m.setAttribute('aria-hidden','true');};
