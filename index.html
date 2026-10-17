@@ -9567,21 +9567,6 @@ function dfCalorieBarsRender(eaten,base,extra){
       </button>
 
 
-      <button
-        class="toolbar-btn"
-        onclick="lockApp()"
-        title="Blocca"
-      >
-        🔒
-      </button>
-
-      <button
-        class="toolbar-btn accent"
-        onclick="toggleHelpModal()"
-        title="Aiuto"
-      >
-        ?
-      </button>
 
     </div>
 
@@ -12976,7 +12961,7 @@ function dfCalorieBarsRender(eaten,base,extra){
         </div>
 
         <p>
-          Il pulsante 🔒 blocca nuovamente l'accesso
+          La voce 🔒 in Altro blocca nuovamente l'accesso
           a Diario FIT.
         </p>
 
@@ -26521,6 +26506,11 @@ function closeTargetsFromProgress(restoreStats=true){
     <button type="button" class="ux25-more-card" onclick="ux25OpenInfo()">
       <span class="ux25-more-icon">ℹ️</span>
       <span><strong>Informazioni</strong><small>Cos'è DiarioFIT, come nasce, criteri e riferimenti utilizzati.</small></span>
+      <b>›</b>
+    </button>
+    <button type="button" class="ux25-more-card" onclick="ux25CloseMore();lockApp()">
+      <span class="ux25-more-icon">🔒</span>
+      <span><strong>Blocca DiarioFIT</strong><small>Blocca l'accesso fino al prossimo sblocco.</small></span>
       <b>›</b>
     </button>
     <button type="button" class="ux25-more-card" onclick="ux25OpenHelp()">
