@@ -28191,7 +28191,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
  const KEY="dfBackLayerV1";
  const selector=".modal-overlay,#ux25-more-modal,#df-edu-overlay,#dfai-web-photo-overlay,#dfai-result-overlay,#df-food-advice-modal,#ux2-add-sheet";
  let armed=false,queued=false,lastTop=null,sequence=0;
- let gestureReady=false;
+ let gestureReady=false,returning=false;
  const opened=new WeakMap(),parents=new WeakMap();
  const visible=el=>!!el&&!el.hidden&&el.getClientRects().length>0&&getComputedStyle(el).display!=="none"&&getComputedStyle(el).visibility!=="hidden";
  function active(){
@@ -28230,8 +28230,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
   }
  }
  window.addEventListener("popstate",()=>{
+  if(returning){returning=false;schedule();return}
   if(!armed)return;
-  armed=false;
   try{
   const top=active();
   if(top)closeTop(top);
@@ -28242,8 +28242,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
    else if(typeof ux24CloseAdd==="function")ux24CloseAdd();
   }
   }finally{
-   // Re-arm immediately, also on Home and while an analysis prevents closing.
-   arm();schedule();
+   // Never pushState after Back: Chromium would mark ALL app entries skippable.
+   // Return to the existing guard instead; this does not create history entries.
+   returning=true;
+   history.forward();
+   schedule();
   }
  });
  // Chrome may skip pushState entries created before any trusted interaction.
