@@ -28185,12 +28185,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 </script>
 <script id="diariofit-system-back-v1">
 
-/* Android/browser Back: one temporary history entry while an in-app view is open.
+/* Android/browser Back: one persistent guard entry, including on Home.
    Native close controls retain cleanup, confirmation and parent-navigation logic. */
 (function(){
  const KEY="dfBackLayerV1";
  const selector=".modal-overlay,#ux25-more-modal,#df-edu-overlay,#dfai-web-photo-overlay,#dfai-result-overlay,#df-food-advice-modal,#ux2-add-sheet";
- let armed=false,consuming=false,queued=false,lastTop=null,sequence=0;
+ let armed=false,queued=false,lastTop=null,sequence=0;
  const opened=new WeakMap(),parents=new WeakMap();
  const visible=el=>!!el&&!el.hidden&&el.getClientRects().length>0&&getComputedStyle(el).display!=="none"&&getComputedStyle(el).visibility!=="hidden";
  function active(){
@@ -28203,15 +28203,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
  }
  function hasPage(){return ["ux-manual-open","ux24-add-mode","ux23-add-mode"].some(c=>document.body.classList.contains(c))}
  function state(){return history.state&&typeof history.state==="object"?history.state:{}}
- function arm(){if(armed||consuming)return;history.pushState({...state(),[KEY]:true},"");armed=true}
+ function arm(){if(armed)return;history.pushState({...state(),[KEY]:true},"");armed=true}
  function sync(){
   queued=false;
   const top=active();
   if(top&&lastTop&&top!==lastTop&&lastTop.id==="ux25-more-modal"&&!visible(lastTop))parents.set(top,lastTop);
   lastTop=top;
-  if(consuming)return;
-  if(top||hasPage()){arm();return}
-  if(armed){armed=false;consuming=true;history.back()}
+  arm();
  }
  function schedule(){if(!queued){queued=true;queueMicrotask(sync)}}
  function closeTop(top){
@@ -28231,9 +28229,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
   }
  }
  window.addEventListener("popstate",()=>{
-  if(consuming){consuming=false;schedule();return}
   if(!armed)return;
   armed=false;
+  try{
   const top=active();
   if(top)closeTop(top);
   else if(document.body.classList.contains("ux-manual-open"))document.body.classList.remove("ux-manual-open");
@@ -28242,10 +28240,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
    if(back)back.click();
    else if(typeof ux24CloseAdd==="function")ux24CloseAdd();
   }
-  schedule();
+  }finally{
+   // Re-arm immediately, also on Home and while an analysis prevents closing.
+   arm();schedule();
+  }
  });
- // A reload restores the current view independently; discard only our stale marker.
- if(state()[KEY]){const next={...state()};delete next[KEY];history.replaceState(next,"")}
+ // Reuse our current entry on reload instead of adding another one.
+ if(state()[KEY])armed=true;
  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["class","style","hidden","aria-hidden"]});
  window.addEventListener("pageshow",schedule);
  schedule();
