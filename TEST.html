@@ -28183,5 +28183,74 @@ window.dfEduClose=function(){const m=document.getElementById('df-edu-overlay');m
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('df-edu-overlay').classList.contains('open'))dfEduClose();});
 })();
 </script>
+<script id="diariofit-system-back-v1">
+
+/* Android/browser Back: one temporary history entry while an in-app view is open.
+   Native close controls retain cleanup, confirmation and parent-navigation logic. */
+(function(){
+ const KEY="dfBackLayerV1";
+ const selector=".modal-overlay,#ux25-more-modal,#df-edu-overlay,#dfai-web-photo-overlay,#dfai-result-overlay,#df-food-advice-modal,#ux2-add-sheet";
+ let armed=false,consuming=false,queued=false,lastTop=null,sequence=0;
+ const opened=new WeakMap(),parents=new WeakMap();
+ const visible=el=>!!el&&!el.hidden&&el.getClientRects().length>0&&getComputedStyle(el).display!=="none"&&getComputedStyle(el).visibility!=="hidden";
+ function active(){
+  const layers=[...document.querySelectorAll(selector)].filter(visible);
+  for(const el of layers)if(!opened.has(el))opened.set(el,++sequence);
+  // Remove timestamps on closed views so a reopened dialog becomes the newest.
+  document.querySelectorAll(selector).forEach(el=>{if(!layers.includes(el))opened.delete(el)});
+  layers.sort((a,b)=>(Number(getComputedStyle(a).zIndex)||0)-(Number(getComputedStyle(b).zIndex)||0)||opened.get(a)-opened.get(b));
+  return layers.at(-1)||null;
+ }
+ function hasPage(){return ["ux-manual-open","ux24-add-mode","ux23-add-mode"].some(c=>document.body.classList.contains(c))}
+ function state(){return history.state&&typeof history.state==="object"?history.state:{}}
+ function arm(){if(armed||consuming)return;history.pushState({...state(),[KEY]:true},"");armed=true}
+ function sync(){
+  queued=false;
+  const top=active();
+  if(top&&lastTop&&top!==lastTop&&lastTop.id==="ux25-more-modal"&&!visible(lastTop))parents.set(top,lastTop);
+  lastTop=top;
+  if(consuming)return;
+  if(top||hasPage()){arm();return}
+  if(armed){armed=false;consuming=true;history.back()}
+ }
+ function schedule(){if(!queued){queued=true;queueMicrotask(sync)}}
+ function closeTop(top){
+  if(top.id==="df-start-modal"&&typeof dfStartStep!=="undefined"&&dfStartStep>0){dfStartBack();return}
+  const innerBack=top.querySelector(".df-edu-back");
+  if(innerBack&&visible(innerBack)){innerBack.click();return}
+  if(top.id==="dfai-web-photo-overlay"){dfaiCloseWebPhoto();return}
+  if(top.id==="dfai-result-overlay"){dfaiCloseResult();return}
+  const close=top.querySelector('button.modal-close,button[aria-label^="Chiudi"],button.sfv1-close,button.bodycomp-photo-guide-close,button.ux25-more-close,button.df-edu-close,button.missing-today-close-btn');
+  if(close){if(!close.disabled)close.click()}
+  else if(top.classList.contains("modal-overlay")&&typeof closeModalWithNavigation==="function")closeModalWithNavigation(top);
+  else return;
+  const parent=parents.get(top);
+  if(parent&&!visible(top)&&!active()){
+   parents.delete(top);
+   if(typeof ux2OpenMore==="function")ux2OpenMore();
+  }
+ }
+ window.addEventListener("popstate",()=>{
+  if(consuming){consuming=false;schedule();return}
+  if(!armed)return;
+  armed=false;
+  const top=active();
+  if(top)closeTop(top);
+  else if(document.body.classList.contains("ux-manual-open"))document.body.classList.remove("ux-manual-open");
+  else if(hasPage()){
+   const back=document.querySelector("#ux23-add-header button,#ux24-add-page .ux24-back");
+   if(back)back.click();
+   else if(typeof ux24CloseAdd==="function")ux24CloseAdd();
+  }
+  schedule();
+ });
+ // A reload restores the current view independently; discard only our stale marker.
+ if(state()[KEY]){const next={...state()};delete next[KEY];history.replaceState(next,"")}
+ new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["class","style","hidden","aria-hidden"]});
+ window.addEventListener("pageshow",schedule);
+ schedule();
+})();
+
+</script>
 </body>
 </html>
