@@ -20182,7 +20182,7 @@ function renderSavedMealsList() {
   }
 
   container.innerHTML =
-    savedMeals.map((meal, index) => {
+    savedMeals.map((meal,index)=>({meal,index})).sort((a,b)=>dfCompareSavedNames(a.meal,b.meal)).map(({meal,index}) => {
 
       const items =
         Array.isArray(meal.items)
@@ -20281,6 +20281,10 @@ function renderSavedMealsList() {
 }
 
 
+function dfCompareSavedNames(a,b){
+  return String(a?.name||"").trim().localeCompare(String(b?.name||"").trim(),"it",{sensitivity:"base",numeric:true,ignorePunctuation:true});
+}
+
 function renderFoodPickerModal(filterText = "") {
   const container = document.getElementById("food-options-container");
   container.innerHTML = "";
@@ -20374,7 +20378,7 @@ function renderFoodPickerModal(filterText = "") {
       )
     : [];
 
-  addFoodGroup("⭐ I miei alimenti", customMatches, true);
+  addFoodGroup("⭐ I miei alimenti", customMatches.sort(dfCompareSavedNames), true);
 
   /* =======================================================
      🍽️ ALIMENTI PREDEFINITI PER CATEGORIA
@@ -21654,7 +21658,7 @@ function renderQuickCustomizeList() {
       group.label =
         "⭐ I miei alimenti";
 
-      savedFoods.forEach((food, foodIndex) => {
+      savedFoods.map((food,foodIndex)=>({food,foodIndex})).sort((a,b)=>dfCompareSavedNames(a.food,b.food)).forEach(({food,foodIndex}) => {
 
         const option =
           document.createElement("option");
