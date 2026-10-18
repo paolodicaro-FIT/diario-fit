@@ -28191,6 +28191,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
  const KEY="dfBackLayerV1";
  const selector=".modal-overlay,#ux25-more-modal,#df-edu-overlay,#dfai-web-photo-overlay,#dfai-result-overlay,#df-food-advice-modal,#ux2-add-sheet";
  let armed=false,queued=false,lastTop=null,sequence=0;
+ let gestureReady=false;
  const opened=new WeakMap(),parents=new WeakMap();
  const visible=el=>!!el&&!el.hidden&&el.getClientRects().length>0&&getComputedStyle(el).display!=="none"&&getComputedStyle(el).visibility!=="hidden";
  function active(){
@@ -28203,7 +28204,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
  }
  function hasPage(){return ["ux-manual-open","ux24-add-mode","ux23-add-mode"].some(c=>document.body.classList.contains(c))}
  function state(){return history.state&&typeof history.state==="object"?history.state:{}}
- function arm(){if(armed)return;history.pushState({...state(),[KEY]:true},"");armed=true}
+ function arm(){if(armed||!gestureReady)return;history.pushState({...state(),[KEY]:true},"");armed=true}
  function sync(){
   queued=false;
   const top=active();
@@ -28245,8 +28246,16 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
    arm();schedule();
   }
  });
- // Reuse our current entry on reload instead of adding another one.
- if(state()[KEY])armed=true;
+ // Chrome may skip pushState entries created before any trusted interaction.
+ // Create the guard synchronously inside the first real click, never at page load.
+ document.addEventListener("click",event=>{
+  if(!event.isTrusted)return;
+  if(!gestureReady){
+   gestureReady=true;
+   armed=false;
+   arm();
+  }else if(!armed)arm();
+ },true);
  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["class","style","hidden","aria-hidden"]});
  window.addEventListener("pageshow",schedule);
  schedule();
