@@ -22517,6 +22517,51 @@ async function dp2Lock(id){const e=dp2State().entries.find(x=>x.id===id);if(!e||
 async function dp2Delete(id){const s=dp2State(),e=s.entries.find(x=>x.id===id);if(!e||e.done)return;s.entries=s.entries.filter(x=>x.id!==id);await dp2Save();renderDp2Timeline()}
 async function dp2Confirm(id){if(!ensureDiaryWriteAccess())return;const e=dp2State().entries.find(x=>x.id===id);if(!e||e.done)return;const f=e.food,q=e.multiplier||1;addQuick(f.name,f.kcal,f.pro,f.fat,f.carb,f.sugar,f.waterMl,f.weight,f.sugarSplit);setQuickPreviewMultiplier(q);quickDiaryPreviewPending.plannerEntryId=id;quickDiaryPreviewPending.source="planner";const saveOption=document.getElementById("quick-preview-save-option"),destinationTitle=document.getElementById("quick-preview-destination-title");if(saveOption)saveOption.style.display="none";if(destinationTitle)destinationTitle.textContent="In quale pasto hai mangiato questo alimento?"}
 
+/* Modifica retroattiva del diario: non altera gli altri alimenti. */
+function dfEditDiaryItem(id) {
+  if (!ensureDiaryWriteAccess()) return;
+  const item=log.find(x=>String(x.id)===String(id));
+  if (!item) return;
+  document.getElementById("df-diary-edit-modal")?.remove();
+  const overlay=document.createElement("div");
+  overlay.id="df-diary-edit-modal";
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:15px;overflow:auto";
+  const fields=[["name","Alimento","text"],["meal","Pasto","text"],["time","Ora del consumo","time"],["weight","Peso (g)","number"],["kcal","Calorie (kcal)","number"],["pro","Proteine (g)","number"],["carb","Carboidrati (g)","number"],["fat","Grassi (g)","number"],["sugar","Zuccheri (g)","number"],["waterMl","Acqua (ml)","number"]];
+  const panel=document.createElement("form");
+  panel.style.cssText="background:var(--card-bg,#202733);color:var(--text,#fff);border:1px solid #64748b;border-radius:16px;padding:20px;max-width:440px;width:100%;max-height:90vh;overflow:auto";
+  const heading=document.createElement("h3");heading.textContent="✏️ Modifica alimento registrato";panel.appendChild(heading);
+  fields.forEach(([key,label,type])=>{
+    const wrap=document.createElement("label");wrap.style.cssText="display:block;margin:9px 0;font-size:14px";
+    wrap.textContent=label;
+    const input=document.createElement("input");input.name=key;input.type=type;input.value=item[key]??(type==="number"?0:"");
+    if(type==="number"){input.min="0";input.step="any";}
+    if(key==="time")input.required=true;
+    if(key==="name")input.required=true;
+    input.style.cssText="display:block;width:100%;box-sizing:border-box;padding:9px;border-radius:8px;margin-top:4px;color:#111;background:#fff";
+    wrap.appendChild(input);panel.appendChild(wrap);
+  });
+  const actions=document.createElement("div");actions.style.cssText="display:flex;gap:10px;margin-top:15px";
+  const cancel=document.createElement("button");cancel.type="button";cancel.textContent="Annulla";cancel.onclick=()=>overlay.remove();
+  const save=document.createElement("button");save.type="submit";save.textContent="✓ Salva modifiche";
+  [cancel,save].forEach(b=>{b.style.cssText="flex:1;padding:11px;border-radius:9px;cursor:pointer";actions.appendChild(b)});
+  panel.appendChild(actions);overlay.appendChild(panel);document.body.appendChild(overlay);
+  overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.remove()});
+  panel.addEventListener("submit",async e=>{
+    e.preventDefault();if(!ensureDiaryWriteAccess())return;
+    const values=Object.fromEntries(new FormData(panel));
+    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(values.time))return alert("Orario non valido.");
+    if(!values.name.trim())return alert("Indica il nome dell'alimento.");
+    for(const key of ["weight","kcal","pro","carb","fat","sugar","waterMl"]){
+      const n=Number(values[key]);if(!Number.isFinite(n)||n<0)return alert("Valore non valido: "+key);
+      values[key]=n;
+    }
+    const previous={...item};
+    Object.assign(item,values);
+    try {await saveAndRender();overlay.remove();}
+    catch(err){Object.assign(item,previous);renderLog();alert("Salvataggio non riuscito. Riprova.");}
+  });
+}
+
 /* =========================================================
    DELETE
 ========================================================= */
@@ -23851,9 +23896,10 @@ function renderLog() {
   let html = "";
 
 
+  const orderedGroups = Object.entries(groups).map(([mealName, items]) => [mealName, items.slice().sort((a,b) => String(a.time||"").localeCompare(String(b.time||"")))]).sort((a,b) => String(a[1][0]?.time||"").localeCompare(String(b[1][0]?.time||"")));
   for (
     const [mealName, items]
-    of Object.entries(groups)
+    of orderedGroups
   ) {
 
     html +=
@@ -23906,6 +23952,7 @@ function renderLog() {
             </div>
 
 
+            <button class="delete-btn" onclick="dfEditDiaryItem(${item.id})" style="margin-right:6px">✏️ Modifica</button>
             <button
               class="delete-btn"
               onclick="deleteItem(${item.id})"
