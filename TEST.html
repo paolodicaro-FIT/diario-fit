@@ -23952,13 +23952,10 @@ function renderLog() {
             </div>
 
 
-            <button class="delete-btn" onclick="dfEditDiaryItem(${item.id})" style="margin-right:6px">✏️ Modifica</button>
-            <button
-              class="delete-btn"
-              onclick="deleteItem(${item.id})"
-            >
-              Elimina
-            </button>
+            <div class="df-log-actions" style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto;flex-shrink:0">
+              <button class="delete-btn" onclick="dfEditDiaryItem(${item.id})">✏️ Modifica</button>
+              <button class="delete-btn" onclick="deleteItem(${item.id})">Elimina</button>
+            </div>
 
           </div>
 
