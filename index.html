@@ -8637,6 +8637,10 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
   text-shadow: 0 1px 2px #031022, 0 0 8px rgba(247,165,42,.7);
   white-space: nowrap;
 }
+
+/* Identificativo release discreto nell'angolo inferiore destro del cockpit */
+.calorie-cockpit{position:relative}
+.df-cockpit-release{position:absolute;right:24px;bottom:16px;z-index:3;font-size:10px;letter-spacing:.035em;color:rgba(165,225,235,.65);pointer-events:none;white-space:nowrap}
 </style>
 
 <style>
@@ -9601,6 +9605,7 @@ function dfCalorieBarsRender(eaten,base,extra){
   <div id="ux2-goal-activity" class="calorie-target-pill calorie-activity" hidden><span class="calorie-target-label">CON ATTIVITÀ <strong id="calorie-activity-percent">0%</strong></span><span class="calorie-target-value"><b id="ux2-activity-target-kcal">—</b> <small>kcal</small></span></div>
  </div>
  </div>
+ <div class="df-cockpit-release" aria-label="Versione DiarioFIT">rev. 2026.10.21.01</div>
  <div class="calorie-screen-reader"><div id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div><span id="calorie-extra-note"></span></div>
  <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
 </section>
