@@ -22549,7 +22549,7 @@ function dfEditDiaryItem(id) {
   panel.addEventListener("submit",async e=>{
     e.preventDefault();if(!ensureDiaryWriteAccess())return;
     const values=Object.fromEntries(new FormData(panel));
-    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(values.time))return alert("Orario non valido.");
+    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(values.time))return alert("Orario non valido.");
     if(!values.name.trim())return alert("Indica il nome dell'alimento.");
     for(const key of ["weight","kcal","pro","carb","fat","sugar","waterMl"]){
       const n=Number(values[key]);if(!Number.isFinite(n)||n<0)return alert("Valore non valido: "+key);
