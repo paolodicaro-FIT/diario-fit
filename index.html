@@ -9606,6 +9606,7 @@ function dfCalorieBarsRender(eaten,base,extra){
  </div>
  </div>
  <div class="df-cockpit-release" aria-label="Versione DiarioFIT">rev. 2026.10.21.01</div>
+<script>(function(){const el=document.querySelector('.df-cockpit-release');if(!el)return;el.title='Ultima revisione pubblicata su GitHub; la cache del dispositivo potrebbe essere precedente';fetch('https://api.github.com/repos/paolodicaro-FIT/diario-fit/commits?path=index.html&per_page=1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(a=>{const c=a[0];if(!c?.sha)return;const date=new Date(c.commit.committer.date).toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'}).replaceAll('-','.');el.textContent='rev. '+date+' · '+c.sha.slice(0,7)}).catch(()=>{});})();</script>
  <div class="calorie-screen-reader"><div id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div><span id="calorie-extra-note"></span></div>
  <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
 </section>
