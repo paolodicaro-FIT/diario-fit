@@ -27525,6 +27525,10 @@ function sugarPreviewRefresh(){
 }
 function sugarHelpOpen(){
  const modal=document.getElementById("sugar-origin-modal"),list=document.getElementById("sugar-origin-list");list.innerHTML="";
+ const totals=(log||[]).reduce((a,item)=>{const p=sugarParts(item);a.total+=p.total;a.known+=p.natural+p.free;return a},{total:0,known:0});
+ const summary=document.createElement("p");summary.className="composition-coverage";
+ summary.textContent="Copertura classificazione zuccheri: "+(totals.total?Math.round(totals.known/totals.total*100):100)+"% · "+sugarFmt(totals.known)+" g classificati su "+sugarFmt(totals.total)+" g registrati. Le quote non determinate non sono automaticamente zuccheri liberi.";
+ list.appendChild(summary);
  (log||[]).forEach((item,index)=>{
   if(!(Number(item.sugar)>0))return;
   const row=document.createElement("details");row.className="sugar-origin-row";
@@ -27706,6 +27710,7 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
  #ux2-home .fat-macro>.sugar-track,#ux2-home .sugar-macro>.sugar-track{height:5px;margin:3px 0}
  #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{text-align:left;font-size:.58rem!important;line-height:1.2;margin-top:4px}
 }
+.composition-coverage{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-weight:600;line-height:1.45;background:rgba(34,211,238,.06)}
 </style>
 <div id="fat-origin-modal" class="modal-overlay"><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fat-origin-title">
 <div class="modal-header"><h3 id="fat-origin-title">🥑 Composizione dei grassi</h3><button type="button" class="modal-close" aria-label="Chiudi" onclick="document.getElementById('fat-origin-modal').style.display='none'">✕</button></div>
@@ -27765,6 +27770,10 @@ function fatHomeRender(){
 }
 function fatHelpOpen(){
  const modal=document.getElementById("fat-origin-modal"),list=document.getElementById("fat-origin-list");list.replaceChildren();
+ const totals=(log||[]).reduce((a,item)=>{const p=fatParts(item);a.total+=p.total;a.known+=p.saturated+p.unsaturated;return a},{total:0,known:0});
+ const summary=document.createElement("p");summary.className="composition-coverage";
+ summary.textContent="Copertura classificazione grassi: "+(totals.total?Math.round(totals.known/totals.total*100):100)+"% · "+sugarFmt(totals.known)+" g classificati su "+sugarFmt(totals.total)+" g registrati. I grassi non determinati non sono automaticamente saturi.";
+ list.appendChild(summary);
  (log||[]).filter(x=>Number(x.fat)>0).forEach(item=>{
   const p=fatParts(item),row=document.createElement("div");row.className="fat-source-row";
   const title=document.createElement("strong");title.textContent=item.name;row.appendChild(title);
