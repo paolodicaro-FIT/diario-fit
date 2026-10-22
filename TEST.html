@@ -27483,6 +27483,13 @@ function sugarHomeRender(){
   if(label)label.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="natural"?"Naturali non liberi: ":"Liberi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
+ const known=t.natural+t.free;
+ for(const id of ["ux2-sugar-natural-bar","ux2-sugar-free-bar"]){
+  const bar=document.getElementById(id),track=bar?.parentElement;if(!track)continue;
+  const pct=t.total?Math.min(100,Math.max(0,known/t.total*100)):100;
+  track.style.background=t.unknown>=.05?"linear-gradient(to right, rgba(100,116,139,.18) 0%, rgba(100,116,139,.18) "+pct+"%, rgba(148,163,184,.75) "+pct+"%, rgba(148,163,184,.75) 100%)":"";
+  track.title=t.unknown>=.05?"Parte grigia: "+sugarFmt(t.unknown)+" g non classificati":"Classificazione completa";
+ }
  const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Origine incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-sugar-free-reference");
  const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
@@ -27764,6 +27771,13 @@ function fatHomeRender(){
   const el=document.getElementById(id),bar=document.getElementById(id+"-bar");
   if(el)el.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="unsaturated"?"Insaturi: ":"Saturi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
+ }
+ const known=t.unsaturated+t.saturated;
+ for(const id of ["ux2-fat-unsaturated-bar","ux2-fat-saturated-bar"]){
+  const bar=document.getElementById(id),track=bar?.parentElement;if(!track)continue;
+  const pct=t.total?Math.min(100,Math.max(0,known/t.total*100)):100;
+  track.style.background=t.unknown>=.05?"linear-gradient(to right, rgba(100,116,139,.18) 0%, rgba(100,116,139,.18) "+pct+"%, rgba(148,163,184,.75) "+pct+"%, rgba(148,163,184,.75) 100%)":"";
+  track.title=t.unknown>=.05?"Parte grigia: "+sugarFmt(t.unknown)+" g non classificati":"Classificazione completa";
  }
  const unknown=document.getElementById("ux2-fat-unknown");if(unknown){unknown.textContent="Quota incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Classificati "+(t.total?Math.round((t.saturated+t.unsaturated)/t.total*100):100)+"% · "+(t.unknown>=.05?"quota incerta "+sugarFmt(t.unknown)+" g":"copertura completa")+" · stima CREA";
