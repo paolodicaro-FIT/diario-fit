@@ -27486,7 +27486,7 @@ function sugarHomeRender(){
  const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Origine incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-sugar-free-reference");
  const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
- if(note)note.textContent="Liberi: rif. < "+sugarFmt(reference)+" g"+(t.unknown>=.05?" · dati incompleti":"");
+ if(note)note.textContent="Classificati "+(t.total?Math.round((t.natural+t.free)/t.total*100):100)+"% · "+(t.unknown>=.05?"origine incerta "+sugarFmt(t.unknown)+" g":"copertura completa")+" · liberi rif. < "+sugarFmt(reference)+" g";
 }
 function sugarEditorHTML(prefix){
  return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="auto">Automatico (consigliato)</option><option value="unknown">Lascia non determinati</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>DiarioFIT riconosce gli alimenti semplici e distingue i casi incerti. Non serve compilare nulla. Puoi correggere qui solo se necessario.</small>';
@@ -27766,7 +27766,7 @@ function fatHomeRender(){
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="unsaturated"?"Insaturi: ":"Saturi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
  const unknown=document.getElementById("ux2-fat-unknown");if(unknown){unknown.textContent="Quota incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
- const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Ripartizione stimata · CREA";
+ const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Classificati "+(t.total?Math.round((t.saturated+t.unsaturated)/t.total*100):100)+"% · "+(t.unknown>=.05?"quota incerta "+sugarFmt(t.unknown)+" g":"copertura completa")+" · stima CREA";
 }
 function fatHelpOpen(){
  const modal=document.getElementById("fat-origin-modal"),list=document.getElementById("fat-origin-list");list.replaceChildren();
