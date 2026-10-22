@@ -27426,6 +27426,15 @@ async function sugarVerifyRemote(date,items){
 /* Origine zuccheri V1: sugar resta la fonte del totale; quote senza inferenze. */
 
 /* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
+/* TEST: stima conservativa zuccheri pizza da ricetta; non è un'analisi del prodotto. */
+function sugarPizzaEstimate(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ if(!/\b(?:pizza|trancio|pinsa)\b/.test(n))return null;
+ if(!/\b(?:(?:quattro|4) stagioni|margherita)\b/.test(n))return null;
+ // Zuccheri di pomodoro, farina e lattosio: quota prevalentemente intrinseca.
+ // Senza ricetta/etichetta non è possibile escludere zuccheri aggiunti all'impasto o salsa.
+ return {version:1,naturalShare:.7,freeShare:0,source:"auto",rule:"pizza-ricetta-stimata-70pct-intrinseci-30pct-incerti"};
+}
 function sugarAutomatic(item){
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
@@ -27434,6 +27443,7 @@ function sugarAutomatic(item){
  .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
  if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
  if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
+ const pizzaEstimate=sugarPizzaEstimate(item);if(pizzaEstimate)return pizzaEstimate;
  if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*|caramellat\w*|dolcificat\w*|zuccherat\w*)\b|\+/.test(simple))return null;
  if(/^(?:latte(?: vaccino)?(?: parzialmente scremato| parz scremato| scremato)?|yogurt(?: greco)?(?: bianco| naturale)?(?: 0%| 2%| 5%)?|kefir(?: bianco| naturale)?|ricotta(?: vaccina| di vacca| di pecora)?|mozzarella(?: vaccina| di vacca| di bufala)?|fiocchi di (?:latte|formaggio)(?: magro)?|parmigiano(?: reggiano)?(?: dop)?|grana padano(?: dop)?)$/.test(simple))return make("natural","latticino-semplice");
  if(/^(?:mela|mele|pera|pere|banana|banane|arancia|arance|mandarino|mandarini|clementina|clementine|kiwi|pesca|pesche|nettarina|nettarine|albicocca|albicocche|prugna|prugne|susina|susine|ciliegia|ciliegie|uva|uvetta|uva passa|anguria|cocomero|melone|ananas|mango|papaya|pompelmo|limone|limoni|fragola|fragole|mirtillo|mirtilli|lampone|lamponi|mora|more|ribes|fico|fichi|dattero|datteri|cachi|melograno|avocado|cocco|pomodoro|pomodori(?: da insalata)?|carota|carote|zucchina|zucchine|melanzana|melanzane|broccolo|broccoli|spinaci|lattuga|finocchio|finocchi|peperone|peperoni|cetriolo|cetrioli|cavolfiore|cavolo|cavoli|verza|bietola|bietole|cicoria|radicchio|rucola|sedano|cipolla|cipolle|aglio|porro|porri|asparagi|carciofi|funghi|zucca|barbabietola|rapa|rape|patata|patate|patate dolci|fagiolini|piselli|ceci|fagioli(?: borlotti| cannellini)?|lenticchie|fave|soia|lupini|noci(?: pecan| del brasile| di macadamia)?|macadamia|mandorle|nocciole|pistacchi|anacardi|arachidi|pinoli|castagne|semi di (?:lino|chia|zucca|girasole|sesamo))$/.test(simple))return make("natural","vegetale-intero");
