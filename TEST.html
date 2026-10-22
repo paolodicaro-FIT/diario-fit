@@ -27737,9 +27737,22 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 <script id="fat-composition-v1-script">
 /* Profili medi CREA, dicembre 2019. Percentuali di lipidi: fonte presentazione-dati.
    Somme >100 per arrotondamenti: normalizzate; somme <100: residuo non attribuito. */
+/* Stima orientativa di ricetta: soltanto pizze con tipo esplicito.
+   Non rappresenta una misura del condimento effettivo; il 25% resta incerto. */
+function fatRecipeEstimate(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ if(!/\b(?:pizza|trancio|pinsa)\b/.test(n))return null;
+ const four=/\b(?:quattro|4) stagioni\b/.test(n);
+ const margherita=/\bmargherita\b/.test(n);
+ if(!four&&!margherita)return null;
+ // Ipotesi di composizione dei lipidi: mozzarella, olio EVO e, per quattro stagioni, salumi/olive.
+ // Le quote sono volutamente parziali; il residuo evita falsa precisione.
+ const sat=four?.32:.34,unsat=four?.43:.41;
+ return {version:1,saturatedShare:sat,unsaturatedShare:unsat,source:"ricetta-stimata",code:null,description:four?"pizza quattro stagioni":"pizza margherita"};
+}
 function fatAutomaticProfile(item){
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
- if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return null;
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return fatRecipeEstimate(item);
 
  // Profili medi specifici CREA: riconoscimento completo, mai per una parola in una ricetta.
  const catalog=[["nocciol[ae]",6.49,75.85,8.11,"008550"],["noci pecan",11.29,47.05,41.41,"008580"],["pistacchi",10.64,69.16,20.21,"008600"],["anacardi",20.47,61.4,18.19,"008610"],["avocado",11.28,83.36,6.59,"007490"],["olio (?:di )?(?:semi di )?girasole",11.91,35.35,53.2,"009650"],["olio (?:di )?(?:semi di )?arachid[ei]",19.41,52.57,27.9,"009610"],["salmone affumicato",28.03,43.43,29.04,"122410"],["salmone",28.13,43.56,28.88,"122400"],["(?:sgombro|maccarello)",28.5,45.1,26.86,"123000"],["(?:uovo|uova)(?: di gallina)?(?: intero| intere)?",45.55,37.07,18.1,"181100"],["parmigiano(?: reggiano)?(?: dop)?",65.98,31.35,2.81,"166000"],["(?:petto (?:di )?pollo|pollo petto)",37.2,28.27,34.23,"106500"],["(?:petto (?:di )?tacchino|fesa (?:di )?tacchino|tacchino fesa)",37.25,30.39,33.33,"106850"],["(?:lonza|lombo)(?: di maiale)?",35.01,37.36,28.57,"105210"],["prosciutto crudo(?: nazionale)?",33.7,44.2,12.9,"110535"],["bresaola(?: della valtellina)?(?: igp)?",33,31.6,16,"110020"],["speck(?: alto adige| dell alto adige)?(?: igp)?",33,41.7,16.1,"110800"]];
@@ -27760,7 +27773,7 @@ function fatAutomaticProfile(item){
  else if(/^pancetta tesa\b/.test(n))p=[36.38,47.66,16.58,"110310"];
  else if(/^pancetta magretta\b/.test(n))p=[39.44,49.98,11.05,"110300"];
  else if(/^pancetta arrotolata\b/.test(n))p=[31.2,46.8,12,"110320"];
- if(!p)return null;
+ if(!p)return fatRecipeEstimate(item);
  if(/\b(caramellat\w*|zuccherat\w*|cioccolat\w*|aromatizzat\w*|margarin\w*)\b/.test(n))return null;
  const divisor=Math.max(100,p[0]+p[1]+p[2]);
  return {version:1,saturatedShare:p[0]/divisor,unsaturatedShare:(p[1]+p[2])/divisor,source:"CREA",code:p[3]};
@@ -27798,8 +27811,8 @@ function fatHelpOpen(){
  (log||[]).filter(x=>Number(x.fat)>0).forEach(item=>{
   const p=fatParts(item),row=document.createElement("div");row.className="fat-source-row";
   const title=document.createElement("strong");title.textContent=item.name;row.appendChild(title);
-  const detail=document.createElement("p");detail.textContent=p.profile?"Stima: "+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
-  if(p.profile){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
+  const detail=document.createElement("p");detail.textContent=p.profile?(p.profile.source==="ricetta-stimata"?"Stima indicativa da ricetta (ingredienti e quantità non verificati): ":"Stima da profilo CREA: ")+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
+  if(p.profile?.code){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
   list.appendChild(row);
  });
  modal.style.display="flex";modal.querySelector(".modal-close").focus();
