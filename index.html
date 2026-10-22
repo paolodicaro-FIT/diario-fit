@@ -8637,10 +8637,6 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
   text-shadow: 0 1px 2px #031022, 0 0 8px rgba(247,165,42,.7);
   white-space: nowrap;
 }
-
-/* Identificativo release discreto nell'angolo inferiore destro del cockpit */
-.calorie-cockpit{position:relative}
-.df-cockpit-release{position:absolute;right:24px;bottom:16px;z-index:3;font-size:10px;letter-spacing:.035em;color:rgba(165,225,235,.65);pointer-events:none;white-space:nowrap}
 </style>
 
 <style>
@@ -9605,8 +9601,6 @@ function dfCalorieBarsRender(eaten,base,extra){
   <div id="ux2-goal-activity" class="calorie-target-pill calorie-activity" hidden><span class="calorie-target-label">CON ATTIVITÀ <strong id="calorie-activity-percent">0%</strong></span><span class="calorie-target-value"><b id="ux2-activity-target-kcal">—</b> <small>kcal</small></span></div>
  </div>
  </div>
- <div class="df-cockpit-release" aria-label="Versione DiarioFIT">rev. 2026.10.21.01</div>
-<script>(function(){const el=document.querySelector('.df-cockpit-release');if(!el)return;el.title='Ultima revisione pubblicata su GitHub; la cache del dispositivo potrebbe essere precedente';fetch('https://api.github.com/repos/paolodicaro-FIT/diario-fit/commits?path=index.html&per_page=1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(a=>{const c=a[0];if(!c?.sha)return;const date=new Date(c.commit.committer.date).toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'}).replaceAll('-','.');el.textContent='rev. '+date+' · '+c.sha.slice(0,7)}).catch(()=>{});})();</script>
  <div class="calorie-screen-reader"><div id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div><span id="calorie-extra-note"></span></div>
  <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
 </section>
@@ -9614,8 +9608,8 @@ function dfCalorieBarsRender(eaten,base,extra){
     <section class="ux2-macros">
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
-      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div>
-      <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><small id="ux2-sugar-free-reference"></small><small id="ux2-sugar-source">Categorie secondo OMS<br>Ripartizione stimata · DiarioFIT</small></div>
+      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-fat-uncertain-bar"></i></div><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div>
+      <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-sugar-uncertain-bar"></i></div><small id="ux2-sugar-free-reference"></small><small id="ux2-sugar-source">Categorie secondo OMS<br>Ripartizione stimata · DiarioFIT</small></div>
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
 
@@ -22555,7 +22549,7 @@ function dfEditDiaryItem(id) {
   panel.addEventListener("submit",async e=>{
     e.preventDefault();if(!ensureDiaryWriteAccess())return;
     const values=Object.fromEntries(new FormData(panel));
-    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(values.time))return alert("Orario non valido.");
+    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(values.time))return alert("Orario non valido.");
     if(!values.name.trim())return alert("Indica il nome dell'alimento.");
     for(const key of ["weight","kcal","pro","carb","fat","sugar","waterMl"]){
       const n=Number(values[key]);if(!Number.isFinite(n)||n<0)return alert("Valore non valido: "+key);
@@ -27432,6 +27426,15 @@ async function sugarVerifyRemote(date,items){
 /* Origine zuccheri V1: sugar resta la fonte del totale; quote senza inferenze. */
 
 /* Classificazione automatica conservativa: soltanto il campo sugar, mai carb. */
+/* TEST: stima conservativa zuccheri pizza da ricetta; non è un'analisi del prodotto. */
+function sugarPizzaEstimate(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ if(!/\b(?:pizza|trancio|pinsa)\b/.test(n))return null;
+ if(!/\b(?:(?:quattro|4) stagioni|margherita)\b/.test(n))return null;
+ // Zuccheri di pomodoro, farina e lattosio: quota prevalentemente intrinseca.
+ // Senza ricetta/etichetta non è possibile escludere zuccheri aggiunti all'impasto o salsa.
+ return {version:1,naturalShare:.7,freeShare:0,source:"auto",rule:"pizza-ricetta-stimata-70pct-intrinseci-30pct-incerti"};
+}
 function sugarAutomatic(item){
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
@@ -27440,6 +27443,7 @@ function sugarAutomatic(item){
  .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
  if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
  if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
+ const pizzaEstimate=sugarPizzaEstimate(item);if(pizzaEstimate)return pizzaEstimate;
  if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|salsa|sugo|crema|frullat\w*|smoothie|purea|omogeneizzat\w*|marmellat\w*|confettur\w*|sciroppat\w*|candit\w*|caramellat\w*|dolcificat\w*|zuccherat\w*)\b|\+/.test(simple))return null;
  if(/^(?:latte(?: vaccino)?(?: parzialmente scremato| parz scremato| scremato)?|yogurt(?: greco)?(?: bianco| naturale)?(?: 0%| 2%| 5%)?|kefir(?: bianco| naturale)?|ricotta(?: vaccina| di vacca| di pecora)?|mozzarella(?: vaccina| di vacca| di bufala)?|fiocchi di (?:latte|formaggio)(?: magro)?|parmigiano(?: reggiano)?(?: dop)?|grana padano(?: dop)?)$/.test(simple))return make("natural","latticino-semplice");
  if(/^(?:mela|mele|pera|pere|banana|banane|arancia|arance|mandarino|mandarini|clementina|clementine|kiwi|pesca|pesche|nettarina|nettarine|albicocca|albicocche|prugna|prugne|susina|susine|ciliegia|ciliegie|uva|uvetta|uva passa|anguria|cocomero|melone|ananas|mango|papaya|pompelmo|limone|limoni|fragola|fragole|mirtillo|mirtilli|lampone|lamponi|mora|more|ribes|fico|fichi|dattero|datteri|cachi|melograno|avocado|cocco|pomodoro|pomodori(?: da insalata)?|carota|carote|zucchina|zucchine|melanzana|melanzane|broccolo|broccoli|spinaci|lattuga|finocchio|finocchi|peperone|peperoni|cetriolo|cetrioli|cavolfiore|cavolo|cavoli|verza|bietola|bietole|cicoria|radicchio|rucola|sedano|cipolla|cipolle|aglio|porro|porri|asparagi|carciofi|funghi|zucca|barbabietola|rapa|rape|patata|patate|patate dolci|fagiolini|piselli|ceci|fagioli(?: borlotti| cannellini)?|lenticchie|fave|soia|lupini|noci(?: pecan| del brasile| di macadamia)?|macadamia|mandorle|nocciole|pistacchi|anacardi|arachidi|pinoli|castagne|semi di (?:lino|chia|zucca|girasole|sesamo))$/.test(simple))return make("natural","vegetale-intero");
@@ -27489,10 +27493,18 @@ function sugarHomeRender(){
   if(label)label.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="natural"?"Naturali non liberi: ":"Liberi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
+ const known=t.natural+t.free;
+ for(const id of ["ux2-sugar-natural-bar","ux2-sugar-free-bar"]){
+  const bar=document.getElementById(id),track=bar?.parentElement;if(!track)continue;
+  const pct=t.total?Math.min(100,Math.max(0,known/t.total*100)):100;
+  track.style.background=t.unknown>=.05?"linear-gradient(to right, rgba(100,116,139,.18) 0%, rgba(100,116,139,.18) "+pct+"%, rgba(148,163,184,.75) "+pct+"%, rgba(148,163,184,.75) 100%)":"";
+  track.title=t.unknown>=.05?"Parte grigia: "+sugarFmt(t.unknown)+" g non classificati":"Classificazione completa";
+ }
+ const uncertainBar=document.getElementById("ux2-sugar-uncertain-bar");if(uncertainBar){uncertainBar.style.width=(t.total?t.unknown/t.total*100:0)+"%";uncertainBar.parentElement.setAttribute("aria-label","Quota incerta: "+sugarFmt(t.unknown)+" grammi su "+sugarFmt(t.total)+" totali");uncertainBar.parentElement.hidden=t.unknown<.05;}
  const unknown=document.getElementById("ux2-sugar-unknown");if(unknown){unknown.textContent="Origine incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
  const note=document.getElementById("ux2-sugar-free-reference");
  const base=Number(TARGETS?.kcal)||0,reference=base*.1/4;
- if(note)note.textContent="Liberi: rif. < "+sugarFmt(reference)+" g"+(t.unknown>=.05?" · dati incompleti":"");
+ if(note)note.textContent="Classificati "+(t.total?Math.round((t.natural+t.free)/t.total*100):100)+"% · "+(t.unknown>=.05?"origine incerta "+sugarFmt(t.unknown)+" g":"copertura completa")+" · liberi rif. < "+sugarFmt(reference)+" g";
 }
 function sugarEditorHTML(prefix){
  return '<label for="'+prefix+'-mode">Origine degli zuccheri</label><select id="'+prefix+'-mode" onchange="sugarEditorChange(\''+prefix+'\')"><option value="auto">Automatico (consigliato)</option><option value="unknown">Lascia non determinati</option><option value="natural">Tutti naturali non liberi</option><option value="free">Tutti liberi (anche aggiunti)</option><option value="mixed">Misti / ripartizione parziale</option></select><div id="'+prefix+'-mixed" hidden class="sugar-mixed"><label>Naturali non liberi (g)<input id="'+prefix+'-natural" type="number" min="0" step="0.1" inputmode="decimal"></label><label>Liberi (g)<input id="'+prefix+'-free" type="number" min="0" step="0.1" inputmode="decimal"></label></div><small>DiarioFIT riconosce gli alimenti semplici e distingue i casi incerti. Non serve compilare nulla. Puoi correggere qui solo se necessario.</small>';
@@ -27531,6 +27543,10 @@ function sugarPreviewRefresh(){
 }
 function sugarHelpOpen(){
  const modal=document.getElementById("sugar-origin-modal"),list=document.getElementById("sugar-origin-list");list.innerHTML="";
+ const totals=(log||[]).reduce((a,item)=>{const p=sugarParts(item);a.total+=p.total;a.known+=p.natural+p.free;return a},{total:0,known:0});
+ const summary=document.createElement("p");summary.className="composition-coverage";
+ summary.textContent="Copertura classificazione zuccheri: "+(totals.total?Math.round(totals.known/totals.total*100):100)+"% · "+sugarFmt(totals.known)+" g classificati su "+sugarFmt(totals.total)+" g registrati. Le quote non determinate non sono automaticamente zuccheri liberi.";
+ list.appendChild(summary);
  (log||[]).forEach((item,index)=>{
   if(!(Number(item.sugar)>0))return;
   const row=document.createElement("details");row.className="sugar-origin-row";
@@ -27693,6 +27709,11 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 </style>
 <style id="diariofit-arrow-endpoint-fix">.calorie-frame-trace{stroke-linecap:butt;stroke-dasharray:none;transition:none}</style>
 <style id="fat-composition-v1">
+/* TEST: barra dedicata alle quote non classificate */
+#ux2-home .sugar-track.uncertain{background:rgba(148,163,184,.14);border-radius:999px;overflow:hidden}
+#ux2-home .sugar-track.uncertain i{display:block;height:100%;background:#a78bfa;border-radius:999px;transition:width .2s ease}
+#ux2-home .sugar-track.uncertain[hidden]{display:none!important}
+
 .fat-macro .sugar-line{display:flex;justify-content:space-between;gap:4px;font-size:.65rem;line-height:1.3;margin-top:6px;text-align:left}
 .fat-macro .sugar-line strong{white-space:nowrap}
 .fat-macro>small{display:block;font-size:.59rem;line-height:1.35;margin-top:4px}
@@ -27712,6 +27733,7 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
  #ux2-home .fat-macro>.sugar-track,#ux2-home .sugar-macro>.sugar-track{height:5px;margin:3px 0}
  #ux2-home .fat-macro>small,#ux2-home .sugar-macro>small{text-align:left;font-size:.58rem!important;line-height:1.2;margin-top:4px}
 }
+.composition-coverage{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-weight:600;line-height:1.45;background:rgba(34,211,238,.06)}
 </style>
 <div id="fat-origin-modal" class="modal-overlay"><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fat-origin-title">
 <div class="modal-header"><h3 id="fat-origin-title">🥑 Composizione dei grassi</h3><button type="button" class="modal-close" aria-label="Chiudi" onclick="document.getElementById('fat-origin-modal').style.display='none'">✕</button></div>
@@ -27725,9 +27747,22 @@ for(const name of ["applyQuickPreviewMultiplier","syncQuickPreviewWeight","syncQ
 <script id="fat-composition-v1-script">
 /* Profili medi CREA, dicembre 2019. Percentuali di lipidi: fonte presentazione-dati.
    Somme >100 per arrotondamenti: normalizzate; somme <100: residuo non attribuito. */
+/* Stima orientativa di ricetta: soltanto pizze con tipo esplicito.
+   Non rappresenta una misura del condimento effettivo; il 25% resta incerto. */
+function fatRecipeEstimate(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ if(!/\b(?:pizza|trancio|pinsa)\b/.test(n))return null;
+ const four=/\b(?:quattro|4) stagioni\b/.test(n);
+ const margherita=/\bmargherita\b/.test(n);
+ if(!four&&!margherita)return null;
+ // Ipotesi di composizione dei lipidi: mozzarella, olio EVO e, per quattro stagioni, salumi/olive.
+ // Le quote sono volutamente parziali; il residuo evita falsa precisione.
+ const sat=four?.32:.34,unsat=four?.43:.41;
+ return {version:1,saturatedShare:sat,unsaturatedShare:unsat,source:"ricetta-stimata",code:null,description:four?"pizza quattro stagioni":"pizza margherita"};
+}
 function fatAutomaticProfile(item){
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
- if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return null;
+ if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return fatRecipeEstimate(item);
 
  // Profili medi specifici CREA: riconoscimento completo, mai per una parola in una ricetta.
  const catalog=[["nocciol[ae]",6.49,75.85,8.11,"008550"],["noci pecan",11.29,47.05,41.41,"008580"],["pistacchi",10.64,69.16,20.21,"008600"],["anacardi",20.47,61.4,18.19,"008610"],["avocado",11.28,83.36,6.59,"007490"],["olio (?:di )?(?:semi di )?girasole",11.91,35.35,53.2,"009650"],["olio (?:di )?(?:semi di )?arachid[ei]",19.41,52.57,27.9,"009610"],["salmone affumicato",28.03,43.43,29.04,"122410"],["salmone",28.13,43.56,28.88,"122400"],["(?:sgombro|maccarello)",28.5,45.1,26.86,"123000"],["(?:uovo|uova)(?: di gallina)?(?: intero| intere)?",45.55,37.07,18.1,"181100"],["parmigiano(?: reggiano)?(?: dop)?",65.98,31.35,2.81,"166000"],["(?:petto (?:di )?pollo|pollo petto)",37.2,28.27,34.23,"106500"],["(?:petto (?:di )?tacchino|fesa (?:di )?tacchino|tacchino fesa)",37.25,30.39,33.33,"106850"],["(?:lonza|lombo)(?: di maiale)?",35.01,37.36,28.57,"105210"],["prosciutto crudo(?: nazionale)?",33.7,44.2,12.9,"110535"],["bresaola(?: della valtellina)?(?: igp)?",33,31.6,16,"110020"],["speck(?: alto adige| dell alto adige)?(?: igp)?",33,41.7,16.1,"110800"]];
@@ -27748,7 +27783,7 @@ function fatAutomaticProfile(item){
  else if(/^pancetta tesa\b/.test(n))p=[36.38,47.66,16.58,"110310"];
  else if(/^pancetta magretta\b/.test(n))p=[39.44,49.98,11.05,"110300"];
  else if(/^pancetta arrotolata\b/.test(n))p=[31.2,46.8,12,"110320"];
- if(!p)return null;
+ if(!p)return fatRecipeEstimate(item);
  if(/\b(caramellat\w*|zuccherat\w*|cioccolat\w*|aromatizzat\w*|margarin\w*)\b/.test(n))return null;
  const divisor=Math.max(100,p[0]+p[1]+p[2]);
  return {version:1,saturatedShare:p[0]/divisor,unsaturatedShare:(p[1]+p[2])/divisor,source:"CREA",code:p[3]};
@@ -27766,16 +27801,28 @@ function fatHomeRender(){
   if(el)el.textContent=sugarFmt(t[kind])+" g";
   if(bar){bar.style.width=(t.total>0?t[kind]/t.total*100:0)+"%";bar.parentElement.setAttribute("aria-label",(kind==="unsaturated"?"Insaturi: ":"Saturi: ")+sugarFmt(t[kind])+" grammi su "+sugarFmt(t.total)+" totali")}
  }
+ const known=t.unsaturated+t.saturated;
+ for(const id of ["ux2-fat-unsaturated-bar","ux2-fat-saturated-bar"]){
+  const bar=document.getElementById(id),track=bar?.parentElement;if(!track)continue;
+  const pct=t.total?Math.min(100,Math.max(0,known/t.total*100)):100;
+  track.style.background=t.unknown>=.05?"linear-gradient(to right, rgba(100,116,139,.18) 0%, rgba(100,116,139,.18) "+pct+"%, rgba(148,163,184,.75) "+pct+"%, rgba(148,163,184,.75) 100%)":"";
+  track.title=t.unknown>=.05?"Parte grigia: "+sugarFmt(t.unknown)+" g non classificati":"Classificazione completa";
+ }
+ const uncertainBar=document.getElementById("ux2-fat-uncertain-bar");if(uncertainBar){uncertainBar.style.width=(t.total?t.unknown/t.total*100:0)+"%";uncertainBar.parentElement.setAttribute("aria-label","Quota incerta: "+sugarFmt(t.unknown)+" grammi su "+sugarFmt(t.total)+" totali");uncertainBar.parentElement.hidden=t.unknown<.05;}
  const unknown=document.getElementById("ux2-fat-unknown");if(unknown){unknown.textContent="Quota incerta: "+sugarFmt(t.unknown)+" g";unknown.hidden=t.unknown<.05}
- const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Ripartizione stimata · CREA";
+ const note=document.getElementById("ux2-fat-reference");if(note)note.textContent="Classificati "+(t.total?Math.round((t.saturated+t.unsaturated)/t.total*100):100)+"% · "+(t.unknown>=.05?"quota incerta "+sugarFmt(t.unknown)+" g":"copertura completa")+" · stima CREA";
 }
 function fatHelpOpen(){
  const modal=document.getElementById("fat-origin-modal"),list=document.getElementById("fat-origin-list");list.replaceChildren();
+ const totals=(log||[]).reduce((a,item)=>{const p=fatParts(item);a.total+=p.total;a.known+=p.saturated+p.unsaturated;return a},{total:0,known:0});
+ const summary=document.createElement("p");summary.className="composition-coverage";
+ summary.textContent="Copertura classificazione grassi: "+(totals.total?Math.round(totals.known/totals.total*100):100)+"% · "+sugarFmt(totals.known)+" g classificati su "+sugarFmt(totals.total)+" g registrati. I grassi non determinati non sono automaticamente saturi.";
+ list.appendChild(summary);
  (log||[]).filter(x=>Number(x.fat)>0).forEach(item=>{
   const p=fatParts(item),row=document.createElement("div");row.className="fat-source-row";
   const title=document.createElement("strong");title.textContent=item.name;row.appendChild(title);
-  const detail=document.createElement("p");detail.textContent=p.profile?"Stima: "+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
-  if(p.profile){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
+  const detail=document.createElement("p");detail.textContent=p.profile?(p.profile.source==="ricetta-stimata"?"Stima indicativa da ricetta (ingredienti e quantità non verificati): ":"Stima da profilo CREA: ")+sugarFmt(p.unsaturated)+" g insaturi · "+sugarFmt(p.saturated)+" g saturi"+(p.unknown>=.05?" · "+sugarFmt(p.unknown)+" g non attribuiti":""):"Composizione non determinabile dal nome o dalla fotografia: "+sugarFmt(p.total)+" g non attribuiti.";row.appendChild(detail);
+  if(p.profile?.code){const link=document.createElement("a");link.href="https://www.alimentinutrizione.it/tabelle-nutrizionali/"+p.profile.code;link.textContent="Scheda CREA "+p.profile.code;link.target="_blank";link.rel="noopener";row.appendChild(link)}
   list.appendChild(row);
  });
  modal.style.display="flex";modal.querySelector(".modal-close").focus();
