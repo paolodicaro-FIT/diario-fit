@@ -28397,37 +28397,32 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 <script id="df-manual-pasta-estimator-v1">
 function dfEstimateManualPasta(){
  const get=id=>document.getElementById(id);
+ const note=get("df-est-note");
+ const say=message=>{if(note)note.textContent=message;};
  const name=get("custom-name");
  const title=(name?.value||"").trim();
- if(title && !/pasta|spaghetti|penne|fusilli|rigatoni|linguine/i.test(title)){
-   get("df-est-note").textContent="Questa prima versione supporta solo la pasta aglio e olio; non sono stati modificati i campi.";
-   return;
+ if(title&&!/pasta|spaghetti|penne|fusilli|rigatoni|linguine/i.test(title)){
+  say("Il calcolo locale supporta per ora soltanto la pasta. Nessun campo modificato.");return;
  }
- const grams=Number(get("df-est-pasta-weight").value);
- const oilText=get("df-est-oil").value.trim();
+ const grams=Number(get("df-est-pasta-weight")?.value);
+ const oilText=(get("df-est-oil")?.value||"").trim();
  const oil=oilText===""?0:Number(oilText);
- const state=get("df-est-pasta-state").value.trim().toLowerCase();
- if(!/(^|\\s)(secc[ao]|crud[ao]|cott[ao]|bollit[ao])($|\\s)/i.test(state)){
-  get("df-est-note").textContent="Descrizione libera accettata, ma per calcolare la pasta specifica «secca/cruda» oppure «cotta». Per altri piatti servirà il calcolatore IA universale.";
-  return;
+ const state=(get("df-est-pasta-state")?.value||"").trim().toLowerCase();
+ if(!/(secc[ao]|crud[ao]|cott[ao]|bollit[ao])/i.test(state)){
+  say("Per la pasta specifica secca, cruda o cotta nel campo Peso riferito a.");return;
  }
  if(!Number.isFinite(grams)||grams<=0||!Number.isFinite(oil)||oil<0){
-   get("df-est-note").textContent="Inserisci peso pasta positivo e olio non negativo.";
-   return;
+  say("Inserisci una quantità positiva e olio non negativo.");return;
  }
- // Valori medi indicativi pasta secca per 100g; cotta stimata con rapporto 2,5:1.
  const cooked=/cott[ao]|bollit[ao]/i.test(state);
  const dry=grams/(cooked?2.5:1);
  const round=n=>Math.round(n*10)/10;
- const fields={ "custom-kcal":dry*3.53+oil*8.84+4,
-   "custom-pro":dry*.125+.2,
-   "custom-fat":dry*.015+oil+.05,
-   "custom-carb":dry*.715+.8,
-   "custom-sugar":dry*.035+.1,
-   "custom-weight":grams+oil+3 };
- for(const [id,val] of Object.entries(fields)){const el=get(id);if(el){el.value=round(val);el.dispatchEvent(new Event("input",{bubbles:true}));}}
+ const fields={"custom-kcal":dry*3.53+oil*8.84+4,"custom-pro":dry*.125+.2,"custom-fat":dry*.015+oil+.05,"custom-carb":dry*.715+.8,"custom-sugar":dry*.035+.1,"custom-weight":grams+oil+3};
+ for(const [id,val] of Object.entries(fields)){
+  const el=get(id);if(el){el.value=round(val);el.dispatchEvent(new Event("input",{bubbles:true}));}
+ }
  if(name&&!title)name.value="Pasta aglio e olio";
- get("df-est-note").textContent="Stima indicativa: pasta "+round(dry)+" g a secco, olio "+oil+" g"+(oilText===""?" (non dichiarato, conteggiato come 0 g)":"")+", aglio ~3 g. Verifica i valori e salva solo dopo averli controllati. Peso cotto stimato con rapporto 2,5:1.";
+ say("Campi compilati: "+round(dry)+" g pasta secca equivalente, "+oil+" g olio (se non indicato: 0 g), circa 3 g aglio. Stima indicativa: verifica prima di salvare.");
 }
 </script>
 </body>
