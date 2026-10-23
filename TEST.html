@@ -28409,8 +28409,9 @@ async function dfEstimateManualPasta(){
  const oilText=(get("df-est-oil")?.value||"").trim();
  const notes=(get("df-est-dish-notes")?.value||"").trim();
  if(!title){say("Inserisci prima il nome del piatto.");name?.focus();return;}
- if(!Number.isFinite(grams)||grams<=0||grams>10000){say("Inserisci una quantità valida in grammi.");return;}
- if(!state){say("Seleziona se il peso è riferito all'alimento crudo o cotto.");return;}
+ if(grams!==null&&(!Number.isFinite(grams)||grams<=0||grams>10000)){say("Inserisci una quantità valida in grammi oppure lascia il campo vuoto.");return;}
+ if(grams!==null&&!state){say("Se indichi i grammi, seleziona crudo/secco oppure cotto/pronto.");return;}
+ if(grams===null&&state){say("Se non conosci il peso, lascia vuoto anche il campo «Peso riferito a».");return;}
  if(oilText!==""&&(!Number.isFinite(Number(oilText))||Number(oilText)<0||Number(oilText)>1000)){say("Controlla la quantità di olio.");return;}
  if(typeof apiFetch!=="function"){say("Servizio IA non disponibile: riprova dopo l'accesso.");return;}
  const description=[
