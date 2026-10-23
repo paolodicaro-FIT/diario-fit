@@ -13239,11 +13239,7 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
 
 
 
-<script id="df-ai-modal-controls">
-function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)return;m.classList.add("open");document.getElementById("df-ai-name")?.focus();}
-function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
-function dfAiSave(){const name=document.getElementById("df-ai-name")?.value.trim();if(!name){document.getElementById("df-est-note").textContent="Inserisci il nome del piatto.";return;}if(document.getElementById("df-ai-results")?.style.display==="none"){document.getElementById("df-est-note").textContent="Calcola prima i valori con l'IA.";return;}document.getElementById("custom-name").value=name;for(const id of ["kcal","pro","fat","carb","sugar","weight"]){const dest=document.getElementById("custom-"+id),src=document.getElementById("df-ai-"+id);if(dest&&src){dest.value=src.value;dest.dispatchEvent(new Event("input",{bubbles:true}));}}dfAiClose();addCustom();}
-</script>
+
 </body>
 </html>`);
   printWindow.document.close();
@@ -28468,5 +28464,10 @@ async function dfEstimateManualPasta(){
     </div>
 
 </div></div>
+<script id="df-ai-modal-controls">
+function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)return;m.classList.add("open");document.getElementById("df-ai-name")?.focus();}
+function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
+function dfAiSave(){const name=document.getElementById("df-ai-name")?.value.trim();if(!name){document.getElementById("df-est-note").textContent="Inserisci il nome del piatto.";return;}if(document.getElementById("df-ai-results")?.style.display==="none"){document.getElementById("df-est-note").textContent="Calcola prima i valori con l'IA.";return;}document.getElementById("custom-name").value=name;for(const id of ["kcal","pro","fat","carb","sugar","weight"]){const dest=document.getElementById("custom-"+id),src=document.getElementById("df-ai-"+id);if(dest&&src){dest.value=src.value;dest.dispatchEvent(new Event("input",{bubbles:true}));}}dfAiClose();addCustom();}
+</script>
 </body>
 </html>
