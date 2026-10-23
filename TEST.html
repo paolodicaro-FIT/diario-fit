@@ -27765,7 +27765,17 @@ function fatRecipeEstimate(item){
  const sat=four?.32:.34,unsat=four?.43:.41;
  return {version:1,saturatedShare:sat,unsaturatedShare:unsat,source:"ricetta-stimata",code:null,description:four?"pizza quattro stagioni":"pizza margherita"};
 }
+/* Profili da etichette condivise: solo prodotti nominati esplicitamente.
+   La quota non satura è ottenuta per differenza; può includere arrotondamenti. */
+function fatLabelProfile(item){
+ const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ const make=(sat,total,code)=>({version:1,saturatedShare:sat/total,unsaturatedShare:(total-sat)/total,source:"etichetta",code:null,description:code});
+ if(/^cracker(?:s)? lino sesamo(?: quinoa)?(?: \d+ ?g)?$/.test(n))return make(1.8,14.8,"Cracker lino sesamo quinoa Lidl");
+ if(/^taralli(?:ni)? puja(?: \d+ ?g)?$/.test(n))return make(1.7,14.3,"Tarallini Puja");
+ return null;
+}
 function fatAutomaticProfile(item){
+ const labelProfile=fatLabelProfile(item);if(labelProfile)return labelProfile;
  const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
  if(/\b(con|e|ripien\w*|farcit\w*|ricopert\w*|glass\w*|torta|biscott\w*|crema|pasta|spaghetti|riso|insalata|pizza|pinsa|panino|pesto|fritt\w*)\b|\+/.test(n))return fatRecipeEstimate(item);
 
