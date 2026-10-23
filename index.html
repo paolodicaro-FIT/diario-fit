@@ -10053,13 +10053,7 @@ function dfCalorieBarsRender(eaten,base,extra){
       🍽️ Pasti salvati
     </button>
 
-    <button
-      type="button"
-      class="ux254-manual-trigger"
-      onclick="ux254OpenManual()"
-    >
-      ✍️ Inserimento manuale
-    </button>
+    <div class="df-ai-home-actions"><button type="button" class="ux254-manual-trigger" onclick="ux254OpenManual()">✍️ Inserimento manuale</button><button type="button" class="ux254-manual-trigger" onclick="dfAiOpen()">✨ Calcola con IA</button></div>
 
 
     <div
@@ -10158,20 +10152,6 @@ function dfCalorieBarsRender(eaten,base,extra){
 
     </div>
 
-
-    <div id="df-text-estimator" style="padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:12px;background:var(--card-2)">
-      <strong>✨ Calcola valori dal piatto</strong>
-      <p style="font-size:.85rem;color:var(--subtext);margin:6px 0">Stima nutrizionale con Cloudflare Workers AI per qualsiasi piatto. I valori sono indicativi: verifica ingredienti e porzioni prima di salvare.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <label style="flex:1;min-width:110px">Quantità (g) · facoltativa<input id="df-est-pasta-weight" type="number" min="1" placeholder="Vuoto = stima IA" style="width:100%"></label>
-        <label style="flex:1;min-width:110px">Peso riferito a · se conosciuto<select id="df-est-pasta-state" style="width:100%"><option value="">Seleziona...</option><option value="dry">Crudo / secco</option><option value="cooked">Cotto / pronto</option></select></label>
-        <label style="flex:1;min-width:110px">Olio EVO (g) · facoltativo<input id="df-est-oil" type="number" min="0" placeholder="Se non usato, lascia vuoto" style="width:100%"></label>
-      </div>
-      <label style="display:block;margin-top:10px">Note sul piatto (facoltative)<input id="df-est-dish-notes" type="text" placeholder="Es. fatto in casa, con aglio fresco, senza formaggio..." style="width:100%"></label>
-      <button type="button" class="save-food-btn" style="width:100%;margin-top:10px" onclick="dfEstimateManualPasta()">✨ Calcola e compila</button>
-      <div id="df-est-weight-source" style="display:none;margin-top:8px;font-size:.83rem;color:var(--subtext)" role="status"></div>
-      <small id="df-est-note" style="display:block;margin-top:8px;color:var(--subtext)" role="status">Scrivi il nome del piatto nel campo Alimento. Se non conosci il peso, lascia vuoti quantità e stato: l’IA proverà a stimare la porzione dalla descrizione. Note e olio sono facoltativi.</small>
-    </div>
 
     <div class="free-entry-macros">
 
@@ -28407,7 +28387,7 @@ async function dfEstimateManualPasta(){
  const get=id=>document.getElementById(id);
  const say=message=>{const el=get("df-est-note");if(el)el.textContent=message;};
  const btn=document.querySelector('#df-text-estimator button[onclick="dfEstimateManualPasta()"]');
- const name=get("custom-name");
+ const name=get("df-ai-name");
  const title=(name?.value||"").trim();
  const gramsText=(get("df-est-pasta-weight")?.value||"").trim();
  const grams=gramsText===""?null:Number(gramsText);
@@ -28434,12 +28414,13 @@ async function dfEstimateManualPasta(){
   const response=await apiFetch("/api/ai/meal-text",{method:"POST",body:JSON.stringify({description})});
   const x=response?.result;
   if(!x)throw new Error("RISPOSTA_AI_NON_VALIDA");
-  const fields={"custom-kcal":x.kcal,"custom-pro":x.pro,"custom-fat":x.fat,"custom-carb":x.carb,"custom-sugar":x.sugar};
-  if(Number.isFinite(Number(x.serving_weight_g))&&Number(x.serving_weight_g)>0)fields["custom-weight"]=x.serving_weight_g;
+  const fields={"df-ai-kcal":x.kcal,"df-ai-pro":x.pro,"df-ai-fat":x.fat,"df-ai-carb":x.carb,"df-ai-sugar":x.sugar};
+  if(Number.isFinite(Number(x.serving_weight_g))&&Number(x.serving_weight_g)>0)fields["df-ai-weight"]=x.serving_weight_g;
   for(const [id,value] of Object.entries(fields)){
    const el=get(id);const n=Number(value);
    if(el&&value!==null&&value!==undefined&&Number.isFinite(n)&&n>=0){el.value=Math.round(n*10)/10;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}
   }
+  get("df-ai-results").style.display="block";
   const weightInfo=get("df-est-weight-source");
   if(weightInfo){
    const estimatedWeight=Number(x.serving_weight_g);
@@ -28464,6 +28445,33 @@ async function dfEstimateManualPasta(){
   say(msg);
  }finally{if(btn){btn.disabled=false;btn.textContent=oldLabel||"✨ Calcola e compila";}}
 }
+</script>
+
+<style>
+.df-ai-home-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.df-ai-home-actions button{min-width:0;white-space:normal;padding:11px 7px}.df-ai-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99998;display:none;align-items:center;justify-content:center;padding:12px}.df-ai-overlay.open{display:flex}.df-ai-dialog{width:min(540px,100%);max-height:calc(100dvh - 24px);overflow-y:auto;background:var(--card,#172331);color:var(--text,#fff);border:1px solid var(--border,#555);border-radius:16px;padding:16px;box-sizing:border-box}.df-ai-dialog input,.df-ai-dialog select{box-sizing:border-box;max-width:100%}
+</style>
+<div id="df-ai-overlay" class="df-ai-overlay" role="dialog" aria-modal="true" aria-label="Calcola con IA" onclick="if(event.target===this)dfAiClose()">
+<div class="df-ai-dialog"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><strong>✨ Calcola con IA</strong><button type="button" class="mini-btn" onclick="dfAiClose()" aria-label="Chiudi">✕</button></div>    <div id="df-text-estimator" style="padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:12px;background:var(--card-2)">
+      <strong>✨ Calcola con IA</strong>
+      <label style="display:block;margin-top:10px">🍽️ Descrizione del piatto<input id="df-ai-name" type="text" placeholder="Es. Trancio di pizza alta 4 stagioni, porzione normale" style="width:100%"></label>
+      <p style="font-size:.85rem;color:var(--subtext);margin:6px 0">Stima nutrizionale con Cloudflare Workers AI per qualsiasi piatto. I valori sono indicativi: verifica ingredienti e porzioni prima di salvare.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label style="flex:1;min-width:110px">Quantità (g) · facoltativa<input id="df-est-pasta-weight" type="number" min="1" placeholder="Vuoto = stima IA" style="width:100%"></label>
+        <label style="flex:1;min-width:110px">Peso riferito a · se conosciuto<select id="df-est-pasta-state" style="width:100%"><option value="">Seleziona...</option><option value="dry">Crudo / secco</option><option value="cooked">Cotto / pronto</option></select></label>
+        <label style="flex:1;min-width:110px">Olio EVO (g) · facoltativo<input id="df-est-oil" type="number" min="0" placeholder="Se non usato, lascia vuoto" style="width:100%"></label>
+      </div>
+      <label style="display:block;margin-top:10px">Note sul piatto (facoltative)<input id="df-est-dish-notes" type="text" placeholder="Es. fatto in casa, con aglio fresco, senza formaggio..." style="width:100%"></label>
+      <button type="button" class="save-food-btn" style="width:100%;margin-top:10px" onclick="dfEstimateManualPasta()">✨ Calcola e compila</button>
+      <div id="df-est-weight-source" style="display:none;margin-top:8px;font-size:.83rem;color:var(--subtext)" role="status"></div>
+      <small id="df-est-note" style="display:block;margin-top:8px;color:var(--subtext)" role="status">Descrivi il piatto nel campo qui sopra. Se non conosci il peso, lascia vuoti quantità e stato: l’IA proverà a stimare la porzione dalla descrizione. Note e olio sono facoltativi.</small>
+      <div id="df-ai-results" style="display:none;margin-top:12px"><strong>Valori stimati · modificabili</strong><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px"><label style="min-width:0">🔥 Kcal<input id="df-ai-kcal" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🥩 Proteine (g)<input id="df-ai-pro" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🥑 Grassi (g)<input id="df-ai-fat" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🍞 Carboidrati (g)<input id="df-ai-carb" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🍬 Zuccheri (g)<input id="df-ai-sugar" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">⚖️ Peso (g)<input id="df-ai-weight" type="number" min="0" step="any" style="width:100%"></label></div><button type="button" class="save-food-btn" style="width:100%;margin-top:12px" onclick="dfAiSave()">＋ Aggiungi e salva</button></div>
+    </div>
+
+</div></div>
+<script id="df-ai-modal-controls">
+function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)return;m.classList.add("open");document.getElementById("df-ai-name")?.focus();}
+function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
+function dfAiSave(){const name=document.getElementById("df-ai-name")?.value.trim();if(!name){document.getElementById("df-est-note").textContent="Inserisci il nome del piatto.";return;}if(document.getElementById("df-ai-results")?.style.display==="none"){document.getElementById("df-est-note").textContent="Calcola prima i valori con l'IA.";return;}document.getElementById("custom-name").value=name;for(const id of ["kcal","pro","fat","carb","sugar","weight"]){const dest=document.getElementById("custom-"+id),src=document.getElementById("df-ai-"+id);if(dest&&src){dest.value=src.value;dest.dispatchEvent(new Event("input",{bubbles:true}));}}dfAiClose();addCustom();}
 </script>
 </body>
 </html>
