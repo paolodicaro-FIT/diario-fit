@@ -10165,6 +10165,7 @@ function dfCalorieBarsRender(eaten,base,extra){
       </div>
       <label style="display:block;margin-top:10px">Note sul piatto (facoltative)<input id="df-est-dish-notes" type="text" placeholder="Es. fatto in casa, con aglio fresco, senza formaggio..." style="width:100%"></label>
       <button type="button" class="save-food-btn" style="width:100%;margin-top:10px" onclick="dfEstimateManualPasta()">✨ Calcola e compila</button>
+      <div id="df-est-weight-source" style="display:none;margin-top:8px;font-size:.83rem;color:var(--subtext)" role="status"></div>
       <small id="df-est-note" style="display:block;margin-top:8px;color:var(--subtext)" role="status">Scrivi il nome del piatto nel campo Alimento. Se non conosci il peso, lascia vuoti quantità e stato: l’IA proverà a stimare la porzione dalla descrizione. Note e olio sono facoltativi.</small>
     </div>
 
@@ -28434,9 +28435,24 @@ async function dfEstimateManualPasta(){
    const el=get(id);const n=Number(value);
    if(el&&value!==null&&value!==undefined&&Number.isFinite(n)&&n>=0){el.value=Math.round(n*10)/10;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}
   }
+  const weightInfo=get("df-est-weight-source");
+  if(weightInfo){
+   const estimatedWeight=Number(x.serving_weight_g);
+   const hasWeight=Number.isFinite(estimatedWeight)&&estimatedWeight>0;
+   weightInfo.style.display="block";
+   weightInfo.textContent=grams===null
+    ?(hasWeight?"⚖️ Peso della porzione: "+Math.round(estimatedWeight)+" g — STIMATO dall'IA, non misurato.":"⚖️ Peso non disponibile: l'IA non è riuscita a stimarlo.")
+    :(state==="dry"?"⚖️ Peso iniziale dichiarato: "+grams+" g crudo/secco."+(hasWeight?" Peso del piatto pronto: "+Math.round(estimatedWeight)+" g stimato dall'IA.":""):"⚖️ Peso dichiarato dall'utente: "+grams+" g cotto/pronto."+(hasWeight&&Math.abs(estimatedWeight-grams)>1?" Peso proposto dall'IA: "+Math.round(estimatedWeight)+" g (da verificare).":""));
+  }
+  const macroValues=[x.pro,x.fat,x.carb].map(Number);
+  const macroKcal=macroValues.every(Number.isFinite)?macroValues[0]*4+macroValues[1]*9+macroValues[2]*4:null;
+  const declaredKcal=Number(x.kcal);
+  const macroDifference=macroKcal!==null&&Number.isFinite(declaredKcal)?Math.abs(declaredKcal-macroKcal):0;
+  const macroWarning=macroDifference>Math.max(50,declaredKcal*0.10)?" · ⚠️ Calorie e macronutrienti poco coerenti (4-9-4: circa "+Math.round(macroKcal)+" kcal). Verifica prima di salvare.":"";
+  const confidence=grams===null&&x.confidence==="alta"?"media (peso stimato)":(x.confidence==="alta"&&x.nutrition_source!=="web"&&x.nutrition_source!=="label"?"media (stima non verificata)":(x.confidence||"non indicata"));
   const source=x.nutrition_source==="web"?"Fonte web verificata":x.nutrition_source==="label"?"Etichetta":"Stima IA";
   const uncertainty=Number.isFinite(Number(x.kcal_min))&&Number.isFinite(Number(x.kcal_max))&&Number(x.kcal_max)>Number(x.kcal_min)?" · Intervallo: "+x.kcal_min+"–"+x.kcal_max+" kcal":"";
-  say("✓ "+source+" · Attendibilità: "+(x.confidence||"non indicata")+uncertainty+(x.warning?" · "+x.warning:"")+" · Controlla i valori prima di salvare.");
+  say("✓ "+source+" · Attendibilità: "+confidence+uncertainty+macroWarning+(x.warning?" · "+x.warning:"")+" · Controlla i valori prima di salvare.");
  }catch(error){
   const code=String(error?.message||"");
   const msg=code==="AUTH_REQUIRED"?"Accedi a DIARIO-FIT per utilizzare l'IA.":code==="NOT_FOUND"?"Aggiorna prima il Worker Cloudflare: la nuova funzione testuale non è ancora pubblicata.":code==="WORKERS_AI_NOT_CONFIGURED"?"Cloudflare Workers AI non configurato.":code==="WORKERS_AI_ERROR"?"Cloudflare AI non risponde. Riprova più tardi.":"Analisi IA non riuscita ("+code.slice(0,70)+"). Nessun dato è stato salvato.";
