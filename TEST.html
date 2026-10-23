@@ -10157,7 +10157,7 @@ function dfCalorieBarsRender(eaten,base,extra){
 
     <div id="df-text-estimator" style="padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:12px;background:var(--card-2)">
       <strong>✨ Calcola valori dal piatto — TEST</strong>
-      <p style="font-size:.85rem;color:var(--subtext);margin:6px 0">Stima nutrizionale con IA Gemini per qualsiasi piatto. I valori sono indicativi: verifica ingredienti e porzioni prima di salvare.</p>
+      <p style="font-size:.85rem;color:var(--subtext);margin:6px 0">Stima nutrizionale con Cloudflare Workers AI per qualsiasi piatto. I valori sono indicativi: verifica ingredienti e porzioni prima di salvare.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <label style="flex:1;min-width:110px">Quantità (g)<input id="df-est-pasta-weight" type="number" min="1" value="100" style="width:100%"></label>
         <label style="flex:1;min-width:110px">Peso riferito a <strong style="color:#f59e0b;font-size:.85em">* obbligatorio</strong><select id="df-est-pasta-state" required aria-required="true" style="width:100%"><option value="">Seleziona...</option><option value="dry">Crudo / secco</option><option value="cooked">Cotto / pronto</option></select></label>
@@ -28422,8 +28422,8 @@ async function dfEstimateManualPasta(){
  const oldLabel=btn?.textContent;
  try{
   if(btn){btn.disabled=true;btn.textContent="⏳ Analisi IA in corso…";}
-  say("Sto stimando i valori nutrizionali con Gemini…");
-  const response=await apiFetch("/api/gemini/estimate",{method:"POST",body:JSON.stringify({description})});
+  say("Sto stimando i valori nutrizionali con Cloudflare AI…");
+  const response=await apiFetch("/api/ai/meal-text",{method:"POST",body:JSON.stringify({description})});
   const x=response?.result;
   if(!x)throw new Error("RISPOSTA_AI_NON_VALIDA");
   const fields={"custom-kcal":x.kcal,"custom-pro":x.pro,"custom-fat":x.fat,"custom-carb":x.carb,"custom-sugar":x.sugar};
@@ -28437,7 +28437,7 @@ async function dfEstimateManualPasta(){
   say("✓ "+source+" · Attendibilità: "+(x.confidence||"non indicata")+uncertainty+(x.warning?" · "+x.warning:"")+" · Controlla i valori prima di salvare.");
  }catch(error){
   const code=String(error?.message||"");
-  const msg=code==="AUTH_REQUIRED"?"Accedi a DIARIO-FIT per utilizzare l'IA.":code==="GEMINI_NOT_CONFIGURED"?"Chiave Gemini non configurata nel backend.":code==="GEMINI_API_ERROR"?"Il servizio Gemini non risponde. Riprova più tardi.":code==="GEMINI_INVALID_VALUES"?"La risposta IA contiene valori non validi. Riprova.":"Analisi IA non riuscita ("+code.slice(0,70)+"). Nessun dato è stato salvato.";
+  const msg=code==="AUTH_REQUIRED"?"Accedi a DIARIO-FIT per utilizzare l'IA.":code==="NOT_FOUND"?"Aggiorna prima il Worker Cloudflare: la nuova funzione testuale non è ancora pubblicata.":code==="WORKERS_AI_NOT_CONFIGURED"?"Cloudflare Workers AI non configurato.":code==="WORKERS_AI_ERROR"?"Cloudflare AI non risponde. Riprova più tardi.":"Analisi IA non riuscita ("+code.slice(0,70)+"). Nessun dato è stato salvato.";
   say(msg);
  }finally{if(btn){btn.disabled=false;btn.textContent=oldLabel||"✨ Calcola e compila";}}
 }
