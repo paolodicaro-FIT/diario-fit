@@ -27440,6 +27440,10 @@ function sugarAutomatic(item){
  .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
  if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
  if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
+ // Latticini semplici con whey non zuccherate: zuccheri principalmente da lattosio.
+ // Limitato ai nomi espliciti; preparati aromatizzati/dolcificati restano incerti.
+ if(/^(?=.*\\byogurt\\b)(?=.*\\b(?:whey|proteine del siero)\\b)/.test(n)&&!/\\b(?:zucchero|zuccherato|miele|sciroppo|marmellata|confettura|frutta|cioccolato|cacao|aromatizzato|dolcificato|vaniglia|fragola)\\b/.test(n))
+  return {version:1,naturalShare:.8,freeShare:0,source:"auto",rule:"yogurt-whey-semplice-stima-parziale-80pct"};
  const pizzaEstimate=sugarPizzaEstimate(item);if(pizzaEstimate)return pizzaEstimate;
  // Nomi ricorrenti del diario: riconoscimento mirato, senza assimilare bevande aromatizzate.
  if(/^(?:noce|noci) di macadamia(?: \d+(?: g| gr| grammi)?)?$/.test(n))return make("natural","macadamia-intera");
