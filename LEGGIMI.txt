@@ -1,0 +1,9 @@
+PaoloLab Launcher v1.5
+
+Carica TUTTI i file di questo ZIP nella cartella principale del repository diario-fit, sostituendo Launcher.html. Non modificare index.html.
+
+Apri: https://paolodicaro-fit.github.io/diario-fit/Launcher.html
+
+Per installare sul cellulare: apri la pagina in Chrome, menu > Aggiungi a schermata Home (o Installa app). Se hai gia una scorciatoia, rimuovila e ricreala dopo la pubblicazione per aggiornare la nuova icona.
+
+Include icone PNG 32, 48, 180, 192, 512 px e manifest PWA.

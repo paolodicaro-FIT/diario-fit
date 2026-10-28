@@ -1,0 +1,24 @@
+{
+  "name": "PaoloLab Launcher",
+  "short_name": "PaoloLab",
+  "description": "Accesso alle WebApp Diario FIT, Diario GYM e Moto NAV",
+  "start_url": "./Launcher.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1426",
+  "theme_color": "#0b1426",
+  "icons": [
+    {
+      "src": "./paololab-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./paololab-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
