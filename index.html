@@ -8106,6 +8106,13 @@ html[data-theme="light"] .bodycomp-guide-visual{background:radial-gradient(circl
     color:#05291b;font-size:1rem;font-weight:900;
     box-shadow:0 8px 24px rgba(0,218,146,.16)
   }
+  html[data-theme="light"] .ux2-photo-home,
+  html[data-theme="light"] #ux2-home .ux2-photo-home {
+    background:linear-gradient(135deg,#e9faff,#d6f1f7)!important;
+    color:#155469!important;
+    border-color:#83c9d9!important;
+    box-shadow:0 4px 12px rgba(23,110,135,.10)!important;
+  }
   .ux2-photo-home{
     width:100%;min-height:52px;
     border:1px solid rgba(126,226,168,.52);border-radius:15px;
@@ -13240,6 +13247,48 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
 
 
 
+
+
+
+
+
+
+
+
+<style id="df-light-final-dialog-cockpit">
+html[data-theme="light"] #df-diary-edit-modal form{background:#f7fbfd!important;color:#173744!important;border-color:#a8cfdb!important}
+html[data-theme="light"] #df-diary-edit-modal form h3,
+html[data-theme="light"] #df-diary-edit-modal form label{color:#173744!important}
+html[data-theme="light"] #df-diary-edit-modal form input{background:#fff!important;color:#182c35!important;border:1px solid #aacbd4!important}
+html[data-theme="light"] #df-diary-edit-modal form button{background:#e4f4f7!important;color:#174353!important;border:1px solid #99c7d2!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit{background:linear-gradient(135deg,#effaff,#d8f0f3)!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit::before{opacity:.035!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-cockpit-eyebrow,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-target-label,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-amount span,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-target-pill{color:#245565!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-amount strong,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-target-pill strong{color:#103d4c!important}
+</style>
+
+<style id="df-light-photo-button-final">
+html[data-theme="light"] #ux2-home button.ux2-photo-home{background:linear-gradient(135deg,#e9faff,#d6f1f7)!important;color:#155469!important;border:1px solid #83c9d9!important;box-shadow:0 4px 12px rgba(23,110,135,.10)!important}
+html[data-theme="light"] #ux2-home button.ux2-photo-home:hover{background:#c9edf5!important}
+</style>
+
+<style id="df-more-light-theme">
+html[data-theme="light"] #ux25-more-modal .ux25-more-panel{background:#f5fafc!important;color:#173745!important;border:1px solid #acd3dd!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-head h2,
+html[data-theme="light"] #ux25-more-modal .ux25-more-card strong{color:#173745!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-head small{color:#148a72!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-intro,
+html[data-theme="light"] #ux25-more-modal .ux25-more-card small{color:#526e7b!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-card{background:linear-gradient(135deg,#fff,#eaf5f8)!important;color:#173745!important;border:1px solid #b8dbe4!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-close{background:#e1f3f7!important;color:#174a5b!important;border:1px solid #a8d0da!important}
+html[data-theme="light"] #ux25-more-modal .ux25-more-card > b{color:#098d75!important}
+html[data-theme="light"] #ux25-more-modal .theme-choice:not(.active){background:#fff!important;color:#1a3d4c!important;border:1px solid #b5d1d9!important}
+html[data-theme="light"] #ux25-more-modal .theme-choice.active{background:#ff9e16!important;color:#172b34!important}
+</style>
 </body>
 </html>`);
   printWindow.document.close();
@@ -22525,7 +22574,9 @@ function dfEditDiaryItem(id) {
   overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:15px;overflow:auto";
   const fields=[["name","Alimento","text"],["meal","Pasto","text"],["time","Ora del consumo","time"],["weight","Peso (g)","number"],["kcal","Calorie (kcal)","number"],["pro","Proteine (g)","number"],["carb","Carboidrati (g)","number"],["fat","Grassi (g)","number"],["sugar","Zuccheri (g)","number"],["waterMl","Acqua (ml)","number"]];
   const panel=document.createElement("form");
-  panel.style.cssText="background:var(--card-bg,#202733);color:var(--text,#fff);border:1px solid #64748b;border-radius:16px;padding:20px;max-width:440px;width:100%;max-height:90vh;overflow:auto";
+  const dfLightEdit=document.documentElement.getAttribute("data-theme")==="light";
+  panel.style.cssText=`background:${dfLightEdit?"#f7fbfd":"#202733"};color:${dfLightEdit?"#173744":"#f3f8fa"};border:1px solid ${dfLightEdit?"#a8cfdb":"#64748b"};border-radius:16px;padding:20px;max-width:440px;width:100%;max-height:90vh;overflow:auto`;
+  panel.dataset.theme=dfLightEdit?"light":"dark";
   const heading=document.createElement("h3");heading.textContent="✏️ Modifica alimento registrato";panel.appendChild(heading);
   fields.forEach(([key,label,type])=>{
     const wrap=document.createElement("label");wrap.style.cssText="display:block;margin:9px 0;font-size:14px";
@@ -26205,6 +26256,12 @@ function ux254OpenManual(){
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
   if(!modal)return;
+  const light=document.documentElement.getAttribute("data-theme")==="light";
+  const panel=modal.querySelector(".ux25-more-panel");
+  if(panel){panel.style.setProperty("background",light?"#f5fafc":"linear-gradient(155deg,#103746,#071f29 72%)","important");panel.style.setProperty("color",light?"#173745":"#f4fbff","important");}
+  modal.querySelectorAll(".ux25-more-card").forEach(el=>{el.style.setProperty("background",light?"#ffffff":"#103746","important");el.style.setProperty("color",light?"#173745":"#f4fbff","important");});
+  modal.querySelectorAll(".ux25-more-card strong,.ux25-more-head h2").forEach(el=>el.style.setProperty("color",light?"#173745":"#ffffff","important"));
+  modal.querySelectorAll(".ux25-more-card small,.ux25-more-intro").forEach(el=>el.style.setProperty("color",light?"#526e7b":"#a6c1cb","important"));
   modal.classList.add("ux25-open");
   modal.setAttribute("aria-hidden","false");
 }
@@ -28518,5 +28575,62 @@ function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)retur
 function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
 function dfAiSave(){const name=document.getElementById("df-ai-name")?.value.trim();if(!name){document.getElementById("df-est-note").textContent="Inserisci il nome del piatto.";return;}if(document.getElementById("df-ai-results")?.style.display==="none"){document.getElementById("df-est-note").textContent="Calcola prima i valori con l'IA.";return;}document.getElementById("custom-name").value=name;for(const id of ["kcal","pro","fat","carb","sugar","weight"]){const dest=document.getElementById("custom-"+id),src=document.getElementById("df-ai-"+id);if(dest&&src){dest.value=src.value;dest.dispatchEvent(new Event("input",{bubbles:true}));}}dfAiClose();addCustom();}
 </script>
+<style id="df-full-light-surface-test">
+/* Tema chiaro coerente: superfici chiare, testo scuro, accenti Diario FIT. */
+html[data-theme="light"] #ux2-home .ux2-macro,
+html[data-theme="light"] #ux2-home .calorie-cockpit,
+html[data-theme="light"] #ux2-home .calorie-panel,
+html[data-theme="light"] #ux2-home .ux2-diary-fold,
+html[data-theme="light"] #ux2-home .ux2-diary-toggle,
+html[data-theme="light"] #ux2-home .ux2-status-btn,
+html[data-theme="light"] #ux2-home .ux2-action-btn,
+html[data-theme="light"] #ux2-home .ux2-composition-details,
+html[data-theme="light"] #ux2-bottom-nav {
+ background:linear-gradient(145deg,#ffffff,#eaf5f7)!important;
+ color:#183544!important;
+ border-color:rgba(25,143,165,.28)!important;
+ box-shadow:0 5px 18px rgba(25,65,78,.10)!important;
+}
+html[data-theme="light"] #ux2-home .ux2-macro,
+html[data-theme="light"] #ux2-home .ux2-macro > b,
+html[data-theme="light"] #ux2-home .ux2-macro > b span,
+html[data-theme="light"] #ux2-home .ux2-macro > b small,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body strong,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-amount strong {
+ color:#153544!important;
+}
+html[data-theme="light"] #ux2-home .ux2-macro > small,
+html[data-theme="light"] #ux2-home .ux2-macro .sugar-line,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body small {color:#526c79!important}
+html[data-theme="light"] #ux2-home .ux2-macro label {color:#087d9b!important}
+html[data-theme="light"] #ux2-bottom-nav button {background:transparent!important;color:#345765!important}
+html[data-theme="light"] #ux2-bottom-nav button.active,
+html[data-theme="light"] #ux2-bottom-nav button[aria-current="page"] {background:#d5f2ec!important;color:#086c65!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit::before {opacity:.10!important}
+html[data-theme="light"] #ux2-home .calorie-frame-trace {opacity:.65}
+</style>
+<style id="df-food-advice-light-test">
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-panel{background:#f7fbfd!important;color:#193743!important;border:1px solid #b7dce5!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-editor,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-results{background:#fff!important;color:#193743!important;border-color:#b9dbe3!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked){background:#dff8ee!important;border-color:#10ad79!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label::before{background:#eaf5f7!important;color:#176779!important;border-color:#8bbac6!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked)::before{background:#10c98a!important;color:#073b2c!important}
+html[data-theme="light"] #df-food-advice-modal input,
+html[data-theme="light"] #df-food-advice-modal select,
+html[data-theme="light"] #df-food-advice-modal textarea,
+html[data-theme="light"] #df-food-catalog-search,
+html[data-theme="light"] #df-food-catalog-select{background:#fff!important;color:#183743!important;border:1px solid #9fcbd6!important}
+html[data-theme="light"] #df-food-advice-modal input::placeholder{color:#718792!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-edit-btn,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-edit button,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-controls button:not(.df-main){background:#e6f5f8!important;color:#155365!important;border-color:#a2cbd5!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-remove-btn{color:#b33143!important}
+html[data-theme="light"] #df-food-advice-modal #df-food-advice-status,
+html[data-theme="light"] #df-food-advice-modal p,
+html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
+</style>
 </body>
 </html>
