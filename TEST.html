@@ -27432,11 +27432,19 @@ function sugarPizzaEstimate(item){
  // Senza ricetta/etichetta non è possibile escludere zuccheri aggiunti all'impasto o salsa.
  return {version:1,naturalShare:.7,freeShare:0,source:"auto",rule:"pizza-ricetta-stimata-70pct-intrinseci-30pct-incerti"};
 }
+/* Normalizzazione etichette del diario: quantità e porzioni non cambiano la natura dell'alimento. */
+function dfFoodCanonicalName(name){
+ return String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+ .replace(/^[^a-z0-9]+/,"").replace(/[—–]/g," ")
+ .replace(/\(\s*\d+\s*x\s*\)/g," ").replace(/\b\d+\s*(?:pz|pezzi|pezzo|unita)\b/g," ")
+ .replace(/\b(?:sodo|sode|sodi|alla coque)\b/g," ")
+ .replace(/\s+/g," ").trim();
+}
 function sugarAutomatic(item){
- const n=String(item?.name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9%+]+/g," ").trim();
+ const n=dfFoodCanonicalName(item?.name).replace(/[^a-z0-9%+]+/g," ").trim();
  const make=(kind,rule)=>({version:1,naturalShare:kind==="natural"?1:0,freeShare:kind==="free"?1:0,source:"auto",rule});
  // Nessuna conversione dei carboidrati: si ripartisce esclusivamente item.sugar.
- const simple=n.replace(/\b\d+(?: \d+)?\s*(?:g|gr|ml|kg)\b/g," ").replace(/\b(?:senza zuccheri aggiunti|senza zucchero aggiunto|senza lattosio|con buccia|senza buccia|al naturale|in acqua|in salamoia|non zuccherato|non zuccherata)\b/g," ")
+ const simple=n.replace(/\b\d+(?: \d+)?\s*(?:g|gr|ml|kg|pz)\b/g," ").replace(/\b(?:senza zuccheri aggiunti|senza zucchero aggiunto|senza lattosio|con buccia|senza buccia|al naturale|in acqua|in salamoia|non zuccherato|non zuccherata)\b/g," ")
  .replace(/\b(?:fresco|fresca|fresche|freschi|intero|intera|intere|interi|crudo|cruda|crudi|crude|cotto|cotta|cotti|cotte|bollito|bollita|bolliti|bollite|lessato|lessata|lessati|lessate|surgelato|surgelata|surgelati|surgelate|secco|secca|secchi|secche|sgusciato|sgusciate|sgusciati|essiccato|essiccata|essiccati|essiccate|naturali|semplice|semplici|biologico|biologica|bio|g|gr|grammi|ml|kg)\b/g," ").replace(/\b\d+(?: \d+)?\b(?!%)/g," ").replace(/\s+/g," ").trim();
  if(/^(?:succo|spremuta|nettare) (?:di |d )?(?:arancia|arance|mela|mele|pera|pere|uva|ananas|pompelmo|limone|frutta|melograno)(?: 100%| senza zuccheri aggiunti)?$/.test(n)||/^(?:zucchero(?: bianco| di canna| integrale)?|fruttosio|destrosio|glucosio|maltosio|miele(?: di \w+)?|sciroppo (?:di |d )?(?:acero|agave|glucosio|fruttosio|riso)|melassa)(?: \d+ ?g)?$/.test(n))return make("free","zuccheri-liberi-espliciti");
  if(/^(?:coca cola|cola|fanta|sprite|aranciata|limonata|chinotto|gassosa|caramelle|caramella|zucchero filato|lecca lecca|leccalecca|gommose)(?: classica| classico| alla frutta| \d+ ?(?:g|ml))?$/.test(n))return make("free","bevande-e-dolci-zuccherati");
@@ -27793,7 +27801,8 @@ function fatAutomaticProfile(item){
   }
  }
  let p=null;
- if(/^(?:noci |noce |noc[ie] di )?macadamia\b/.test(n))p=[16.52,81.20,1.38,"008620"];
+ if(/^(?:uovo|uova)(?:\s+\d+)?$/.test(dfFoodCanonicalName(item?.name).replace(/[^a-z0-9]+/g," ").trim()))p=[45.55,37.07,18.1,"181100"];
+ else if(/^(?:noci |noce |noc[ie] di )?macadamia\b/.test(n))p=[16.52,81.20,1.38,"008620"];
  else if(/^(?:olio (?:extravergine|extra vergine)(?: di oliva)?|olio evo|evo)\b/.test(n))p=[15.32,77.27,7.97,"009210"];
  else if(/^olio (?:di oliva|d oliva)\b/.test(n))p=[16.34,75.28,8.94,"009200"];
  else if(/^mandorl[ae]\b/.test(n))p=[8.38,72.04,19.82,"008540"];
