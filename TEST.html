@@ -13241,79 +13241,11 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
 
 
 
-<style id="df-light-contrast-desktop-fix">
-/* La Home mantiene card blu anche nel tema chiaro: testo esplicitamente leggibile. */
-html[data-theme="light"] #ux2-home .ux2-macro,
-html[data-theme="light"] #ux2-home .ux2-macro > b,
-html[data-theme="light"] #ux2-home .ux2-macro > b span,
-html[data-theme="light"] #ux2-home .ux2-macro > b small {color:#f5fbff!important}
-html[data-theme="light"] #ux2-home .ux2-macro > small {color:#b5d1db!important}
-html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body,
-html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body strong {color:#e9f7fb!important}
-/* La dock desktop deve rimanere ancorata al bordo inferiore, senza coprire contenuti. */
-@media(min-width:761px){
- #ux2-bottom-nav{position:sticky!important;bottom:10px!important;left:auto!important;right:auto!important;margin:20px auto 0!important;transform:none!important;z-index:20!important}
-}
-</style>
 
-<style id="df-full-light-surface-test">
-/* Tema chiaro coerente: superfici chiare, testo scuro, accenti Diario FIT. */
-html[data-theme="light"] #ux2-home .ux2-macro,
-html[data-theme="light"] #ux2-home .calorie-cockpit,
-html[data-theme="light"] #ux2-home .calorie-panel,
-html[data-theme="light"] #ux2-home .ux2-diary-fold,
-html[data-theme="light"] #ux2-home .ux2-diary-toggle,
-html[data-theme="light"] #ux2-home .ux2-status-btn,
-html[data-theme="light"] #ux2-home .ux2-action-btn,
-html[data-theme="light"] #ux2-home .ux2-composition-details,
-html[data-theme="light"] #ux2-bottom-nav {
- background:linear-gradient(145deg,#ffffff,#eaf5f7)!important;
- color:#183544!important;
- border-color:rgba(25,143,165,.28)!important;
- box-shadow:0 5px 18px rgba(25,65,78,.10)!important;
-}
-html[data-theme="light"] #ux2-home .ux2-macro,
-html[data-theme="light"] #ux2-home .ux2-macro > b,
-html[data-theme="light"] #ux2-home .ux2-macro > b span,
-html[data-theme="light"] #ux2-home .ux2-macro > b small,
-html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body,
-html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body strong,
-html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-amount strong {
- color:#153544!important;
-}
-html[data-theme="light"] #ux2-home .ux2-macro > small,
-html[data-theme="light"] #ux2-home .ux2-macro .sugar-line,
-html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body small {color:#526c79!important}
-html[data-theme="light"] #ux2-home .ux2-macro label {color:#087d9b!important}
-html[data-theme="light"] #ux2-bottom-nav button {background:transparent!important;color:#345765!important}
-html[data-theme="light"] #ux2-bottom-nav button.active,
-html[data-theme="light"] #ux2-bottom-nav button[aria-current="page"] {background:#d5f2ec!important;color:#086c65!important}
-html[data-theme="light"] #ux2-home .calorie-cockpit::before {opacity:.10!important}
-html[data-theme="light"] #ux2-home .calorie-frame-trace {opacity:.65}
-</style>
 
-<style id="df-food-advice-light-test">
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-panel{background:#f7fbfd!important;color:#193743!important;border:1px solid #b7dce5!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label,
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-editor,
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-results{background:#fff!important;color:#193743!important;border-color:#b9dbe3!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked){background:#dff8ee!important;border-color:#10ad79!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label::before{background:#eaf5f7!important;color:#176779!important;border-color:#8bbac6!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked)::before{background:#10c98a!important;color:#073b2c!important}
-html[data-theme="light"] #df-food-advice-modal input,
-html[data-theme="light"] #df-food-advice-modal select,
-html[data-theme="light"] #df-food-advice-modal textarea,
-html[data-theme="light"] #df-food-catalog-search,
-html[data-theme="light"] #df-food-catalog-select{background:#fff!important;color:#183743!important;border:1px solid #9fcbd6!important}
-html[data-theme="light"] #df-food-advice-modal input::placeholder{color:#718792!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-edit-btn,
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-edit button,
-html[data-theme="light"] #df-food-advice-modal .df-food-advice-controls button:not(.df-main){background:#e6f5f8!important;color:#155365!important;border-color:#a2cbd5!important}
-html[data-theme="light"] #df-food-advice-modal .df-food-remove-btn{color:#b33143!important}
-html[data-theme="light"] #df-food-advice-modal #df-food-advice-status,
-html[data-theme="light"] #df-food-advice-modal p,
-html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
-</style>
+
+
+
 </body>
 </html>`);
   printWindow.document.close();
@@ -28592,5 +28524,62 @@ function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)retur
 function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
 function dfAiSave(){const name=document.getElementById("df-ai-name")?.value.trim();if(!name){document.getElementById("df-est-note").textContent="Inserisci il nome del piatto.";return;}if(document.getElementById("df-ai-results")?.style.display==="none"){document.getElementById("df-est-note").textContent="Calcola prima i valori con l'IA.";return;}document.getElementById("custom-name").value=name;for(const id of ["kcal","pro","fat","carb","sugar","weight"]){const dest=document.getElementById("custom-"+id),src=document.getElementById("df-ai-"+id);if(dest&&src){dest.value=src.value;dest.dispatchEvent(new Event("input",{bubbles:true}));}}dfAiClose();addCustom();}
 </script>
+<style id="df-full-light-surface-test">
+/* Tema chiaro coerente: superfici chiare, testo scuro, accenti Diario FIT. */
+html[data-theme="light"] #ux2-home .ux2-macro,
+html[data-theme="light"] #ux2-home .calorie-cockpit,
+html[data-theme="light"] #ux2-home .calorie-panel,
+html[data-theme="light"] #ux2-home .ux2-diary-fold,
+html[data-theme="light"] #ux2-home .ux2-diary-toggle,
+html[data-theme="light"] #ux2-home .ux2-status-btn,
+html[data-theme="light"] #ux2-home .ux2-action-btn,
+html[data-theme="light"] #ux2-home .ux2-composition-details,
+html[data-theme="light"] #ux2-bottom-nav {
+ background:linear-gradient(145deg,#ffffff,#eaf5f7)!important;
+ color:#183544!important;
+ border-color:rgba(25,143,165,.28)!important;
+ box-shadow:0 5px 18px rgba(25,65,78,.10)!important;
+}
+html[data-theme="light"] #ux2-home .ux2-macro,
+html[data-theme="light"] #ux2-home .ux2-macro > b,
+html[data-theme="light"] #ux2-home .ux2-macro > b span,
+html[data-theme="light"] #ux2-home .ux2-macro > b small,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body strong,
+html[data-theme="light"] #ux2-home .calorie-cockpit .calorie-amount strong {
+ color:#153544!important;
+}
+html[data-theme="light"] #ux2-home .ux2-macro > small,
+html[data-theme="light"] #ux2-home .ux2-macro .sugar-line,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body small {color:#526c79!important}
+html[data-theme="light"] #ux2-home .ux2-macro label {color:#087d9b!important}
+html[data-theme="light"] #ux2-bottom-nav button {background:transparent!important;color:#345765!important}
+html[data-theme="light"] #ux2-bottom-nav button.active,
+html[data-theme="light"] #ux2-bottom-nav button[aria-current="page"] {background:#d5f2ec!important;color:#086c65!important}
+html[data-theme="light"] #ux2-home .calorie-cockpit::before {opacity:.10!important}
+html[data-theme="light"] #ux2-home .calorie-frame-trace {opacity:.65}
+</style>
+<style id="df-food-advice-light-test">
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-panel{background:#f7fbfd!important;color:#193743!important;border:1px solid #b7dce5!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-editor,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-results{background:#fff!important;color:#193743!important;border-color:#b9dbe3!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked){background:#dff8ee!important;border-color:#10ad79!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label::before{background:#eaf5f7!important;color:#176779!important;border-color:#8bbac6!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-options label:has(input:checked)::before{background:#10c98a!important;color:#073b2c!important}
+html[data-theme="light"] #df-food-advice-modal input,
+html[data-theme="light"] #df-food-advice-modal select,
+html[data-theme="light"] #df-food-advice-modal textarea,
+html[data-theme="light"] #df-food-catalog-search,
+html[data-theme="light"] #df-food-catalog-select{background:#fff!important;color:#183743!important;border:1px solid #9fcbd6!important}
+html[data-theme="light"] #df-food-advice-modal input::placeholder{color:#718792!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-edit-btn,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-edit button,
+html[data-theme="light"] #df-food-advice-modal .df-food-advice-controls button:not(.df-main){background:#e6f5f8!important;color:#155365!important;border-color:#a2cbd5!important}
+html[data-theme="light"] #df-food-advice-modal .df-food-remove-btn{color:#b33143!important}
+html[data-theme="light"] #df-food-advice-modal #df-food-advice-status,
+html[data-theme="light"] #df-food-advice-modal p,
+html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
+</style>
 </body>
 </html>
