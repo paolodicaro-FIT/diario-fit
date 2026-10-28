@@ -26256,6 +26256,12 @@ function ux254OpenManual(){
 function ux2OpenMore(){
   const modal=document.getElementById("ux25-more-modal");
   if(!modal)return;
+  const light=document.documentElement.getAttribute("data-theme")==="light";
+  const panel=modal.querySelector(".ux25-more-panel");
+  if(panel){panel.style.setProperty("background",light?"#f5fafc":"linear-gradient(155deg,#103746,#071f29 72%)","important");panel.style.setProperty("color",light?"#173745":"#f4fbff","important");}
+  modal.querySelectorAll(".ux25-more-card").forEach(el=>{el.style.setProperty("background",light?"#ffffff":"#103746","important");el.style.setProperty("color",light?"#173745":"#f4fbff","important");});
+  modal.querySelectorAll(".ux25-more-card strong,.ux25-more-head h2").forEach(el=>el.style.setProperty("color",light?"#173745":"#ffffff","important"));
+  modal.querySelectorAll(".ux25-more-card small,.ux25-more-intro").forEach(el=>el.style.setProperty("color",light?"#526e7b":"#a6c1cb","important"));
   modal.classList.add("ux25-open");
   modal.setAttribute("aria-hidden","false");
 }
