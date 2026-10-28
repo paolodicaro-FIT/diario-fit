@@ -80,7 +80,10 @@ async function connectDiario(){
   render();
  }catch(e){box.innerHTML='Impossibile leggere i Preferiti · <a href="../">Apri DiarioFIT</a>';console.warn('MiniFIT account:',e.message)}
 }
-render();connectDiario();$('workonly').onchange=render;try{const v=JSON.parse(localStorage.getItem('minifit-shaker')||'{}');if(typeof v.enabled==='boolean')$('shakeron').checked=v.enabled;if(Number(v.grams)>0&&Number(v.grams)<=80)$('shakergrams').value=v.grams}catch{};if(Number($('shakergrams').value)>80)$('shakergrams').value=42;const saveShaker=()=>localStorage.setItem('minifit-shaker',JSON.stringify({enabled:$('shakeron').checked,grams:Number($('shakergrams').value)}));$('shakeron').onchange=saveShaker;$('shakergrams').onchange=saveShaker;
+render();
+// Avoid an indefinite verification screen when the backend stalls.
+const connectTimeout=setTimeout(()=>{const box=$('account');if(box.textContent.includes('Verifica account'))box.textContent='Collegamento lento o non disponibile. Ricarica la pagina; le borse locali non vengono cancellate.'},12000);
+connectDiario().finally(()=>clearTimeout(connectTimeout));$('workonly').onchange=render;try{const v=JSON.parse(localStorage.getItem('minifit-shaker')||'{}');if(typeof v.enabled==='boolean')$('shakeron').checked=v.enabled;if(Number(v.grams)>0&&Number(v.grams)<=80)$('shakergrams').value=v.grams}catch{};if(Number($('shakergrams').value)>80)$('shakergrams').value=42;const saveShaker=()=>localStorage.setItem('minifit-shaker',JSON.stringify({enabled:$('shakeron').checked,grams:Number($('shakergrams').value)}));$('shakeron').onchange=saveShaker;$('shakergrams').onchange=saveShaker;
 
 const bagKey=()=>accountId?'minifit-bags-'+accountId:null;
 function getBags(){if(!accountId)return [];try{const v=JSON.parse(localStorage.getItem(bagKey())||'[]');return Array.isArray(v)?v:[]}catch{return []}}
