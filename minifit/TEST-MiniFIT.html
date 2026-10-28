@@ -43,18 +43,21 @@ function render(){const pick=$('pick'),selected=$('selected');pick.replaceChildr
 
 // MiniFIT 0.26: account verified by DiarioFIT backend; favorites are read-only.
 const api='https://diario-fit-api.paolodicaro-3d.workers.dev';
+async function fetchWithTimeout(url,options){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}}
+function localBagDiagnostic(){const keys=Object.keys(localStorage).filter(k=>k.startsWith('minifit-bags-')||k.startsWith('minifit-bag-'));return keys.length+' archivi borse in questo browser'}
 async function connectDiario(){
  const token=localStorage.getItem('diario_backend_token');
  const box=$('account');
- if(!token){box.innerHTML='Account non collegato · <a href="../">Accedi a DiarioFIT</a> per importare i Preferiti';return}
+ box.textContent='TEST · Verifica account… · '+localBagDiagnostic();
+ if(!token){box.innerHTML='TEST · '+localBagDiagnostic()+' · Account non collegato · <a href="../">Accedi a DiarioFIT</a> per importare i Preferiti';return}
  try{
   const headers={Authorization:'Bearer '+token};
-  const meResponse=await fetch(api+'/api/me',{headers,cache:'no-store'});
+  const meResponse=await fetchWithTimeout(api+'/api/me',{headers,cache:'no-store'});
   const me=await meResponse.json();
   if(!meResponse.ok||!me.ok||!me.user)throw Error('SESSION');
   const uid=String(me.user.id??me.user.email??'');
   if(!uid)throw Error('USER');accountId=uid;migrateBag();
-  const settingsResponse=await fetch(api+'/api/user/settings',{headers,cache:'no-store'});
+  const settingsResponse=await fetchWithTimeout(api+'/api/user/settings',{headers,cache:'no-store'});
   const data=await settingsResponse.json();
   if(!settingsResponse.ok||!data.ok)throw Error('SETTINGS');
   dailyTarget=Number(data.targets?.kcal)||null;const storageKey='minifit-user-'+uid;
@@ -76,9 +79,9 @@ async function connectDiario(){
   const persist=()=>localStorage.setItem(storageKey,JSON.stringify(items.filter(x=>!x.fromDiario||x.selected)));
   // Preserve imported foods for this session; never write DiarioFIT favorites.
   window.miniSave=persist;
-  box.textContent='✓ DiarioFIT collegato · '+favs.length+' preferiti · target '+(dailyTarget?Math.round(dailyTarget)+' kcal':'non disponibile');
+  box.textContent='✓ TEST · DiarioFIT collegato · '+favs.length+' preferiti · target '+(dailyTarget?Math.round(dailyTarget)+' kcal':'non disponibile');
   render();
- }catch(e){box.innerHTML='Impossibile leggere i Preferiti · <a href="../">Apri DiarioFIT</a>';console.warn('MiniFIT account:',e.message)}
+ }catch(e){box.innerHTML='Impossibile leggere i Preferiti · <a href="../">Apri DiarioFIT</a>';console.warn('MiniFIT account:',e.message);box.textContent='TEST · Connessione fallita ('+String(e.name==='AbortError'?'timeout':e.message)+') · '+localBagDiagnostic()}
 }
 render();
 // Avoid an indefinite verification screen when the backend stalls.
