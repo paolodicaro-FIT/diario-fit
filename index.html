@@ -8637,9 +8637,6 @@ body.ux-manual-open #ux24-manual-card{display:block!important}
   text-shadow: 0 1px 2px #031022, 0 0 8px rgba(247,165,42,.7);
   white-space: nowrap;
 }
-/* Identificativo release discreto nell'angolo inferiore destro del cockpit */
-.calorie-cockpit{position:relative}
-.df-cockpit-release{position:absolute;right:24px;bottom:16px;z-index:3;font-size:10px;letter-spacing:.035em;color:rgba(165,225,235,.65);pointer-events:none;white-space:nowrap}
 </style>
 
 <style>
@@ -9604,8 +9601,6 @@ function dfCalorieBarsRender(eaten,base,extra){
   <div id="ux2-goal-activity" class="calorie-target-pill calorie-activity" hidden><span class="calorie-target-label">CON ATTIVITÀ <strong id="calorie-activity-percent">0%</strong></span><span class="calorie-target-value"><b id="ux2-activity-target-kcal">—</b> <small>kcal</small></span></div>
  </div>
  </div>
- <div class="df-cockpit-release" aria-label="Versione DiarioFIT">rev. 2026.10.21.01</div>
-<script>(function(){const el=document.querySelector('.df-cockpit-release');if(!el)return;el.title='Ultima revisione pubblicata su GitHub; la cache del dispositivo potrebbe essere precedente';fetch('https://api.github.com/repos/paolodicaro-FIT/diario-fit/commits?path=index.html&per_page=1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(a=>{const c=a[0];if(!c?.sha)return;const date=new Date(c.commit.committer.date).toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'}).replaceAll('-','.');el.textContent='rev. '+date+' · '+c.sha.slice(0,7)}).catch(()=>{});})();</script>
  <div class="calorie-screen-reader"><div id="calorie-base-track" role="progressbar" aria-label="Calorie rispetto al target base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><div id="calorie-activity-track" role="progressbar" aria-label="Calorie rispetto al target con attività" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div><span id="calorie-extra-note"></span></div>
  <div hidden aria-hidden="true"><span id="ux2-kcal-target"></span><span id="ux2-kcal-percent"></span><span id="ux2-ring"></span><span id="ux2-activity-ring"></span></div>
 </section>
@@ -9613,8 +9608,8 @@ function dfCalorieBarsRender(eaten,base,extra){
     <section class="ux2-macros">
       <div class="ux2-macro"><span class="ico">🥩</span><b><span id="ux2-pro">0</span> <small>g</small></b><label>Proteine</label><div class="ux2-track"><i id="ux2-pro-bar"></i></div><small>di <span id="ux2-pro-target">—</span> g</small></div>
       <div class="ux2-macro"><span class="ico">🍞</span><b><span id="ux2-carb">0</span> <small>g</small></b><label>Carboidrati</label><div class="ux2-track"><i id="ux2-carb-bar"></i></div><small>di <span id="ux2-carb-target">—</span> g</small></div>
-      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-fat-uncertain-bar"></i></div><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div>
-      <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-sugar-uncertain-bar"></i></div><small id="ux2-sugar-free-reference"></small><small id="ux2-sugar-source">Categorie secondo OMS<br>Ripartizione stimata · DiarioFIT</small></div>
+      <div class="ux2-macro fat-macro"><span class="ico">🥑</span><b><span id="ux2-fat">0</span> <small>g</small></b><label>Grassi totali <button type="button" class="sugar-info" onclick="fatHelpOpen()" aria-label="Spiegazione e composizione dei grassi">ⓘ</button></label><details class="ux2-composition-details"><summary>Mostra dettagli <span aria-hidden="true">⌄</span></summary><div class="ux2-composition-body"><div class="sugar-line"><span>Insaturi</span><strong id="ux2-fat-unsaturated">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-fat-unsaturated-bar"></i></div><div class="sugar-line"><span>Saturi</span><strong id="ux2-fat-saturated">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-fat-saturated-bar"></i></div><small id="ux2-fat-unknown">Quota incerta: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-fat-uncertain-bar"></i></div><small id="ux2-fat-reference"></small><span hidden id="ux2-fat-target"></span></div></details></div>
+      <div class="ux2-macro sugar-macro"><span class="ico">🍬</span><b><span id="ux2-sugar">0</span> <small>g</small></b><label>Zuccheri totali <button type="button" class="sugar-info" onclick="sugarHelpOpen()" aria-label="Spiegazione e origine degli zuccheri">ⓘ</button></label><details class="ux2-composition-details"><summary>Mostra dettagli <span aria-hidden="true">⌄</span></summary><div class="ux2-composition-body"><div class="sugar-line"><span>Naturali non liberi</span><strong id="ux2-sugar-natural">0 g</strong></div><div class="sugar-track" role="img"><i id="ux2-sugar-natural-bar"></i></div><div class="sugar-line"><span>Liberi</span><strong id="ux2-sugar-free">0 g</strong></div><div class="sugar-track free" role="img"><i id="ux2-sugar-free-bar"></i></div><small id="ux2-sugar-unknown">Da classificare: 0 g</small><div class="sugar-track uncertain" role="img" aria-label="Quota non classificata"><i id="ux2-sugar-uncertain-bar"></i></div><small id="ux2-sugar-free-reference"></small><small id="ux2-sugar-source">Categorie secondo OMS<br>Ripartizione stimata · DiarioFIT</small></div></details></div>
       <div class="ux2-macro"><span class="ico">💧</span><b><span id="ux2-water">0</span></b><label>Acqua</label><div class="ux2-track"><i id="ux2-water-bar"></i></div><small>di <span id="ux2-water-target">—</span> ml</small></div>
     </section>
 
@@ -10139,14 +10134,15 @@ function dfCalorieBarsRender(eaten,base,extra){
     </div>
 
 
-    <div class="free-entry-name">
+    <div class="free-entry-name" style="padding:12px;border:1px solid rgba(245,158,11,.55);border-radius:14px;background:rgba(245,158,11,.07)">
 
       <label>
-        <span>🍽️ Alimento</span>
+        <span style="font-size:1.05rem;font-weight:800">🍽️ Nome del piatto</span>
         <input
           type="text"
           id="custom-name"
-          placeholder="Nome alimento e dose"
+          style="font-size:1.2rem;font-weight:750;min-height:48px;width:100%"
+          placeholder="Nome del piatto"
         >
       </label>
 
@@ -28456,6 +28452,39 @@ async function dfEstimateManualPasta(){
 
 <style>
 .df-ai-home-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.df-ai-home-actions button{min-width:0;white-space:normal;padding:11px 7px}.df-ai-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99998;display:none;align-items:center;justify-content:center;padding:12px}.df-ai-overlay.open{display:flex}.df-ai-dialog{width:min(540px,100%);max-height:calc(100dvh - 24px);overflow-y:auto;background:var(--card,#172331);color:var(--text,#fff);border:1px solid var(--border,#555);border-radius:16px;padding:16px;box-sizing:border-box}.df-ai-dialog input,.df-ai-dialog select{box-sizing:border-box;max-width:100%}
+
+/* TEST: composizione grassi e zuccheri compatta, espandibile a richiesta */
+#ux2-home .ux2-composition-details{width:100%;margin-top:5px}
+#ux2-home .ux2-composition-details>summary{cursor:pointer;list-style:none;font-size:.69rem;color:var(--accent);padding:7px 3px;min-height:30px;display:flex;align-items:center;justify-content:center;gap:6px}
+#ux2-home .ux2-composition-details>summary::-webkit-details-marker{display:none}
+#ux2-home .ux2-composition-details[open]>summary span{transform:rotate(180deg)}
+#ux2-home .ux2-composition-body{padding-top:3px}
+#ux2-home .ux2-composition-body>small{display:block;font-size:.59rem;line-height:1.35;margin-top:4px}
+#ux2-home .ux2-composition-details:not([open]){margin-bottom:0}
+
+/* TEST: riduce l'altezza delle schede grassi e zuccheri chiuse */
+@media(max-width:760px){
+ #ux2-home .ux2-macro.fat-macro:has(.ux2-composition-details:not([open])),#ux2-home .ux2-macro.sugar-macro:has(.ux2-composition-details:not([open])){min-height:0!important;height:auto!important;padding:8px 10px!important;align-self:stretch}
+ #ux2-home .ux2-composition-details:not([open]){margin-top:0}
+ #ux2-home .ux2-composition-details>summary{min-height:26px;padding:2px 0;font-size:.66rem}
+}
+
+/* TEST: riquadri compatti, apertura dettagli a dimensione naturale */
+@media(max-width:760px){
+ #ux2-home .ux2-macro.fat-macro:has(> .ux2-composition-details:not([open])),
+ #ux2-home .ux2-macro.sugar-macro:has(> .ux2-composition-details:not([open])){
+   display:grid!important;grid-template-columns:1fr auto!important;grid-template-rows:auto auto!important;
+   align-content:center!important;align-items:center!important;
+   min-height:0!important;height:auto!important;padding:7px 10px!important;gap:1px 5px!important;
+ }
+ #ux2-home .ux2-macro.fat-macro:has(> .ux2-composition-details:not([open]))>b,
+ #ux2-home .ux2-macro.sugar-macro:has(> .ux2-composition-details:not([open]))>b{grid-column:1!important;grid-row:1!important;margin:0!important;line-height:1.05!important}
+ #ux2-home .ux2-macro.fat-macro:has(> .ux2-composition-details:not([open]))>label,
+ #ux2-home .ux2-macro.sugar-macro:has(> .ux2-composition-details:not([open]))>label{grid-column:1!important;grid-row:2!important;margin:0!important;line-height:1.15!important}
+ #ux2-home .ux2-macro.fat-macro:has(> .ux2-composition-details:not([open]))>.ux2-composition-details,
+ #ux2-home .ux2-macro.sugar-macro:has(> .ux2-composition-details:not([open]))>.ux2-composition-details{grid-column:2!important;grid-row:1/3!important;align-self:center!important;margin:0!important}
+ #ux2-home .ux2-composition-details:not([open])>summary{font-size:.63rem!important;min-height:34px!important;max-width:90px;text-align:center;line-height:1.2;padding:2px!important}
+}
 </style>
 <div id="df-ai-overlay" class="df-ai-overlay" role="dialog" aria-modal="true" aria-label="Calcola con IA" onclick="if(event.target===this)dfAiClose()">
 <div class="df-ai-dialog"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><strong>✨ Calcola con IA</strong><button type="button" class="mini-btn" onclick="dfAiClose()" aria-label="Chiudi">✕</button></div>    <div id="df-text-estimator" style="padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:12px;background:var(--card-2)">
@@ -28474,7 +28503,7 @@ async function dfEstimateManualPasta(){
       <div id="df-ai-results" style="display:none;margin-top:12px"><strong>Valori stimati · modificabili</strong><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px"><label style="min-width:0">🔥 Kcal<input id="df-ai-kcal" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🥩 Proteine (g)<input id="df-ai-pro" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🥑 Grassi (g)<input id="df-ai-fat" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🍞 Carboidrati (g)<input id="df-ai-carb" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">🍬 Zuccheri (g)<input id="df-ai-sugar" type="number" min="0" step="any" style="width:100%"></label><label style="min-width:0">⚖️ Peso (g)<input id="df-ai-weight" type="number" min="0" step="any" style="width:100%"></label></div><button type="button" class="save-food-btn" style="width:100%;margin-top:12px" onclick="dfAiSave()">＋ Aggiungi e salva</button></div>
     </div>
 
-</div></div>
+</div></div></details></div>
 <script id="df-ai-modal-controls">
 function dfAiOpen(){const m=document.getElementById("df-ai-overlay");if(!m)return;m.classList.add("open");document.getElementById("df-ai-name")?.focus();}
 function dfAiClose(){document.getElementById("df-ai-overlay")?.classList.remove("open");}
