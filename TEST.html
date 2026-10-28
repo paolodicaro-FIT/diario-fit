@@ -13240,6 +13240,21 @@ window.addEventListener("load", () => setTimeout(() => window.print(), 180));
 
 
 
+
+<style id="df-light-contrast-desktop-fix">
+/* La Home mantiene card blu anche nel tema chiaro: testo esplicitamente leggibile. */
+html[data-theme="light"] #ux2-home .ux2-macro,
+html[data-theme="light"] #ux2-home .ux2-macro > b,
+html[data-theme="light"] #ux2-home .ux2-macro > b span,
+html[data-theme="light"] #ux2-home .ux2-macro > b small {color:#f5fbff!important}
+html[data-theme="light"] #ux2-home .ux2-macro > small {color:#b5d1db!important}
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body,
+html[data-theme="light"] #ux2-home .ux2-macro .ux2-composition-body strong {color:#e9f7fb!important}
+/* La dock desktop deve rimanere ancorata al bordo inferiore, senza coprire contenuti. */
+@media(min-width:761px){
+ #ux2-bottom-nav{position:sticky!important;bottom:10px!important;left:auto!important;right:auto!important;margin:20px auto 0!important;transform:none!important;z-index:20!important}
+}
+</style>
 </body>
 </html>`);
   printWindow.document.close();
