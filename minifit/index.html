@@ -1,4 +1,4 @@
-<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101521"><title>MiniFIT 0.26</title><style>:root{font-family:system-ui;background:#101521;color:#f4f6fb}*{box-sizing:border-box}body{margin:0;padding:18px;max-width:760px;margin:auto}h1{margin:8px 0;color:#8be5df}h2{font-size:1.1rem}small,.muted{color:#aeb9ca}.panel{background:#1b2434;border:1px solid #344459;border-radius:18px;padding:16px;margin:14px 0}button,input,select{font:inherit;border-radius:10px;padding:10px;border:1px solid #53647a;background:#121b2a;color:white}button{cursor:pointer;background:#176d77;border:0;font-weight:650}button.secondary{background:#344459}.line{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:9px 0}.food{display:grid;grid-template-columns:1fr 85px 80px;gap:8px;align-items:center;border-bottom:1px solid #344459;padding:9px 0}.food label{display:flex;align-items:center;gap:8px}.food input[type=checkbox]{accent-color:#60d5d0;width:20px;height:20px}.food input[type=number]{width:100%}table{width:100%;border-collapse:collapse}td,th{padding:12px 5px;border-bottom:1px solid #344459;text-align:left;vertical-align:top}th:first-child,td:first-child{width:75px;font-weight:700}strong{color:#8be5df}.notice{font-size:.87rem;color:#c4d0dd}#result{display:none}.food{grid-template-columns:1fr!important;gap:10px!important;padding:17px 0!important}.food .controls{display:flex;align-items:center;gap:10px}.food .controls input{width:90px;min-width:0}.food .controls select{width:85px}.food .controls button{margin-left:auto}.food .foodname{font-weight:650;font-size:1.02rem}.panel{padding:19px}.line{gap:12px}details{margin-top:18px;padding-top:14px;border-top:1px solid #344459}summary{cursor:pointer;color:#b9cbd9}#selected{margin-top:15px}/* v0.4 compact mobile layout */body{padding:10px 12px}.panel{padding:12px!important;margin:9px 0!important;border-radius:14px}h1{font-size:1.5rem;margin:2px 0 3px}h2{font-size:1rem;margin:2px 0 10px}.line{gap:7px;margin:6px 0;flex-wrap:wrap}button,input,select{padding:8px;border-radius:9px;font-size:0.95rem}.food{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:7px!important;padding:7px 0!important;min-height:47px}.food .foodname{font-size:.91rem;line-height:1.15;min-width:0}.food .controls{gap:5px;flex-wrap:nowrap}.food .controls input{width:59px;padding:7px 5px;text-align:center}.food .controls select{width:57px;padding:7px 3px}.food .controls button{padding:6px 9px;min-width:30px;margin:0}.notice{font-size:.78rem}details{margin-top:9px;padding-top:8px}#selected{margin-top:7px}#generate{padding:12px!important}table td,table th{padding:8px 4px}@media(max-width:390px){body{padding:7px}.panel{padding:10px!important}.food .foodname{font-size:.85rem}.food .controls input{width:52px}.food .controls select{width:53px}}/* v0.5 DiarioFIT-inspired, compact flat layout */
+<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101521"><title>MiniFIT 0.39</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%232ce7dc%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231679c7%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22118%22%20height%3D%22118%22%20rx%3D%2228%22%20fill%3D%22%23101725%22%20stroke%3D%22%2333d8db%22%20stroke-width%3D%225%22%2F%3E%3Cpath%20d%3D%22M22%2083L40%2057%2055%2073%2078%2037%20105%2069%22%20fill%3D%22none%22%20stroke%3D%22url(%23g)%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2279%22%20cy%3D%2237%22%20r%3D%228%22%20fill%3D%22%23f9c55e%22%2F%3E%3Ctext%20x%3D%2264%22%20y%3D%22111%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%20font-family%3D%22Arial%2Csans-serif%22%20font-weight%3D%22bold%22%20fill%3D%22%23eaffff%22%3EminiFIT%3C%2Ftext%3E%3C%2Fsvg%3E"><style>:root{font-family:system-ui;background:#101521;color:#f4f6fb}*{box-sizing:border-box}body{margin:0;padding:18px;max-width:760px;margin:auto}h1{margin:8px 0;color:#8be5df}h2{font-size:1.1rem}small,.muted{color:#aeb9ca}.panel{background:#1b2434;border:1px solid #344459;border-radius:18px;padding:16px;margin:14px 0}button,input,select{font:inherit;border-radius:10px;padding:10px;border:1px solid #53647a;background:#121b2a;color:white}button{cursor:pointer;background:#176d77;border:0;font-weight:650}button.secondary{background:#344459}.line{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:9px 0}.food{display:grid;grid-template-columns:1fr 85px 80px;gap:8px;align-items:center;border-bottom:1px solid #344459;padding:9px 0}.food label{display:flex;align-items:center;gap:8px}.food input[type=checkbox]{accent-color:#60d5d0;width:20px;height:20px}.food input[type=number]{width:100%}table{width:100%;border-collapse:collapse}td,th{padding:12px 5px;border-bottom:1px solid #344459;text-align:left;vertical-align:top}th:first-child,td:first-child{width:75px;font-weight:700}strong{color:#8be5df}.notice{font-size:.87rem;color:#c4d0dd}#result{display:none}.food{grid-template-columns:1fr!important;gap:10px!important;padding:17px 0!important}.food .controls{display:flex;align-items:center;gap:10px}.food .controls input{width:90px;min-width:0}.food .controls select{width:85px}.food .controls button{margin-left:auto}.food .foodname{font-weight:650;font-size:1.02rem}.panel{padding:19px}.line{gap:12px}details{margin-top:18px;padding-top:14px;border-top:1px solid #344459}summary{cursor:pointer;color:#b9cbd9}#selected{margin-top:15px}/* v0.4 compact mobile layout */body{padding:10px 12px}.panel{padding:12px!important;margin:9px 0!important;border-radius:14px}h1{font-size:1.5rem;margin:2px 0 3px}h2{font-size:1rem;margin:2px 0 10px}.line{gap:7px;margin:6px 0;flex-wrap:wrap}button,input,select{padding:8px;border-radius:9px;font-size:0.95rem}.food{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:7px!important;padding:7px 0!important;min-height:47px}.food .foodname{font-size:.91rem;line-height:1.15;min-width:0}.food .controls{gap:5px;flex-wrap:nowrap}.food .controls input{width:59px;padding:7px 5px;text-align:center}.food .controls select{width:57px;padding:7px 3px}.food .controls button{padding:6px 9px;min-width:30px;margin:0}.notice{font-size:.78rem}details{margin-top:9px;padding-top:8px}#selected{margin-top:7px}#generate{padding:12px!important}table td,table th{padding:8px 4px}@media(max-width:390px){body{padding:7px}.panel{padding:10px!important}.food .foodname{font-size:.85rem}.food .controls input{width:52px}.food .controls select{width:53px}}/* v0.5 DiarioFIT-inspired, compact flat layout */
 :root{background:#0d1320;color:#f4f8ff}
 body{padding:12px 13px;max-width:650px}
 h1{font-size:1.85rem;letter-spacing:-.6px;color:#7ce6e0;text-shadow:0 0 20px #1ec7c455}
@@ -26,12 +26,74 @@ button#pickadd{background:linear-gradient(120deg,#176d79,#218d91);box-shadow:0 0
 input:focus,select:focus{outline:1px solid #65d7d4;box-shadow:0 0 10px #23bfc444}
 #result{border-top:1px solid #2a3b50!important;padding-top:14px!important}
 @media(max-width:390px){.time-row{gap:6px}.time-row label{gap:4px;font-size:.85rem}.time-row input{padding:7px 3px}.food .foodname{font-size:.94rem}}
-#account{padding:7px 0;color:#91dcd9}#account a{color:#8ce9e4}.food{min-height:36px!important;padding:3px 0!important}.food .controls input,.food .controls select{padding:4px 3px}.food .controls button{padding:3px 8px}button#generate{box-shadow:0 0 30px #19d4d45c,0 0 8px #2ddedc44}h1{text-shadow:0 0 28px #21d6d6a0}#selected{margin-top:5px}#savebag,#loadbag{font-size:.82rem;padding:7px 9px}#bagstatus{min-height:1em;color:#88d9d2}#targetinfo{margin:6px 0;color:#9fcfd1}#bagname{max-width:230px}#bagpick{max-width:100%}#deletebag{min-width:34px}#bagstatus{font-size:.8rem}</style><h1>MiniFIT <small>· v0.26</small></h1><div class="muted">Organizza gli alimenti dalle 05:00 alle 14:15</div><section class="panel"><h2>La giornata</h2><div class="line"><label><input type="checkbox" id="gym" checked> Palestra alle</label><input type="time" id="gymtime" value="14:15"></div><div class="time-row"><label>Inizio <input type="time" id="start" value="05:15"></label><label>Fine <input type="time" id="end" value="14:00"></label></div><div class="line" style="margin-top:9px"><label><input id="shakeron" type="checkbox" checked> Shaker quotidiano</label><label class="notice">Whey <input id="shakergrams" type="number" min="1" value="42" style="width:72px"> g</label></div><div class="notice">450 ml acqua + whey + creatina. Orario modificabile.</div></section><section class="panel"><h2>La borsa di oggi</h2><div id="account" class="notice" style="margin-bottom:8px">Verifica account DiarioFIT…</div><div class="notice" style="margin:5px 0">Scegli una borsa salvata oppure prepara quella di oggi.</div><div class="line" style="margin-top:9px"><input id="bagname" placeholder="Nome borsa" aria-label="Nome borsa" style="flex:1;min-width:125px"><button id="savebag" class="secondary">Salva</button></div><div class="line"><select id="bagpick" aria-label="Borse salvate" style="flex:1;min-width:135px"></select><button id="loadbag" class="secondary">Carica</button><button id="deletebag" class="secondary" title="Elimina borsa selezionata">×</button></div><div id="bagstatus" class="notice"></div><div class="line"><select id="pick" style="flex:1;min-width:130px"></select><button id="pickadd">+ Aggiungi</button></div><div id="selected"></div><div class="line"><label class="notice"><input type="checkbox" id="workonly" checked> Solo alimenti da lavoro</label></div><details><summary>Gestisci alimenti</summary><p class="notice">Aggiungi un alimento con calorie per 100 g.</p><div class="line"><input id="newname" placeholder="Alimento" style="flex:1;min-width:130px"><input id="newkcal" type="number" min="0" placeholder="kcal/100 g" style="width:115px"><button id="add">Salva</button></div></details></section><button id="generate" style="width:100%;padding:16px">Genera programma</button><section class="panel" id="result"><h2>Programma della mattina</h2><div id="summary"></div><div id="targetinfo" class="notice"></div><table><thead><tr><th>Orario</th><th>Cosa mangiare</th><th>kcal</th></tr></thead><tbody id="schedule"></tbody></table><p class="notice">Distribuzione indicativa: non sostituisce una valutazione nutrizionale. Le quantità vengono ripartite in modo orientativo e non implicano che debbano essere consumate tutte.</p><button id="copy" class="secondary">Copia programma</button></section><script>
+#account{padding:7px 0;color:#91dcd9}#account a{color:#8ce9e4}.food{min-height:36px!important;padding:3px 0!important}.food .controls input,.food .controls select{padding:4px 3px}.food .controls button{padding:3px 8px}button#generate{box-shadow:0 0 30px #19d4d45c,0 0 8px #2ddedc44}h1{text-shadow:0 0 28px #21d6d6a0}#selected{margin-top:5px}#savebag,#loadbag{font-size:.82rem;padding:7px 9px}#bagstatus{min-height:1em;color:#88d9d2}#targetinfo{margin:6px 0;color:#9fcfd1}#bagname{max-width:230px}#bagpick{max-width:100%}#deletebag{min-width:34px}#bagstatus{font-size:.8rem}/* v0.36: mobile-first tighter controls and clearer schedule */
+body{padding:9px 11px}
+h1{font-size:1.65rem;margin:0 0 2px}
+body>.muted{font-size:.82rem;margin-bottom:5px}
+.panel{margin:5px 0!important;padding:4px 0 9px!important}
+.panel+.panel{padding-top:10px!important}
+.panel h2{font-size:1.04rem;margin-bottom:7px}
+.line{gap:5px;margin:4px 0}
+button,input,select{padding:7px 6px;font-size:.9rem}
+#account{padding:3px 0;font-size:.8rem}
+.food{padding:4px 0!important;min-height:36px!important}
+.food .foodname{font-size:.91rem}
+#selected{margin-top:4px}
+#generate{padding:11px!important;margin:5px 0;font-size:1rem!important}
+#result{padding-top:9px!important}
+#result #summary{font-size:1.03rem;font-weight:600;line-height:1.35}
+#result #targetshort{margin-top:3px}
+#result table{font-size:.91rem}
+#result td,#result th{padding:8px 4px;line-height:1.32}
+#result td:last-child,#result th:last-child{text-align:right;white-space:nowrap}
+#result td:first-child,#result th:first-child{width:66px}
+#bagname{max-width:none}
+@media(max-width:420px){#result table{font-size:.87rem}#result td:first-child,#result th:first-child{width:57px}.food .controls input{width:52px}}
+
+
+/* MiniFIT compact mobile dashboard v0.39 */
+:root{color-scheme:dark}html{scroll-behavior:smooth}body{max-width:660px;padding:9px 12px 25px!important}
+h1{font-size:1.42rem!important;line-height:1.1;margin:2px 0!important}
+h1 small{font-size:.57em!important}body>.muted{font-size:.76rem!important;margin:2px 0 6px!important}
+.panel{padding:7px 0!important;margin:5px 0!important}.panel+.panel{padding-top:10px!important}
+.panel h2{font-size:1rem!important;margin:0 0 5px!important}
+.line{margin:4px 0!important;gap:6px!important}
+button,input,select{font-size:.88rem!important;padding:7px 8px!important;border-radius:9px!important}
+input[type=checkbox]{width:17px;height:17px;accent-color:#29c6c6}
+.time-row{margin-top:5px!important;gap:6px!important}
+.time-row label{font-size:.81rem!important}
+#gymtime{width:91px!important}
+#shakergrams{width:58px!important}
+#account{font-size:.75rem!important;padding:3px 0!important;margin-bottom:2px!important}
+#bagname{max-width:none!important}#bagstatus{min-height:0!important;margin:0!important}
+#selected{margin-top:3px!important}
+.food{padding:4px 0!important;min-height:35px!important;gap:5px!important}
+.food .foodname{font-size:.84rem!important;line-height:1.18!important}
+.food .controls{gap:4px!important}
+.food .controls input{width:46px!important;padding:5px 2px!important;font-size:.87rem!important}
+.food .controls select{width:48px!important;padding:5px 1px!important;font-size:.87rem!important}
+.food .controls button{padding:4px 7px!important}
+details{margin-top:6px!important;padding-top:7px!important}
+summary{font-size:.84rem!important}
+button#generate{padding:11px!important;font-size:1rem!important;margin:5px 0!important}
+#result{padding-top:9px!important}
+#result h2{margin-bottom:5px!important}
+#summary{font-size:1.02rem!important;font-weight:700;line-height:1.3}
+#targetshort{font-size:.77rem!important;line-height:1.35}
+#targetinfo{font-size:.76rem!important;line-height:1.45}
+table{table-layout:fixed;font-size:.84rem;line-height:1.3}
+table th,table td{padding:7px 4px!important}
+table th:first-child,table td:first-child{width:60px!important}
+table th:last-child,table td:last-child{width:72px;text-align:right;font-variant-numeric:tabular-nums}
+#result p.notice{font-size:.72rem!important;line-height:1.35}
+#copy{padding:7px 10px!important}
+@media(max-width:370px){body{padding:7px!important}.food .foodname{font-size:.78rem!important}.food .controls input{width:41px!important}.food .controls select{width:45px!important}table th:first-child,table td:first-child{width:55px!important}table th:last-child,table td:last-child{width:66px!important}}
+</style><h1>MiniFIT <small>· v0.39</small></h1><div class="muted">Organizza gli alimenti dalle 05:00 alle 14:15</div><section class="panel"><h2>La giornata</h2><div class="line"><label><input type="checkbox" id="gym" checked> Palestra alle</label><input type="time" id="gymtime" value="14:15"></div><div class="time-row"><label>Inizio <input type="time" id="start" value="05:15"></label><label>Fine <input type="time" id="end" value="14:00"></label></div><div class="line" style="margin-top:9px"><label><input id="shakeron" type="checkbox" checked> Shaker quotidiano</label><label class="notice">Whey <input id="shakergrams" type="number" min="1" value="42" style="width:72px"> g</label></div><div class="notice">450 ml acqua + whey + creatina. Orario modificabile.</div></section><section class="panel"><h2>La borsa di oggi</h2><div id="account" class="notice" style="margin-bottom:8px">Verifica account DiarioFIT…</div><div class="notice" style="margin:5px 0">Scegli una borsa salvata oppure prepara quella di oggi.</div><div class="line" style="margin-top:9px"><input id="bagname" placeholder="Nome borsa" aria-label="Nome borsa" style="flex:1;min-width:125px"><button id="savebag" class="secondary">Salva</button></div><div class="line"><select id="bagpick" aria-label="Borse salvate" style="flex:1;min-width:135px"></select><button id="loadbag" class="secondary">Carica</button><button id="deletebag" class="secondary" title="Elimina borsa selezionata">×</button></div><div id="bagstatus" class="notice"></div><div class="line"><select id="pick" style="flex:1;min-width:130px"></select><button id="pickadd">+ Aggiungi</button></div><div id="selected"></div><div class="line"><label class="notice"><input type="checkbox" id="workonly" checked> Solo alimenti da lavoro</label><label class="notice"><input type="checkbox" id="allfoods"> Mostra tutti i preferiti</label></div><details><summary>Gestisci alimenti</summary><p class="notice">Aggiungi un alimento con calorie per 100 g.</p><div class="line"><input id="newname" placeholder="Alimento" style="flex:1;min-width:130px"><input id="newkcal" type="number" min="0" placeholder="kcal/100 g" style="width:115px"><button id="add">Salva</button></div></details></section><button id="generate" style="width:100%;padding:16px">Genera programma</button><section class="panel" id="result"><h2>Programma della mattina</h2><div id="summary"></div><div id="targetshort" class="notice"></div><details id="targetdetails"><summary>Dettagli calorie, borsa e macronutrienti</summary><div id="targetinfo" class="notice"></div></details><table><thead><tr><th>Orario</th><th>Cosa mangiare</th><th>kcal</th></tr></thead><tbody id="schedule"></tbody></table><p class="notice">Distribuzione indicativa: non sostituisce una valutazione nutrizionale. Le quantità vengono ripartite in modo orientativo e non implicano che debbano essere consumate tutte.</p><button id="copy" class="secondary">Copia programma</button></section><script>
 const defaults=[['Shaker yogurt greco 0% + whey',95,250,true],['Pane di segale',250,120,true],['Banana',89,360,true],['Gallette di riso',385,48,true],['Granetti di pane',390,0,false],['Cracker ai semi',470,0,false],['Mirtilli',57,0,false],['Fiocchi di latte',98,0,false],['Parmigiano',402,0,false],['Macadamia',718,0,false]];
-const key='minifit-foods-v1', $=id=>document.getElementById(id);let accountId=null,dailyTarget=null;
+const key='minifit-foods-v1', $=id=>document.getElementById(id);let accountId=null,dailyTarget=null,macroTargets=null,macroCoverage={complete:0,total:0};
 let items;try{items=JSON.parse(localStorage.getItem(key))||defaults.map(([name,kcal,grams,selected])=>({name,kcal,grams,selected}))}catch{items=defaults.map(([name,kcal,grams,selected])=>({name,kcal,grams,selected}))}
 const pieceWeights={'Banana':120,'Gallette di riso':8,'Granetti di pane':7.5,'Cracker ai semi':10,'Macadamia':2.5};items.forEach(it=>{if(!it.unit){it.unit=pieceWeights[it.name]?'pz':'g';it.pieceWeight=pieceWeights[it.name]||0;it.qty=it.unit==='pz'?Math.round((it.grams||0)/it.pieceWeight):it.grams||0}if(!Number.isFinite(+it.qty))it.qty=0});const save=()=>{if(window.miniSave)window.miniSave();else localStorage.setItem(key,JSON.stringify(items))};
-function isWorkFood(name){return /shaker|yogurt|whey|pane|banana|gallet|cracker|granett|mirtill|fiocchi|parmigian|macadam|mandorl|noce|noci|pecan|tarall|mela|pera|frutta|barrett|pop.?corn|cioccolat|tonno|salmone|uov|riso|latte/i.test(name)&&!/nigiri|sushi|pizza|hamburger|piadina|spaghetti|pasta con|risotto|fritto|tempura|involtini/i.test(name)}
+function isWorkFood(name){return /pane|segale|banana|gallet|cracker|granett|mirtill|fiocchi|yogurt|macadam|mandorl|noce|noci|pecan|tarall|mela|pera|barrett|pop.?corn|cioccolat|tonno|uov|parmigian|shaker|whey/i.test(name)&&!/nigiri|sushi|pizza|hamburger|piadina|spaghetti|pasta|risotto|fritto|tempura|involtini|salmone.*grigl|riso.*(?:cotto|bollito)/i.test(name)}
 function foodIdentity(x){return x.diarioKey||x.name.toLocaleLowerCase('it').trim()}
 function pieceKind(name){if(/pane|segale/i.test(name))return 'fette';if(/banana|mela|pera/i.test(name))return 'frutti';if(/gallet|cracker|granett|macadam|noce|noci|mandorl|pecan/i.test(name))return 'pezzi';return ''}
 function isKnownRyeBread(x){return /^pane di segale(?: integrale)?(?: senza semi)?$/i.test(x.name.trim())}
@@ -39,7 +101,7 @@ function unitWeight(x){if(isKnownRyeBread(x))return 60;if(x.customPieceWeight>0)
 function portionLabel(x){const w=unitWeight(x);return w>0&&pieceKind(x.name)?' · 1 '+(pieceKind(x.name)==='fette'?(isKnownRyeBread(x)?'fetta':'porzione (fetta da verificare)'):pieceKind(x.name)==='frutti'?'frutto':'pz')+' = '+w+' g'+(isKnownRyeBread(x)?' (MiniFIT)':x.diarioWeight>0&&Math.abs(w-x.diarioWeight)<.01?' (DiarioFIT)':''):x.diarioWeight>0?' · porzione DiarioFIT '+x.diarioWeight+' g':''}
 function syncPortion(x){const w=unitWeight(x);if(w>0&&pieceKind(x.name)){x.pieceWeight=w;x.unit='pz';if(!(x.qty>0)){x.qty=1;x.grams=w}}else{x.unit='g';if(!(x.qty>0)){x.qty=Number(x.diarioWeight)||0;x.grams=x.qty}}}
 function normalizeFood(x){const w=unitWeight(x);if(x.unit==='pz'&&w>0){x.pieceWeight=w;x.grams=Number(x.qty)*w}else if(x.unit==='pz'&&!(w>0)){x.unit='g';x.qty=Number(x.grams)||0}else{x.grams=Number(x.qty)||0}}
-function render(){const pick=$('pick'),selected=$('selected');pick.replaceChildren();selected.replaceChildren();items.map((it,i)=>({it,i})).filter(x=>!x.it.selected&&(!$('workonly')?.checked||isWorkFood(x.it.name))).sort((a,b)=>a.it.name.localeCompare(b.it.name,'it')).forEach(({it,i})=>{const opt=document.createElement('option');opt.value=i;opt.textContent=it.name;pick.append(opt)});items.forEach((it,i)=>{if(!it.selected)return;const div=document.createElement('div');div.className='food';const name=document.createElement('div');name.className='foodname';name.textContent=it.name+portionLabel(it);const controls=document.createElement('div');controls.className='controls';const q=document.createElement('input');q.type='number';q.min=0;q.step=it.unit==='pz'?1:'any';q.value=it.qty;q.setAttribute('aria-label','Quantità '+it.name);q.onchange=()=>{it.qty=Math.max(0,+q.value||0);normalizeFood(it);save();render()};const unit=document.createElement('select');['g','pz'].forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=u;unit.append(o)});unit.value=it.unit;unit.onchange=()=>{const grams=Number(it.grams)||0;if(unit.value==='pz'){let w=unitWeight(it);if(!(w>0)){const answer=prompt('Quanti grammi pesa un pezzo?', '');w=Number(answer);if(!(w>0)){unit.value=it.unit;return}it.customPieceWeight=w}it.pieceWeight=w;it.qty=Math.max(1,Math.round(grams/w))}else it.qty=Math.round(grams*10)/10;it.unit=unit.value;normalizeFood(it);save();render()};const remove=document.createElement('button');remove.textContent='×';remove.className='secondary';remove.title='Rimuovi';remove.onclick=()=>{it.selected=false;save();render()};controls.append(q,unit,remove);div.append(name,controls);selected.append(div)});if(!selected.children.length)selected.textContent='Aggiungi gli alimenti che hai con te.'}
+function render(){const pick=$('pick'),selected=$('selected');pick.replaceChildren();selected.replaceChildren();items.map((it,i)=>({it,i})).filter(x=>!x.it.selected&&($('allfoods')?.checked||!$('workonly')?.checked||isWorkFood(x.it.name))).sort((a,b)=>a.it.name.localeCompare(b.it.name,'it')).forEach(({it,i})=>{const opt=document.createElement('option');opt.value=i;opt.textContent=it.name+(it.missingDiarioWeight&&!(it.customReferenceWeight>0)?' · peso da indicare':'');pick.append(opt)});items.forEach((it,i)=>{if(!it.selected)return;const div=document.createElement('div');div.className='food';const name=document.createElement('div');name.className='foodname';name.textContent=it.name+portionLabel(it);const controls=document.createElement('div');controls.className='controls';const q=document.createElement('input');q.type='number';q.min=0;q.step=it.unit==='pz'?1:'any';q.value=it.qty;q.setAttribute('aria-label','Quantità '+it.name);q.onchange=()=>{it.qty=Math.max(0,+q.value||0);normalizeFood(it);save();render()};const unit=document.createElement('select');['g','pz'].forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=u;unit.append(o)});unit.value=it.unit;unit.onchange=()=>{const grams=Number(it.grams)||0;if(unit.value==='pz'){let w=unitWeight(it);if(!(w>0)){const answer=prompt('Quanti grammi pesa un pezzo?', '');w=Number(answer);if(!(w>0)){unit.value=it.unit;return}it.customPieceWeight=w}it.pieceWeight=w;it.qty=Math.max(1,Math.round(grams/w))}else it.qty=Math.round(grams*10)/10;it.unit=unit.value;normalizeFood(it);save();render()};const remove=document.createElement('button');remove.textContent='×';remove.className='secondary';remove.title='Rimuovi';remove.onclick=()=>{it.selected=false;save();render()};controls.append(q,unit,remove);div.append(name,controls);selected.append(div)});if(!selected.children.length)selected.textContent='Aggiungi gli alimenti che hai con te.'}
 
 // MiniFIT 0.26: account verified by DiarioFIT backend; favorites are read-only.
 const api='https://diario-fit-api.paolodicaro-3d.workers.dev';
@@ -57,20 +119,21 @@ async function connectDiario(){
   const settingsResponse=await fetch(api+'/api/user/settings',{headers,cache:'no-store'});
   const data=await settingsResponse.json();
   if(!settingsResponse.ok||!data.ok)throw Error('SETTINGS');
-  dailyTarget=Number(data.targets?.kcal)||null;const storageKey='minifit-user-'+uid;
+  dailyTarget=Number(data.targets?.kcal)||null;macroTargets=data.targets||null;const storageKey='minifit-user-'+uid;
   let stored=[];try{stored=JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{}
   if(!Array.isArray(stored))stored=[];
   const old=items;
   items=stored.length?stored:old.filter(x=>x.selected).map(x=>({...x}));
   const favs=Array.isArray(data.savedFoods)?data.savedFoods:[];
+  macroCoverage={total:favs.length,complete:favs.filter(f=>['protein','carbs','fat'].every(k=>Number.isFinite(Number(f[k]))&&f[k]!==null&&f[k]!==undefined&&f[k]!=='' )).length};
   let added=0;
   favs.forEach((food,index)=>{
    const name=String(food.name||'').trim(),weight=Number(food.weight),cal=Number(food.kcal);
-   if(!name||!(weight>0)||!Number.isFinite(cal)||cal<0)return;
+   if(!name||!Number.isFinite(cal)||cal<0)return;
    const key='fav:'+index+':'+name.toLocaleLowerCase('it');
    let it=items.find(x=>x.diarioKey===key)||items.find(x=>x.name.toLocaleLowerCase('it')===name.toLocaleLowerCase('it'));
    if(!it){it={name,qty:0,grams:0,unit:'g',pieceWeight:0,selected:false,fromDiario:true};items.push(it);added++}
-   it.diarioKey=key;if(isKnownRyeBread(it)){it.customPieceWeight=60;it.pieceWeight=60}it.diarioWeight=weight;it.diarioKcal=cal;it.kcal=cal*100/weight;it.fromDiario=true;if(pieceKind(name)&&!(it.customPieceWeight>0))it.pieceWeight=unitWeight(it);
+   it.diarioKey=key;it.missingDiarioWeight=!(weight>0);if(weight>0&&!isKnownRyeBread(it)){delete it.customReferenceWeight;delete it.customPieceWeight;it.pieceWeight=weight;}if(isKnownRyeBread(it)){it.customPieceWeight=60;it.pieceWeight=60}it.diarioWeight=weight>0?weight:0;it.diarioKcal=cal;it.macros=weight>0&&['protein','carbs','fat'].every(k=>food[k]!==null&&food[k]!==undefined&&food[k]!==''&&Number.isFinite(Number(food[k]))&&Number(food[k])>=0)?{p:Number(food.protein)*100/weight,c:Number(food.carbs)*100/weight,f:Number(food.fat)*100/weight}:null;if(weight>0){it.kcal=cal*100/weight}else if(it.customReferenceWeight>0){it.kcal=cal*100/it.customReferenceWeight}else{it.kcal=0}it.fromDiario=true;if(pieceKind(name)&&!(it.customPieceWeight>0))it.pieceWeight=unitWeight(it);
    if(!it.selected||!(Number(it.qty)>0))syncPortion(it);else if(it.unit==='pz'&&!(unitWeight(it)>0)){it.unit='g';it.qty=Number(it.grams)||0}else normalizeFood(it);
   });
   const persist=()=>localStorage.setItem(storageKey,JSON.stringify(items.filter(x=>!x.fromDiario||x.selected)));
@@ -80,17 +143,17 @@ async function connectDiario(){
   render();
  }catch(e){box.innerHTML='Impossibile leggere i Preferiti · <a href="../">Apri DiarioFIT</a>';console.warn('MiniFIT account:',e.message)}
 }
-render();connectDiario();$('workonly').onchange=render;try{const v=JSON.parse(localStorage.getItem('minifit-shaker')||'{}');if(typeof v.enabled==='boolean')$('shakeron').checked=v.enabled;if(Number(v.grams)>0&&Number(v.grams)<=80)$('shakergrams').value=v.grams}catch{};if(Number($('shakergrams').value)>80)$('shakergrams').value=42;const saveShaker=()=>localStorage.setItem('minifit-shaker',JSON.stringify({enabled:$('shakeron').checked,grams:Number($('shakergrams').value)}));$('shakeron').onchange=saveShaker;$('shakergrams').onchange=saveShaker;
+render();connectDiario();$('workonly').onchange=render;$('allfoods').onchange=render;try{const v=JSON.parse(localStorage.getItem('minifit-shaker')||'{}');if(typeof v.enabled==='boolean')$('shakeron').checked=v.enabled;if(Number(v.grams)>0&&Number(v.grams)<=80)$('shakergrams').value=v.grams}catch{};if(Number($('shakergrams').value)>80)$('shakergrams').value=42;const saveShaker=()=>localStorage.setItem('minifit-shaker',JSON.stringify({enabled:$('shakeron').checked,grams:Number($('shakergrams').value)}));$('shakeron').onchange=saveShaker;$('shakergrams').onchange=saveShaker;
 
 const bagKey=()=>accountId?'minifit-bags-'+accountId:null;
 function getBags(){if(!accountId)return [];try{const v=JSON.parse(localStorage.getItem(bagKey())||'[]');return Array.isArray(v)?v:[]}catch{return []}}
 function refreshBags(){const select=$('bagpick'),prev=select.value;select.replaceChildren();getBags().forEach(b=>{const o=document.createElement('option');o.value=b.name;o.textContent=b.name;select.append(o)});if([...select.options].some(o=>o.value===prev))select.value=prev;else if(select.options.length)select.selectedIndex=0;}
 function migrateBag(){if(!accountId)return;const legacy='minifit-bag-'+accountId;if(localStorage.getItem(legacy)&&!getBags().length){try{const bag=JSON.parse(localStorage.getItem(legacy));if(Array.isArray(bag))localStorage.setItem(bagKey(),JSON.stringify([{name:'Borsa abituale',foods:bag}]))}catch{}}refreshBags()}
 $('savebag').onclick=()=>{if(!accountId)return alert('Collega prima DiarioFIT');const name=$('bagname').value.trim();if(!name)return alert('Dai un nome alla borsa');const foods=items.filter(x=>x.selected).map(x=>({name:x.name,diarioKey:x.diarioKey,qty:x.qty,unit:x.unit,pieceWeight:x.pieceWeight,customPieceWeight:x.customPieceWeight,grams:x.grams,kcal:x.kcal}));if(!foods.length)return alert('Seleziona almeno un alimento');const bags=getBags();const ix=bags.findIndex(b=>b.name.toLowerCase()===name.toLowerCase());if(ix>=0){if(!confirm('Sovrascrivere la borsa '+bags[ix].name+'?'))return;bags[ix]={name,foods}}else bags.push({name,foods});localStorage.setItem(bagKey(),JSON.stringify(bags));refreshBags();$('bagpick').value=name;$('bagstatus').textContent='✓ Salvata: '+name};
-$('loadbag').onclick=()=>{if(!accountId)return alert('Collega prima DiarioFIT');const bag=getBags().find(b=>b.name===$('bagpick').value);if(!bag)return alert('Seleziona una borsa salvata');items.forEach(x=>x.selected=false);bag.foods.forEach(b=>{let x=items.find(x=>(b.diarioKey&&x.diarioKey===b.diarioKey)||x.name.toLowerCase()===String(b.name).toLowerCase());if(!x){x={...b,selected:true};items.push(x)}else{const preserved={diarioKey:x.diarioKey,diarioWeight:x.diarioWeight,diarioKcal:x.diarioKcal,kcal:x.kcal,fromDiario:x.fromDiario};Object.assign(x,b,preserved,{selected:true})}if(isKnownRyeBread(x)){x.customPieceWeight=60;x.pieceWeight=60}if(pieceKind(x.name)&&unitWeight(x)>0&&!(x.customPieceWeight>0)){x.pieceWeight=unitWeight(x);if(x.unit==='g'&&x.qty>0&&Number.isInteger(x.qty/x.pieceWeight)){x.qty=x.qty/x.pieceWeight;x.unit='pz'}}normalizeFood(x)});save();render();$('bagname').value=bag.name;$('bagstatus').textContent='✓ Caricata: '+bag.name};
+$('loadbag').onclick=()=>{if(!accountId)return alert('Collega prima DiarioFIT');const bag=getBags().find(b=>b.name===$('bagpick').value);if(!bag)return alert('Seleziona una borsa salvata');items.forEach(x=>x.selected=false);bag.foods.forEach(b=>{let x=items.find(x=>(b.diarioKey&&x.diarioKey===b.diarioKey)||x.name.toLowerCase()===String(b.name).toLowerCase());if(!x){x={...b,selected:true};items.push(x)}else{const preserved={macros:x.macros,diarioKey:x.diarioKey,diarioWeight:x.diarioWeight,diarioKcal:x.diarioKcal,kcal:x.kcal,fromDiario:x.fromDiario,missingDiarioWeight:x.missingDiarioWeight};Object.assign(x,b,preserved,{selected:true});if(x.fromDiario&&x.diarioWeight>0&&!isKnownRyeBread(x)){delete x.customReferenceWeight;delete x.customPieceWeight;x.pieceWeight=x.diarioWeight;}}if(isKnownRyeBread(x)){x.customPieceWeight=60;x.pieceWeight=60}if(pieceKind(x.name)&&unitWeight(x)>0&&!(x.customPieceWeight>0)){x.pieceWeight=unitWeight(x);if(x.unit==='g'&&x.qty>0&&Number.isInteger(x.qty/x.pieceWeight)){x.qty=x.qty/x.pieceWeight;x.unit='pz'}}normalizeFood(x)});save();render();$('bagname').value=bag.name;$('bagstatus').textContent='✓ Caricata: '+bag.name};
 $('deletebag').onclick=()=>{if(!accountId)return;const name=$('bagpick').value;if(!name||!confirm('Eliminare la borsa '+name+'?'))return;localStorage.setItem(bagKey(),JSON.stringify(getBags().filter(b=>b.name!==name)));refreshBags();$('bagstatus').textContent='Borsa eliminata'};
 
-$('pickadd').onclick=()=>{let i=+$('pick').value;if(!Number.isInteger(i)||!items[i])return;items[i].selected=true;if(!(items[i].qty>0))syncPortion(items[i]);normalizeFood(items[i]);save();render()};
+$('pickadd').onclick=()=>{let i=+$('pick').value;if(!Number.isInteger(i)||!items[i])return;const it=items[i];if(it.missingDiarioWeight&&!(it.customReferenceWeight>0)){const answer=prompt('DiarioFIT indica '+it.diarioKcal+' kcal per questo alimento, ma non specifica il peso. A quanti grammi si riferiscono questi valori? (es. peso della porzione o confezione)', '');if(answer===null)return;const w=Number(String(answer).replace(',','.'));if(!(w>0)||w>10000)return alert('Inserisci un peso valido in grammi.');it.customReferenceWeight=w;it.kcal=it.diarioKcal*100/w;it.diarioWeight=w;it.customPieceWeight=w;it.pieceWeight=w;it.unit='pz';it.qty=1;it.grams=w;}items[i].selected=true;if(!(items[i].qty>0))syncPortion(items[i]);normalizeFood(items[i]);save();render()};
 $('add').onclick=()=>{const name=$('newname').value.trim(),kcal=+$('newkcal').value;if(!name||!(kcal>0))return alert('Inserisci nome e kcal per 100 g');items.push({name,kcal,grams:0,qty:0,unit:'g',pieceWeight:0,selected:true});save();render();$('newname').value='';$('newkcal').value=''};
 function minutes(s){const [h,m]=s.split(':').map(Number);return h*60+m}function clock(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
 let last='';
@@ -101,29 +164,32 @@ $('generate').onclick=()=>{
  const ambiguous=items.filter(x=>x.selected&&Number(x.qty)>0&&(/pacchetto da 5/i.test(x.name)||(/pane/i.test(x.name)&&x.unit==='pz'&&!(unitWeight(x)>0)))&&!(x.customPieceWeight>0));if(ambiguous.length)return alert('Verifica peso per pezzo o pacchetto: '+ambiguous.map(x=>x.name).join(', ')+'. Imposta i grammi oppure definisci il peso di un pezzo.');
  const source=items.filter(x=>x.selected&&Number(x.qty)>0&&Number(x.kcal)>0&&!/shaker.*(yogurt|whey|siero)/i.test(x.name)).map(x=>({...x,grams:x.unit==='pz'?Number(x.qty)*unitWeight(x):Number(x.qty)})).filter(x=>x.grams>0);
  if(!source.length&&!shaker)return alert('Seleziona almeno un alimento');
- const target=dailyTarget?Math.round(dailyTarget*(gym?.42:.36)):null;
+ // The morning reference is a planning guide, not a hard calorie ceiling.
+ // Work remains physically active even on non-gym days.
+ const target=dailyTarget?Math.round(dailyTarget*(gym?.42:.39)):null;
  const available=source.reduce((a,x)=>a+x.grams*x.kcal/100,shakeKcal);
  const limit=target||Infinity;
- const offsets=gym?[0,135,240,360,435,510]:[0,135,255,360,435];
+ const offsets=gym?[0,135,240,360,435,480]:[0,135,255,360,435];
  const times=offsets.map(v=>start+v).filter(t=>t<=end&&(!gym||t<workout));
  if(!times.length)return alert('Controlla gli orari');
- const entries=times.map(t=>({time:clock(t),parts:[],kcal:0,optional:false}));
+ const entries=times.map(t=>({time:clock(t),parts:[],kcal:0,optionalKcal:0,optional:false}));
  let total=0;const remaining=new Map(source.map((x,i)=>[i,x.grams]));
- const category=x=>/banana/i.test(x.name)?'banana':/gallet|cracker di riso|cracker.*riso/i.test(x.name)?'cake':/pane|segale/i.test(x.name)?'bread':/macadam|noce|noci|mandorl|pecan/i.test(x.name)?'nuts':'other';
- const find=type=>source.map((x,i)=>({x,i})).find(v=>category(v.x)===type&&(remaining.get(v.i)||0)>0);
+ const category=x=>/banana/i.test(x.name)?'banana':/gallet|cracker di riso|cracker.*riso/i.test(x.name)?'cake':/cracker.*(?:lino|sesamo|quinoa|semi)/i.test(x.name)?'seedcracker':/pane|segale/i.test(x.name)?'bread':/macadam|noce|noci|mandorl|pecan/i.test(x.name)?'nuts':'other';
+ const find=type=>source.map((x,i)=>({x,i})).filter(v=>category(v.x)===type&&(remaining.get(v.i)||0)>0).sort((a,b)=>type==='cake'?((remaining.get(b.i)||0)-(remaining.get(a.i)||0)):0)[0];
  function add(type,slot,quantity,optional=false){
   const v=find(type);if(!v||!entries[slot])return false;
-  const {x,i}=v,remain=remaining.get(i),step=x.unit==='pz'?x.pieceWeight:10;
+  const {x,i}=v,remain=remaining.get(i),step=x.unit==='pz'?unitWeight(x):10;
   if(!(step>0))return false;
   const desired=(type==='bread')?quantity:(x.unit==='pz'?quantity*step:quantity);
   let grams=Math.min(remain,desired);
   grams=Math.floor(grams/step+1e-6)*step;
   if(grams<=0)return false;
   const kcal=grams*x.kcal/100;
-  if((!optional&&total+kcal>limit+25)||(!optional&&entries[slot].kcal+kcal>360))return false;
+  if((!optional&&total+kcal>limit+90)||(!optional&&entries[slot].kcal+kcal>360))return false;
   const text=(type==='bread'?Math.round(grams)+' g':x.unit==='pz'?Math.round(grams/step)+' pz':Math.round(grams)+' g')+' di '+x.name;
   entries[slot].parts.push((optional?'Facoltativo: ':'')+text);
-  entries[slot].kcal+=kcal;
+  if(optional)entries[slot].optionalKcal+=kcal;
+  else entries[slot].kcal+=kcal;
   entries[slot].optional ||=optional;
   remaining.set(i,remain-grams);
   if(!optional)total+=kcal;
@@ -137,7 +203,8 @@ $('generate').onclick=()=>{
   add('banana',2,1);add('cake',2,3);
   add('bread',3,60);
   add('banana',4,1);add('cake',4,3);
-  add('banana',5,1,true);
+  // Optional pre-workout fruit only when available and not already consumed.
+  if(!add('cake',5,2,true))add('banana',5,1,true);
   // Keep one normal bread portion per break. Extra bread stays in the bag.
   // Add available rice cakes to carbohydrate breaks without duplicating food entries.
   for(const slot of [2,4]){
@@ -152,12 +219,46 @@ $('generate').onclick=()=>{
   add('banana',2,1);add('cake',2,2);
   add('bread',3,60);
   add('banana',4,1);add('cake',4,2);
-  // If the bag has no bread or fruit left, use a small portion of nuts
-  // to avoid a four-hour interval without food.
-  for(const slot of [3,4]){
-   if(entries[slot]&&entries[slot].parts.length===0)add('nuts',slot,3);
+  // Avoid prescribing nuts automatically without a reliable fat budget.
+ }
+ // v0.34: replace a repetitive bread break with a seed cracker when its actual
+ // DiarioFIT portion fits the morning energy guide. Do not stack it on top.
+ const seed=find('seedcracker');
+ if(seed&&entries[3]&&entries[3].parts.some(p=>/pane|segale/i.test(p))){
+  const {x,i}=seed,step=x.unit==='pz'?unitWeight(x):Math.min(24,remaining.get(i));
+  const kcal=step*x.kcal/100;
+  const breadPart=entries[3].parts.findIndex(p=>/pane|segale/i.test(p));
+  const breadKcal=entries[3].kcal;
+  if(step>0&&kcal>0&&kcal<=210&&total-breadKcal+kcal<=limit+50){
+   // Return the bread portion to inventory before replacing it.
+   const bread=source.findIndex(v=>category(v)==='bread'&&v.grams-(remaining.get(source.indexOf(v))||0)>0);
+   if(bread>=0){
+    const used=Math.min(60,source[bread].grams-(remaining.get(bread)||0));
+    remaining.set(bread,(remaining.get(bread)||0)+used);
+   }
+   entries[3].parts.splice(breadPart,1,(x.unit==='pz'?'1 pz':Math.round(step)+' g')+' di '+x.name);
+   entries[3].kcal=kcal;total=total-breadKcal+kcal;
+   remaining.set(i,(remaining.get(i)||0)-step);
   }
  }
+ // Nuts are offered as an optional small portion, never silently included
+ // in the planned calories without reliable daily fat targets.
+ const nuts=find('nuts');
+ if(nuts&&entries.length>2){
+  const {x,i}=nuts,step=x.unit==='pz'?unitWeight(x):Math.min(10,remaining.get(i));
+  const portion=Math.min(remaining.get(i)||0,step*3);
+  const kcal=portion*x.kcal/100;
+  if(step>0&&portion>0&&kcal>0&&kcal<=95){
+   const slot=1;
+   entries[slot].parts.push('Facoltativo: '+(x.unit==='pz'?Math.round(portion/step)+' pz':Math.round(portion)+' g')+' di '+x.name);
+   entries[slot].optional=true;
+   entries[slot].optionalKcal+=kcal;
+   remaining.set(i,(remaining.get(i)||0)-portion);
+  }
+ }
+ // v0.29: do not automatically allocate energy-dense nuts for variety.
+ // Without reliable fat/macronutrient targets, leave them in the bag.
+ // Nuts can still fill an otherwise empty break if no carbohydrate food is available.
  // v0.26: use actual bag quantities, preserving practical whole portions.
  // An empty break is not a reason to force extra calories.
  // Fill with other portable foods only when they fit the remaining energy budget.
@@ -179,12 +280,26 @@ $('generate').onclick=()=>{
  // The allocation above already reserves optional food through remaining.
  // Show exactly how much is left rather than suggesting the entire bag must be eaten.
  const unusedKcal=source.reduce((sum,x,i)=>sum+(remaining.get(i)||0)*x.kcal/100,0);
+ const optionalKcal=entries.reduce((a,e)=>a+e.optionalKcal,0);
+ const macroOf=(x,g)=>x.macros&&['p','c','f'].every(k=>Number.isFinite(x.macros[k]))?{p:x.macros.p*g/100,c:x.macros.c*g/100,f:x.macros.f*g/100}:null;
+ const macroTotals={p:0,c:0,f:0},optionalMacros={p:0,c:0,f:0};let unknownMacroKcal=0;
+ const macroSource=source.map((x,i)=>({...x,used:x.grams-(remaining.get(i)||0)}));
+ // The shaker has no verified macro composition in MiniFIT: exclude it from verified totals.
+ macroSource.forEach(x=>{const m=macroOf(x,x.used);if(m){for(const k of ['p','c','f'])macroTotals[k]+=m[k]}else if(x.used>0)unknownMacroKcal+=x.used*x.kcal/100});
+ // Optional foods are reserved in remaining, so split their macros by reconstructing the optional entries.
+ const optionalPortions=entries.flatMap(e=>e.parts.filter(p=>p.startsWith('Facoltativo:')).map(p=>({p,entry:e})));
+ optionalPortions.forEach(({p,entry})=>{const x=source.find(x=>p.includes(' di '+x.name));if(!x)return;const match=p.match(/(\d+(?:\.\d+)?)\s*(pz|g) di /);if(!match)return;const g=Number(match[1])*(match[2]==='pz'?unitWeight(x):1),m=macroOf(x,g);if(m){for(const k of ['p','c','f']){macroTotals[k]-=m[k];optionalMacros[k]+=m[k]}}else unknownMacroKcal+=0});
+ const fmt=m=>['p','c','f'].map((k,i)=>['P','C','G'][i]+' '+m[k].toFixed(1)+' g').join(' · ');
+ const shakerWarning=shaker?' Lo shaker non è incluso nei macro verificati.':'';
+ const macrosText='Macro degli alimenti programmati con dati completi: '+fmt(macroTotals)+(optionalKcal>0?' · Extra facoltativi: '+fmt(optionalMacros):'')+'. '+(unknownMacroKcal>0?'Alimenti senza macro verificati: circa '+Math.round(unknownMacroKcal)+' kcal. ':'')+shakerWarning+' Non è un bilancio giornaliero: mancano i pasti successivi e alcuni dati potrebbero essere incompleti.';
+ const unusedNuts=source.reduce((sum,x,i)=>sum+(category(x)==='nuts'?(remaining.get(i)||0):0),0);
  $('schedule').replaceChildren();
- entries.forEach(e=>{if(!e.parts.length)return;const tr=document.createElement('tr');[e.time,e.parts.join(' + '),Math.round(e.kcal)+(e.optional?'*':'')].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});$('schedule').append(tr)});
- const optionalKcal=entries.filter(e=>e.optional).reduce((a,e)=>a+e.kcal,0);
+ entries.forEach(e=>{if(!e.parts.length)return;const tr=document.createElement('tr');[e.time,e.parts.join(' + '),Math.round(e.kcal)+(e.optionalKcal?' + '+Math.round(e.optionalKcal)+'*':'')].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});$('schedule').append(tr)});
+ const totalIfOptional=total+optionalKcal;
+ $('targetshort').textContent='Riferimento mattutino '+(target?target+' kcal':'non disponibile')+' · nella borsa restano '+Math.round(unusedKcal)+' kcal'+(optionalKcal?' (con extra)':'')+'.';
  $('summary').textContent=(gym?'Palestra alle '+clock(workout):'Senza palestra')+' · '+Math.round(total)+' kcal'+(optionalKcal?' + '+Math.round(optionalKcal)+' facoltative':'');
- $('targetinfo').textContent=(target?'Target DiarioFIT '+Math.round(dailyTarget)+' kcal · riferimento mattutino '+target+' kcal. ':'')+'Alimenti disponibili '+Math.round(available)+' kcal. Residuo in borsa circa '+Math.round(unusedKcal)+' kcal; non è necessario consumare tutto. Priorità a energia, intervalli regolari e porzioni pratiche.';
- last=entries.filter(e=>e.parts.length).map(e=>e.time+' — '+e.parts.join(' + ')+' ('+Math.round(e.kcal)+' kcal'+(e.optional?', facoltativo':'')+')').join('\n');
+ $('targetinfo').textContent=(target?'Target DiarioFIT '+Math.round(dailyTarget)+' kcal · riferimento mattutino '+target+' kcal. ':'')+'Alimenti disponibili '+Math.round(available)+' kcal. Alimenti rimasti nella borsa: '+Math.round(unusedKcal)+' kcal'+(optionalKcal?' se consumi anche lo spuntino facoltativo; '+Math.round(unusedKcal+optionalKcal)+' kcal se non lo consumi':'')+'. '+(unusedNuts>0?'Frutta secca disponibile ('+Math.round(unusedNuts)+' g): non inserita automaticamente perché il budget dei grassi non è verificato. ':'')+'Dati macro: '+macroCoverage.complete+' di '+macroCoverage.total+' preferiti con campi completi. '+macrosText;
+ last=entries.filter(e=>e.parts.length).map(e=>e.time+' — '+e.parts.join(' + ')+' ('+Math.round(e.kcal)+' kcal'+(e.optionalKcal?' + '+Math.round(e.optionalKcal)+' kcal facoltative':'')+')').join('\n');
  $('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
 };
 $('copy').onclick=()=>navigator.clipboard?.writeText(last).then(()=>alert('Copiato')).catch(()=>alert('Copia non disponibile'));
