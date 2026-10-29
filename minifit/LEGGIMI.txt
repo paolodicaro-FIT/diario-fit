@@ -1,0 +1,15 @@
+MiniFIT — pacchetto icone approvato
+
+Carica tutti i file di questa cartella nella directory minifit/ del repository GitHub paolodicaro-FIT/diario-fit.
+
+Per attivare il nuovo logo nella pagina minifit/index.html (e TEST-MiniFIT.html se usata), rimuovi la vecchia icona SVG incorporata e inserisci nel <head>:
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b1220">
+
+Nota: per visualizzare il logo anche nella schermata di caricamento o nella testata dell’app occorre aggiornare separatamente i riferimenti nel codice HTML.
+
+Per le icone Android/iPhone potrebbe essere necessario rimuovere e riaggiungere il collegamento alla schermata Home per aggiornare la cache.
