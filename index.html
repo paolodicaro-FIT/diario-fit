@@ -21564,8 +21564,9 @@ function renderQuickCustomizeList() {
   const editableItems =
     quickAddItems.filter(
       item => !item.isWater
-    ).slice(0, 8);
+    ).slice(0, 14);
 
+  while(editableItems.length < 14) editableItems.push({isEmpty:true,emoji:"",label:""});
   editableItems.forEach((item, index) => {
 
     const row =
@@ -21777,11 +21778,11 @@ async function saveQuickCustomization() {
   const currentEditable =
     quickAddItems.filter(
       item => !item.isWater
-    ).slice(0, 8);
+    ).slice(0, 14);
 
   const updated = [];
 
-  for (let index = 0; index < 8; index++) {
+  for (let index = 0; index < 14; index++) {
 
     const select =
       document.getElementById(
