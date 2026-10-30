@@ -10728,10 +10728,10 @@ function dfCalorieBarsRender(eaten,base,extra){
       <label class="full">💧 Acqua (ml)<input type="number" id="quick-preview-water" oninput="syncQuickPreviewField('water', this.value)" min="0" step="1"></label>
     </div>
     <details class="sugar-editor"><summary>🍬 Origine degli zuccheri · facoltativa</summary><div id="sugar-preview"></div></details>
-    <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
+    <div class="quick-preview-destination" style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
       <div id="quick-preview-destination-title" style="font-size:.72rem; font-weight:850; color:var(--text); margin-bottom:7px;">Dove vuoi salvare questo alimento?</div>
       <button id="quick-preview-save-option" type="button" class="save-food-btn" style="margin-top:0; background:var(--card-2); color:var(--text); border:1px solid rgba(255,159,28,.35);" onclick="confirmQuickDiaryPreview('saved')">⭐ Salva nei Miei alimenti</button>
-      <div style="font-size:.67rem; color:var(--subtext); margin:9px 0 6px;">Oppure aggiungilo al Diario:</div>
+      <div class="quick-preview-diary-label" style="font-size:.67rem; color:var(--subtext); margin:9px 0 6px;">Oppure aggiungilo al Diario:</div>
       <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px;">
         <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Snack / Integrazione')">🥤 Snack</button>
         <button type="button" class="save-food-btn" style="margin-top:0;" onclick="confirmQuickDiaryPreview('Colazione')">🍳 Colazione</button>
@@ -28648,6 +28648,29 @@ html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
 #quick-diary-preview-modal .sugar-editor summary{padding:7px 0!important}
 #quick-diary-preview-modal .save-food-btn{min-height:39px!important;padding:8px!important}
 @media(max-width:420px){#quick-diary-preview-modal .modal-content{padding:12px!important}#quick-diary-preview-modal .free-grid{gap:7px!important}}
+
+/* TEST v2: densita' reale dell'anteprima, campi leggibili e touch target */
+#quick-diary-preview-modal .modal-content{padding:10px 13px!important;max-height:calc(100dvh - 24px)!important}
+#quick-diary-preview-modal .modal-header{padding-bottom:5px!important;margin-bottom:5px!important}
+#quick-diary-preview-modal .modal-header h3{font-size:1rem!important}
+#quick-diary-preview-modal label[style*="display:block"][style*="margin-bottom:8px"]{margin-bottom:4px!important}
+#quick-diary-preview-modal #quick-preview-name{min-height:36px!important;height:36px!important}
+#quick-diary-preview-modal .modal-content>.multiplier-control{margin:0!important}
+#quick-diary-preview-modal .modal-content>div:has(>.multiplier-control){display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px!important}
+#quick-diary-preview-modal .modal-content>div:has(>.multiplier-control)>label{margin:0!important;font-size:.77rem!important}
+#quick-diary-preview-modal .multiplier-control{width:155px!important;max-width:155px!important;flex-shrink:0}
+#quick-diary-preview-modal .multiplier-control button,#quick-diary-preview-modal .multiplier-control input{height:36px!important;min-height:36px!important}
+#quick-diary-preview-modal .free-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px 9px!important;margin:0!important}
+#quick-diary-preview-modal .free-grid label{font-size:.70rem!important;line-height:1.12!important;min-width:0!important}
+#quick-diary-preview-modal .free-grid input{height:35px!important;min-height:35px!important;padding:5px 9px!important;margin-top:2px!important;font-size:.95rem!important}
+#quick-diary-preview-modal .free-grid label.full{grid-column:auto!important}
+#quick-diary-preview-modal .sugar-editor{margin:5px 0!important}
+#quick-diary-preview-modal .sugar-editor summary{padding:4px 0!important;font-size:.78rem!important}
+#quick-diary-preview-modal .quick-preview-destination{margin-top:5px!important;padding-top:6px!important}
+#quick-diary-preview-modal #quick-preview-destination-title{margin-bottom:4px!important;font-size:.75rem!important}
+#quick-diary-preview-modal .quick-preview-diary-label{margin:4px 0!important}
+#quick-diary-preview-modal .quick-preview-destination .save-food-btn{min-height:39px!important;padding:6px!important;font-size:.80rem!important}
+#quick-diary-preview-modal .quick-preview-destination .btn{min-height:36px!important;margin-top:5px!important}
 </style>
 <div aria-label="Ambiente di test" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div></body>
 </html>
