@@ -10696,7 +10696,7 @@ function dfCalorieBarsRender(eaten,base,extra){
 <div class="modal-overlay" id="quick-diary-preview-modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3>👁️ Anteprima prima dell’aggiunta</h3>
+      <h3>👁️ Anteprima alimento</h3>
       <button class="modal-close" onclick="closeQuickDiaryPreview()">✕</button>
     </div>
     <label style="display:block; margin-bottom:8px; font-size:.70rem; color:var(--subtext);">
@@ -10709,7 +10709,7 @@ function dfCalorieBarsRender(eaten,base,extra){
         style="width:100%; margin-top:4px; font-weight:850; color:var(--accent);"
       >
     </label>
-    <div style="font-size:.70rem; color:var(--subtext); margin-bottom:10px;">Controlla o modifica quantità e valori. La destinazione si sceglie solo alla fine.</div>
+    
     <div style="margin-bottom:10px;">
       <label style="display:block; margin-bottom:4px;">✖️ Moltiplicatore</label>
       <div class="multiplier-control" style="max-width:180px;">
@@ -28632,6 +28632,22 @@ html[data-theme="light"] #df-food-advice-modal .df-food-remove-btn{color:#b33143
 html[data-theme="light"] #df-food-advice-modal #df-food-advice-status,
 html[data-theme="light"] #df-food-advice-modal p,
 html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
+
+/* DiarioFIT TEST: anteprima rapida compatta su cellulare */
+#quick-diary-preview-modal .modal-content{padding:14px 16px!important;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain}
+#quick-diary-preview-modal .modal-header{margin-bottom:9px!important;padding-bottom:8px!important;gap:8px}
+#quick-diary-preview-modal .modal-header h3{font-size:1.05rem!important;line-height:1.25!important;margin:0!important}
+#quick-diary-preview-modal label{line-height:1.2}
+#quick-diary-preview-modal #quick-preview-name{margin-top:3px!important;min-height:39px!important;padding:7px 10px!important}
+#quick-diary-preview-modal .multiplier-control{max-width:170px!important;min-height:38px}
+#quick-diary-preview-modal .multiplier-control button,#quick-diary-preview-modal .multiplier-control input{min-height:38px!important;height:38px!important}
+#quick-diary-preview-modal .free-grid{gap:8px!important;margin-top:5px!important}
+#quick-diary-preview-modal .free-grid label{font-size:.76rem!important;margin:0!important}
+#quick-diary-preview-modal .free-grid input{min-height:38px!important;height:38px!important;padding:7px 9px!important;margin-top:3px!important}
+#quick-diary-preview-modal .sugar-editor{margin-top:10px!important;margin-bottom:6px!important}
+#quick-diary-preview-modal .sugar-editor summary{padding:7px 0!important}
+#quick-diary-preview-modal .save-food-btn{min-height:39px!important;padding:8px!important}
+@media(max-width:420px){#quick-diary-preview-modal .modal-content{padding:12px!important}#quick-diary-preview-modal .free-grid{gap:7px!important}}
 </style>
 <div aria-label="Ambiente di test" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div></body>
 </html>
