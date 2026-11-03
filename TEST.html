@@ -28744,5 +28744,13 @@ div[aria-label="Ambiente di test"]{position:fixed!important;left:0!important;rig
 /* Badge centered in viewport regardless of inherited CSS or document width. */
 body>div[aria-label="Ambiente di test"]{position:fixed!important;left:50vw!important;right:auto!important;top:calc(env(safe-area-inset-top, 0px) + 10px)!important;transform:translateX(-50%)!important;width:max-content!important;max-width:none!important;margin:0!important;padding:5px 10px!important;white-space:nowrap!important}
 </style>
+<style id="diariofit-login-mobile-recovery">
+/* Keep the entire sign-in card visible on short mobile browser viewports. */
+#login-overlay{height:100dvh!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:16px!important}
+#login-overlay .login-card{flex:0 0 auto!important;max-width:min(380px,calc(100vw - 32px))!important;margin:auto!important;padding:clamp(14px,3vh,24px) 18px!important;max-height:none!important}
+#login-overlay .login-card input{box-sizing:border-box!important;max-width:100%!important}
+#login-overlay #login-error{font-size:14px!important;line-height:1.4!important;overflow-wrap:anywhere!important}
+@media(max-height:740px){#login-overlay .login-card{padding:12px 16px!important}#login-overlay .login-logo{font-size:30px!important;margin-bottom:2px!important}#login-overlay .login-card p{margin:5px 0 10px!important}}
+</style>
 </body>
 </html>
