@@ -13289,15 +13289,15 @@ html[data-theme="light"] #ux25-more-modal .ux25-more-card > b{color:#098d75!impo
 html[data-theme="light"] #ux25-more-modal .theme-choice:not(.active){background:#fff!important;color:#1a3d4c!important;border:1px solid #b5d1d9!important}
 html[data-theme="light"] #ux25-more-modal .theme-choice.active{background:#ff9e16!important;color:#172b34!important}
 </style>
-<style id="diariofit-nixie-isolated">
+<style id="diariofit-nixie-calorie-test">
 /* TEST: dark gradient behind frameless, bright incandescent wire numerals */
 .calorie-amount .calorie-nixie{display:inline-flex;align-items:center;justify-content:center;gap:1px;max-width:100%;padding:4px 0;background:transparent;border:0;border-radius:0;box-shadow:none}
 .calorie-nixie .cn-tube{position:relative;display:block;width:clamp(37px,11vw,58px);height:clamp(70px,19vw,100px);border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
 .calorie-nixie .cn-tube:after{display:none}
 .calorie-nixie svg{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .calorie-nixie path{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.calorie-nixie .cn-off path{stroke:#a94a21;stroke-width:.55;opacity:.42}
-.calorie-nixie .cn-on{stroke:#f57b16;stroke-width:1.15;filter:drop-shadow(0 0 1px #ffc078) drop-shadow(0 0 2px #ff8a17) drop-shadow(0 0 5px #e94a00) drop-shadow(0 0 9px #ba2500)}
+.calorie-nixie .cn-off path{stroke:#6b301c;stroke-width:.42;opacity:.19}
+.calorie-nixie .cn-on{stroke:#ff8a22;stroke-width:1.3;filter:drop-shadow(0 0 1px #ffcf8b) drop-shadow(0 0 3px #ff8c1b) drop-shadow(0 0 6px #f05000) drop-shadow(0 0 11px #c92a00)}
 .calorie-amount #ux2-kcal-now.cn-original{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(max-width:390px){.calorie-nixie .cn-tube{width:clamp(32px,10vw,42px);height:clamp(62px,18vw,77px)}.calorie-amount .calorie-nixie{padding:6px 8px}}
 
@@ -13312,7 +13312,7 @@ html[data-theme="light"] #ux25-more-modal .theme-choice.active{background:#ff9e1
 .calorie-amount:before{content:"";position:absolute;z-index:-1;pointer-events:none;left:-32vw;right:-32vw;top:-65px;bottom:-75px;background:radial-gradient(ellipse 75% 68% at 50% 50%,#020304 0%,#03070a 38%,#07121a99 66%,transparent 100%);border:0;border-radius:0;box-shadow:none}
 .calorie-amount .calorie-nixie{position:relative;z-index:1}
 </style>
-<script id="diariofit-nixie-isolated-script">
+<script id="diariofit-nixie-calorie-test-script">
 (function(){
 const paths=['M20 8 C5 8 6 59 20 61 C35 61 35 8 20 8 Z','M10 20 L20 8 L20 61','M8 20 C8 5 34 4 32 20 C31 30 8 45 8 61 L33 61','M8 14 C16 4 33 8 32 21 C31 30 20 32 16 32 C37 30 38 61 19 61 C12 61 8 58 7 53','M29 61 L29 8 L6 45 L35 45','M32 8 L10 8 L8 33 C30 20 38 40 31 54 C25 67 10 63 7 54','M30 11 C9 2 5 28 8 48 C11 69 35 66 34 48 C33 28 14 28 8 44','M7 8 L34 8 L15 61','M20 8 C3 8 5 32 20 32 C37 32 36 8 20 8 Z M20 32 C3 32 4 61 20 61 C37 61 37 32 20 32 Z','M33 28 C30 5 8 3 7 23 C6 42 33 43 33 21 C36 42 32 63 11 60'];
 const NS='http://www.w3.org/2000/svg';
