@@ -28693,5 +28693,30 @@ html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
 #quick-diary-preview-modal .quick-preview-diary-label{margin:3px 0!important}
 #quick-diary-preview-modal .quick-preview-destination .save-food-btn{min-height:37px!important;padding:5px 7px!important}
 </style>
-<div aria-label="Ambiente di test" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div></body>
+<div aria-label="Ambiente di test" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div>
+<style id="diariofit-nixie-calorie-test">
+/* TEST only: glowing thin-wire calorie readout, original value remains authoritative */
+.calorie-amount .calorie-nixie{display:inline-flex;align-items:center;justify-content:center;gap:3px;max-width:100%;padding:5px 7px;background:linear-gradient(160deg,#160805,#030506);border:1px solid #8e3b17;border-radius:14px;box-shadow:inset 0 0 20px #f40a,0 0 15px #f60a}
+.calorie-nixie .cn-tube{position:relative;display:block;width:clamp(30px,9vw,49px);height:clamp(57px,16vw,83px);border-radius:13px;background:radial-gradient(ellipse,#1c0805 0%,#040405 75%);border:1px solid #803512;box-shadow:inset 2px 0 6px #ff7c002a,inset -2px 0 7px #000,0 0 7px #f506;overflow:hidden}
+.calorie-nixie .cn-tube:after{content:"";position:absolute;left:4px;top:4px;width:17%;height:72%;border-left:1px solid #ffca6a30;border-radius:50%;pointer-events:none}
+.calorie-nixie svg{display:block;position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px)}
+.calorie-nixie path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.calorie-nixie .cn-off path{stroke:#a24b22;stroke-width:.66;opacity:.48}
+.calorie-nixie .cn-on{stroke:#ff9015;stroke-width:1.12;filter:drop-shadow(0 0 1px #ffe19b) drop-shadow(0 0 3px #ff7600) drop-shadow(0 0 6px #f30)}
+.calorie-amount #ux2-kcal-now.cn-original{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+@media(max-width:390px){.calorie-nixie .cn-tube{width:clamp(25px,8vw,34px);height:clamp(50px,15vw,64px)}.calorie-amount .calorie-nixie{gap:2px;padding:4px}}
+</style>
+<script id="diariofit-nixie-calorie-test-script">
+(function(){
+const paths=['M20 8 C5 8 6 59 20 61 C35 61 35 8 20 8 Z','M10 20 L20 8 L20 61','M8 20 C8 5 34 4 32 20 C31 30 8 45 8 61 L33 61','M8 14 C16 4 33 8 32 21 C31 30 20 32 16 32 C37 30 38 61 19 61 C12 61 8 58 7 53','M29 61 L29 8 L6 45 L35 45','M32 8 L10 8 L8 33 C30 20 38 40 31 54 C25 67 10 63 7 54','M30 11 C9 2 5 28 8 48 C11 69 35 66 34 48 C33 28 14 28 8 44','M7 8 L34 8 L15 61','M20 8 C3 8 5 32 20 32 C37 32 36 8 20 8 Z M20 32 C3 32 4 61 20 61 C37 61 37 32 20 32 Z','M33 28 C30 5 8 3 7 23 C6 42 33 43 33 21 C36 42 32 63 11 60'];
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,v);return e}
+function init(){const original=document.getElementById('ux2-kcal-now');if(!original||original.dataset.cnReady)return;original.dataset.cnReady='1';const display=document.createElement('span');display.className='calorie-nixie';display.setAttribute('aria-hidden','true');original.classList.add('cn-original');original.insertAdjacentElement('afterend',display);
+let last='';
+function sync(){const raw=original.textContent.trim(),value=raw.replace(/[^0-9]/g,'');if(value===last)return;last=value;display.replaceChildren();if(!value){return}for(const c of value.slice(-6)){const tube=document.createElement('span');tube.className='cn-tube';const svg=el('svg',{viewBox:'0 0 40 70'}),off=el('g',{class:'cn-off'});paths.forEach(d=>off.append(el('path',{d})));svg.append(off,el('path',{class:'cn-on',d:paths[Number(c)]}));tube.append(svg);display.append(tube)}}
+new MutationObserver(sync).observe(original,{subtree:true,childList:true,characterData:true});sync()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+</body>
 </html>
