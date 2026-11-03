@@ -28702,7 +28702,7 @@ html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
 .calorie-nixie svg{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .calorie-nixie path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 .calorie-nixie .cn-off path{stroke:#a94a21;stroke-width:.55;opacity:.42}
-.calorie-nixie .cn-on{stroke:#ffad25;stroke-width:1.15;filter:drop-shadow(0 0 1px #fff0b5) drop-shadow(0 0 2px #ffb300) drop-shadow(0 0 5px #ff6200) drop-shadow(0 0 9px #ff3300)}
+.calorie-nixie .cn-on{stroke:#f57b16;stroke-width:1.15;filter:drop-shadow(0 0 1px #ffc078) drop-shadow(0 0 2px #ff8a17) drop-shadow(0 0 5px #e94a00) drop-shadow(0 0 9px #ba2500)}
 .calorie-amount #ux2-kcal-now.cn-original{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(max-width:390px){.calorie-nixie .cn-tube{width:clamp(32px,10vw,42px);height:clamp(62px,18vw,77px)}.calorie-amount .calorie-nixie{padding:6px 8px}}
 
@@ -28762,7 +28762,24 @@ body>div[aria-label="Ambiente di test"]{position:fixed!important;left:50vw!impor
 html body > [aria-label="Ambiente di test"]{position:fixed!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;top:calc(env(safe-area-inset-top,0px) + 10px)!important;margin:0!important;max-width:none!important;width:max-content!important;z-index:2147483647!important}
 </style>
 <script id="df-badge-body-anchor">
-(function(){function place(){const badge=document.querySelector('[aria-label="Ambiente di test"]');if(badge&&badge.parentElement!==document.body)document.body.appendChild(badge);if(badge){badge.style.setProperty('left','50%','important');badge.style.setProperty('right','auto','important');badge.style.setProperty('transform','translateX(-50%)','important');badge.style.setProperty('margin','0','important')}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place,{once:true});else place()})();
+(function(){
+ function place(){
+  const badge=document.querySelector('[aria-label="Ambiente di test"]');
+  if(!badge)return;
+  if(badge.parentElement!==document.documentElement)document.documentElement.appendChild(badge);
+  // Visual viewport coordinates remain correct even if the page has horizontal overflow.
+  const v=window.visualViewport;
+  const x=(v?v.offsetLeft+v.width/2:window.innerWidth/2);
+  badge.style.setProperty('position','fixed','important');
+  badge.style.setProperty('left',x+'px','important');
+  badge.style.setProperty('right','auto','important');
+  badge.style.setProperty('transform','translateX(-50%)','important');
+  badge.style.setProperty('margin','0','important');
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place,{once:true});else place();
+ window.addEventListener('resize',place);
+ if(window.visualViewport){visualViewport.addEventListener('resize',place);visualViewport.addEventListener('scroll',place)}
+})();
 </script>
 </body>
 </html>
