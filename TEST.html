@@ -28693,7 +28693,7 @@ html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
 #quick-diary-preview-modal .quick-preview-diary-label{margin:3px 0!important}
 #quick-diary-preview-modal .quick-preview-destination .save-food-btn{min-height:37px!important;padding:5px 7px!important}
 </style>
-<div aria-label="Ambiente di test" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div>
+<div aria-label="Ambiente di test" style="position:fixed!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;top:calc(env(safe-area-inset-top, 0px) + 10px)!important;z-index:2147483647;background:#a95b0c;color:#fff;border:1px solid #ffd08a;border-radius:999px;padding:5px 10px;font:800 12px system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 13px #ffae4b88;pointer-events:none">⚗ TEST</div>
 <style id="diariofit-nixie-calorie-test">
 /* TEST: dark gradient behind frameless, bright incandescent wire numerals */
 .calorie-amount .calorie-nixie{display:inline-flex;align-items:center;justify-content:center;gap:1px;max-width:100%;padding:4px 0;background:transparent;border:0;border-radius:0;box-shadow:none}
@@ -28705,6 +28705,12 @@ html[data-theme="light"] #df-food-advice-modal h3{color:#193743!important}
 .calorie-nixie .cn-on{stroke:#ffad25;stroke-width:1.15;filter:drop-shadow(0 0 1px #fff0b5) drop-shadow(0 0 2px #ffb300) drop-shadow(0 0 5px #ff6200) drop-shadow(0 0 9px #ff3300)}
 .calorie-amount #ux2-kcal-now.cn-original{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(max-width:390px){.calorie-nixie .cn-tube{width:clamp(32px,10vw,42px);height:clamp(62px,18vw,77px)}.calorie-amount .calorie-nixie{padding:6px 8px}}
+
+/* Broad feathered vignette across the entire calorie card, no hard rectangle */
+#ux2-home .calorie-panel.calorie-cockpit{isolation:isolate;overflow:hidden}
+#ux2-home .calorie-panel.calorie-cockpit::after{content:"";position:absolute;pointer-events:none;z-index:0;inset:0;border-radius:inherit;background:radial-gradient(ellipse 78% 75% at 50% 44%,#010203 0%,#03070a 36%,#05121bcc 61%,transparent 100%)}
+#ux2-home .calorie-panel.calorie-cockpit .calorie-cockpit-content{position:relative;z-index:2}
+#ux2-home .calorie-panel.calorie-cockpit .calorie-nixie{background:none!important;box-shadow:none!important;border:none!important}
 </style>
 /* Seamless black vignette across the entire energy card, not a box around digits */
 #ux2-kcal-now{isolation:isolate}
