@@ -22572,11 +22572,11 @@ function dfEditDiaryItem(id) {
   document.getElementById("df-diary-edit-modal")?.remove();
   const overlay=document.createElement("div");
   overlay.id="df-diary-edit-modal";
-  overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:15px;box-sizing:border-box;overflow:auto";
+  overlay.style.cssText="position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100dvh!important;margin:0!important;transform:none!important;background:rgba(0,0,0,.7);z-index:99999;display:flex!important;align-items:center!important;justify-content:center!important;padding:12px!important;box-sizing:border-box!important;overflow:hidden!important";
   const fields=[["name","Alimento","text"],["meal","Pasto","text"],["time","Ora del consumo","time"],["weight","Peso (g)","number"],["kcal","Calorie (kcal)","number"],["pro","Proteine (g)","number"],["carb","Carboidrati (g)","number"],["fat","Grassi (g)","number"],["sugar","Zuccheri (g)","number"],["waterMl","Acqua (ml)","number"]];
   const panel=document.createElement("form");
   const dfLightEdit=document.documentElement.getAttribute("data-theme")==="light";
-  panel.style.cssText=`background:${dfLightEdit?"#f7fbfd":"#202733"};color:${dfLightEdit?"#173744":"#f3f8fa"};border:1px solid ${dfLightEdit?"#a8cfdb":"#64748b"};border-radius:16px;padding:20px;max-width:440px;width:100%;min-width:0;box-sizing:border-box;max-height:90dvh;overflow:auto;overflow-x:hidden`;
+  panel.style.cssText=`background:${dfLightEdit?"#f7fbfd":"#202733"};color:${dfLightEdit?"#173744":"#f3f8fa"};border:1px solid ${dfLightEdit?"#a8cfdb":"#64748b"};border-radius:16px;padding:16px!important;width:min(440px, calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;min-width:0!important;flex:0 1 auto!important;box-sizing:border-box!important;margin:0!important;position:relative!important;left:auto!important;right:auto!important;transform:none!important;max-height:calc(100dvh - 24px)!important;overflow-y:auto!important;overflow-x:hidden!important`;
   panel.dataset.theme=dfLightEdit?"light":"dark";
   const heading=document.createElement("h3");heading.textContent="✏️ Modifica alimento registrato";panel.appendChild(heading);
   fields.forEach(([key,label,type])=>{
