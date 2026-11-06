@@ -5165,6 +5165,11 @@ html[data-theme="light"]
 
   width: 100%;
   height: 250px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
 }
 
 #progress-weight-chart {
@@ -19286,6 +19291,15 @@ function drawWeightChart() {
   const rect =
     wrap.getBoundingClientRect();
 
+  // Mantiene leggibili le rilevazioni, anche con molti mesi di storico.
+  const timestamps = weightHistory.map(item => Date.parse(item.date + "T00:00:00Z")).filter(Number.isFinite);
+  const days = timestamps.length > 1 ? Math.max(1, Math.round((Math.max(...timestamps) - Math.min(...timestamps)) / 86400000)) : 1;
+  const chartWidth = Math.max(rect.width, Math.min(12000, days * 18 + 54));
+  const previousWidth = parseFloat(canvas.style.width) || 0;
+  const wasAtEnd = wrap.scrollWidth - wrap.clientWidth - wrap.scrollLeft < 45;
+  canvas.style.width = chartWidth + "px";
+  canvas.style.minWidth = chartWidth + "px";
+
   if (
     rect.width <= 0 ||
     rect.height <= 0
@@ -19297,7 +19311,7 @@ function drawWeightChart() {
     window.devicePixelRatio || 1;
 
   canvas.width =
-    Math.round(rect.width * dpr);
+    Math.round(chartWidth * dpr);
 
   canvas.height =
     Math.round(rect.height * dpr);
@@ -19309,12 +19323,15 @@ function drawWeightChart() {
     dpr, 0, 0, dpr, 0, 0
   );
 
-  const width = rect.width;
+  const width = chartWidth;
   const height = rect.height;
 
   ctx.clearRect(
     0, 0, width, height
   );
+  if (previousWidth === 0 || wasAtEnd) {
+    requestAnimationFrame(() => { wrap.scrollLeft = wrap.scrollWidth - wrap.clientWidth; });
+  }
 
   const styles =
     getComputedStyle(
